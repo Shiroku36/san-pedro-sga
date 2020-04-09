@@ -1,0 +1,35 @@
+﻿
+@{
+    ViewBag.Title = "Cargar";
+}
+
+<h2>Cargar personal</h2>
+@using (Html.BeginForm("Cargar", "Trabajador", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+
+<div class="form-group">
+    <div class="col-md-12 ">
+        <b class="control-label col-md-2">Documento</b>
+        <input id="Foto" type="file" name="csv" accept=".csv" class="form-control" value="@ViewBag.documento">
+    </div>
+    <br />
+    <div class="col-md-12" style="margin-top:20px; margin-bottom:20px">
+        <b class="control-label col-md-2">Empresa</b>
+        <select class="form-control" name="empresa">
+            @foreach (var empresa in ViewBag.Empresas)
+            {
+                <option class="form-control" value=@empresa name="empresa">@empresa</option>
+            }
+        </select>
+    </div>
+    <br />
+    <div class="col-md-offset-2 col-md-12 form-group">
+        <input type="submit" value="Cargar" class="btn btn-default" />
+    </div>
+    @if (!String.IsNullOrEmpty(ViewBag.mensaje))
+    {
+        <p align="center" style="color:red;"><strong>@ViewBag.mensaje</strong></p>
+    }
+</div>
+ }
+

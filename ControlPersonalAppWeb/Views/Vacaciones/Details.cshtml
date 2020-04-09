@@ -1,0 +1,82 @@
+﻿@model ControlPersonalAppWeb.Vacaciones
+
+@{
+    ViewBag.Title = "Detalles";
+}
+
+<h2>Detalles</h2>
+
+<div>
+    <h4>Vacaciones</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Año)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Año)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Normales)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Normales)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Progresivas)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Progresivas)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Total)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Total)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TomadasNormales)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TomadasNormales)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TomadasProgresivas)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TomadasProgresivas)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Saldo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Saldo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IdTrabajador)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IdTrabajador)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Volver a la lista", "Index")
+</p>

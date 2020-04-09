@@ -1,0 +1,30 @@
+﻿
+@{
+    ViewBag.Title = "Informes";
+}
+
+<h2>Calcular horas extras</h2>
+@using (Html.BeginForm("Horas", "Informes", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+
+<div class="form-group">
+    <div class="col-md-12 ">
+        <b class="control-label col-md-2">Documento</b>
+        <input id="Foto" type="file" name="csv" accept=".csv" class="form-control" value="@ViewBag.documento" multiple>
+    </div>
+    <br />
+    <div class="col-md-12" style="margin-top:20px; margin-bottom:20px">
+        <b class="control-label col-md-2">Titulo</b>
+        <input type="text" name="titulo" class="form-control">
+    </div>
+    <br />
+    <div class="col-md-offset-2">
+        <label><input type="checkbox" name="horario" value="T" class="custom-checkbox chkCheckBoxId" />Horario diferido</label>
+    </div>
+    <br />
+    <div class="col-md-offset-2 col-md-12 form-group">
+        <input type="submit" value="Cargar" class="btn btn-default" />
+    </div>
+</div>
+ }
+

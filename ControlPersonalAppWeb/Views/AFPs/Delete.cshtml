@@ -1,0 +1,64 @@
+﻿@model ControlPersonalAppWeb.AFP
+
+@{
+    ViewBag.Title = "Eliminar AFP";
+}
+
+<h2>Delete</h2>
+
+<h3>¿Está seguro que desea eliminar?</h3>
+<div>
+    <h4>AFP</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Nombre)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Nombre)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Porcentaje)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Porcentaje)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Periodo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Periodo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Retiro)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Retiro)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Voluntario)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Voluntario)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Volver a la lista", "Index")
+        </div>
+    }
+</div>

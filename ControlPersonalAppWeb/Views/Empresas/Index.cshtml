@@ -1,0 +1,63 @@
+﻿
+
+@model IEnumerable<ControlPersonalAppWeb.Empresas>
+
+@{
+    ViewBag.Title = "Índice";
+    var cuenta = ControlPersonalAppWeb.Utils.SessionManager.CuentaAutenticada().Permisos;
+}
+
+<h2>Índice Empresas</h2>
+@if (cuenta.Contains("EmpresasC"))
+{
+    <a href='@Url.Action("Create", "Empresa")'>
+        <button type="button" class="btn btn-default">Crear Nuevo</button>
+    </a>
+}
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Nombre)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Rut)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Nombre)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Rut)
+            </td>
+            <td>
+                @if (cuenta.Contains("EmpresasE"))
+                {
+                    <a href='@Url.Action("Edit", "Empresas", new { id = item.Id })'>
+                        <button type="button" class="btn btn-default">Editar</button>
+                    </a>
+                }
+                <a href='@Url.Action("Details", "Empresas", new { id = item.Id })'>
+                    <button type="button" class="btn btn-default">Detalle</button>
+                </a>
+                @if (cuenta.Contains("EmpresasD"))
+                {
+                    <a href='@Url.Action("Delete", "Empresas", new { id = item.Id })'>
+                        <button type="button" class="btn btn-default" )>Borrar</button>
+                    </a>
+                }
+                <a href='@Url.Action("Index", "Cargos", new { id = item.Id })'>
+                    <button type="button" class="btn btn-default" )>Cargos</button>
+                </a>
+                <a href='@Url.Action("Index", "CentroDeCostos", new { id = item.Id })'>
+                    <button type="button" class="btn btn-default" )>Centros de costos </button>
+                </a>
+            </td>
+        </tr>
+    }
+
+</table>

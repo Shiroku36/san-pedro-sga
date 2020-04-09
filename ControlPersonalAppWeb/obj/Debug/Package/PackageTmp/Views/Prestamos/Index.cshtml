@@ -1,0 +1,60 @@
+﻿@model IEnumerable<ControlPersonalAppWeb.Prestamo>
+
+@{
+    ViewBag.Title = "Índice";
+}
+<a href='@Url.Action("Create", "Prestamos", new { id = ViewBag.trabajador.Id })'>
+    <button type="button" class="btn btn-default">Crear nuevo</button>
+</a>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Moneda)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Monto)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Meses)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Interes)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Inicio)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Moneda)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Monto)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Meses)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Interes)%
+        </td>
+        <td>
+            @item.Inicio.Value.ToString("MM-yyyy")
+        </td>
+        <td>
+            <a href='@Url.Action("Edit", "Prestamos", new { id = item.Id })'>
+                <button type="button" class="btn btn-default">Editar</button>
+            </a>
+            <a href='@Url.Action("Details", "Prestamos", new { id = item.Id })'>
+                <button type="button" class="btn btn-default">Detalle</button>
+            </a>
+            <a href='@Url.Action("Delete", "Prestamos", new { id = item.Id })'>
+                <button type="button" class="btn btn-default" })>Borrar</button>
+            </a>
+        </td>
+    </tr>
+}
+
+</table>

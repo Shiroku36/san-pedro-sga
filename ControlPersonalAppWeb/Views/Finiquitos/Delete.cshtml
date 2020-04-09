@@ -1,0 +1,144 @@
+﻿@model ControlPersonalAppWeb.Finiquito
+
+@{
+    ViewBag.Title = "Eliminar";
+}
+
+<h2>Eliminar</h2>
+
+<h3>¿Está seguro que desea eliminar?</h3>
+<div>
+    <h4>Finiquito</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Causa)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Causa)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Texto)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Texto)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.FechaDocumento)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FechaDocumento)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.FechaFin)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FechaFin)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DiasDeVacaciones)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DiasDeVacaciones)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Dias)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Dias)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SueldoMensual)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SueldoMensual)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.AvisoPrevio)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AvisoPrevio)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.FactorAvisoPrevio)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FactorAvisoPrevio)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Indemnización)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Indemnización)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.FactorIndemnizacion)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FactorIndemnizacion)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Vacaciones)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Vacaciones)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.FactorVacaciones)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FactorVacaciones)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Total)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Total)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IdTrabajador)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IdTrabajador)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Eliminar" class="btn btn-default" /> |
+            @Html.ActionLink("Volver a la lista", "Index")
+        </div>
+    }
+</div>

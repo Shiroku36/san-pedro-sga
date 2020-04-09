@@ -1,0 +1,42 @@
+﻿
+@{
+    ViewBag.Title = "Excel Previred";
+    var id = ControlPersonalAppWeb.Utils.SessionManager.CuentaAutenticada().Empresa;
+}
+
+<h2>Excel Previred</h2>
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+<div class="form-horizontal" aling="center">
+    <div class="form-group">
+        <b class="control-label col-md-2">Periodo</b>
+        <div class="col-md-10">
+            <input class="form-control" type="month" name="Periodo"  />
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <b class="control-label col-md-3">Centros de costos</b>
+
+            <div class="col-md-10">
+                @if (ViewBag.centros != null)
+                {
+                    foreach (var trabajador in ViewBag.centros)
+                    {
+                        <label><input type="checkbox" id="Permisos" name="centros"  value=@trabajador.Id class="custom-checkbox chkCheckBoxId" /> @trabajador.Nombre - @trabajador.Rut</label><br />
+
+                    }
+                }
+            </div>
+        </div>
+    </div>
+    <input type="hidden" value=@id name="id" id="id" />
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Enviar" class="btn btn-default" />
+        </div>
+    </div>
+</div>
+}

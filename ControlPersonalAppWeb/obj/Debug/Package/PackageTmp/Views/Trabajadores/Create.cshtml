@@ -1,0 +1,1312 @@
+﻿si @model ControlPersonalAppWeb.Trabajador
+
+@{
+    ViewBag.Title = "Crear";
+    string clase = "";
+    string estilo = "text-align:center";
+}
+
+<h2>Crear</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>Trabajador</h4>
+        <hr />
+
+        <h4 class=@clase style=@estilo>Datos del Trabajador</h4>
+
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.Nombre, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Nombre, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Nombre, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div>
+            <input type="hidden" value=@ViewBag.Empresa name="Empresa" />
+        </div>
+
+        <div class="form-group">
+            <b class="control-label col-md-2">Apellido Paterno</b>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.ApellidoPaterno, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.ApellidoPaterno, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <b class="control-label col-md-2">Apellido Materno</b>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.ApellidoMaterno, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.ApellidoMaterno, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Rut, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Rut, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Rut, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Nacionalidad, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.Nacionalidad, new SelectList(new string[] { "", "0. Chileno", "1. Extranjero" }), htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Nacionalidad, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Sexo, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.Sexo, new SelectList(new string[] { "", "Masculino", "Femenino" }), htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Sexo, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <b class="control-label col-md-2">Tramo Asignacion Familiar</b>
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.TrampoAsignacionFamiliar,
+                new SelectList(new string[] {"", "A. Primer Tramo",
+                                            "B. Segundo Tramo",
+                                            "C. Tercer Tramo",
+                                            "D. Sin Derecho",
+                                            "Sin Información. Sin Derecho" }), htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.TrampoAsignacionFamiliar, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <b class="control-label col-md-2">N° Cargas Simples (Normales)</b>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.CargasSimples, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.CargasSimples, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <b class="control-label col-md-2">N° Cargas Maternales</b>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.CargasMaternales, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.CargasMaternales, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <b class="control-label col-md-2">N° Cargas Invalidas</b>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.CargasInvalidas, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.CargasInvalidas, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <b class="control-label col-md-2">Régimen Previcional Trabajador</b>
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.RegimenPrevicional,
+                new SelectList(new string[] {"", "AFP. AFP",
+                                              "INP. IPS (Ex-INP)",
+                                              "SIP. Sin Institución Previsional" }), htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.RegimenPrevicional, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <b class="control-label col-md-2">Monto Asignacion Familiar</b>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.AsignacionFamiliar, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.AsignacionFamiliar, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <b class="control-label col-md-2">Monto Asignacion Familiar Retroactiva</b>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.AsignacionFamiliarRetroactiva, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.AsignacionFamiliarRetroactiva, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <b class="control-label col-md-2">Monto Reintegro Cargas Familiares</b>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.ReintegroCargasFamiliares, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.ReintegroCargasFamiliares, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <b class="control-label col-md-2">Solicitud Trabajador Joven</b>
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.SolicitudTrabajadorJoven,
+                new SelectList(new string[] {"", "S. Si, Tiene Subsidio",
+                                              "N. No, Tiene Subsidio" }), htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.SolicitudTrabajadorJoven, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <h4 class=@clase style=@estilo>Datos de la AFP</h4>
+        <div class="form-group">
+            @Html.LabelFor(model => model.AFP, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.AFP,
+               new SelectList(new string[]
+               {"","00. No está en AFP", "08. Provida", "29. Planvital", "34. Modelo", "05. Habitat", "03. Cuprum", "33. Capital" }), htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.AFP, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <b class="control-label col-md-2">Tramo AFP</b>
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.TipoPago, new SelectList(new string[]
+           { "","A","B","C","D","E" }
+           ), htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.TrampoAFP, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <b class="control-label col-md-2">Tipo Trabajador</b>
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.Jubiulado,
+                new SelectList(new string[] {"", "0. Activo (No Pensionado)",
+                                            "1. Pensionado y cotiza",
+                                            "2. Pensionado y no cotiza",
+                                            "3. Activo > 65 años (nunca pensionado)" }), htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Jubiulado, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            <b class="control-label col-md-2">Tipo Linea AFP</b>
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.TipoLineaAFP,
+                new SelectList(new string[] {"", "00. Línea Principal o Base",
+                                            "01. Línea Adicional",
+                                            "02. Segundo Contrato",
+                                            "03. Movimiento de Personal Afiliado Voluntario" }), htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.TipoLineaAFP, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Cargo, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.TipoLineaAFP,
+                new SelectList(ViewBag.Cargos), htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Cargo, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Contrato, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.Contrato, new SelectList(new string[] { "Faena", "Indefinido", "Plazo fijo" }), htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Contrato, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <script type="text/javascript">
+        function copyTextValue(bf) {
+            //var text1 = bf.checked ? document.getElementById("SueldoBase").value : '';
+            document.getElementById("SueldoBruto").value = parseInt(document.getElementById("SueldoBase").value) * 1.25;
+            document.getElementById("Gratificacion").value = parseInt(document.getElementById("SueldoBase").value) * 0.25;
+        }
+        function cuenta() {
+            var rut = document.getElementById("Rut").value;
+            document.getElementById("NumeroCuenta").value = rut.substring(0, rut.length - 1);
+        }
+
+        </script>
+        <div class="form-group">
+            <b class="control-label col-md-2">Sueldo Base</b>
+            <div class="col-md-10">
+                <input class="form-control" type="number" id="SueldoBase" name="SueldoBase" onchange="copyTextValue(this);" placeholder="">
+                @Html.ValidationMessageFor(model => model.SueldoBase, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Gratificacion, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Gratificacion, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Gratificacion, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <b class="control-label col-md-2">Sueldo Bruto</b>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.SueldoBruto, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.SueldoBruto, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <b class="control-label col-md-2">Tipo Pago</b>
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.TipoPago, new SelectList(new string[]
+           { "","01. Remuneraciones del mes",
+             "02. Gratificaciones",
+             "03. Bono Ley de Modernización Empresas Públicas" }
+           ), htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.TipoPago, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Colacion, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Colacion, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Colacion, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Movilizacion, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Movilizacion, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Movilizacion, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <b class="control-label col-md-2">Dias de Vacaciones al Año</b>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.DiasVacacionesAño, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.DiasVacacionesAño, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            <b class="control-label col-md-2">Código Movimiento De Personal</b>
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.CodigoMovimientoDePersonal,
+                new SelectList(new string[] {"", "0. Sin Movimiento en el Mes",
+                                            "1. Contratación a plazo indefinido",
+                                            "2. Retiro",
+                                            "3. Subsidios",
+                                            "4. Permiso Sin Goce de Sueldos",
+                                            "5. Incorporación en el Lugar de Trabajo",
+                                            "6. Accidentes del Trabajo",
+                                            "7. Contratación a plazo fijo",
+                                            "8. Cambio Contrato plazo fijo a plazo indefinido",
+                                            "11. Otros Movimientos (Ausentismos)",
+                                            "12. Reliquidación, Premio, Bono" }), htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.CodigoMovimientoDePersonal, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <b class="control-label col-md-2">Inicio Movimiento Personal</b>
+            <div class="col-md-10">
+                <input class="form-control" type="date" name="InicioMovimientoPersonal">
+                @Html.ValidationMessageFor(model => model.InicioMovimientoPersonal, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <b class="control-label col-md-2">Fin Movimiento Personal</b>
+            <div class="col-md-10">
+                <input class="form-control" type="date" name="FinMovimientoPersonal">
+                @Html.ValidationMessageFor(model => model.FinMovimientoPersonal, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <b class="control-label col-md-2">Monto Renta Imponible AFP</b>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.RentaImponibleAFP, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.RentaImponibleAFP, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <b class="control-label col-md-2">Monto Cotizacion Obligatoria AFP</b>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.CotizacionObligatoriaAFP, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.CotizacionObligatoriaAFP, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <b class="control-label col-md-2">
+                Monto Cotización Seguro de Invalidez y Sobrevivencia (SIS)
+            </b>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.SIS, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.SIS, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <b class="control-label col-md-2">Monto Ahorro Voluntario AFP</b>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.AhorroVoluntarioAFP, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.AhorroVoluntarioAFP, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <b class="control-label col-md-2">Monto Renta Imponible Sustitiva AFP</b>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.RentaImpSustitutiva, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.RentaImpSustitutiva, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <b class="control-label col-md-2">Tasa Pactada (Susti.)</b>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.TasaPactadaSus, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.TasaPactadaSus, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <b class="control-label col-md-2">Monto Aporte Indemn (Susti.)</b>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.AporteIndemSus, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.AporteIndemSus, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <b class="control-label col-md-2">N° Períodos (Susti.)</b>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.NPeriodosSus, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.NPeriodosSus, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <b class="control-label col-md-2">Período Desde (Susti.)</b>
+            <div class="col-md-10">
+                <input class="form-control" type="date" name="FechaIngreso" min="2018-01-01">
+                @Html.ValidationMessageFor(model => model.PeriodosDesdeSus, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <b class="control-label col-md-2">Período Hasta (Susti.)</b>
+            <div class="col-md-10">
+                <input class="form-control" type="date" name="FechaIngreso" min="2018-01-01">
+                @Html.ValidationMessageFor(model => model.PerodoHastaSus, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <b class="control-label col-md-2">Nombre Puesto de Trabajo Pesado</b>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.PuestoTrabajoPesado, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.PuestoTrabajoPesado, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <b class="control-label col-md-2">% Cotización Trabajo Pesado</b>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.PorcentajeTrabajoPesado, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.PorcentajeTrabajoPesado, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <b class="control-label col-md-2">Monto Trabajo Pesado</b>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.MontoTrabajoPesado, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.MontoTrabajoPesado, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <h4 class=@clase style=@estilo>Datos Ahorro Previsional voluntario </h4>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.APVI, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.APVI, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.APVI, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <b class="control-label col-md-2">Código APVI</b>
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.CodigoAPVI,
+                new SelectList(new string[] {"", "000. No Cotiza A.P.V.",
+                                            "003. Cuprum",
+                                            "005. Habitat",
+                                            "008. Provida",
+                                            "029. Planvital",
+                                            "033. Capital",
+                                            "034. Modelo",
+                                            "100. ABN AMRO (CHILE) SEGUROS DE VIDA S.A.",
+                                            "101. AGF ALLIANZ CHILE COMPAÑIA DE SEGUROS VIDA S.A",
+                                            "102. SANTANDER SEGUROS DE VIDA S.A.",
+                                            "103. BCI SEGUROS VIDA S.A.",
+                                            "104. BANCHILE SEGUROS DE VIDA S.A.",
+                                            "105. BBVA SEGUROS DE VIDA S.A.",
+                                            "106. BICE VIDA COMPAÑIA DE SEGUROS S.A.",
+                                            "107. CHILENA CONSOLIDADA SEGUROS DE VIDA S.A.",
+                                            "108. CIGNA COMPAÑIA DE SEGUROS DE VIDA S.A.",
+                                            "109. CN LIFE, COMPAÑIA DE SEGUROS DE VIDA S.A.",
+                                            "110. COMPAÑIA DE SEGUROS DE VIDA CARDIF S.A.",
+                                            "111. CIA DE SEG. DE VIDA CONSORCIO NACIONAL DE SEG S.A.",
+                                            "113. COMPAÑIA DE SEGUROS DE VIDA HUELEN S.A.",
+                                            "115. COMPAÑIA DE SEGUROS DE VIDA VITALIS S.A.",
+                                            "116. COMPAÑIA DE SEGUROS CONFUTUTO S.A.",
+                                            "118. SEGUROS DE VIDA SURA S.A.",
+                                            "121. METLIFE CHILE SEGUROS DE VIDA S.A.",
+                                            "123. MAPFRE COMPAÑIA DE SEGUROS DE VIDA DE CHILE S.A.",
+                                            "125. MUTUAL DE SEGUROS DE CHILE",
+                                            "126. MUTUALIDAD DE CARABINEROS",
+                                            "127. MUTUALIDAD DEL EJERCITO Y AVIACION",
+                                            "128. OHIO NATIONAL SEGUROS DE VIDA S.A.",
+                                            "129. PRINCIPAL COMPAÑIA DE SEGUROS DE VIDA CHILE S.A.",
+                                            "130. RENTA NACIONAL COMPAÑIA DE SEGUROS DE VIDA S.A.",
+                                            "131. SEGUROS DE VIDA SECURITY PREVISION S.A.",
+                                            "134. COMPAÑIA DE SEGUROS GENERALES PENTA-SECURITY S.A.",
+                                            "135. PENTA VIDA COMPAÑIA DE SEGUROS DE VIDA S.A.",
+                                            "136. ACE SEGUROS S.A.",
+                                            "201. BANDESARROLLO ADM. GENERAL DE FONDOS S.A.",
+                                            "203. BBVA ASSET MANAGEMENT AGF S.A.",
+                                            "204. BCI ASSET MANAGEMENT ADMINISTRADORA GENERAL DE FONDOS S.A.",
+                                            "205. BICE INVERSIONES AGF S.A.",
+                                            "208. BTG PACTUAL CHILE S.A. ADMINISTRADORA GENERAL DE FONDOS",
+                                            "214. PRINCIPAL ADMINISTRADORA GENERAL DE FONDOS S.A.",
+                                            "215. SANTANDER ASSET MANAGEMENT S.A. ADM. GENERAL DE FONDOS",
+                                            "217. SCOTIA SUDAMERICANO ADMINISTRADORA DE FONDOS MUTUOS S.A.",
+                                            "218. ADMINISTRADORA GENERAL DE FONDOS SECURITY S.A.",
+                                            "224. ZURICH ADMINISTRADORA GENERAL DE FONDOS S.A.",
+                                            "225. ITAU ADMINISTRADORA GENERAL DE FONDOS S.A.",
+                                            "229. BANCOESTADO S.A. ADMINISTRADORA GENERAL DE FONDOS",
+                                            "237. FINTUAL ADMINISTRADORA GENERAL DE FONDOS S.A",
+                                            "600. ZURICH CHILE ASSET MANAGEMENT ADMINISTRADORA GENERAL DE FONDOS S.A",
+                                            "601. LARRAIN VIAL ADMINISTRADORA GENERAL DE FONDOS S.A.",
+                                            "213. LARRAIN VIAL S.A. CORREDORA DE BOLSA",
+                                            "222. BANCHILE CORREDORES DE BOLSA S.A.",
+                                            "227. CORREDORES DE BOLSA SURA S.A.",
+                                            "228. BTG PACTUAL CHILE S.A. CORREDORES DE BOLSA",
+                                            "231. SCOTIA SUD AMERICANO CORREDORES DE BOLSA S.A.",
+                                            "232. BICE INVERSIONES CORREDORES DE BOLSA S.A.",
+                                            "234. VALORES SECURITY S.A. CORREDORES DE BOLSA",
+                                            "235. MBI CORREDORES DE BOLSA S.A.",
+                                            "236. CONSORCIO CORREDORES DE BOLSA S.A.",
+                                            "321. Banco Santander Santiago" }), htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.CodigoAPVI, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <b class="control-label col-md-2">Codigo Contrato de APVI</b>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.NumeroAPVI, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.NumeroAPVI, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <b class="control-label col-md-2">Forma Pago APVI</b>
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.FormaPagoAPVI,
+                new SelectList(new string[] {"", "1. Directa",
+                                            "2. Indirecta" }), htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.FormaPagoAPVI, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <b class="control-label col-md-2">Monto Cotización APVI</b>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.CotizacionAPVI, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.CotizacionAPVI, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <b class="control-label col-md-2">Monto Cotizacón Despósitos Convenidos</b>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.CotizaciónDepositosConvenidos, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.CotizaciónDepositosConvenidos, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <h4 class=@clase style=@estilo>Datos Ahorro Previsional Voluntario Colectivo</h4>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.APVC, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.APVC, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.APVC, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <b class="control-label col-md-2">Código APVC</b>
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.CodigoAPVC,
+                new SelectList(new string[] {"", "000. No Cotiza A.P.V.",
+                                            "003. Cuprum",
+                                            "005. Habitat",
+                                            "008. Provida",
+                                            "029. Planvital",
+                                            "033. Capital",
+                                            "034. Modelo",
+                                            "100. ABN AMRO (CHILE) SEGUROS DE VIDA S.A.",
+                                            "101. AGF ALLIANZ CHILE COMPAÑIA DE SEGUROS VIDA S.A",
+                                            "102. SANTANDER SEGUROS DE VIDA S.A.",
+                                            "103. BCI SEGUROS VIDA S.A.",
+                                            "104. BANCHILE SEGUROS DE VIDA S.A.",
+                                            "105. BBVA SEGUROS DE VIDA S.A.",
+                                            "106. BICE VIDA COMPAÑIA DE SEGUROS S.A.",
+                                            "107. CHILENA CONSOLIDADA SEGUROS DE VIDA S.A.",
+                                            "108. CIGNA COMPAÑIA DE SEGUROS DE VIDA S.A.",
+                                            "109. CN LIFE, COMPAÑIA DE SEGUROS DE VIDA S.A.",
+                                            "110. COMPAÑIA DE SEGUROS DE VIDA CARDIF S.A.",
+                                            "111. CIA DE SEG. DE VIDA CONSORCIO NACIONAL DE SEG S.A.",
+                                            "113. COMPAÑIA DE SEGUROS DE VIDA HUELEN S.A.",
+                                            "115. COMPAÑIA DE SEGUROS DE VIDA VITALIS S.A.",
+                                            "116. COMPAÑIA DE SEGUROS CONFUTUTO S.A.",
+                                            "118. SEGUROS DE VIDA SURA S.A.",
+                                            "121. METLIFE CHILE SEGUROS DE VIDA S.A.",
+                                            "123. MAPFRE COMPAÑIA DE SEGUROS DE VIDA DE CHILE S.A.",
+                                            "125. MUTUAL DE SEGUROS DE CHILE",
+                                            "126. MUTUALIDAD DE CARABINEROS",
+                                            "127. MUTUALIDAD DEL EJERCITO Y AVIACION",
+                                            "128. OHIO NATIONAL SEGUROS DE VIDA S.A.",
+                                            "129. PRINCIPAL COMPAÑIA DE SEGUROS DE VIDA CHILE S.A.",
+                                            "130. RENTA NACIONAL COMPAÑIA DE SEGUROS DE VIDA S.A.",
+                                            "131. SEGUROS DE VIDA SECURITY PREVISION S.A.",
+                                            "134. COMPAÑIA DE SEGUROS GENERALES PENTA-SECURITY S.A.",
+                                            "135. PENTA VIDA COMPAÑIA DE SEGUROS DE VIDA S.A.",
+                                            "136. ACE SEGUROS S.A.",
+                                            "201. BANDESARROLLO ADM. GENERAL DE FONDOS S.A.",
+                                            "203. BBVA ASSET MANAGEMENT AGF S.A.",
+                                            "204. BCI ASSET MANAGEMENT ADMINISTRADORA GENERAL DE FONDOS S.A.",
+                                            "205. BICE INVERSIONES AGF S.A.",
+                                            "208. BTG PACTUAL CHILE S.A. ADMINISTRADORA GENERAL DE FONDOS",
+                                            "214. PRINCIPAL ADMINISTRADORA GENERAL DE FONDOS S.A.",
+                                            "215. SANTANDER ASSET MANAGEMENT S.A. ADM. GENERAL DE FONDOS",
+                                            "217. SCOTIA SUDAMERICANO ADMINISTRADORA DE FONDOS MUTUOS S.A.",
+                                            "218. ADMINISTRADORA GENERAL DE FONDOS SECURITY S.A.",
+                                            "224. ZURICH ADMINISTRADORA GENERAL DE FONDOS S.A.",
+                                            "225. ITAU ADMINISTRADORA GENERAL DE FONDOS S.A.",
+                                            "229. BANCOESTADO S.A. ADMINISTRADORA GENERAL DE FONDOS",
+                                            "237. FINTUAL ADMINISTRADORA GENERAL DE FONDOS S.A",
+                                            "600. ZURICH CHILE ASSET MANAGEMENT ADMINISTRADORA GENERAL DE FONDOS S.A",
+                                            "601. LARRAIN VIAL ADMINISTRADORA GENERAL DE FONDOS S.A.",
+                                            "213. LARRAIN VIAL S.A. CORREDORA DE BOLSA",
+                                            "222. BANCHILE CORREDORES DE BOLSA S.A.",
+                                            "227. CORREDORES DE BOLSA SURA S.A.",
+                                            "228. BTG PACTUAL CHILE S.A. CORREDORES DE BOLSA",
+                                            "231. SCOTIA SUD AMERICANO CORREDORES DE BOLSA S.A.",
+                                            "232. BICE INVERSIONES CORREDORES DE BOLSA S.A.",
+                                            "234. VALORES SECURITY S.A. CORREDORES DE BOLSA",
+                                            "235. MBI CORREDORES DE BOLSA S.A.",
+                                            "236. CONSORCIO CORREDORES DE BOLSA S.A.",
+                                            "321. Banco Santander Santiago" }), htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.CodigoAPVC, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <b class="control-label col-md-2">Codigo Contrato de APVC</b>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.NumeroAPVC, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.NumeroAPVC, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <b class="control-label col-md-2">Forma Pago APVC</b>
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.FormaPagoAPVC,
+                new SelectList(new string[] {"", "1. Directa",
+                                            "2. Indirecta" }), htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.FormaPagoAPVC, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <b class="control-label col-md-2">Monto Cotizacion Trabajador APVC</b>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.CotizacionTrabajadorAPVC, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.CotizacionTrabajadorAPVC, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <b class="control-label col-md-2">Monto Cotizacion Empleador APVC</b>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.CotizacionEmpleadorAPVC, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.CotizacionEmpleadorAPVC, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <h4 class=@clase style=@estilo>Datos Afiliado Voluntario</h4>
+        <div class="form-group">
+            <b class="control-label col-md-2">Afiliado Voluntario</b>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.AfiliadoVoluntario, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.AfiliadoVoluntario, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <b class="control-label col-md-2">Rut Afiliado Voluntario</b>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.RutAV, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.RutAV, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <b class="control-label col-md-2">Nombres Afiliado Voluntario</b>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.NombresAV, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.NombresAV, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <b class="control-label col-md-2">Apellido Paterno Afiliado Voluntario</b>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.ApellidoPaternoAV, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.ApellidoPaternoAV, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <b class="control-label col-md-2">Apellido Materno Afiliado Voluntario</b>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.ApellidoMaternoAV, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.ApellidoMaternoAV, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            <b class="control-label col-md-2">Código Movimiento Personal AV</b>
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.AFPAV,
+              new SelectList(new string[]
+              {"","10. Cese de Cotización de Afiliado Voluntario" }), htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.CodigoMovimientoPersonalAV, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <b class="control-label col-md-2">Desde AV</b>
+            <div class="col-md-10">
+                <input class="form-control" type="date" name="FechaIngreso" min="2019-01-01">
+                @Html.ValidationMessageFor(model => model.DesdeAV, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <b class="control-label col-md-2">Hasta AV</b>
+            <div class="col-md-10">
+                <input class="form-control" type="date" name="FechaIngreso" min="2019-01-01">
+                @Html.ValidationMessageFor(model => model.HastaAV, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <b class="control-label col-md-2">AFP AV</b>
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.AFPAV,
+               new SelectList(new string[]
+               {"","00. No está en AFP", "08. Provida", "29. Planvital", "34. Modelo", "05. Habitat", "03. Cuprum", "33. Capital" }), htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.AFPAV, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            <b class="control-label col-md-2">Monto Capitalizacion Voluntaria</b>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.MontoCapitalizacionVoluntaria, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.MontoCapitalizacionVoluntaria, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <b class="control-label col-md-2">Monto AV</b>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.MontoAV, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.MontoAV, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <b class="control-label col-md-2">N° Periodos AV</b>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.PeriodosAV, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.PeriodosAV, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <h4 class=@clase style=@estilo>Datos IPS - ISL - FONASA</h4>
+
+
+        <div class="form-group">
+            <b class="control-label col-md-2">Código Ex-Caja</b>
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.CodigoExcaja,
+                new SelectList(new string[] {"", "0000. No pertenece al IPS",
+                                            "0201. Bancaria - Régimen 1",
+                                            "0202. Bancaria - Régimen 2",
+                                            "0203. Bancaria - Régimen 3",
+                                            "0214. Bancaria - Régimen 14",
+                                            "0221. Bancaria - Régimen 21",
+                                            "0234. Bancaria - Régimen 34",
+                                            "2201. Caja de Previsión de Gildemeister - Régimen 1",
+                                            "2202. Caja de Previsión de Gildemeister - Régimen 2",
+                                            "1601. Caja de Previsión Social de los EE - Régimen 1",
+                                            "1602. Caja de Previsión Social de los EE - Régimen 2",
+                                            "1202. Caja Ferro - Régimen 2",
+                                            "1203. Caja Ferro - Régimen 3",
+                                            "1204. Caja Ferro - Régimen 4",
+                                            "1205. Caja Ferro - Régimen 5",
+                                            "1207. Caja Ferro - Régimen 7",
+                                            "1401. Canaempu: Periodistas - Régimen 1",
+                                            "1402. Canaempu: Periodistas - Régimen 2",
+                                            "1403. Canaempu: Periodistas - Régimen 3",
+                                            "1404. Canaempu: Periodistas - Régimen 4",
+                                            "1405. Canaempu: Periodistas - Régimen 5",
+                                            "1406. Canaempu: Periodistas - Régimen 6",
+                                            "1407. Canaempu: Periodistas - Régimen 7",
+                                            "1408. Canaempu: Periodistas - Régimen 8",
+                                            "1411. Canaempu: Periodistas - Régimen 11",
+                                            "1412. Canaempu: Periodistas - Régimen 12",
+                                            "1413. Canaempu: Periodistas - Régimen 13",
+                                            "1414. Canaempu: Periodistas - Régimen 14",
+                                            "1415. Canaempu: Periodistas - Régimen 15",
+                                            "1416. Canaempu: Periodistas - Régimen 16",
+                                            "1417. Canaempu: Periodistas - Régimen 17",
+                                            "1418. Canaempu: Periodistas - Régimen 18",
+                                            "1421. Canaempu: Periodistas - Régimen 21",
+                                            "1422. Canaempu: Periodistas - Régimen 22",
+                                            "1423. Canaempu: Periodistas - Régimen 23",
+                                            "1424. Canaempu: Periodistas - Régimen 24",
+                                            "1425. Canaempu: Periodistas - Régimen 25",
+                                            "1426. Canaempu: Periodistas - Régimen 26",
+                                            "1431. Canaempu: Periodistas - Régimen 31",
+                                            "1432. Canaempu: Periodistas - Régimen 32",
+                                            "1433. Canaempu: Periodistas - Régimen 33",
+                                            "1434. Canaempu: Periodistas - Régimen 34",
+                                            "1301. Canaempu: Públicos - Régimen 1",
+                                            "1302. Canaempu: Públicos - Régimen 2",
+                                            "1303. Canaempu: Públicos - Régimen 3",
+                                            "1305. Canaempu: Públicos - Régimen 5",
+                                            "1306. Canaempu: Públicos - Régimen 6",
+                                            "1308. Canaempu: Públicos - Régimen 8",
+                                            "1309. Canaempu: Públicos - Régimen 9",
+                                            "1310. Canaempu: Públicos - Régimen 10",
+                                            "1311. Canaempu: Públicos - Régimen 11",
+                                            "1312. Canaempu: Públicos - Régimen 12",
+                                            "1321. Canaempu: Públicos - Régimen 21",
+                                            "1322. Canaempu: Públicos - Régimen 22",
+                                            "1323. Canaempu: Públicos - Régimen 23",
+                                            "1325. Canaempu: Públicos - Régimen 25",
+                                            "1326. Canaempu: Públicos - Régimen 26",
+                                            "1328. Canaempu: Públicos - Régimen 28",
+                                            "1329. Canaempu: Públicos - Régimen 29",
+                                            "1330. Canaempu: Públicos - Régimen 30",
+                                            "1331. Canaempu: Públicos - Régimen 31",
+                                            "1332. Canaempu: Públicos - Régimen 32",
+                                            "1338. Canaempu: Públicos - Régimen 38",
+                                            "0501. Caprebech - Régimen 1",
+                                            "0503. Caprebech - Régimen 3",
+                                            "0514. Caprebech - Régimen 14",
+                                            "0521. Caprebech - Régimen 21",
+                                            "0534. Caprebech - Régimen 34",
+                                            "0601. Capremer - Régimen 1",
+                                            "0602. Capremer - Régimen 2",
+                                            "0603. Capremer - Régimen 3",
+                                            "0604. Capremer - Régimen 4",
+                                            "0605. Capremer - Régimen 5",
+                                            "0606. Capremer - Régimen 6",
+                                            "0608. Capremer - Régimen 8",
+                                            "1501. Copremusa EE - Régimen 1",
+                                            "1502. Copremusa EE - Régimen 2",
+                                            "1503. Copremusa EE - Régimen 3",
+                                            "1901. Diomp - Régimen 1",
+                                            "1701. EE Municipales de la Republica - Régimen 1",
+                                            "1702. EE Municipales de la Republica - Régimen 2",
+                                            "1703. EE Municipales de la Republica - Régimen 3",
+                                            "1704. EE Municipales de la Republica - Régimen 4",
+                                            "2001. EE Salitre - Régimen 1",
+                                            "2002. EE Salitre - Régimen 2",
+                                            "0101. Empart - Régimen 1",
+                                            "0102. Empart - Régimen 2",
+                                            "0103. Empart - Régimen 3",
+                                            "0104. Empart - Régimen 4",
+                                            "0106. Empart - Régimen 6",
+                                            "1001. Empleados de Emos - Régimen 1",
+                                            "0801. Hípica Nacional - Régimen 1",
+                                            "0802. Hípica Nacional - Régimen 2",
+                                            "0803. Hípica Nacional - Régimen 3",
+                                            "0804. Hípica Nacional - Régimen 4",
+                                            "2301. Mauricio, Hochschild - Régimen 1",
+                                            "2302. Mauricio, Hochschild - Régimen 2",
+                                            "1101. Obreros de Emos - Régimen 1",
+                                            "1801. OO Municipales de la Republica - Régimen 1",
+                                            "1802. OO Municipales de la Republica - Régimen 2",
+                                            "1803. OO Municipales de la Republica - Régimen 3",
+                                            "2101. Sección Esp.Previsión Empleados - Régimen 1",
+                                            "2102. Sección Esp.Previsión Empleados - Régimen 2",
+                                            "2401. Secgasco - Régimen 1",
+                                            "2402. Secgasco - Régimen 2",
+                                            "0901. Servicios de Seguro Social - Régimen 1",
+                                            "0902. Servicios de Seguro Social - Régimen 2",
+                                            "0701. Triomar - Régimen 1",
+                                            "0702. Triomar - Régimen 2",
+                                            "0703. Triomar - Régimen 3",
+                                            "0704. Triomar - Régimen 4" }), htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.CodigoExcaja, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <b class="control-label col-md-2">% Tasa Ex-Caja</b>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.TasaExcaja, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.TasaExcaja, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <b class="control-label col-md-2">Monto Renta Imponible IPS</b>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.RentaImponibleIPS, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.RentaImponibleIPS, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <b class="control-label col-md-2">Monto Cotización Obligatoria IPS</b>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.CotizacionObligatoriaIPS, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.CotizacionObligatoriaIPS, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <b class="control-label col-md-2">Monto Renta Imponible Desahucio</b>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.RentaImponibleDesahucio, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.RentaImponibleDesahucio, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <b class="control-label col-md-2">Código Ex-cafa Desahucio</b>
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.CodigoExcajaDesahucio,
+                new SelectList(new string[] {"", "0101. Empart",
+                                            "0201. Bancaria",
+                                            "0202. Bancaria",
+                                            "0203. Bancaria",
+                                            "0501. Caprebech",
+                                            "0502. Caprebech",
+                                            "0503. Caprebech",
+                                            "0601. Capremer",
+                                            "0603. Capremer",
+                                            "0902. Servicios de Seguro Social",
+                                            "1204. Caja Ferro",
+                                            "1303. Canaempu: Públicos",
+                                            "1311. Canaempu: Públicos",
+                                            "1343. Canaempu: Públicos",
+                                            "1363. Canaempu: Públicos",
+                                            "1401. Canaempu: Periodistas",
+                                            "1402. Canaempu: Periodistas",
+                                            "1406. Canaempu: Periodistas",
+                                            "1501. Copremusa EE",
+                                            "1503. Copremusa EE",
+                                            "1601. Caja de Previsión Social de los EE",
+                                            "1602. Caja de Previsión Social de los EE",
+                                            "1701. EE Municipales de la República",
+                                            "1901. Diomp" }), htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.CodigoExcajaDesahucio, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <b class="control-label col-md-2">% Tasa Cotización Desahucio</b>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.TasaCotizacionDesahucio, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.TasaCotizacionDesahucio, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <b class="control-label col-md-2">Monto Cotización Desahucio</b>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.CotizaciónDesahucio, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.CotizaciónDesahucio, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <b class="control-label col-md-2">Monto Cotización Fonasa</b>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.CotizacionFonasa, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.CotizacionFonasa, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <b class="control-label col-md-2">Monto Cotización ISL</b>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.CotizacionISL, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.CotizacionISL, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <b class="control-label col-md-2">Monto Bonificación Ley 15.386</b>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.BonificacionLey, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.BonificacionLey, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <b class="control-label col-md-2">Monto Descuento Por Cargas Familiares ISL</b>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.DescuentoPorCargasFamiliaresISL, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.DescuentoPorCargasFamiliaresISL, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <b class="control-label col-md-2">Monto Monto Bono Gobierno</b>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.BonosGobierno, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.BonosGobierno, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <h4 class=@clase style=@estilo>Datos Salud</h4>
+        <div class="form-group">
+            <b class="control-label col-md-2">Código Intitución Salud</b>
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.CodigoIntitucionSalud,
+                new SelectList(new string[] {"", "00. Sin Isapre",
+                                            "01. Banmédica",
+                                            "02. Consalud",
+                                            "03. VidaTres",
+                                            "04. Colmena",
+                                            "05. Isapre Cruz Blanca S.A.",
+                                            "07. Fonasa",
+                                            "09. Chuquicamata",
+                                            "10. Nueva Masvida",
+                                            "11. Institución de Salud Previsional Fusat Ltda.",
+                                            "12. Isapre Bco. Estado",
+                                            "20. Río Blanco",
+                                            "21. San Lorenzo isapre Ltda.",
+                                            "25. Cruz del Norte" }), htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.CodigoIntitucionSalud, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <b class="control-label col-md-2">Numero Del FUN</b>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.NumeroFun, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.NumeroFun, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <b class="control-label col-md-2">Monto Renta Imponible Isapre</b>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.RentaImponibleIsapre, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.RentaImponibleIsapre, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <b class="control-label col-md-2">Moneda Del Plan Pactado Isapre</b>
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.MonedaDelPlanPactadoIsapre,
+                new SelectList(new string[] {"", "1. Pesos",
+                                            "2. UF" }), htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.MonedaDelPlanPactadoIsapre, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <b class="control-label col-md-2">Monto Cotización Pactada</b>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.CotizacionPactada, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.CotizacionPactada, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <b class="control-label col-md-2">Monto Cotización Isapre</b>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.CotizacionIsapre, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.CotizacionIsapre, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <b class="control-label col-md-2" Monto>Cotización Isapre AV</b>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.CotizacionIsapreAV, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.CotizacionIsapreAV, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <b class="control-label col-md-2">Monto Garantía Explícita de Salud (GES)</b>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.MontoGES, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.MontoGES, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <h4 class=@clase style=@estilo>Datos Caja de Compensanción</h4>
+        <div class="form-group">
+            <b class="control-label col-md-2">Código CCAF</b>
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.CodigoCCAF,
+                new SelectList(new string[] {"", "00. Sin CCAF",
+                                            "01. Los Andes",
+                                            "02. La Araucana",
+                                            "03. Los Héroes",
+                                            "06. 18 de Septiembre" }), htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.CodigoCCAF, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <b class="control-label col-md-2">Monto Renta Imponible CCAF</b>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.RentaImponibleCCAF, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.RentaImponibleCCAF, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <b class="control-label col-md-2">Monto Creditos Personales CCAF</b>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.CreditosPersonalesCCAF, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.CreditosPersonalesCCAF, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <b class="control-label col-md-2">Monto Descuento Dental CCAF</b>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.DescuentoDentalCCAF, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.DescuentoDentalCCAF, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <b class="control-label col-md-2">Monto Descuentos Por Leasing</b>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.DescuentosPorLeasing, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.DescuentosPorLeasing, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <b class="control-label col-md-2">Descuentos Por Seguro de Vida CCAF</b>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.DescuentoPorSeguroDeVidaCCAF, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.DescuentoPorSeguroDeVidaCCAF, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <b class="control-label col-md-2">Monto Otros Descuentos CCAF</b>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.OtrosDescuentosCCAF, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.OtrosDescuentosCCAF, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <b class="control-label col-md-2">Monto Cotización CCAF No Afiliados Isapres</b>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.CotizacionCCAFNoAfiniladosIsapres, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.CotizacionCCAFNoAfiniladosIsapres, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <b class="control-label col-md-2">Monto Descuentos Cargas Familiares CCAF</b>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.DescuentoCargasFamiliaresCCAF, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.DescuentoCargasFamiliaresCCAF, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <b class="control-label col-md-2">Otros Descuentos CCAF 1</b>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.OtrosDescuentosCCAF1, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.OtrosDescuentosCCAF1, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <b class="control-label col-md-2">Monto Otros Descuentos CCAF 2</b>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.OtrosDescuentosCCAF2, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.OtrosDescuentosCCAF2, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <b class="control-label col-md-2">Bonos Gobierno CCAF</b>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.BonosGobiernoCCAF, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.BonosGobiernoCCAF, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <b class="control-label col-md-2">Código Sucursal CCAF</b>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.CodigoSucursalCCAF, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.CodigoSucursalCCAF, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Mutual, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <div class="checkbox">
+                    @Html.EditorFor(model => model.Mutual, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Mutual, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+
+        <h4 class=@clase style=@estilo>Datos Mutualidad</h4>
+        <div class="form-group">
+            <b class="control-label col-md-2">Código Mutualidad</b>
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.CodigoMutualidad,
+                new SelectList(new string[] {"", "00. Sin Mutual - Empresa entrega aporte Accidentes del Trabajo al ISL",
+                                            "01. Asociación Chilena de Seguridad (ACHS)",
+                                            "02. Mutual de Seguridad CCHC",
+                                            "03. Instituto de Seguridad del Trabajo I.S.T." }), htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.CodigoMutualidad, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            <b class="control-label col-md-2">Monto Renta Imponible Mutual</b>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.RentaImponibleMutual, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.RentaImponibleMutual, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <b class="control-label col-md-2">Monto Cotización Accidente Mutual</b>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.CotizacionAccidenteMutual, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.CotizacionAccidenteMutual, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <b class="control-label col-md-2">Sucursal Para Pago Mutual</b>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.SucursalParaPagoMutual, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.SucursalParaPagoMutual, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <h4 class=@clase style=@estilo>Datos Administradora de Seguro de Cesantía</h4>
+
+        <div class="form-group">
+            <b class="control-label col-md-2">Seguro Cesantia</b>
+            <div class="col-md-10">
+                <div class="checkbox">
+                    @Html.EditorFor(model => model.SeguroCesantia, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.SeguroCesantia, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <b class="control-label col-md-2">Monto Renta Imponible Seguro Cesantía</b>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.RentaImponibleSeguroCensantia, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.RentaImponibleSeguroCensantia, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <b class="control-label col-md-2">Monto Aporte Trabajador Seguro Censantia</b>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.AporteTrabajadorSeguroCensatia, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.AporteTrabajadorSeguroCensatia, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <b class="control-label col-md-2">Monto Aporte Empleador Seguro Censatia</b>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.AporteEmpleadorSeguroCesantia, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.AporteEmpleadorSeguroCesantia, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <h4 class=@clase style=@estilo>Datos Pagador de Subsidios</h4>
+        <div class="form-group">
+            @Html.LabelFor(model => model.Subsidio, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.Subsidio,
+                new SelectList(new string[] {"", "96572800-7. Banmédica",
+    "96856780-2. Consalud",
+    "96502530-8. Vida Tres",
+    "76296619-0. Colmena",
+    "96501450-0. Isapre Cruz Blanca S.A.",
+    "61603000-0. Fonasa",
+    "79566720-2. Chuquicamata",
+    "96504160-5. Nueva Masvida",
+    "76334370-7. Institución de Salud Previsional Fusat Ltda.",
+    "71235700-2. Isapre Banco Estado",
+    "89441300-k. Río Blanco",
+    "76521250-2. San Lorenzo Isapre Ltda.",
+    "79906120-1. Cruz del Norte",
+    "70360100-6. Asociación Chilena de Seguridad (ACHS)",
+    "70285100-9. Mutual de Seguridad CCHC",
+    "70015580-3. Instituto de Seguridad del Trabajo I.S.T.",
+    "61533000-0. Instituto de Seguridad Laboral I.S.L." }), htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Subsidio, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            <b class="control-label col-md-2">Centos de costos, Sucursal, Agencia, Obra, Región</b>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.DatosEmpresa, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.DatosEmpresa, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Crear" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Volver a la lista", "Index")
+</div>

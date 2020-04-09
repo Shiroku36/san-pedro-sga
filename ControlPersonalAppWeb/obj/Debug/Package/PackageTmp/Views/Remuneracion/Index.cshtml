@@ -1,0 +1,129 @@
+﻿@model ControlPersonalAppWeb.Trabajador
+@{
+    ViewBag.Title = "Remuneración";
+    int SueldoBase = (int)Model.SueldoBase;
+    double SueldoBaseDiario = SueldoBase / 30.0;
+    double DiasTrabajados = ViewBag.dias;
+    int Gratificacion = Convert.ToInt32(DiasTrabajados * SueldoBaseDiario*0.25);
+    int TotalTrabajados = Convert.ToInt32(SueldoBaseDiario * DiasTrabajados);
+    int TotalImponible = TotalTrabajados + Gratificacion;
+    int AFP = Convert.ToInt32(TotalImponible * 0.1041);
+    int Salud = Convert.ToInt32(TotalImponible * 0.07);
+    int TotalDescuento = AFP + Salud;
+    int Total = Convert.ToInt32(TotalImponible - AFP - Salud);
+}
+
+<h2>
+    @Model.Nombre
+</h2>
+
+
+
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+
+        <h4 align="center"><strong>Datos del trabajador</strong></h4>
+
+        <dt>
+            Nombre
+        </dt>
+        <dd>
+            @Model.Nombre
+        </dd>
+        <dt>
+            Rut
+        </dt>
+        <dd>
+            @Model.Rut
+        </dd>
+        <dt>
+            Cargo
+        </dt>
+        <dd>
+            @Model.Cargo
+        </dd>
+
+        <h4 align="center"><strong>Detalle de remurenación</strong></h4>
+
+        <dt>
+            Sueldo base mensual
+        </dt>
+        <dd>
+            @SueldoBase.ToString("C0")
+        </dd>
+        <dt>
+            Sueldo base por día
+        </dt>
+        <dd>
+            @SueldoBaseDiario.ToString("C0")
+        </dd>
+        <dt>
+            Dias trabajados
+        </dt>
+        <dd>
+            @DiasTrabajados
+        </dd>
+        <dt>
+            Total dias trabajados
+        </dt>
+        <dd>
+            @TotalTrabajados.ToString("C0")
+        </dd>
+        <dt>
+            Gratificación legal
+        </dt>
+        <dd>
+            @Gratificacion.ToString("C0")
+        </dd>
+        <dt>
+            Total remuneración imponible
+        </dt>
+        <dd>
+            @TotalImponible.ToString("C0")
+        </dd>
+        <dt>
+            Total de haberes
+        </dt>
+        <dd>
+            @TotalImponible.ToString("C0")
+        </dd>
+
+        <h4 align="center"><strong>Descuentos</strong></h4>
+
+        <dt>
+            AFP (10.41%)
+        </dt>
+        <dd>
+            @AFP.ToString("C0")
+        </dd>
+        <dt>
+            Fonasa o Isapre (7%)
+        </dt>
+        <dd>
+            @Salud.ToString("C0")
+        </dd>
+        <dt>
+            Total descuentos
+        </dt>
+        <dd>
+            @TotalDescuento.ToString("C0")
+        </dd>
+
+        <h4 align="center"><strong>Total</strong></h4>
+
+        <dt>
+            Alcance líquido
+        </dt>
+        <dd>
+            @Total.ToString("C0")
+        </dd>
+        <dt>
+            Sueldo Liquido a pagar
+        </dt>
+        <dd>
+            @Total.ToString("C0")
+        </dd>
+    </dl>
+</div>
+

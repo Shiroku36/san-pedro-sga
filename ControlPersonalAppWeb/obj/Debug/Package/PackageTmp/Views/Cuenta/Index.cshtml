@@ -1,0 +1,63 @@
+﻿@model IEnumerable<ControlPersonalAppWeb.Cuentas>
+
+@{
+    ViewBag.Title = "Índice";
+    var cuenta = ControlPersonalAppWeb.Utils.SessionManager.CuentaAutenticada().Permisos;
+}
+
+<h2>Índice Cuentas</h2>
+
+    @if (cuenta.Contains("CuentasC"))
+    {
+        <a href='@Url.Action("Create", "Cuenta")'>
+            <button type="button" class="btn btn-default">Crear Nuevo</button>
+        </a>
+    }
+        <table class="table">
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Usuario)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Empresa)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Nivel)
+                </th>
+                <th></th>
+            </tr>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Usuario)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Empresa)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Nivel)
+                    </td>
+                    <td>
+                        @if (cuenta.Contains("CuentasE"))
+                        {
+                            <a href='@Url.Action("Edit", "Cuenta", new { id = item.Id })'>
+                                <button type="button" class="btn btn-default">Editar</button>
+                            </a>
+                        }
+                        <a href='@Url.Action("Details", "Cuenta", new { id = item.Id })'>
+                            <button type="button" class="btn btn-default">Detalle</button>
+                        </a>
+
+                        @if (cuenta.Contains("CuentasD"))
+                        {
+                            <a href='@Url.Action("Delete", "Cuenta", new { id = item.Id })'>
+                                <button type="button" class="btn btn-default" onclick="return confirm('¿Está seguro que desea eliminar la Cuenta?');" })>Borrar</button>
+                            </a>
+                        }
+                    </td>
+                </tr>
+            }
+
+        </table>

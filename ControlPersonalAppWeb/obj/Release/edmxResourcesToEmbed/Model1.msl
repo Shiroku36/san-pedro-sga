@@ -1,0 +1,96 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="DBManejoPersonalModelStoreContainer" CdmEntityContainer="DBManejoPersonalEntities">
+    <EntitySetMapping Name="Campos">
+      <EntityTypeMapping TypeName="DBManejoPersonalModel.Campos">
+        <MappingFragment StoreEntitySet="Campos">
+          <ScalarProperty Name="TelefonoAsistente" ColumnName="TelefonoAsistente" />
+          <ScalarProperty Name="Asistente" ColumnName="Asistente" />
+          <ScalarProperty Name="Telefono" ColumnName="Telefono" />
+          <ScalarProperty Name="Correo" ColumnName="Correo" />
+          <ScalarProperty Name="Encargado" ColumnName="Encargado" />
+          <ScalarProperty Name="Coordenadas" ColumnName="Coordenadas" />
+          <ScalarProperty Name="Empresa" ColumnName="Empresa" />
+          <ScalarProperty Name="Lugar" ColumnName="Lugar" />
+          <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Cuentas">
+      <EntityTypeMapping TypeName="DBManejoPersonalModel.Cuentas">
+        <MappingFragment StoreEntitySet="Cuentas">
+          <ScalarProperty Name="Nivel" ColumnName="Nivel" />
+          <ScalarProperty Name="Empresa" ColumnName="Empresa" />
+          <ScalarProperty Name="Password" ColumnName="Password" />
+          <ScalarProperty Name="Usuario" ColumnName="Usuario" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Empresas">
+      <EntityTypeMapping TypeName="DBManejoPersonalModel.Empresas">
+        <MappingFragment StoreEntitySet="Empresas">
+          <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Trabajador">
+      <EntityTypeMapping TypeName="DBManejoPersonalModel.Trabajador">
+        <MappingFragment StoreEntitySet="Trabajador">
+          <ScalarProperty Name="Empresa" ColumnName="Empresa" />
+          <ScalarProperty Name="Uid" ColumnName="Uid" />
+          <ScalarProperty Name="Foto" ColumnName="Foto" />
+          <ScalarProperty Name="FotoCarnet" ColumnName="FotoCarnet" />
+          <ScalarProperty Name="Gerente" ColumnName="Gerente" />
+          <ScalarProperty Name="JefeDirecto" ColumnName="JefeDirecto" />
+          <ScalarProperty Name="SueldoBruto" ColumnName="SueldoBruto" />
+          <ScalarProperty Name="Gratificacion" ColumnName="Gratificacion" />
+          <ScalarProperty Name="SueldoBase" ColumnName="SueldoBase" />
+          <ScalarProperty Name="FechaIngreso" ColumnName="FechaIngreso" />
+          <ScalarProperty Name="Jornada" ColumnName="Jornada" />
+          <ScalarProperty Name="FechaTermino" ColumnName="FechaTermino" />
+          <ScalarProperty Name="Contrato" ColumnName="Contrato" />
+          <ScalarProperty Name="Empleador" ColumnName="Empleador" />
+          <ScalarProperty Name="Campo" ColumnName="Campo" />
+          <ScalarProperty Name="NombreJefe" ColumnName="NombreJefe" />
+          <ScalarProperty Name="Cargo" ColumnName="Cargo" />
+          <ScalarProperty Name="TelefonoEmer" ColumnName="TelefonoEmer" />
+          <ScalarProperty Name="DireccionEmer" ColumnName="DireccionEmer" />
+          <ScalarProperty Name="VinculoEmer" ColumnName="VinculoEmer" />
+          <ScalarProperty Name="NombreEmer" ColumnName="NombreEmer" />
+          <ScalarProperty Name="Telefono" ColumnName="Telefono" />
+          <ScalarProperty Name="Salud" ColumnName="Salud" />
+          <ScalarProperty Name="AFP" ColumnName="AFP" />
+          <ScalarProperty Name="Cuantas" ColumnName="Cuantas" />
+          <ScalarProperty Name="CargasFamiliares" ColumnName="CargasFamiliares" />
+          <ScalarProperty Name="Ciudad" ColumnName="Ciudad" />
+          <ScalarProperty Name="Sexo" ColumnName="Sexo" />
+          <ScalarProperty Name="Direccion" ColumnName="Direccion" />
+          <ScalarProperty Name="FechaNacimiento" ColumnName="FechaNacimiento" />
+          <ScalarProperty Name="EstadoCivil" ColumnName="EstadoCivil" />
+          <ScalarProperty Name="CodPersonal" ColumnName="CodPersonal" />
+          <ScalarProperty Name="Contratado" ColumnName="Contratado" />
+          <ScalarProperty Name="NumeroCuenta" ColumnName="NumeroCuenta" />
+          <ScalarProperty Name="Banco" ColumnName="Banco" />
+          <ScalarProperty Name="TipoCuenta" ColumnName="TipoCuenta" />
+          <ScalarProperty Name="Rut" ColumnName="Rut" />
+          <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="RegistroTrabajador">
+      <EntityTypeMapping TypeName="DBManejoPersonalModel.RegistroTrabajador">
+        <MappingFragment StoreEntitySet="RegistroTrabajador">
+          <ScalarProperty Name="Campo" ColumnName="Campo" />
+          <ScalarProperty Name="Foto" ColumnName="Foto" />
+          <ScalarProperty Name="Fecha" ColumnName="Fecha" />
+          <ScalarProperty Name="Uid" ColumnName="Uid" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

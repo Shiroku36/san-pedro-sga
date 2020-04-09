@@ -1,0 +1,113 @@
+﻿@model IEnumerable<ControlPersonalAppWeb.Trabajador>
+
+@{
+    ViewBag.Title = "Índice";
+}
+
+<h2>Índice RR.HH.</h2>
+<p>
+    @Html.ActionLink("Consolidado 30 días PDF","PDFConsolidado")
+</p>
+<p>
+    @Html.ActionLink("Registros del día", "Hoy", "Registro")
+</p>
+<p>
+    @Html.ActionLink("Crear nuevo", "Create")
+</p>
+<input type="text" id="busqueda" onkeyup="buscar()" placeholder="Buscar por rut" class="input-group">
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Rut)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Nombre)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Uid)
+            </th>
+            <th>
+                Numero pulsera
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody id="tabla">
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @item.Rut
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nombre)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Uid)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Gerente)
+                </td>
+                <td>
+                    @Html.ActionLink("Editar", "Edit", new { id = item.Id }) |
+                    @Html.ActionLink("Detalle", "Details", new { id = item.Id }) |
+                    @Html.ActionLink("Borrar", "Delete", new { id = item.Id }, new { onclick = "return confirm('¿Está seguro que desea eliminar el Trabajador?');" }) |
+                    @Html.ActionLink("Registro", "Index", "Registro", new { id = item.Id }, null)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<script>
+    $(document).ready(function () {
+        $("#tabla").jPaginate();
+    });
+</script>
+<script>
+    function buscar() {
+        var input, filter, table, tr, td, i, txtValue;
+        input = document.getElementById("busqueda");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("tabla");
+        tr = table.getElementsByTagName("tr");
+        for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[0];
+            if (td) {
+                txtValue = td.textContent || td.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    }
+</script>
+<script>
+    $("#busqueda").keyup(function () {
+        //split the current value of searchInputxx
+        var data = this.value.split(" ");
+        //create a jquery object of the rows
+        var jo = $("#tabla").find("tr");
+        if (this.value == "") {
+            jo.show();
+            return;
+        }
+        //hide all the rows
+        jo.hide();
+
+        //Recusively filter the jquery object to get results.
+        jo.filter(function (i, v) {
+            var $t = $(this);
+            for (var d = 0; d < data.length; ++d) {
+                if ($t.text().toUpperCase().indexOf(data[d]) > -1) {
+                    return true;
+                }
+            }
+            return false;
+        })
+            //show the rows that match.
+            .show();
+</script>

@@ -1,0 +1,90 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="DBManejoPersonalModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="Campos">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Nombre" Type="nvarchar" MaxLength="50" />
+    <Property Name="Lugar" Type="nvarchar" MaxLength="50" />
+    <Property Name="Empresa" Type="nvarchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="Cuentas">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Usuario" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="Password" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="Empresa" Type="nvarchar" MaxLength="50" />
+    <Property Name="Nivel" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Empresas">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Nombre" Type="varchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="RegistroTrabajador">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Uid" Type="varchar" MaxLength="15" Nullable="false" />
+    <Property Name="Fecha" Type="datetime" Nullable="false" />
+    <Property Name="Foto" Type="image" Nullable="false" />
+    <Property Name="Campo" Type="varchar" MaxLength="15" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Trabajador">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Nombre" Type="varchar" MaxLength="100" Nullable="false" />
+    <Property Name="Rut" Type="varchar" MaxLength="15" Nullable="false" />
+    <Property Name="TipoCuenta" Type="varchar" MaxLength="50" />
+    <Property Name="Banco" Type="varchar" MaxLength="50" />
+    <Property Name="NumeroCuenta" Type="varchar" MaxLength="50" />
+    <Property Name="Contratado" Type="nchar" MaxLength="10" />
+    <Property Name="CodPersonal" Type="nchar" MaxLength="10" />
+    <Property Name="EstadoCivil" Type="nchar" MaxLength="20" />
+    <Property Name="FechaNacimiento" Type="date" />
+    <Property Name="Direccion" Type="varchar" MaxLength="100" />
+    <Property Name="Sexo" Type="nchar" MaxLength="10" />
+    <Property Name="Ciudad" Type="nchar" MaxLength="20" />
+    <Property Name="CargasFamiliares" Type="nchar" MaxLength="10" />
+    <Property Name="Cuantas" Type="int" />
+    <Property Name="AFP" Type="nchar" MaxLength="20" />
+    <Property Name="Salud" Type="nchar" MaxLength="20" />
+    <Property Name="Telefono" Type="nchar" MaxLength="15" />
+    <Property Name="NombreEmer" Type="nchar" MaxLength="50" />
+    <Property Name="VinculoEmer" Type="nchar" MaxLength="15" />
+    <Property Name="DireccionEmer" Type="nchar" MaxLength="100" />
+    <Property Name="TelefonoEmer" Type="nchar" MaxLength="15" />
+    <Property Name="Cargo" Type="nchar" MaxLength="50" />
+    <Property Name="NombreJefe" Type="nchar" MaxLength="50" />
+    <Property Name="Campo" Type="nchar" MaxLength="15" />
+    <Property Name="Empleador" Type="nchar" MaxLength="20" />
+    <Property Name="Contrato" Type="nchar" MaxLength="20" />
+    <Property Name="FechaTermino" Type="date" />
+    <Property Name="Jornada" Type="nchar" MaxLength="100" />
+    <Property Name="FechaIngreso" Type="date" />
+    <Property Name="SueldoBase" Type="int" />
+    <Property Name="Gratificacion" Type="int" />
+    <Property Name="SueldoBruto" Type="int" />
+    <Property Name="JefeDirecto" Type="nchar" MaxLength="10" />
+    <Property Name="Gerente" Type="nchar" MaxLength="10" />
+    <Property Name="FotoCarnet" Type="image" />
+    <Property Name="Foto" Type="image" />
+    <Property Name="Uid" Type="nchar" MaxLength="10" />
+    <Property Name="Empresa" Type="nchar" MaxLength="30" />
+  </EntityType>
+  <EntityContainer Name="DBManejoPersonalModelStoreContainer">
+    <EntitySet Name="Campos" EntityType="Self.Campos" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Cuentas" EntityType="Self.Cuentas" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Empresas" EntityType="Self.Empresas" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="RegistroTrabajador" EntityType="Self.RegistroTrabajador" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Trabajador" EntityType="Self.Trabajador" Schema="dbo" store:Type="Tables" />
+  </EntityContainer>
+</Schema>

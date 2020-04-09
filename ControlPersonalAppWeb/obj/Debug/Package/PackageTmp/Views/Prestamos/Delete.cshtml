@@ -1,0 +1,72 @@
+﻿@model ControlPersonalAppWeb.Prestamo
+
+@{
+    ViewBag.Title = "Eliminar";
+}
+
+<h2>Eliminar</h2>
+
+<h3>¿Está seguro que desea eliminar?</h3>
+<div>
+    <h4>Prestamo</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Moneda)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Moneda)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Monto)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Monto)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Meses)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Meses)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Interes)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Interes)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Inicio)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Inicio)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IdTrabajador)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IdTrabajador)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Eliminar" class="btn btn-default" /> |
+            @Html.ActionLink("Volver a la lista", "Index")
+        </div>
+    }
+</div>

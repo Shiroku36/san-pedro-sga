@@ -1,0 +1,14 @@
+﻿
+@{
+    ViewBag.Title = "UserOption";
+    var cuenta = ControlPersonalAppWeb.Utils.SessionManager.CuentaAutenticada();
+}
+@if(cuenta !=null)
+{ 
+    <li><a href="@Url.Action("Index","Home")">@cuenta.Usuario - @cuenta.Empresa</a></li>
+    <li><a href="@Url.Action("Salir","Cuenta")">Salir</a></li>
+}
+else
+{
+    <li><a href="@Url.Action("Login","Cuenta")">Ingresar</a></li>
+}

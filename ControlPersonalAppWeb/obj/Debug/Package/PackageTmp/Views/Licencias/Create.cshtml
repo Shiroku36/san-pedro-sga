@@ -1,0 +1,73 @@
+﻿@model ControlPersonalAppWeb.Licencia
+
+@{
+    ViewBag.Title = "Crear";
+}
+
+<h2>Crear</h2>
+
+
+@using (Html.BeginForm()) 
+{
+    @Html.AntiForgeryToken()
+    
+<div class="form-horizontal">
+    <h4>Licencia</h4>
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Desde, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            <input class="form-control" type="date" name="Desde" id="Desde" >
+            @Html.ValidationMessageFor(model => model.Desde, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Dias, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            <input class="form-control" type="number" id="Dias" name="Dias" onchange="copyTextValue();" placeholder="">
+            @Html.ValidationMessageFor(model => model.Dias, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Hasta, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            <input class="form-control" type="date" name="Hasta" id="Hasta" />
+            @Html.ValidationMessageFor(model => model.Hasta, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Causa, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.DropDownListFor(model => model.Causa, new SelectList(new string[] { "Enfermedad", "Accidente", "Ausentismo","Permiso SGC" }), htmlAttributes: new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.Causa, "", new { @class = "text-danger" })
+        </div>
+    </div>
+    <input type="hidden" value=@ViewBag.id name="IdTrabajador" />
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Crear" class="btn btn-default" />
+        </div>
+    </div>
+</div>
+}
+
+<div>
+    @Html.ActionLink("Volver a la lista", "Index")
+</div>
+<script>
+
+    function copyTextValue(bf) {
+        var date = new Date(document.getElementById("Desde").value );
+        date.setDate(date.getDate() + document.getElementById("Dias").value );
+
+        document.getElementById("Hasta").value = document.getElementById("Desde").value;
+    }
+</script>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

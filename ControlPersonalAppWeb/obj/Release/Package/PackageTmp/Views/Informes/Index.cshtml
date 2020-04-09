@@ -1,0 +1,69 @@
+﻿
+@{
+    ViewBag.Title = "Índice";
+}
+
+<h2>MODULO EN MANTENCIÓN.</h2>
+
+
+<h4>
+    @Html.ActionLink("Consolidado PDF", "PDFConsolidado", "Trabajador")
+</h4>
+<h4>
+    @Html.ActionLink("Registros hoy PDF", "PDFHoy", "Trabajador")
+</h4>
+<div class="col-lg-12">
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        <div align="left" class="form-group col-lg-6">
+            <h4>
+                Registro por rut
+            </h4>
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div class="form-group">
+                <b class="control-label col-md-2">Rut</b>
+                <div class="col-md-10">
+                    <input class="form-control" maxlength="10" type="text" id="Rut" name="Rut" oninput="checkRut(this)" placeholder="Rut...">
+                    <script src="~/Scripts/validarRUT.js"></script>
+                </div>
+            </div>
+        </div>
+        <div align="left" class="form-group col-lg-6">
+            <h4>
+                Registros por Huerto
+            </h4>
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div class="form-group">
+                <b class="control-label col-md-2">Nombre</b>
+                <div class="col-md-10">
+                    <input class="form-control" maxlength="10" type="text" id="Campo" name="Campo" placeholder="Huerto...">
+                </div>
+            </div>
+        </div>
+        <div align="left" class="form-group col-lg-6">
+            <h4>
+                Registros por rango de fechas
+            </h4>
+            <p>
+                (Use solo la feha de inicio para generar el de 1 día)<br />
+            </p>
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div class="form-group">
+                <b class="control-label col-md-2">Inicio</b>
+                <div class="col-md-10">
+                    <input class="form-control" type="date" id="Inicio" name="Inicio" min="2019-01-01">
+                </div>
+                <b class="control-label col-md-2">Fin</b>
+                <div class="col-md-10">
+                    <input class="form-control" type="date" id="Fin" name="Fin" min="2019-01-01" max="2019">
+                </div>
+                <!--<script src="~/Scripts/validarRUT.js"></script>-->
+            </div>
+        </div>
+        <div align="center" class="form-group col-lg-12">
+            <input type="submit" value="Generar" class="btn btn-default" />
+        </div>
+    }
+</div>
+

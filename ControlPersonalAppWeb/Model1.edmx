@@ -1,0 +1,1089 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="DBManejoPersonalModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="AFP">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nombre" Type="varchar" MaxLength="50" />
+          <Property Name="Porcentaje" Type="varchar" MaxLength="50" />
+          <Property Name="Periodo" Type="date" />
+          <Property Name="Retiro" Type="varchar" MaxLength="50" />
+          <Property Name="Voluntario" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="Campos">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nombre" Type="varchar" MaxLength="50" />
+          <Property Name="Lugar" Type="varchar" MaxLength="50" />
+          <Property Name="Empresa" Type="varchar" MaxLength="50" />
+          <Property Name="Coordenadas" Type="ntext" />
+          <Property Name="Encargado" Type="varchar" MaxLength="50" />
+          <Property Name="Correo" Type="varchar" MaxLength="50" />
+          <Property Name="Telefono" Type="varchar" MaxLength="50" />
+          <Property Name="Asistente" Type="varchar" MaxLength="50" />
+          <Property Name="TelefonoAsistente" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="Cargo">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nombre" Type="varchar" MaxLength="50" />
+          <Property Name="IdEmpresa" Type="int" />
+        </EntityType>
+        <EntityType Name="CentroDeCostos">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nombre" Type="varchar" MaxLength="50" />
+          <Property Name="IdEmpresa" Type="int" />
+        </EntityType>
+        <EntityType Name="Cuentas">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Usuario" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Password" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Empresa" Type="varchar" MaxLength="50" />
+          <Property Name="Nivel" Type="int" Nullable="false" />
+          <Property Name="Permisos" Type="varchar" MaxLength="512" />
+        </EntityType>
+        <EntityType Name="Empresas">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nombre" Type="varchar" MaxLength="128" />
+          <Property Name="Rut" Type="varchar" MaxLength="50" />
+          <Property Name="RazonSocial" Type="varbinary" MaxLength="256" />
+          <Property Name="RepresentanteLegalNombre" Type="varchar" MaxLength="50" />
+          <Property Name="RepresenntanteLegalRut" Type="nvarchar" MaxLength="50" />
+          <Property Name="Giro" Type="varchar" MaxLength="256" />
+          <Property Name="Dirección" Type="varchar" MaxLength="256" />
+          <Property Name="Comuna" Type="varchar" MaxLength="50" />
+          <Property Name="Ciudad" Type="varchar" MaxLength="50" />
+          <Property Name="Telefono" Type="varchar" MaxLength="50" />
+          <Property Name="Mutual" Type="varchar" MaxLength="50" />
+          <Property Name="FactorMutual" Type="varchar" MaxLength="50" />
+          <Property Name="CajaDeCompensacion" Type="varchar" MaxLength="50" />
+          <Property Name="TextoLiquidacion" Type="varchar(max)" />
+          <Property Name="Logo" Type="image" />
+        </EntityType>
+        <EntityType Name="Finiquito">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Causa" Type="varchar" MaxLength="128" />
+          <Property Name="Texto" Type="varchar" MaxLength="50" />
+          <Property Name="FechaDocumento" Type="date" />
+          <Property Name="FechaFin" Type="date" />
+          <Property Name="DiasDeVacaciones" Type="float" />
+          <Property Name="Dias" Type="int" />
+          <Property Name="SueldoMensual" Type="int" />
+          <Property Name="AvisoPrevio" Type="int" />
+          <Property Name="FactorAvisoPrevio" Type="int" />
+          <Property Name="Indemnización" Type="int" />
+          <Property Name="FactorIndemnizacion" Type="float" />
+          <Property Name="Vacaciones" Type="float" />
+          <Property Name="FactorVacaciones" Type="float" />
+          <Property Name="Total" Type="int" />
+          <Property Name="IdTrabajador" Type="int" />
+        </EntityType>
+        <EntityType Name="HorasExtras">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Horas" Type="float" />
+          <Property Name="Porcentaje" Type="int" />
+          <Property Name="Periodo" Type="date" />
+          <Property Name="IdTrabajador" Type="int" />
+        </EntityType>
+        <EntityType Name="HyD">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nombre" Type="varchar" MaxLength="50" />
+          <Property Name="Moneda" Type="varchar" MaxLength="50" />
+          <Property Name="Monto" Type="varchar" MaxLength="50" />
+          <Property Name="Periodo" Type="date" />
+          <Property Name="Tipo" Type="varchar" MaxLength="50" />
+          <Property Name="IdTrabajador" Type="int" />
+          <Property Name="Fijo" Type="bit" />
+        </EntityType>
+        <EntityType Name="Licencia">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Desde" Type="date" />
+          <Property Name="Dias" Type="int" />
+          <Property Name="Hasta" Type="date" />
+          <Property Name="Causa" Type="varchar" MaxLength="50" />
+          <Property Name="IdTrabajador" Type="int" />
+        </EntityType>
+        <EntityType Name="Prestamo">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Moneda" Type="varchar" MaxLength="50" />
+          <Property Name="Monto" Type="int" />
+          <Property Name="Meses" Type="int" />
+          <Property Name="Interes" Type="float" />
+          <Property Name="Inicio" Type="date" />
+          <Property Name="IdTrabajador" Type="int" />
+        </EntityType>
+        <EntityType Name="RegistroTrabajador">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Uid" Type="varchar" MaxLength="15" Nullable="false" />
+          <Property Name="Fecha" Type="datetime" Nullable="false" />
+          <Property Name="Foto" Type="image" Nullable="false" />
+          <Property Name="Campo" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="Empresa" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="principal_id" Type="int" Nullable="false" />
+          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="version" Type="int" />
+          <Property Name="definition" Type="varbinary(max)" />
+        </EntityType>
+        <EntityType Name="TipoContrato">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nombre" Type="nchar" MaxLength="10" />
+        </EntityType>
+        <EntityType Name="Trabajador">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nombre" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="ApellidoPaterno" Type="varchar" MaxLength="100" />
+          <Property Name="ApellidoMaterno" Type="varchar" MaxLength="100" />
+          <Property Name="Rut" Type="varchar" MaxLength="15" Nullable="false" />
+          <Property Name="TipoCuenta" Type="varchar" MaxLength="50" />
+          <Property Name="Banco" Type="varchar" MaxLength="50" />
+          <Property Name="NumeroCuenta" Type="varchar" MaxLength="50" />
+          <Property Name="Contratado" Type="varchar" MaxLength="10" />
+          <Property Name="CodPersonal" Type="varchar" MaxLength="10" />
+          <Property Name="EstadoCivil" Type="varchar" MaxLength="20" />
+          <Property Name="Nacionalidad" Type="varchar" MaxLength="20" />
+          <Property Name="FechaNacimiento" Type="date" />
+          <Property Name="Direccion" Type="varchar" MaxLength="100" />
+          <Property Name="Sexo" Type="varchar" MaxLength="10" />
+          <Property Name="Ciudad" Type="varchar" MaxLength="20" />
+          <Property Name="Telefono" Type="varchar" MaxLength="15" />
+          <Property Name="Email" Type="varchar" MaxLength="100" />
+          <Property Name="CargasFamiliares" Type="varchar" MaxLength="10" />
+          <Property Name="TrampoAsignacionFamiliar" Type="varchar" MaxLength="100" />
+          <Property Name="CargasSimples" Type="int" />
+          <Property Name="CargasMaternales" Type="int" />
+          <Property Name="CargasInvalidas" Type="int" />
+          <Property Name="RegimenPrevicional" Type="varchar" MaxLength="100" />
+          <Property Name="AsignacionFamiliar" Type="varchar" MaxLength="100" />
+          <Property Name="AsignacionFamiliarRetroactiva" Type="varchar" MaxLength="100" />
+          <Property Name="ReintegroCargasFamiliares" Type="varchar" MaxLength="100" />
+          <Property Name="SolicitudTrabajadorJoven" Type="varchar" MaxLength="100" />
+          <Property Name="AFP" Type="varchar" MaxLength="100" />
+          <Property Name="TipoLineaAFP" Type="varchar" MaxLength="100" />
+          <Property Name="RentaImponibleAFP" Type="varchar" MaxLength="100" />
+          <Property Name="CotizacionObligatoriaAFP" Type="varchar" MaxLength="100" />
+          <Property Name="SIS" Type="varchar" MaxLength="100" />
+          <Property Name="AhorroVoluntarioAFP" Type="varchar" MaxLength="100" />
+          <Property Name="RentaImpSustitutiva" Type="varchar" MaxLength="100" />
+          <Property Name="TasaPactadaSus" Type="varchar" MaxLength="100" />
+          <Property Name="AporteIndemSus" Type="varchar" MaxLength="100" />
+          <Property Name="NPeriodosSus" Type="varchar" MaxLength="100" />
+          <Property Name="PeriodosDesdeSus" Type="date" />
+          <Property Name="PuestoTrabajoPesado" Type="varchar" MaxLength="100" />
+          <Property Name="PerodoHastaSus" Type="date" />
+          <Property Name="PorcentajeTrabajoPesado" Type="varchar" MaxLength="100" />
+          <Property Name="MontoTrabajoPesado" Type="varchar" MaxLength="100" />
+          <Property Name="CodigoMovimientoDePersonal" Type="varchar" MaxLength="100" />
+          <Property Name="InicioMovimientoPersonal" Type="date" />
+          <Property Name="FinMovimientoPersonal" Type="date" />
+          <Property Name="TrampoAFP" Type="varchar" MaxLength="100" />
+          <Property Name="Jubiulado" Type="varchar" MaxLength="100" />
+          <Property Name="SeguroCesantia" Type="varchar" MaxLength="100" />
+          <Property Name="Mutual" Type="varchar" MaxLength="100" />
+          <Property Name="Salud" Type="varchar" MaxLength="100" />
+          <Property Name="NombreEmer" Type="varchar" MaxLength="100" />
+          <Property Name="VinculoEmer" Type="varchar" MaxLength="100" />
+          <Property Name="DireccionEmer" Type="varchar" MaxLength="100" />
+          <Property Name="TelefonoEmer" Type="varchar" MaxLength="100" />
+          <Property Name="Cargo" Type="varchar" MaxLength="100" />
+          <Property Name="NombreJefe" Type="varchar" MaxLength="100" />
+          <Property Name="Campo" Type="varchar" MaxLength="100" />
+          <Property Name="Empleador" Type="varchar" MaxLength="100" />
+          <Property Name="Contrato" Type="varchar" MaxLength="100" />
+          <Property Name="Jornada" Type="varchar" MaxLength="100" />
+          <Property Name="FechaIngreso" Type="date" />
+          <Property Name="FechaTermino" Type="date" />
+          <Property Name="SueldoBase" Type="int" />
+          <Property Name="Gratificacion" Type="int" />
+          <Property Name="SueldoBruto" Type="int" />
+          <Property Name="TipoPago" Type="varchar" MaxLength="100" />
+          <Property Name="FactorHE" Type="int" />
+          <Property Name="Colacion" Type="int" />
+          <Property Name="Movilizacion" Type="int" />
+          <Property Name="DiasVacacionesAño" Type="int" />
+          <Property Name="JefeDirecto" Type="varchar" MaxLength="100" />
+          <Property Name="Gerente" Type="varchar" MaxLength="100" />
+          <Property Name="FotoCarnet" Type="image" />
+          <Property Name="Foto" Type="image" />
+          <Property Name="Uid" Type="varchar" MaxLength="10" />
+          <Property Name="Empresa" Type="varchar" MaxLength="100" />
+          <Property Name="APVI" Type="varchar" MaxLength="100" />
+          <Property Name="CodigoAPVI" Type="varchar" MaxLength="100" />
+          <Property Name="NumeroAPVI" Type="varchar" MaxLength="100" />
+          <Property Name="FormaPagoAPVI" Type="varchar" MaxLength="100" />
+          <Property Name="CotizacionAPVI" Type="varchar" MaxLength="100" />
+          <Property Name="CotizaciónDepositosConvenidos" Type="varchar" MaxLength="100" />
+          <Property Name="APVC" Type="varchar" MaxLength="100" />
+          <Property Name="CodigoAPVC" Type="varchar" MaxLength="100" />
+          <Property Name="NumeroAPVC" Type="varchar" MaxLength="100" />
+          <Property Name="FormaPagoAPVC" Type="varchar" MaxLength="100" />
+          <Property Name="CotizacionTrabajadorAPVC" Type="varchar" MaxLength="100" />
+          <Property Name="CotizacionEmpleadorAPVC" Type="varchar" MaxLength="100" />
+          <Property Name="AfiliadoVoluntario" Type="varchar" MaxLength="100" />
+          <Property Name="RutAV" Type="varchar" MaxLength="100" />
+          <Property Name="ApellidoPaternoAV" Type="varchar" MaxLength="100" />
+          <Property Name="ApellidoMaternoAV" Type="varchar" MaxLength="100" />
+          <Property Name="NombresAV" Type="varchar" MaxLength="100" />
+          <Property Name="CodigoMovimientoPersonalAV" Type="varchar" MaxLength="100" />
+          <Property Name="DesdeAV" Type="date" />
+          <Property Name="HastaAV" Type="date" />
+          <Property Name="AFPAV" Type="varchar" MaxLength="100" />
+          <Property Name="MontoCapitalizacionVoluntaria" Type="varchar" MaxLength="100" />
+          <Property Name="MontoAV" Type="varchar" MaxLength="100" />
+          <Property Name="PeriodosAV" Type="varchar" MaxLength="100" />
+          <Property Name="CodigoExcaja" Type="varchar" MaxLength="100" />
+          <Property Name="TasaExcaja" Type="varchar" MaxLength="100" />
+          <Property Name="RentaImponibleIPS" Type="varchar" MaxLength="100" />
+          <Property Name="CotizacionObligatoriaIPS" Type="varchar" MaxLength="100" />
+          <Property Name="RentaImponibleDesahucio" Type="varchar" MaxLength="100" />
+          <Property Name="CodigoExcajaDesahucio" Type="varchar" MaxLength="100" />
+          <Property Name="TasaCotizacionDesahucio" Type="varchar" MaxLength="100" />
+          <Property Name="CotizaciónDesahucio" Type="varchar" MaxLength="100" />
+          <Property Name="CotizacionFonasa" Type="varchar" MaxLength="100" />
+          <Property Name="CotizacionISL" Type="varchar" MaxLength="100" />
+          <Property Name="BonificacionLey" Type="varchar" MaxLength="100" />
+          <Property Name="DescuentoPorCargasFamiliaresISL" Type="varchar" MaxLength="100" />
+          <Property Name="BonosGobierno" Type="varchar" MaxLength="100" />
+          <Property Name="CodigoIntitucionSalud" Type="varchar" MaxLength="100" />
+          <Property Name="NumeroFun" Type="varchar" MaxLength="100" />
+          <Property Name="RentaImponibleIsapre" Type="varchar" MaxLength="100" />
+          <Property Name="MonedaDelPlanPactadoIsapre" Type="varchar" MaxLength="100" />
+          <Property Name="CotizacionPactada" Type="varchar" MaxLength="100" />
+          <Property Name="CotizacionIsapre" Type="varchar" MaxLength="100" />
+          <Property Name="CotizacionIsapreAV" Type="varchar" MaxLength="100" />
+          <Property Name="MontoGES" Type="varchar" MaxLength="100" />
+          <Property Name="CodigoCCAF" Type="varchar" MaxLength="100" />
+          <Property Name="RentaImponibleCCAF" Type="varchar" MaxLength="100" />
+          <Property Name="CreditosPersonalesCCAF" Type="varchar" MaxLength="100" />
+          <Property Name="DescuentoDentalCCAF" Type="varchar" MaxLength="100" />
+          <Property Name="DescuentosPorLeasing" Type="varchar" MaxLength="100" />
+          <Property Name="DescuentoPorSeguroDeVidaCCAF" Type="varchar" MaxLength="100" />
+          <Property Name="OtrosDescuentosCCAF" Type="varchar" MaxLength="100" />
+          <Property Name="CotizacionCCAFNoAfiniladosIsapres" Type="varchar" MaxLength="100" />
+          <Property Name="DescuentoCargasFamiliaresCCAF" Type="varchar" MaxLength="100" />
+          <Property Name="OtrosDescuentosCCAF1" Type="varchar" MaxLength="100" />
+          <Property Name="OtrosDescuentosCCAF2" Type="varchar" MaxLength="100" />
+          <Property Name="BonosGobiernoCCAF" Type="varchar" MaxLength="100" />
+          <Property Name="CodigoSucursalCCAF" Type="varchar" MaxLength="100" />
+          <Property Name="CodigoMutualidad" Type="varchar" MaxLength="100" />
+          <Property Name="RentaImponibleMutual" Type="varchar" MaxLength="100" />
+          <Property Name="CotizacionAccidenteMutual" Type="varchar" MaxLength="100" />
+          <Property Name="SucursalParaPagoMutual" Type="varchar" MaxLength="100" />
+          <Property Name="RentaImponibleSeguroCensantia" Type="varchar" MaxLength="100" />
+          <Property Name="AporteTrabajadorSeguroCensatia" Type="varchar" MaxLength="100" />
+          <Property Name="AporteEmpleadorSeguroCesantia" Type="varchar" MaxLength="100" />
+          <Property Name="Subsidio" Type="varchar" MaxLength="100" />
+          <Property Name="DatosEmpresa" Type="varchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="Vacaciones">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Año" Type="varchar" MaxLength="50" />
+          <Property Name="Normales" Type="float" />
+          <Property Name="Progresivas" Type="float" />
+          <Property Name="Total" Type="float" />
+          <Property Name="TomadasNormales" Type="float" />
+          <Property Name="TomadasProgresivas" Type="float" />
+          <Property Name="Saldo" Type="float" />
+          <Property Name="IdTrabajador" Type="int" />
+        </EntityType>
+        <EntityContainer Name="DBManejoPersonalModelStoreContainer">
+          <EntitySet Name="AFP" EntityType="Self.AFP" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Campos" EntityType="Self.Campos" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Cargo" EntityType="Self.Cargo" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CentroDeCostos" EntityType="Self.CentroDeCostos" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Cuentas" EntityType="Self.Cuentas" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Empresas" EntityType="Self.Empresas" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Finiquito" EntityType="Self.Finiquito" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="HorasExtras" EntityType="Self.HorasExtras" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="HyD" EntityType="Self.HyD" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Licencia" EntityType="Self.Licencia" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Prestamo" EntityType="Self.Prestamo" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="RegistroTrabajador" EntityType="Self.RegistroTrabajador" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="TipoContrato" EntityType="Self.TipoContrato" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Trabajador" EntityType="Self.Trabajador" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Vacaciones" EntityType="Self.Vacaciones" Schema="dbo" store:Type="Tables" />
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="DBManejoPersonalModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="DBManejoPersonalEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Campos" EntityType="DBManejoPersonalModel.Campos" />
+          <EntitySet Name="Cuentas" EntityType="DBManejoPersonalModel.Cuentas" />
+          <EntitySet Name="Empresas" EntityType="DBManejoPersonalModel.Empresas" />
+          <EntitySet Name="RegistroTrabajador" EntityType="DBManejoPersonalModel.RegistroTrabajador" />
+          <EntitySet Name="sysdiagrams" EntityType="DBManejoPersonalModel.sysdiagrams" />
+          <EntitySet Name="HorasExtras" EntityType="DBManejoPersonalModel.HorasExtras" />
+          <EntitySet Name="Licencia" EntityType="DBManejoPersonalModel.Licencia" />
+          <EntitySet Name="TipoContrato" EntityType="DBManejoPersonalModel.TipoContrato" />
+          <EntitySet Name="Prestamo" EntityType="DBManejoPersonalModel.Prestamo" />
+          <EntitySet Name="HyD" EntityType="DBManejoPersonalModel.HyD" />
+          <EntitySet Name="Vacaciones" EntityType="DBManejoPersonalModel.Vacaciones" />
+          <EntitySet Name="Cargo" EntityType="DBManejoPersonalModel.Cargo" />
+          <EntitySet Name="CentroDeCostos" EntityType="DBManejoPersonalModel.CentroDeCostos" />
+          <EntitySet Name="Finiquito" EntityType="DBManejoPersonalModel.Finiquito" />
+          <EntitySet Name="AFP" EntityType="DBManejoPersonalModel.AFP" />
+          <EntitySet Name="Trabajador" EntityType="DBManejoPersonalModel.Trabajador" />
+          </EntityContainer>
+        <EntityType Name="Campos">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Lugar" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Empresa" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Coordenadas" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Encargado" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Correo" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Telefono" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Asistente" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="TelefonoAsistente" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="Cuentas">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Usuario" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Password" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Empresa" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Nivel" Type="Int32" Nullable="false" />
+          <Property Name="Permisos" Type="String" MaxLength="512" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="Empresas">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre" Type="String" MaxLength="128" FixedLength="false" Unicode="false" />
+          <Property Name="Rut" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="RazonSocial" Type="Binary" MaxLength="256" FixedLength="false" />
+          <Property Name="RepresentanteLegalNombre" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="RepresenntanteLegalRut" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Giro" Type="String" MaxLength="256" FixedLength="false" Unicode="false" />
+          <Property Name="Dirección" Type="String" MaxLength="256" FixedLength="false" Unicode="false" />
+          <Property Name="Comuna" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Ciudad" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Telefono" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Mutual" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="FactorMutual" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CajaDeCompensacion" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="TextoLiquidacion" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Logo" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <EntityType Name="RegistroTrabajador">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Uid" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="Fecha" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Foto" Type="Binary" Nullable="false" MaxLength="Max" FixedLength="false" />
+          <Property Name="Campo" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Empresa" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <EntityType Name="HorasExtras">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="Horas" Type="Double" />
+          <Property Name="Porcentaje" Type="Int32" />
+          <Property Name="Periodo" Type="DateTime" Precision="0" />
+          <Property Name="IdTrabajador" Type="Int32" />
+        </EntityType>
+        <EntityType Name="Licencia">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="Desde" Type="DateTime" Precision="0" />
+          <Property Name="Dias" Type="Int32" />
+          <Property Name="Hasta" Type="DateTime" Precision="0" />
+          <Property Name="Causa" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="IdTrabajador" Type="Int32" />
+        </EntityType>
+        <EntityType Name="TipoContrato">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="Nombre" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+        </EntityType>
+        <EntityType Name="Prestamo">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Moneda" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Monto" Type="Int32" />
+          <Property Name="Meses" Type="Int32" />
+          <Property Name="Interes" Type="Double" />
+          <Property Name="Inicio" Type="DateTime" Precision="0" />
+          <Property Name="IdTrabajador" Type="Int32" />
+        </EntityType>
+        <EntityType Name="HyD">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Moneda" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Monto" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Periodo" Type="DateTime" Precision="0" />
+          <Property Name="Tipo" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="IdTrabajador" Type="Int32" />
+          <Property Name="Fijo" Type="Boolean" />
+        </EntityType>
+        <EntityType Name="Vacaciones">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Año" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Normales" Type="Double" />
+          <Property Name="Progresivas" Type="Double" />
+          <Property Name="Total" Type="Double" />
+          <Property Name="TomadasNormales" Type="Double" />
+          <Property Name="TomadasProgresivas" Type="Double" />
+          <Property Name="Saldo" Type="Double" />
+          <Property Name="IdTrabajador" Type="Int32" />
+        </EntityType>
+        <EntityType Name="Cargo">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="IdEmpresa" Type="Int32" />
+        </EntityType>
+        <EntityType Name="CentroDeCostos">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="IdEmpresa" Type="Int32" />
+        </EntityType>
+        <EntityType Name="Finiquito">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Causa" Type="String" MaxLength="128" FixedLength="false" Unicode="false" />
+          <Property Name="Texto" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="FechaDocumento" Type="DateTime" Precision="0" />
+          <Property Name="FechaFin" Type="DateTime" Precision="0" />
+          <Property Name="DiasDeVacaciones" Type="Double" />
+          <Property Name="Dias" Type="Int32" />
+          <Property Name="SueldoMensual" Type="Int32" />
+          <Property Name="AvisoPrevio" Type="Int32" />
+          <Property Name="FactorAvisoPrevio" Type="Int32" />
+          <Property Name="Indemnización" Type="Int32" />
+          <Property Name="FactorIndemnizacion" Type="Double" />
+          <Property Name="Vacaciones" Type="Double" />
+          <Property Name="FactorVacaciones" Type="Double" />
+          <Property Name="Total" Type="Int32" />
+          <Property Name="IdTrabajador" Type="Int32" />
+        </EntityType>
+        <EntityType Name="AFP">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Porcentaje" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Periodo" Type="DateTime" Precision="0" />
+          <Property Name="Retiro" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Voluntario" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="Trabajador">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="ApellidoPaterno" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="ApellidoMaterno" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Rut" Type="String" Nullable="false" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="TipoCuenta" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Banco" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="NumeroCuenta" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Contratado" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="CodPersonal" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="EstadoCivil" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Nacionalidad" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="FechaNacimiento" Type="DateTime" Precision="0" />
+          <Property Name="Direccion" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Sexo" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="Ciudad" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Telefono" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="Email" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CargasFamiliares" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="TrampoAsignacionFamiliar" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CargasSimples" Type="Int32" />
+          <Property Name="CargasMaternales" Type="Int32" />
+          <Property Name="CargasInvalidas" Type="Int32" />
+          <Property Name="RegimenPrevicional" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="AsignacionFamiliar" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="AsignacionFamiliarRetroactiva" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="ReintegroCargasFamiliares" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="SolicitudTrabajadorJoven" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="AFP" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="TipoLineaAFP" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="RentaImponibleAFP" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CotizacionObligatoriaAFP" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="SIS" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="AhorroVoluntarioAFP" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="RentaImpSustitutiva" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="TasaPactadaSus" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="AporteIndemSus" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="NPeriodosSus" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="PeriodosDesdeSus" Type="DateTime" Precision="0" />
+          <Property Name="PuestoTrabajoPesado" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="PerodoHastaSus" Type="DateTime" Precision="0" />
+          <Property Name="PorcentajeTrabajoPesado" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="MontoTrabajoPesado" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CodigoMovimientoDePersonal" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="InicioMovimientoPersonal" Type="DateTime" Precision="0" />
+          <Property Name="FinMovimientoPersonal" Type="DateTime" Precision="0" />
+          <Property Name="TrampoAFP" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Jubiulado" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="SeguroCesantia" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Mutual" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Salud" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="NombreEmer" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="VinculoEmer" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="DireccionEmer" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="TelefonoEmer" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Cargo" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="NombreJefe" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Campo" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Empleador" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Contrato" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Jornada" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="FechaIngreso" Type="DateTime" Precision="0" />
+          <Property Name="FechaTermino" Type="DateTime" Precision="0" />
+          <Property Name="SueldoBase" Type="Int32" />
+          <Property Name="Gratificacion" Type="Int32" />
+          <Property Name="SueldoBruto" Type="Int32" />
+          <Property Name="TipoPago" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="FactorHE" Type="Int32" />
+          <Property Name="Colacion" Type="Int32" />
+          <Property Name="Movilizacion" Type="Int32" />
+          <Property Name="DiasVacacionesAño" Type="Int32" />
+          <Property Name="JefeDirecto" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Gerente" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="FotoCarnet" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="Foto" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="Uid" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="Empresa" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="APVI" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CodigoAPVI" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="NumeroAPVI" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="FormaPagoAPVI" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CotizacionAPVI" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CotizaciónDepositosConvenidos" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="APVC" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CodigoAPVC" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="NumeroAPVC" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="FormaPagoAPVC" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CotizacionTrabajadorAPVC" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CotizacionEmpleadorAPVC" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="AfiliadoVoluntario" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="RutAV" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="ApellidoPaternoAV" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="ApellidoMaternoAV" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="NombresAV" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CodigoMovimientoPersonalAV" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="DesdeAV" Type="DateTime" Precision="0" />
+          <Property Name="HastaAV" Type="DateTime" Precision="0" />
+          <Property Name="AFPAV" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="MontoCapitalizacionVoluntaria" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="MontoAV" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="PeriodosAV" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CodigoExcaja" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="TasaExcaja" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="RentaImponibleIPS" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CotizacionObligatoriaIPS" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="RentaImponibleDesahucio" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CodigoExcajaDesahucio" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="TasaCotizacionDesahucio" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CotizaciónDesahucio" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CotizacionFonasa" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CotizacionISL" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="BonificacionLey" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="DescuentoPorCargasFamiliaresISL" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="BonosGobierno" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CodigoIntitucionSalud" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="NumeroFun" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="RentaImponibleIsapre" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="MonedaDelPlanPactadoIsapre" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CotizacionPactada" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CotizacionIsapre" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CotizacionIsapreAV" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="MontoGES" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CodigoCCAF" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="RentaImponibleCCAF" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CreditosPersonalesCCAF" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="DescuentoDentalCCAF" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="DescuentosPorLeasing" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="DescuentoPorSeguroDeVidaCCAF" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="OtrosDescuentosCCAF" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CotizacionCCAFNoAfiniladosIsapres" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="DescuentoCargasFamiliaresCCAF" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="OtrosDescuentosCCAF1" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="OtrosDescuentosCCAF2" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="BonosGobiernoCCAF" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CodigoSucursalCCAF" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CodigoMutualidad" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="RentaImponibleMutual" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="CotizacionAccidenteMutual" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="SucursalParaPagoMutual" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="RentaImponibleSeguroCensantia" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="AporteTrabajadorSeguroCensatia" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="AporteEmpleadorSeguroCesantia" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Subsidio" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="DatosEmpresa" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+        </EntityType>
+        </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="DBManejoPersonalModelStoreContainer" CdmEntityContainer="DBManejoPersonalEntities">
+          <EntitySetMapping Name="Campos">
+            <EntityTypeMapping TypeName="DBManejoPersonalModel.Campos">
+              <MappingFragment StoreEntitySet="Campos">
+                <ScalarProperty Name="TelefonoAsistente" ColumnName="TelefonoAsistente" />
+                <ScalarProperty Name="Asistente" ColumnName="Asistente" />
+                <ScalarProperty Name="Telefono" ColumnName="Telefono" />
+                <ScalarProperty Name="Correo" ColumnName="Correo" />
+                <ScalarProperty Name="Encargado" ColumnName="Encargado" />
+                <ScalarProperty Name="Coordenadas" ColumnName="Coordenadas" />
+                <ScalarProperty Name="Empresa" ColumnName="Empresa" />
+                <ScalarProperty Name="Lugar" ColumnName="Lugar" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Cuentas">
+            <EntityTypeMapping TypeName="DBManejoPersonalModel.Cuentas">
+              <MappingFragment StoreEntitySet="Cuentas">
+                <ScalarProperty Name="Permisos" ColumnName="Permisos" />
+                <ScalarProperty Name="Nivel" ColumnName="Nivel" />
+                <ScalarProperty Name="Empresa" ColumnName="Empresa" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="Usuario" ColumnName="Usuario" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Empresas">
+            <EntityTypeMapping TypeName="DBManejoPersonalModel.Empresas">
+              <MappingFragment StoreEntitySet="Empresas">
+                <ScalarProperty Name="Logo" ColumnName="Logo" />
+                <ScalarProperty Name="TextoLiquidacion" ColumnName="TextoLiquidacion" />
+                <ScalarProperty Name="CajaDeCompensacion" ColumnName="CajaDeCompensacion" />
+                <ScalarProperty Name="FactorMutual" ColumnName="FactorMutual" />
+                <ScalarProperty Name="Mutual" ColumnName="Mutual" />
+                <ScalarProperty Name="Telefono" ColumnName="Telefono" />
+                <ScalarProperty Name="Ciudad" ColumnName="Ciudad" />
+                <ScalarProperty Name="Comuna" ColumnName="Comuna" />
+                <ScalarProperty Name="Dirección" ColumnName="Dirección" />
+                <ScalarProperty Name="Giro" ColumnName="Giro" />
+                <ScalarProperty Name="RepresenntanteLegalRut" ColumnName="RepresenntanteLegalRut" />
+                <ScalarProperty Name="RepresentanteLegalNombre" ColumnName="RepresentanteLegalNombre" />
+                <ScalarProperty Name="RazonSocial" ColumnName="RazonSocial" />
+                <ScalarProperty Name="Rut" ColumnName="Rut" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RegistroTrabajador">
+            <EntityTypeMapping TypeName="DBManejoPersonalModel.RegistroTrabajador">
+              <MappingFragment StoreEntitySet="RegistroTrabajador">
+                <ScalarProperty Name="Empresa" ColumnName="Empresa" />
+                <ScalarProperty Name="Campo" ColumnName="Campo" />
+                <ScalarProperty Name="Foto" ColumnName="Foto" />
+                <ScalarProperty Name="Fecha" ColumnName="Fecha" />
+                <ScalarProperty Name="Uid" ColumnName="Uid" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="DBManejoPersonalModel.sysdiagrams">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="definition" ColumnName="definition" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="name" ColumnName="name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="HorasExtras">
+            <EntityTypeMapping TypeName="DBManejoPersonalModel.HorasExtras">
+              <MappingFragment StoreEntitySet="HorasExtras">
+                <ScalarProperty Name="IdTrabajador" ColumnName="IdTrabajador" />
+                <ScalarProperty Name="Periodo" ColumnName="Periodo" />
+                <ScalarProperty Name="Porcentaje" ColumnName="Porcentaje" />
+                <ScalarProperty Name="Horas" ColumnName="Horas" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Licencia">
+            <EntityTypeMapping TypeName="DBManejoPersonalModel.Licencia">
+              <MappingFragment StoreEntitySet="Licencia">
+                <ScalarProperty Name="IdTrabajador" ColumnName="IdTrabajador" />
+                <ScalarProperty Name="Causa" ColumnName="Causa" />
+                <ScalarProperty Name="Hasta" ColumnName="Hasta" />
+                <ScalarProperty Name="Dias" ColumnName="Dias" />
+                <ScalarProperty Name="Desde" ColumnName="Desde" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TipoContrato">
+            <EntityTypeMapping TypeName="DBManejoPersonalModel.TipoContrato">
+              <MappingFragment StoreEntitySet="TipoContrato">
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Prestamo">
+            <EntityTypeMapping TypeName="DBManejoPersonalModel.Prestamo">
+              <MappingFragment StoreEntitySet="Prestamo">
+                <ScalarProperty Name="IdTrabajador" ColumnName="IdTrabajador" />
+                <ScalarProperty Name="Inicio" ColumnName="Inicio" />
+                <ScalarProperty Name="Interes" ColumnName="Interes" />
+                <ScalarProperty Name="Meses" ColumnName="Meses" />
+                <ScalarProperty Name="Monto" ColumnName="Monto" />
+                <ScalarProperty Name="Moneda" ColumnName="Moneda" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="HyD">
+            <EntityTypeMapping TypeName="DBManejoPersonalModel.HyD">
+              <MappingFragment StoreEntitySet="HyD">
+                <ScalarProperty Name="Fijo" ColumnName="Fijo" />
+                <ScalarProperty Name="IdTrabajador" ColumnName="IdTrabajador" />
+                <ScalarProperty Name="Tipo" ColumnName="Tipo" />
+                <ScalarProperty Name="Periodo" ColumnName="Periodo" />
+                <ScalarProperty Name="Monto" ColumnName="Monto" />
+                <ScalarProperty Name="Moneda" ColumnName="Moneda" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Vacaciones">
+            <EntityTypeMapping TypeName="DBManejoPersonalModel.Vacaciones">
+              <MappingFragment StoreEntitySet="Vacaciones">
+                <ScalarProperty Name="IdTrabajador" ColumnName="IdTrabajador" />
+                <ScalarProperty Name="Saldo" ColumnName="Saldo" />
+                <ScalarProperty Name="TomadasProgresivas" ColumnName="TomadasProgresivas" />
+                <ScalarProperty Name="TomadasNormales" ColumnName="TomadasNormales" />
+                <ScalarProperty Name="Total" ColumnName="Total" />
+                <ScalarProperty Name="Progresivas" ColumnName="Progresivas" />
+                <ScalarProperty Name="Normales" ColumnName="Normales" />
+                <ScalarProperty Name="Año" ColumnName="Año" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Cargo">
+            <EntityTypeMapping TypeName="DBManejoPersonalModel.Cargo">
+              <MappingFragment StoreEntitySet="Cargo">
+                <ScalarProperty Name="IdEmpresa" ColumnName="IdEmpresa" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CentroDeCostos">
+            <EntityTypeMapping TypeName="DBManejoPersonalModel.CentroDeCostos">
+              <MappingFragment StoreEntitySet="CentroDeCostos">
+                <ScalarProperty Name="IdEmpresa" ColumnName="IdEmpresa" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Finiquito">
+            <EntityTypeMapping TypeName="DBManejoPersonalModel.Finiquito">
+              <MappingFragment StoreEntitySet="Finiquito">
+                <ScalarProperty Name="IdTrabajador" ColumnName="IdTrabajador" />
+                <ScalarProperty Name="Total" ColumnName="Total" />
+                <ScalarProperty Name="FactorVacaciones" ColumnName="FactorVacaciones" />
+                <ScalarProperty Name="Vacaciones" ColumnName="Vacaciones" />
+                <ScalarProperty Name="FactorIndemnizacion" ColumnName="FactorIndemnizacion" />
+                <ScalarProperty Name="Indemnización" ColumnName="Indemnización" />
+                <ScalarProperty Name="FactorAvisoPrevio" ColumnName="FactorAvisoPrevio" />
+                <ScalarProperty Name="AvisoPrevio" ColumnName="AvisoPrevio" />
+                <ScalarProperty Name="SueldoMensual" ColumnName="SueldoMensual" />
+                <ScalarProperty Name="Dias" ColumnName="Dias" />
+                <ScalarProperty Name="DiasDeVacaciones" ColumnName="DiasDeVacaciones" />
+                <ScalarProperty Name="FechaFin" ColumnName="FechaFin" />
+                <ScalarProperty Name="FechaDocumento" ColumnName="FechaDocumento" />
+                <ScalarProperty Name="Texto" ColumnName="Texto" />
+                <ScalarProperty Name="Causa" ColumnName="Causa" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AFP">
+            <EntityTypeMapping TypeName="DBManejoPersonalModel.AFP">
+              <MappingFragment StoreEntitySet="AFP">
+                <ScalarProperty Name="Voluntario" ColumnName="Voluntario" />
+                <ScalarProperty Name="Retiro" ColumnName="Retiro" />
+                <ScalarProperty Name="Periodo" ColumnName="Periodo" />
+                <ScalarProperty Name="Porcentaje" ColumnName="Porcentaje" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Trabajador">
+            <EntityTypeMapping TypeName="DBManejoPersonalModel.Trabajador">
+              <MappingFragment StoreEntitySet="Trabajador">
+                <ScalarProperty Name="DatosEmpresa" ColumnName="DatosEmpresa" />
+                <ScalarProperty Name="Subsidio" ColumnName="Subsidio" />
+                <ScalarProperty Name="AporteEmpleadorSeguroCesantia" ColumnName="AporteEmpleadorSeguroCesantia" />
+                <ScalarProperty Name="AporteTrabajadorSeguroCensatia" ColumnName="AporteTrabajadorSeguroCensatia" />
+                <ScalarProperty Name="RentaImponibleSeguroCensantia" ColumnName="RentaImponibleSeguroCensantia" />
+                <ScalarProperty Name="SucursalParaPagoMutual" ColumnName="SucursalParaPagoMutual" />
+                <ScalarProperty Name="CotizacionAccidenteMutual" ColumnName="CotizacionAccidenteMutual" />
+                <ScalarProperty Name="RentaImponibleMutual" ColumnName="RentaImponibleMutual" />
+                <ScalarProperty Name="CodigoMutualidad" ColumnName="CodigoMutualidad" />
+                <ScalarProperty Name="CodigoSucursalCCAF" ColumnName="CodigoSucursalCCAF" />
+                <ScalarProperty Name="BonosGobiernoCCAF" ColumnName="BonosGobiernoCCAF" />
+                <ScalarProperty Name="OtrosDescuentosCCAF2" ColumnName="OtrosDescuentosCCAF2" />
+                <ScalarProperty Name="OtrosDescuentosCCAF1" ColumnName="OtrosDescuentosCCAF1" />
+                <ScalarProperty Name="DescuentoCargasFamiliaresCCAF" ColumnName="DescuentoCargasFamiliaresCCAF" />
+                <ScalarProperty Name="CotizacionCCAFNoAfiniladosIsapres" ColumnName="CotizacionCCAFNoAfiniladosIsapres" />
+                <ScalarProperty Name="OtrosDescuentosCCAF" ColumnName="OtrosDescuentosCCAF" />
+                <ScalarProperty Name="DescuentoPorSeguroDeVidaCCAF" ColumnName="DescuentoPorSeguroDeVidaCCAF" />
+                <ScalarProperty Name="DescuentosPorLeasing" ColumnName="DescuentosPorLeasing" />
+                <ScalarProperty Name="DescuentoDentalCCAF" ColumnName="DescuentoDentalCCAF" />
+                <ScalarProperty Name="CreditosPersonalesCCAF" ColumnName="CreditosPersonalesCCAF" />
+                <ScalarProperty Name="RentaImponibleCCAF" ColumnName="RentaImponibleCCAF" />
+                <ScalarProperty Name="CodigoCCAF" ColumnName="CodigoCCAF" />
+                <ScalarProperty Name="MontoGES" ColumnName="MontoGES" />
+                <ScalarProperty Name="CotizacionIsapreAV" ColumnName="CotizacionIsapreAV" />
+                <ScalarProperty Name="CotizacionIsapre" ColumnName="CotizacionIsapre" />
+                <ScalarProperty Name="CotizacionPactada" ColumnName="CotizacionPactada" />
+                <ScalarProperty Name="MonedaDelPlanPactadoIsapre" ColumnName="MonedaDelPlanPactadoIsapre" />
+                <ScalarProperty Name="RentaImponibleIsapre" ColumnName="RentaImponibleIsapre" />
+                <ScalarProperty Name="NumeroFun" ColumnName="NumeroFun" />
+                <ScalarProperty Name="CodigoIntitucionSalud" ColumnName="CodigoIntitucionSalud" />
+                <ScalarProperty Name="BonosGobierno" ColumnName="BonosGobierno" />
+                <ScalarProperty Name="DescuentoPorCargasFamiliaresISL" ColumnName="DescuentoPorCargasFamiliaresISL" />
+                <ScalarProperty Name="BonificacionLey" ColumnName="BonificacionLey" />
+                <ScalarProperty Name="CotizacionISL" ColumnName="CotizacionISL" />
+                <ScalarProperty Name="CotizacionFonasa" ColumnName="CotizacionFonasa" />
+                <ScalarProperty Name="CotizaciónDesahucio" ColumnName="CotizaciónDesahucio" />
+                <ScalarProperty Name="TasaCotizacionDesahucio" ColumnName="TasaCotizacionDesahucio" />
+                <ScalarProperty Name="CodigoExcajaDesahucio" ColumnName="CodigoExcajaDesahucio" />
+                <ScalarProperty Name="RentaImponibleDesahucio" ColumnName="RentaImponibleDesahucio" />
+                <ScalarProperty Name="CotizacionObligatoriaIPS" ColumnName="CotizacionObligatoriaIPS" />
+                <ScalarProperty Name="RentaImponibleIPS" ColumnName="RentaImponibleIPS" />
+                <ScalarProperty Name="TasaExcaja" ColumnName="TasaExcaja" />
+                <ScalarProperty Name="CodigoExcaja" ColumnName="CodigoExcaja" />
+                <ScalarProperty Name="PeriodosAV" ColumnName="PeriodosAV" />
+                <ScalarProperty Name="MontoAV" ColumnName="MontoAV" />
+                <ScalarProperty Name="MontoCapitalizacionVoluntaria" ColumnName="MontoCapitalizacionVoluntaria" />
+                <ScalarProperty Name="AFPAV" ColumnName="AFPAV" />
+                <ScalarProperty Name="HastaAV" ColumnName="HastaAV" />
+                <ScalarProperty Name="DesdeAV" ColumnName="DesdeAV" />
+                <ScalarProperty Name="CodigoMovimientoPersonalAV" ColumnName="CodigoMovimientoPersonalAV" />
+                <ScalarProperty Name="NombresAV" ColumnName="NombresAV" />
+                <ScalarProperty Name="ApellidoMaternoAV" ColumnName="ApellidoMaternoAV" />
+                <ScalarProperty Name="ApellidoPaternoAV" ColumnName="ApellidoPaternoAV" />
+                <ScalarProperty Name="RutAV" ColumnName="RutAV" />
+                <ScalarProperty Name="AfiliadoVoluntario" ColumnName="AfiliadoVoluntario" />
+                <ScalarProperty Name="CotizacionEmpleadorAPVC" ColumnName="CotizacionEmpleadorAPVC" />
+                <ScalarProperty Name="CotizacionTrabajadorAPVC" ColumnName="CotizacionTrabajadorAPVC" />
+                <ScalarProperty Name="FormaPagoAPVC" ColumnName="FormaPagoAPVC" />
+                <ScalarProperty Name="NumeroAPVC" ColumnName="NumeroAPVC" />
+                <ScalarProperty Name="CodigoAPVC" ColumnName="CodigoAPVC" />
+                <ScalarProperty Name="APVC" ColumnName="APVC" />
+                <ScalarProperty Name="CotizaciónDepositosConvenidos" ColumnName="CotizaciónDepositosConvenidos" />
+                <ScalarProperty Name="CotizacionAPVI" ColumnName="CotizacionAPVI" />
+                <ScalarProperty Name="FormaPagoAPVI" ColumnName="FormaPagoAPVI" />
+                <ScalarProperty Name="NumeroAPVI" ColumnName="NumeroAPVI" />
+                <ScalarProperty Name="CodigoAPVI" ColumnName="CodigoAPVI" />
+                <ScalarProperty Name="APVI" ColumnName="APVI" />
+                <ScalarProperty Name="Empresa" ColumnName="Empresa" />
+                <ScalarProperty Name="Uid" ColumnName="Uid" />
+                <ScalarProperty Name="Foto" ColumnName="Foto" />
+                <ScalarProperty Name="FotoCarnet" ColumnName="FotoCarnet" />
+                <ScalarProperty Name="Gerente" ColumnName="Gerente" />
+                <ScalarProperty Name="JefeDirecto" ColumnName="JefeDirecto" />
+                <ScalarProperty Name="DiasVacacionesAño" ColumnName="DiasVacacionesAño" />
+                <ScalarProperty Name="Movilizacion" ColumnName="Movilizacion" />
+                <ScalarProperty Name="Colacion" ColumnName="Colacion" />
+                <ScalarProperty Name="FactorHE" ColumnName="FactorHE" />
+                <ScalarProperty Name="TipoPago" ColumnName="TipoPago" />
+                <ScalarProperty Name="SueldoBruto" ColumnName="SueldoBruto" />
+                <ScalarProperty Name="Gratificacion" ColumnName="Gratificacion" />
+                <ScalarProperty Name="SueldoBase" ColumnName="SueldoBase" />
+                <ScalarProperty Name="FechaTermino" ColumnName="FechaTermino" />
+                <ScalarProperty Name="FechaIngreso" ColumnName="FechaIngreso" />
+                <ScalarProperty Name="Jornada" ColumnName="Jornada" />
+                <ScalarProperty Name="Contrato" ColumnName="Contrato" />
+                <ScalarProperty Name="Empleador" ColumnName="Empleador" />
+                <ScalarProperty Name="Campo" ColumnName="Campo" />
+                <ScalarProperty Name="NombreJefe" ColumnName="NombreJefe" />
+                <ScalarProperty Name="Cargo" ColumnName="Cargo" />
+                <ScalarProperty Name="TelefonoEmer" ColumnName="TelefonoEmer" />
+                <ScalarProperty Name="DireccionEmer" ColumnName="DireccionEmer" />
+                <ScalarProperty Name="VinculoEmer" ColumnName="VinculoEmer" />
+                <ScalarProperty Name="NombreEmer" ColumnName="NombreEmer" />
+                <ScalarProperty Name="Salud" ColumnName="Salud" />
+                <ScalarProperty Name="Mutual" ColumnName="Mutual" />
+                <ScalarProperty Name="SeguroCesantia" ColumnName="SeguroCesantia" />
+                <ScalarProperty Name="Jubiulado" ColumnName="Jubiulado" />
+                <ScalarProperty Name="TrampoAFP" ColumnName="TrampoAFP" />
+                <ScalarProperty Name="FinMovimientoPersonal" ColumnName="FinMovimientoPersonal" />
+                <ScalarProperty Name="InicioMovimientoPersonal" ColumnName="InicioMovimientoPersonal" />
+                <ScalarProperty Name="CodigoMovimientoDePersonal" ColumnName="CodigoMovimientoDePersonal" />
+                <ScalarProperty Name="MontoTrabajoPesado" ColumnName="MontoTrabajoPesado" />
+                <ScalarProperty Name="PorcentajeTrabajoPesado" ColumnName="PorcentajeTrabajoPesado" />
+                <ScalarProperty Name="PerodoHastaSus" ColumnName="PerodoHastaSus" />
+                <ScalarProperty Name="PuestoTrabajoPesado" ColumnName="PuestoTrabajoPesado" />
+                <ScalarProperty Name="PeriodosDesdeSus" ColumnName="PeriodosDesdeSus" />
+                <ScalarProperty Name="NPeriodosSus" ColumnName="NPeriodosSus" />
+                <ScalarProperty Name="AporteIndemSus" ColumnName="AporteIndemSus" />
+                <ScalarProperty Name="TasaPactadaSus" ColumnName="TasaPactadaSus" />
+                <ScalarProperty Name="RentaImpSustitutiva" ColumnName="RentaImpSustitutiva" />
+                <ScalarProperty Name="AhorroVoluntarioAFP" ColumnName="AhorroVoluntarioAFP" />
+                <ScalarProperty Name="SIS" ColumnName="SIS" />
+                <ScalarProperty Name="CotizacionObligatoriaAFP" ColumnName="CotizacionObligatoriaAFP" />
+                <ScalarProperty Name="RentaImponibleAFP" ColumnName="RentaImponibleAFP" />
+                <ScalarProperty Name="TipoLineaAFP" ColumnName="TipoLineaAFP" />
+                <ScalarProperty Name="AFP" ColumnName="AFP" />
+                <ScalarProperty Name="SolicitudTrabajadorJoven" ColumnName="SolicitudTrabajadorJoven" />
+                <ScalarProperty Name="ReintegroCargasFamiliares" ColumnName="ReintegroCargasFamiliares" />
+                <ScalarProperty Name="AsignacionFamiliarRetroactiva" ColumnName="AsignacionFamiliarRetroactiva" />
+                <ScalarProperty Name="AsignacionFamiliar" ColumnName="AsignacionFamiliar" />
+                <ScalarProperty Name="RegimenPrevicional" ColumnName="RegimenPrevicional" />
+                <ScalarProperty Name="CargasInvalidas" ColumnName="CargasInvalidas" />
+                <ScalarProperty Name="CargasMaternales" ColumnName="CargasMaternales" />
+                <ScalarProperty Name="CargasSimples" ColumnName="CargasSimples" />
+                <ScalarProperty Name="TrampoAsignacionFamiliar" ColumnName="TrampoAsignacionFamiliar" />
+                <ScalarProperty Name="CargasFamiliares" ColumnName="CargasFamiliares" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Telefono" ColumnName="Telefono" />
+                <ScalarProperty Name="Ciudad" ColumnName="Ciudad" />
+                <ScalarProperty Name="Sexo" ColumnName="Sexo" />
+                <ScalarProperty Name="Direccion" ColumnName="Direccion" />
+                <ScalarProperty Name="FechaNacimiento" ColumnName="FechaNacimiento" />
+                <ScalarProperty Name="Nacionalidad" ColumnName="Nacionalidad" />
+                <ScalarProperty Name="EstadoCivil" ColumnName="EstadoCivil" />
+                <ScalarProperty Name="CodPersonal" ColumnName="CodPersonal" />
+                <ScalarProperty Name="Contratado" ColumnName="Contratado" />
+                <ScalarProperty Name="NumeroCuenta" ColumnName="NumeroCuenta" />
+                <ScalarProperty Name="Banco" ColumnName="Banco" />
+                <ScalarProperty Name="TipoCuenta" ColumnName="TipoCuenta" />
+                <ScalarProperty Name="Rut" ColumnName="Rut" />
+                <ScalarProperty Name="ApellidoMaterno" ColumnName="ApellidoMaterno" />
+                <ScalarProperty Name="ApellidoPaterno" ColumnName="ApellidoPaterno" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Ninguno" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

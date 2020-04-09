@@ -1,0 +1,138 @@
+﻿@model ControlPersonalAppWeb.Empresas
+
+@{
+    ViewBag.Title = "Detalles";
+}
+
+<h2>Detalles</h2>
+
+<div>
+    <h4>Empresas</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Nombre)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Nombre)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Rut)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Rut)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.RazonSocial)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RazonSocial)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.RepresentanteLegalNombre)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RepresentanteLegalNombre)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.RepresenntanteLegalRut)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RepresenntanteLegalRut)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Giro)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Giro)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Dirección)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Dirección)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Comuna)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Comuna)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Ciudad)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Ciudad)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Telefono)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Telefono)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Mutual)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Mutual)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.FactorMutual)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FactorMutual)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CajaDeCompensacion)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CajaDeCompensacion)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TextoLiquidacion)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TextoLiquidacion)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Logo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Logo)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Volver a la lista", "Index")
+</p>

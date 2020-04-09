@@ -1,0 +1,71 @@
+﻿@model IEnumerable<ControlPersonalAppWeb.HyD>
+
+@{
+    ViewBag.Title = "Índice";
+}
+
+@if (ViewBag.trabajador.Id != 0)
+{
+    <a href='@Url.Action("Create", "HyDs", new { id = ViewBag.trabajador.Id })'>
+        <button type="button" class="btn btn-default">Crear nuevo</button>
+    </a>
+}
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Nombre)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Moneda)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Monto)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Periodo)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Tipo)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Fijo)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Nombre)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Moneda)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Monto)
+        </td>
+        <td>
+            @item.Periodo.Value.ToString("MM-yyyy")
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Tipo)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Fijo)
+        </td>
+        <td>
+            <a href='@Url.Action("Edit", "HyDs", new { id = item.Id })'>
+                <button type="button" class="btn btn-default">Editar</button>
+            </a>
+            <a href='@Url.Action("Details", "HyDs", new { id = item.Id })'>
+                <button type="button" class="btn btn-default">Detalle</button>
+            </a>
+            <a href='@Url.Action("Delete", "HyDs", new { id = item.Id })'>
+                <button type="button" class="btn btn-default" })>Borrar</button>
+            </a>
+        </td>
+    </tr>
+    }
+
+</table>

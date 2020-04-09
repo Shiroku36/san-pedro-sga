@@ -1,0 +1,53 @@
+﻿@model IEnumerable<ControlPersonalAppWeb.HorasExtras>
+
+@{
+    ViewBag.Title = "Horas extras";
+}
+
+@if(ViewBag.trabajador.Id != 0)
+{
+    <a href='@Url.Action("Create", "HorasExtras", new { id = ViewBag.trabajador.Id })'>
+        <button type="button" class="btn btn-default">Crear nuevo</button>
+    </a>
+}
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Horas)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Porcentaje)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Periodo)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Horas)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Porcentaje)
+            </td>
+            <td>
+                @item.Periodo.Value.ToString("MM-yyyy")
+            </td>
+            <td>
+                <a href='@Url.Action("Edit", "HorasExtras", new { id = item.Id })'>
+                    <button type="button" class="btn btn-default">Editar</button>
+                </a>
+                <a href='@Url.Action("Details", "HorasExtras", new { id = item.Id })'>
+                    <button type="button" class="btn btn-default">Detalle</button>
+                </a>
+                <a href='@Url.Action("Delete", "HorasExtras", new { id = item.Id })'>
+                    <button type="button" class="btn btn-default" })>Borrar</button>
+                </a>
+            </td>
+        </tr>
+    }
+
+</table>

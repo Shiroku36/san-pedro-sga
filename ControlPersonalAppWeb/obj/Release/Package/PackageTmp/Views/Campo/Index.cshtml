@@ -1,0 +1,51 @@
+﻿@model IEnumerable<ControlPersonalAppWeb.Campos>
+
+@{
+    ViewBag.Title = "Huertos";
+}
+
+<h2>Índice Huertos</h2>
+
+<p>
+    @Html.ActionLink("Crear nuevo", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Nombre)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Lugar)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Encargado)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Asistente)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Nombre)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Lugar)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Encargado)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Asistente)
+        </td>
+        <td>
+            @Html.ActionLink("Editar", "Edit", new { id = item.Id }) |
+            @Html.ActionLink("Detalle", "Details", new { id = item.Id }) |
+            @Html.ActionLink("Borrar", "Delete", new { id = item.Id }, new { onclick = "return confirm('¿Está seguro que desea eliminar el Campo?');" })
+        </td>
+    </tr>
+}
+
+</table>

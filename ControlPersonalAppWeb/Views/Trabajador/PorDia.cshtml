@@ -1,0 +1,69 @@
+﻿@model IEnumerable<ControlPersonalAppWeb.RegistroTrabajador>
+
+@{
+    ViewBag.Title = "Por Dia";
+    var tipo = "";
+    int id = 0;
+    string nombre = "";
+    var cuenta = ControlPersonalAppWeb.Utils.SessionManager.CuentaAutenticada();
+}
+
+<h2>Por Dia</h2>
+<table class="table">
+    <tr>
+        <th>
+            Nombre
+        </th>
+        <th>
+            Tipo
+        </th>
+        <th>
+            Hora
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Campo)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Foto)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            @foreach (var trabajador in ViewBag.trabajadores)
+            {
+                if (trabajador.Uid.Contains(item.Uid))
+                {
+                    id = trabajador.Id;
+                    nombre = trabajador.Nombre;
+                }
+            }
+            <td>
+                <a href="/Registro/Index/@id"> @nombre</a>
+            </td>
+            <td>
+                @if (item.Fecha.Hour < 12)
+                {
+                    tipo = "Entrada";
+                }
+                else
+                {
+                    tipo = "Salida";
+                }
+                @tipo
+            </td>
+            <td>
+                @item.Fecha.ToShortTimeString()
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Campo)
+            </td>
+            <td>
+                <img src="@String.Format("data:image/jpg;base64,{0}",System.Convert.ToBase64String(item.Foto))" width="110" />
+            </td>
+        </tr>
+    }
+
+</table>

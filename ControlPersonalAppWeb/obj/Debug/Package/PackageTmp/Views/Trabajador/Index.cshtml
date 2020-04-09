@@ -1,0 +1,207 @@
+﻿@model IEnumerable<ControlPersonalAppWeb.Models.TrabajadorIndex>
+
+@{
+    ViewBag.Title = "RR.HH.";
+    var cuenta = ControlPersonalAppWeb.Utils.SessionManager.CuentaAutenticada();
+}
+@if (!String.IsNullOrEmpty(ControlPersonalAppWeb.Utils.SessionManager.mensaje))
+{
+    <div class="alert-info">
+        <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+        @ControlPersonalAppWeb.Utils.SessionManager.mensaje
+    </div>
+    ControlPersonalAppWeb.Utils.SessionManager.mensaje = "";
+}
+<h2>Índice RR.HH.</h2>
+<div class="form-group">
+    @if (cuenta.Permisos.Contains("TrabajadoresC"))
+    {
+        <a href='@Url.Action("Create", "Trabajador")'>
+            <button type="button" class="btn btn-default">Crear Nuevo</button>
+        </a>
+    }
+    <a href='@Url.Action("Hoy", "Registro")'>
+        <button type="button" class="btn btn-default">Registros del día</button>
+    </a>
+    <!--
+    <a href='@Url.Action("Borrar", "Trabajador")'>
+        <button type="button" class="btn btn-default">borrar</button>
+    </a>-->
+</div>
+<div class="form-group-sm">
+    <input type="text" id="busqueda" onkeyup="buscar()" placeholder="Busqueda" class="input-group">
+</div>
+<table class="table" id="tabla">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Rut)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Nombre)
+            </th>
+            <th>
+                Apellidos
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Uid)
+            </th>
+            <th>
+                Numero pulsera
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+        <tr>
+            <td>
+                @item.Rut
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Nombre)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ApellidoPaterno)
+                @Html.DisplayFor(modelItem => item.ApellidoMaterno)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Uid)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Gerente)
+            </td>
+
+            @if (cuenta.Permisos.Contains("RegistrosV"))
+            {
+                <td>
+                    <a href='@Url.Action("Index", "Registro", new { id = item.Id })'>
+                        <button type="button" class="btn btn-default">
+                            <image src="~/Images/registro.png" style="width:32px;height:32px"></image>
+                        </button>
+                    </a>
+                </td>
+            }
+
+            @if (cuenta.Permisos.Contains("TrabajadoresE"))
+            {
+                <td>
+                    <a href='@Url.Action("Edit", "Trabajador", new { id = item.Id })'>
+                        <button title="Editar" type="submit" class="btn btn-default">
+                            <image src="~/Images/editar.png" style="width:32px;height:32px"></image>
+                        </button>
+                    </a>
+                </td>
+            }
+            <td>
+                <a href='@Url.Action("Details", "Trabajador", new { id = item.Id })'>
+                    <button title="Detalle" type="submit" class="btn btn-default">
+                        <image src="~/Images/detalle.png" style="width:32px;height:32px"></image>
+                    </button>
+                </a>
+            </td>
+            @if (cuenta.Permisos.Contains("TrabajadoresD"))
+            {
+                <td>
+                    <a href='@Url.Action("Delete", "Trabajador", new { id = item.Id })' onclick="return confirm('¿Está seguro que desea eliminar el Trabajador?');" })>
+                        <button title="Eliminar" type="submit" class="btn btn-default">
+                            <image src="~/Images/eliminar.png" style="width:32px;height:32px"></image>
+                        </button>
+                    </a>
+                </td>
+            }
+
+            @if (cuenta.Permisos.Contains("Sueldo"))
+            {
+                <td>
+                    <a href='@Url.Action("Index", "Remuneracion", new { id = item.Id })'>
+                        <button title="Remuneración" type="submit" class="btn btn-default">
+                            <image src="~/Images/pago.png" style="width:32px;height:32px"></image>
+                        </button>
+                    </a>
+                </td>
+            }
+
+            @if (cuenta.Permisos.Contains("TrabajadoresS"))
+            {
+                <td>
+                    <a href='@Url.Action("PDFDetalle", "Trabajador", new { id = item.Id })'>
+                        <button title="Solicitud Contratación" type="submit" class="btn btn-default">
+                            <image src="~/Images/contrato.png" style="width:32px;height:32px"></image>
+                        </button>
+                    </a>
+                </td>
+            }
+            @if (cuenta.Permisos.Contains("TrabajadoresM"))
+            {
+                <td>
+                    <a href='@Url.Action("Index", "Trabajador", new { id = item.Id })' target="_blank">
+
+                        <button title="Correo" type="submit" class="btn btn-default">
+                            <image src="~/Images/correo.png" style="width:32px;height:32px"></image>
+                        </button>
+                    </a>
+                </td>
+            }
+        </tr>
+        }
+    </tbody>
+</table>
+<script>
+    function buscar() {
+        var input, filter, table, tr, td1, td2, td3, td4, td5, i, txtValue1, txtValue2, txtValue3, txtValue4, txtValue5 ;
+        input = document.getElementById("busqueda");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("tabla");
+        tr = table.getElementsByTagName("tr");
+        for (i = 0; i < tr.length; i++) {
+            td1 = tr[i].getElementsByTagName("td")[0];
+            td2 = tr[i].getElementsByTagName("td")[1];
+            td3 = tr[i].getElementsByTagName("td")[2];
+            td4 = tr[i].getElementsByTagName("td")[3];
+            td5 = tr[i].getElementsByTagName("td")[4];
+            if (td1) {
+                txtValue1 = td1.textContent || td1.innerText;
+                txtValue2 = td2.textContent || td2.innerText;
+                txtValue3 = td3.textContent || td3.innerText;
+                txtValue4 = td4.textContent || td4.innerText;
+                txtValue5 = td5.textContent || td5.innerText;
+                if (txtValue1.toUpperCase().indexOf(filter) > -1 || txtValue2.toUpperCase().indexOf(filter) > -1 || txtValue3.toUpperCase().indexOf(filter) > -1 ||
+                    txtValue4.toUpperCase().indexOf(filter) > -1 || txtValue5.toUpperCase().indexOf(filter) > -1)    {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+
+    }
+</script>
+<!--
+<script>
+    $("#busqueda").keyup(function () {
+        //split the current value of searchInputxx
+        var data = this.value.split(" ");
+        //create a jquery object of the rows
+        var jo = $("#tabla").find("tr");
+        if (this.value == "") {
+            jo.show();
+            return;
+        }
+        //hide all the rows
+        jo.hide();
+
+        //Recusively filter the jquery object to get results.
+        jo.filter(function (i, v) {
+            var $t = $(this);
+            for (var d = 0; d < data.length; ++d) {
+                if ($t.text().toUpperCase().indexOf(data[d]) > -1) {
+                    return true;
+                }
+            }
+            return false;
+        })
+            //show the rows that match.
+            .show();
+</script>-->

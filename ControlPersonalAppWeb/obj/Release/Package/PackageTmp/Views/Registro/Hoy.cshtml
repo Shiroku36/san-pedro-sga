@@ -1,0 +1,67 @@
+﻿@model IEnumerable<ControlPersonalAppWeb.RegistroTrabajador>
+
+@{
+    ViewBag.Title = "Registros del día";
+    var tipo = "";
+}
+
+<h2>Registros del día @DateTime.Now.ToLongDateString()</h2>
+
+<script src="~/Scripts/fechaHoy.js"></script>
+<table class="table">
+    <tr>
+        <th>
+            Nombre
+        </th>
+        <th>
+            Tipo
+        </th>
+        <th>
+            Hora
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Campo)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Foto)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            @foreach(var trabajador in ViewBag.trabajadores)
+            {
+               if(trabajador.Uid.Contains(item.Uid))
+               {
+                   <td>
+                       @trabajador.Nombre
+                   </td>
+               }
+            }
+            <td>
+                @if (item.Fecha.Hour < 12)
+                {
+                    tipo = "Entrada";
+                }
+                else
+                {
+                    tipo = "Salida";
+                }
+                @tipo
+            </td>
+            <td>
+                @item.Fecha.ToShortTimeString()
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Campo)
+            </td>
+            <td>
+                <img src="@String.Format("data:image/jpg;base64,{0}",System.Convert.ToBase64String(item.Foto))" width="110" height="80" />
+            </td>
+        </tr>
+    }
+
+</table>
+

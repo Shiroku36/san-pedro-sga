@@ -1,0 +1,50 @@
+﻿@model ControlPersonalAppWeb.HorasExtras
+
+@{
+    ViewBag.Title = "Detalles";
+}
+
+<h2>Detalles</h2>
+
+<div>
+    <h4>Horas Extras</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Horas)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Horas)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Porcentaje)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Porcentaje)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Periodo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Periodo)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IdTrabajador)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IdTrabajador)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Volver a la lista", "Index")
+</p>

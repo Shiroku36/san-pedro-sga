@@ -1,0 +1,101 @@
+﻿@model IEnumerable<ControlPersonalAppWeb.RegistroTrabajador>
+
+@{
+    ViewBag.Title = "Índice";
+    var tipo = "";
+}
+<div class="col-lg-8">
+    <h2>
+        Registros - @ViewBag.Trabajador.Nombre
+    </h2>
+
+    <p>
+        @Html.ActionLink("PDF", "PDFRegistro", "Trabajador", new { id = ViewBag.id }, null)
+    </p>
+    <p>
+        @Html.ActionLink("Crear nuevo", "Create", new { id = ViewBag.Id }, null)
+    </p>
+</div>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <input type="hidden" id="id" value="@ViewBag.idTrabajador" />
+    <div align="left" class="form-horizontal col-lg-4">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            <b class="control-label col-md-2">Inicio</b>
+            <div class="col-md-10">
+                <input class="form-control" type="date" id="Inicio" name="Inicio" min="2019-01-01"
+                       max="" value="2019-01-01">
+            </div>
+            <b class="control-label col-md-2">Termino</b>
+            <div class="col-md-10">
+                <input class="form-control" type="date" id="Fin" name="Fin" min="2019-01-01"
+                       max="" value="">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Generar" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<script src="~/Scripts/fechaHoy.js"></script>
+<table class="table">
+    <tr>
+        <th>
+            Tipo
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Fecha)
+        </th>
+        <th>
+            Hora
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Campo)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Foto)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+    <tr>
+        <td>
+            @if (item.Fecha.Hour < 12)
+            {
+                tipo = "Entrada";
+            }
+            else
+            {
+                tipo = "Salida";
+            }
+            @tipo
+        </td>
+        <td>
+            @item.Fecha.ToShortDateString()
+        </td> 
+        <td>
+            @item.Fecha.ToShortTimeString()
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Campo)
+        </td>
+        <td>
+            <img src="@String.Format("data:image/jgp;base64,{0}",System.Convert.ToBase64String(item.Foto))" width="110" height="80" />
+        </td>
+        <td>
+            @Html.ActionLink("Editar", "Edit", new { id = item.Id }) |
+            @Html.ActionLink("Detalle", "Details", new { id = item.Id , idTrabajador = ViewBag.id}) |
+            @Html.ActionLink("Borrar", "Delete", new { id = item.Id }, new { onclick = "return confirm('¿Está seguro que desea eliminar el Registro?');" })
+        </td>
+    </tr>
+    }
+
+</table>

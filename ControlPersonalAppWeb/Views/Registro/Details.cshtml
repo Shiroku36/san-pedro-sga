@@ -1,0 +1,46 @@
+﻿@model ControlPersonalAppWeb.RegistroTrabajador
+
+@{
+    ViewBag.Title = "Detalle";
+    string foto = Model.Foto.ToString();
+}
+<h2>Detalle</h2>
+
+<div>
+    <h4>RegistroTrabajador</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Uid)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Uid)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Fecha)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Fecha)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Campo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Campo)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Foto)
+        </dt>
+        <dd>
+            <img src="@String.Format("data:image/jpg;base64,{0}",System.Convert.ToBase64String(Model.Foto))" width="400" />
+        </dd>
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Volver a la lista", "Index", new { id = ViewBag.idTrabajador })
+</p>
