@@ -53,7 +53,7 @@ namespace ControlPersonalAppWeb.Controllers
             //{
 
             //}
-            Trabajador trabajador = database.Trabajador.First(x => x.Uid == uid);
+             Trabajador trabajador = database.Trabajador.First(x => x.Uid == uid);
             //List<Trabajador> trabajadores = database.Trabajador.ToList();
             //foreach(var trabajador in trabajadores)
             //{
