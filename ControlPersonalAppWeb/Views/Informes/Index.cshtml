@@ -3,157 +3,135 @@
     var cuenta = ControlPersonalAppWeb.Utils.SessionManager.CuentaAutenticada();
 }
 
+<div class="col-lg-12">
+    @using (Html.BeginForm())
+    {
+        <div class="form-group col-lg-12">
 
-
-<h1 class="display-4 text-center">Informes</h1>
-@using (Html.BeginForm())
-{
-    <div class="row mt-3">
-
-
-
-        <div class="col-md-6">
-
-            <a href='@Url.Action("Asistencias", "Trabajador")'>
-                <button type="button" class="btn btn-primary btn-block mb-3">Asistencias mensuales</button>
+            <h2>Informes</h2>
+            <input type="button" class="btn btn-default col-lg-6 " value="Instruciones" onClick="mostrar(this)">
+            <a class="col-lg-6" href='@Url.Action("Asistencias", "Trabajador")'>
+                <button type="button" class="btn btn-default">Asistencias mensuales</button>
             </a>
-
-            @Html.AntiForgeryToken()
+            <div id="oculto" style="display:none" class="col-lg-12">
+                <strong>Rut:</strong> Al poner solo el rut mostrará todos los registros de esa persona <br />
+                <strong>Inicio:</strong> al ingresar solo la fecha en este parametro, muestra todos los registros de 1 solo día<br />
+                <strong>Fin:</strong> Cuando esta inicio y fin, muestra los registros en ese rango de fechas<br />
+                <strong>Huerto:</strong> Muestra todos los registros del campo selecionado<br />
+                <strong>Horario general:</strong> Horario para las personas que no tengan asignado un horario<br />
+                Todas se pueden combinar entre si, por ejemplo un rango de fechas, un campo específico y una hora de inicio: devolverá
+                todos los registros de ese día en ese huerto calculando las horas trabajadas desde la hora selecionada
+            </div>
+        </div>
+        @Html.AntiForgeryToken()
+        <div align="left" class="form-group col-lg-6">
+            <h4>
+                Registro por rut
+            </h4>
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
             <div class="form-group">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="row align-items-center">
-                            <h4 class="card-title col-md-6">Registro por rut</h4>
-
-                            <div class="col-md-6">
-                                <button type="button" class="btn btn-info btn-block" data-container="body" data-toggle="popover" title="Registro por rut" data-placement="bottom"
-                                        data-content=" Al poner un rut, mostrará todos los registros de esta persona">
-                                    Ayuda
-                                </button>
-                            </div>
-
-
-                        </div>
-                        <hr />
-
-                        <input class="form-control" maxlength="10" type="text" id="Rut" name="Rut" oninput="checkRut(this)" placeholder="Rut...">
-                        <script src="~/Scripts/validarRUT.js"></script>
-                    </div>
+                <b class="control-label col-md-3">Rut</b>
+                <div class="col-md-9">
+                    <input class="form-control" maxlength="10" type="text" id="Rut" name="Rut" oninput="checkRut(this)" placeholder="Rut...">
+                    <script src="~/Scripts/validarRUT.js"></script>
                 </div>
             </div>
-
+        </div>
+        <div align="left" class="form-group col-lg-6">
+            <h4>
+                Registros por rango de fechas
+            </h4>
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-
-
-
-
-            <div align="left" class="form-group">
-                <h4>Registros por Huerto</h4>
-                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                <div class="form-group">
-                    <b class="control-label col-md-2">Nombre</b>
-                    <div class="col-md-10">
-                        @Html.DropDownList("Campo", new SelectList(ViewBag.campos), htmlAttributes: new { @class = "form-control" })
-
-                    </div>
-                </div>
-            </div>
-
-            @Html.AntiForgeryToken()
-            <div align="left" class="form-group col-lg-6">
-
-                <h4>
-                    Hora de corte de inicio de actividades
-                </h4>
-                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                <div class="form-group">
-                    <b class="control-label col-md-2">Hora</b>
-                    <div class="col-md-10">
-                        <input class="form-control" maxlength="5" type="time" id="Hora" name="Hora" value="08:00">
-                        <script src="~/Scripts/validarRUT.js"></script>
-                    </div>
-                </div>
-            </div>
-
-            <div align="center" class="form-group">
-                <input type="radio" id="Tipo" value="PDF" name="subject" checked="checked" />PDF
-                <input type="radio" id="Tipo" value="EXCEL" name="subject" />EXCEL
-                <input type="submit" value="Generar" class="btn btn-default" />
-            </div>
-
-        </div>
-
-        <div class="col-md-6">
-
-
             <div class="form-group">
-                <div class="card">
+                <b class="control-label col-md-3">Inicio</b>
+                <div class="col-md-9">
+                    <input class="form-control" type="date" id="Inicio" name="Inicio" min="2019-01-01">
+                </div>
 
-                    <div class="row align-items-center">
-                        <h5 class="card-title mt-3 ml-3 col-7 text-center">Registros por rango de fechas</h5>
-                        <button type="button" class="btn btn-info col-3 mt-1 float-right" title="Dismissible popover" data-container="body" data-toggle="popover" data-placement="bottom"
-                                data-content="Inicio: al ingresar solo la fecha en este parametro, muestra todos los registros de 1 solo día
-                                          Fin: Cuando esta inicio y fin, muestra los registros en ese rango de fechas">
-                            Ayuda
-                        </button>
-                    </div>
+                <b class="control-label col-md-3">Fin</b>
+                <div class="col-md-9">
+                    <input class="form-control" type="date" id="Fin" name="Fin" min="2019-01-01" max="2019">
+                </div>
+                <!--<script src="~/Scripts/validarRUT.js"></script>-->
+            </div>
+        </div>
+        <div align="left" class="form-group col-lg-6">
+            <h4>
+                Registros por Huerto
+            </h4>
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div class="form-group">
+                <b class="control-label col-md-3">Nombre</b>
+                <div class="col-md-9">
+                    @Html.DropDownList("Campo", new SelectList(ViewBag.campos), htmlAttributes: new { @class = "form-control" })
 
-                    <div class="card-body">
-                        <b class="control-label col-3">Inicio</b>
-                        <div class="col-4">
-                            <input class="form-control" type="date" id="Inicio" name="Inicio" min="2019-01-01">
-                        </div>
+                </div>
+            </div>
+        </div>
+        @Html.AntiForgeryToken()
+        <div align="left" class="form-group col-lg-6">
+            <h4>
+                Horario general
+            </h4>
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div class="form-group">
+                <b class="control-label col-md-3">Entrada</b>
+                <div class="col-md-9">
+                    <input class="form-control" maxlength="5" type="time" id="Entrada" name="Entrada" value="08:00" required="required">
+                </div>
+                <b class="control-label col-md-3">Salida</b>
+                <div class="col-md-9">
+                    <input class="form-control" maxlength="5" type="time" id="Salida" name="Salida" value="18:00" required="required">
+                </div>
+                <b class="control-label col-md-3">H. almuerzo</b>
+                <div class="col-md-9">
+                    <input class="form-control" maxlength="5" type="time" id="Almuerzo" name="Almuerzo" value="01:00" required="required">
+                </div>
+            </div>
+        </div>
+        <div align = "center" class="form-group col-lg-12">
+            <input type="radio" id="Tipo" value="PDF" name="subject" checked="checked" />PDF
+            <input type="radio" id="Tipo" value="EXCEL" name="subject" /> EXCEL
+            <input type="submit" value="Generar" class="btn btn-default" />
+        </div>
+    }
 
-                        <b class="control-label col-3">Fin</b>
-                        <div class="col-4">
-                            <input class="form-control" type="date" id="Fin" name="Fin" min="2019-01-01" max="2019">
-                        </div>
-                        <!--<script src="~/Scripts/validarRUT.js"></script>-->
+
+    @if (cuenta.Permisos.Contains("InformesA"))
+    {
+        using (Html.BeginForm("PorDia", "Trabajador", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            @Html.AntiForgeryToken()
+            <div class="form-group col-lg-12">
+
+                <div class="control-label col-lg-6">
+                    <h4>Gestión de atrasos</h4>
+                    <input class="form-control" type="datetime-local" id="Inicio" required name="Inicio" min="2019-01-01">
+                    <b class="control-label col-md-12">Horas</b>
+                    <input class="form-control" type="number" value="2" id="Horas" required name="Horas" max="24">
+                    <input type="submit" value="Buscar" class="btn btn-default" />
+                </div>
+
+                <div class="form-group col-lg-6">
+                    <h4>Instruciones  Atrasos </h4>
+                    <div id="oculto2" style="display:inline-block" class="col-lg-8">
+                        <strong>Fecha:</strong> Se elige el día y hora para mostrar a todas las personas que llegaron después de esa hora<br />
+                        <strong>Hora</strong> Agrega horas a la fecha elegida para mostrar hasta esa hora, el valor 2 busca desde 8:00 a 10:00<br />
+
                     </div>
                 </div>
             </div>
-
-
-            @if (cuenta.Permisos.Contains("InformesA"))
-            {
-                using (Html.BeginForm("PorDia", "Trabajador", FormMethod.Post, new { enctype = "multipart/form-data" }))
-                {
-                    @Html.AntiForgeryToken()
-                    <div class="form-group">
-
-                        <div class="control-label">
-                            <h4>Gestión de atrasos</h4>
-                            <input class="form-control" type="datetime-local" id="Inicio" required name="Inicio" min="2019-01-01">
-                            <b class="control-label col-md-12">Horas</b>
-                            <input class="form-control" type="number" value="2" id="Horas" required name="Horas" max="24">
-                            <input type="submit" value="Buscar" class="btn btn-default" />
-                        </div>
-
-                        <div class="form-group">
-                            <h4>Instruciones  Atrasos </h4>
-                            <div id="oculto2" style="display:inline-block" class="col-lg-8">
-                                <strong>Fecha:</strong> Se elige el día y hora para mostrar a todas las personas que llegaron después de esa hora<br />
-                                <strong>Hora</strong> Agrega horas a la fecha elegida para mostrar hasta esa hora, el valor 2 busca desde 8:00 a 10:00<br />
-                            </div>
-                        </div>
-                    </div>
-                }
-            }
-
-
-        </div>
-
-
-    </div>
-}
+        }
+    }
+</div>
 <script>
     function mostrar(enla) {
         obj = document.getElementById('oculto');
-        obj.style.display = (obj.style.display == 'none') ? 'block' : 'none';
+        obj.style.display = (obj.style.display == 'none') ? 'inline' : 'none';
     }
     function mostrar2(enla) {
         obj = document.getElementById('oculto2');
         obj.style.display = (obj.style.display == 'none') ? 'inline-block' : 'none';
     }
 </script>
+

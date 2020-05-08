@@ -47,20 +47,54 @@ namespace ControlPersonalAppWeb.Controllers
         public ActionResult Registros()
         {
             DBManejoPersonalEntities database = new DBManejoPersonalEntities();
-            string uid = "p2";
-            List<RegistroTrabajador> registros = database.RegistroTrabajador.Where(x => x.Uid == uid).ToList();
+            //string uid = "p2";
+            string empresa = "Invina";
+            List<Trabajador> trabajadores = database.Trabajador.Where(x => x.Empresa == empresa).ToList();
+            foreach(var trabajador in trabajadores)
+            {
+                if(!String.IsNullOrEmpty(trabajador.Jornada))
+                {
+                    if(trabajador.Jornada[0]=='A')
+                    {
+                        trabajador.Entrada = "08:00";
+                        trabajador.Salida = "12:00";
+                        trabajador.EntradaA = "12:45";
+                        trabajador.SalidaA = "17:45";
+                    }
+                    if(trabajador.Jornada[0]=='B')
+                    {
+                        trabajador.Entrada = "08:00";
+                        trabajador.Salida = "12:00";
+                        trabajador.EntradaA = "12:00";
+                        trabajador.SalidaA = "15:30";
+                    }
+                    if(trabajador.Jornada[0]=='C')
+                    {
+                        trabajador.Entrada = "07:00";
+                        trabajador.Salida = "11:00";
+                        trabajador.EntradaA = "11:30";
+                        trabajador.SalidaA = "15:30";
+                    }
+                    if(trabajador.Jornada[0]=='D')
+                    {
+                        trabajador.Entrada = "08:00";
+                        trabajador.Salida = "12:00";
+                        trabajador.EntradaA = "13:00";
+                        trabajador.SalidaA = "18:00";
+                    }
+                }
+            }
            // foreach (var registro in registros)
             //{
 
             //}
-             Trabajador trabajador = database.Trabajador.First(x => x.Uid == uid);
             //List<Trabajador> trabajadores = database.Trabajador.ToList();
             //foreach(var trabajador in trabajadores)
             //{
             //}
             //trabajador.
             database.SaveChanges();
-            return View(registros.OrderByDescending(x => x.Fecha));
+            return View();
         }
         [HttpPost]
         public ActionResult Registros(FormCollection collection)
@@ -90,14 +124,14 @@ namespace ControlPersonalAppWeb.Controllers
         [HttpPost]
         public ActionResult Index(FormCollection collection)
         {
-            string[] ids = collection["ID"].Split(new char[] { ',' });
+            /*string[] ids = collection["ID"].Split(new char[] { ',' });
             DBManejoPersonalEntities databases = new DBManejoPersonalEntities();
             foreach (string id in ids)
             {
                 var employee = databases.RegistroTrabajador.Find(int.Parse(id));
                 employee.Uid = "p2";
                 databases.SaveChanges();
-            }
+            }*/
             return RedirectToAction("Index");
         }
         // GET: Registro/Details/ 

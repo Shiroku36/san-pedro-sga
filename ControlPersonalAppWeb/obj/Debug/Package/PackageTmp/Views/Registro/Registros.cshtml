@@ -13,13 +13,14 @@
 {
     @Html.AntiForgeryToken()
 
-    <button type="submit" value="Delete" class="btn btn-sm btn-danger rounded-0" onclick="return confirm('¿Está seguro que desea elminiar varios registros?')"><i class="fa fa-trash-o"></i> Delete</button>
-    <br /><br />
+    <!--<button type="submit" value="Delete" class="btn btn-sm btn-danger rounded-0" onclick="return confirm('¿Está seguro que desea elminiar varios registros?')"><i class="fa fa-trash-o"></i> Delete</button>
+    <br /><br />-->
     <table class="table">
         <tr>
-            <th>
-                Selección
-            </th>
+            <!--
+        <th>
+            Selección
+        </th>-->
             <th>
                 @Html.DisplayNameFor(model => model.Uid)
             </th>
@@ -38,9 +39,10 @@
         @foreach (var item in Model)
         {
             <tr>
-                <td>
-                    <input type="checkbox" id="ID" checked="checked" name="ID" value="@item.Id" class="custom-checkbox chkCheckBoxId" />
-                </td>
+                <!--
+            <td>
+                <input type="checkbox" id="ID" checked="checked" name="ID" value="@item.Id" class="custom-checkbox chkCheckBoxId" />
+            </td>-->
                 <td>
                     @Html.DisplayFor(modelItem => item.Uid)
                 </td>
@@ -51,10 +53,10 @@
                     @Html.DisplayFor(modelItem => item.Campo)
                 </td>
                 <td>
-                    <img src="@String.Format("data:image/jpg;base64,{0}", System.Convert.ToBase64String(item.Foto))" width="110"  />
+                    <img src="@String.Format("data:image/jpg;base64,{0}", System.Convert.ToBase64String(item.Foto))" width="110" />
                 </td>
             </tr>
         }
 
-    </table>
-}
+        </table>
+    }

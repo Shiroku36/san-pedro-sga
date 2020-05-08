@@ -166,8 +166,23 @@ namespace ControlPersonalAppWeb.Controllers
                             tiempoMuerto = DateTime.ParseExact("2000-01-02 00:00:00", "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
                             horaAnterior = DateTime.ParseExact("2000-01-02 00:00:00", "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
                         }
-                        DateTime desde = DateTime.Parse(values[3] + " " + values[4]);//, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
-                        DateTime hasta = DateTime.Parse(values[5] + " " + values[6]);//, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+                        DateTime desde = new DateTime();
+                        DateTime hasta = new DateTime();
+                        try
+                        {
+                            desde = DateTime.Parse(values[3] + " " + values[4]);//, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+                            hasta = DateTime.Parse(values[5] + " " + values[6]);//, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+                        }
+                        catch
+                        {
+                            ViewBag.texto = "Archivo "+nombreEquipo +" no válido";
+                            document.Dispose();
+                            document.Close();
+                            writer.Dispose();
+                            writer.Close();
+                            hpf = null;
+                            return View();
+                        }
                         if(horaAnterior.Year!=2000 )
                         {
                             tiempoMuerto = tiempoMuerto.Add((desde-horaAnterior));
@@ -476,9 +491,18 @@ namespace ControlPersonalAppWeb.Controllers
             var inicio = string.IsNullOrWhiteSpace(collection["Inicio"]);
             var fin = string.IsNullOrWhiteSpace(collection["Fin"]);
             var campo = string.IsNullOrWhiteSpace(collection["Campo"]);
-            if(!string.IsNullOrWhiteSpace(collection["Hora"]))
+
+            if (!string.IsNullOrWhiteSpace(collection["Entrada"]))
             {
-                Utils.SessionManager.hora = collection["Hora"];
+                Utils.SessionManager.entrada = collection["Entrada"];
+            }
+            if (!string.IsNullOrWhiteSpace(collection["Salida"]))
+            {
+                Utils.SessionManager.salida = collection["Salida"];
+            }
+            if (!string.IsNullOrWhiteSpace(collection["Almuerzo"]))
+            {
+                Utils.SessionManager.almuerzo = collection["Almuerzo"];
             }
             if(!campo)
             {
@@ -499,7 +523,12 @@ namespace ControlPersonalAppWeb.Controllers
             if (!rut && inicio && fin && !campo) 
             {
                 string rutIn = collection["Rut"];
-                TrabajadorIndex trabajadorNew = database.Trabajador.Select(x => new TrabajadorIndex { Id = x.Id, Nombre = x.Nombre, Rut = x.Rut, Uid = x.Uid, Gerente = x.Gerente, Empresa = x.Empresa }).First(x => x.Rut == rutIn);
+                TrabajadorIndex trabajadorNew = database.Trabajador.Select(x => new TrabajadorIndex { Id = x.Id, Nombre = x.Nombre, ApellidoMaterno = x.ApellidoMaterno, ApellidoPaterno = x.ApellidoPaterno , Rut = x.Rut, Uid = x.Uid, Gerente = x.Gerente, Empresa = x.Empresa,
+                    Entrada = x.Entrada,
+                    EntradaA = x.EntradaA,
+                    Salida = x.Salida,
+                    SalidaA = x.SalidaA
+                }).First(x => x.Rut == rutIn);
                 Utils.SessionManager.trabajadores = new List<TrabajadorIndex> { trabajadorNew };
                 Utils.SessionManager.campo = collection["Campo"];
                 Utils.SessionManager.tipo = collection["subject"];
@@ -510,7 +539,15 @@ namespace ControlPersonalAppWeb.Controllers
             {
                 DateTime inicioIn = Convert.ToDateTime(collection["Inicio"]);
                 string empresa = Utils.SessionManager.CuentaAutenticada().Empresa;
-                List<TrabajadorIndex> trabajadores = database.Trabajador.Where(x => x.Empresa == empresa).Select(x => new TrabajadorIndex { Id = x.Id, Nombre = x.Nombre, Rut = x.Rut, Uid = x.Uid, Gerente = x.Gerente, Empresa = x.Empresa }).ToList();
+                List<TrabajadorIndex> trabajadores = database.Trabajador.Where(x => x.Empresa == empresa).Select(x => new TrabajadorIndex { Id = x.Id, Nombre = x.Nombre,
+                    ApellidoMaterno = x.ApellidoMaterno,
+                    ApellidoPaterno = x.ApellidoPaterno,
+                    Rut = x.Rut, Uid = x.Uid, Gerente = x.Gerente, Empresa = x.Empresa,
+                    Entrada = x.Entrada,
+                    EntradaA = x.EntradaA,
+                    Salida = x.Salida,
+                    SalidaA = x.SalidaA
+                }).ToList();
                 trabajadores.Insert(0, new TrabajadorIndex { Nombre = inicioIn.ToShortDateString() });
                 Utils.SessionManager.trabajadores = trabajadores;
                 Utils.SessionManager.inicio = inicioIn;
@@ -522,7 +559,15 @@ namespace ControlPersonalAppWeb.Controllers
             {
                 DateTime inicioIn = Convert.ToDateTime(collection["Inicio"]);
                 string empresa = Utils.SessionManager.CuentaAutenticada().Empresa;
-                List<TrabajadorIndex> trabajadores = database.Trabajador.Where(x => x.Empresa == empresa).Select(x => new TrabajadorIndex { Id = x.Id, Nombre = x.Nombre, Rut = x.Rut, Uid = x.Uid, Gerente = x.Gerente, Empresa = x.Empresa }).ToList();
+                List<TrabajadorIndex> trabajadores = database.Trabajador.Where(x => x.Empresa == empresa).Select(x => new TrabajadorIndex { Id = x.Id, Nombre = x.Nombre,
+                    ApellidoMaterno = x.ApellidoMaterno,
+                    ApellidoPaterno = x.ApellidoPaterno,
+                    Rut = x.Rut, Uid = x.Uid, Gerente = x.Gerente, Empresa = x.Empresa,
+                    Entrada = x.Entrada,
+                    EntradaA = x.EntradaA,
+                    Salida = x.Salida,
+                    SalidaA = x.SalidaA
+                }).ToList();
                 trabajadores.Insert(0, new TrabajadorIndex { Nombre = inicioIn.ToShortDateString() });
                 Utils.SessionManager.trabajadores = trabajadores;
                 Utils.SessionManager.inicio = inicioIn;
@@ -542,7 +587,15 @@ namespace ControlPersonalAppWeb.Controllers
             if (!inicio && !fin && rut && campo)
             {
                 string empresa = Utils.SessionManager.CuentaAutenticada().Empresa;
-                List<TrabajadorIndex> trabajadores = database.Trabajador.Where(x => x.Empresa == empresa).Select(x => new TrabajadorIndex { Id = x.Id, Nombre = x.Nombre, Rut = x.Rut, Uid = x.Uid, Gerente = x.Gerente, Empresa = x.Empresa }).ToList();
+                List<TrabajadorIndex> trabajadores = database.Trabajador.Where(x => x.Empresa == empresa).Select(x => new TrabajadorIndex { Id = x.Id, Nombre = x.Nombre,
+                    ApellidoMaterno = x.ApellidoMaterno,
+                    ApellidoPaterno = x.ApellidoPaterno,
+                    Rut = x.Rut, Uid = x.Uid, Gerente = x.Gerente, Empresa = x.Empresa,
+                    Entrada = x.Entrada,
+                    EntradaA = x.EntradaA,
+                    Salida = x.Salida,
+                    SalidaA = x.SalidaA
+                }).ToList();
                 trabajadores.Insert(0, new TrabajadorIndex { Nombre = collection["Inicio"] +" a "+ collection["Fin"] });
                 Utils.SessionManager.trabajadores = trabajadores;
                 Utils.SessionManager.inicio = Convert.ToDateTime(collection["Inicio"]);
@@ -555,7 +608,15 @@ namespace ControlPersonalAppWeb.Controllers
             if (!inicio && !fin && rut && !campo)
             {
                 string empresa = Utils.SessionManager.CuentaAutenticada().Empresa;
-                List<TrabajadorIndex> trabajadores = database.Trabajador.Where(x => x.Empresa == empresa).Select(x => new TrabajadorIndex { Id = x.Id, Nombre = x.Nombre, Rut = x.Rut, Uid = x.Uid, Gerente = x.Gerente, Empresa = x.Empresa }).ToList();
+                List<TrabajadorIndex> trabajadores = database.Trabajador.Where(x => x.Empresa == empresa).Select(x => new TrabajadorIndex { Id = x.Id, Nombre = x.Nombre,
+                    ApellidoMaterno = x.ApellidoMaterno,
+                    ApellidoPaterno = x.ApellidoPaterno,
+                    Rut = x.Rut, Uid = x.Uid, Gerente = x.Gerente, Empresa = x.Empresa,
+                    Entrada = x.Entrada,
+                    EntradaA = x.EntradaA,
+                    Salida = x.Salida,
+                    SalidaA = x.SalidaA
+                }).ToList();
                 trabajadores.Insert(0, new TrabajadorIndex { Nombre = collection["Inicio"] + " a " + collection["Fin"] +" en "+ collection["Campo"] });
                 Utils.SessionManager.trabajadores = trabajadores;
                 Utils.SessionManager.inicio = Convert.ToDateTime(collection["Inicio"]);
@@ -569,7 +630,15 @@ namespace ControlPersonalAppWeb.Controllers
             {
 
                 string rutIn = collection["Rut"];
-                TrabajadorIndex trabajadorNew = database.Trabajador.Select(x => new TrabajadorIndex { Id = x.Id, Nombre = x.Nombre, Rut = x.Rut, Uid = x.Uid, Gerente = x.Gerente, Empresa = x.Empresa }).First(x => x.Rut == rutIn);
+                TrabajadorIndex trabajadorNew = database.Trabajador.Select(x => new TrabajadorIndex { Id = x.Id, Nombre = x.Nombre,
+                    ApellidoMaterno = x.ApellidoMaterno,
+                    ApellidoPaterno = x.ApellidoPaterno,
+                    Rut = x.Rut, Uid = x.Uid, Gerente = x.Gerente, Empresa = x.Empresa,
+                    Entrada = x.Entrada,
+                    EntradaA = x.EntradaA,
+                    Salida = x.Salida,
+                    SalidaA = x.SalidaA
+                }).First(x => x.Rut == rutIn);
                 Utils.SessionManager.trabajadores = new List<TrabajadorIndex> { trabajadorNew };
                 Utils.SessionManager.inicio = Convert.ToDateTime(collection["Inicio"]);
                 Utils.SessionManager.fin = Convert.ToDateTime(collection["Fin"]);
@@ -582,7 +651,15 @@ namespace ControlPersonalAppWeb.Controllers
             {
 
                 string rutIn = collection["Rut"];
-                TrabajadorIndex trabajadorNew = database.Trabajador.Select(x => new TrabajadorIndex { Id = x.Id, Nombre = x.Nombre, Rut = x.Rut, Uid = x.Uid, Gerente = x.Gerente, Empresa = x.Empresa }).First(x => x.Rut == rutIn);
+                TrabajadorIndex trabajadorNew = database.Trabajador.Select(x => new TrabajadorIndex { Id = x.Id, Nombre = x.Nombre,
+                    ApellidoMaterno = x.ApellidoMaterno,
+                    ApellidoPaterno = x.ApellidoPaterno,
+                    Rut = x.Rut, Uid = x.Uid, Gerente = x.Gerente, Empresa = x.Empresa,
+                    Entrada = x.Entrada,
+                    EntradaA = x.EntradaA,
+                    Salida = x.Salida,
+                    SalidaA = x.SalidaA
+                }).First(x => x.Rut == rutIn);
                 Utils.SessionManager.trabajadores = new List<TrabajadorIndex> { trabajadorNew };
                 Utils.SessionManager.inicio = Convert.ToDateTime(collection["Inicio"]);
                 Utils.SessionManager.fin = Convert.ToDateTime(collection["Fin"]);
@@ -595,7 +672,15 @@ namespace ControlPersonalAppWeb.Controllers
             {
 
                 string rutIn = collection["Rut"];
-                TrabajadorIndex trabajadorNew = database.Trabajador.Select(x => new TrabajadorIndex { Id = x.Id, Nombre = x.Nombre, Rut = x.Rut, Uid = x.Uid, Gerente = x.Gerente, Empresa = x.Empresa }).First(x => x.Rut == rutIn);
+                TrabajadorIndex trabajadorNew = database.Trabajador.Select(x => new TrabajadorIndex { Id = x.Id, Nombre = x.Nombre,
+                    ApellidoMaterno = x.ApellidoMaterno,
+                    ApellidoPaterno = x.ApellidoPaterno,
+                    Rut = x.Rut, Uid = x.Uid, Gerente = x.Gerente, Empresa = x.Empresa,
+                    Entrada = x.Entrada,
+                    EntradaA = x.EntradaA,
+                    Salida = x.Salida,
+                    SalidaA = x.SalidaA
+                }).First(x => x.Rut == rutIn);
                 Utils.SessionManager.trabajadores = new List<TrabajadorIndex> { trabajadorNew };
                 Utils.SessionManager.inicio = Convert.ToDateTime(collection["Inicio"]);
                 Utils.SessionManager.fin = Convert.ToDateTime("01-01-0001");
@@ -608,7 +693,15 @@ namespace ControlPersonalAppWeb.Controllers
             {
 
                 string rutIn = collection["Rut"];
-                TrabajadorIndex trabajadorNew = database.Trabajador.Select(x => new TrabajadorIndex { Id = x.Id, Nombre = x.Nombre, Rut = x.Rut, Uid = x.Uid, Gerente = x.Gerente, Empresa = x.Empresa }).First(x => x.Rut == rutIn);
+                TrabajadorIndex trabajadorNew = database.Trabajador.Select(x => new TrabajadorIndex { Id = x.Id, Nombre = x.Nombre,
+                    ApellidoMaterno = x.ApellidoMaterno,
+                    ApellidoPaterno = x.ApellidoPaterno,
+                    Rut = x.Rut, Uid = x.Uid, Gerente = x.Gerente, Empresa = x.Empresa,
+                    Entrada = x.Entrada,
+                    EntradaA = x.EntradaA,
+                    Salida = x.Salida,
+                    SalidaA = x.SalidaA
+                }).First(x => x.Rut == rutIn);
                 Utils.SessionManager.trabajadores = new List<TrabajadorIndex> { trabajadorNew };
                 Utils.SessionManager.inicio = Convert.ToDateTime(collection["Inicio"]);
                 Utils.SessionManager.fin = Convert.ToDateTime("01-01-0001");
@@ -635,7 +728,12 @@ namespace ControlPersonalAppWeb.Controllers
         {
             DBManejoPersonalEntities db = new DBManejoPersonalEntities();
             string empresa = Utils.SessionManager.CuentaAutenticada().Empresa; 
-            ViewBag.Trabajador = db.Trabajador.Where(x => x.Empresa == empresa).Select(x => new TrabajadorIndex { Id = x.Id, Nombre = x.Nombre, Rut = x.Rut, ApellidoPaterno = x.ApellidoPaterno, ApellidoMaterno = x.ApellidoMaterno }).ToList();
+            ViewBag.Trabajador = db.Trabajador.Where(x => x.Empresa == empresa).Select(x => new TrabajadorIndex { Id = x.Id, Nombre = x.Nombre, ApellidoMaterno = x.ApellidoMaterno, ApellidoPaterno = x.ApellidoPaterno , Rut = x.Rut, 
+                Entrada = x.Entrada,
+                EntradaA = x.EntradaA,
+                Salida = x.Salida,
+                SalidaA = x.SalidaA
+            }).ToList();
             return View();
         }
 

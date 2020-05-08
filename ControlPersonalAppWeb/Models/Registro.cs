@@ -15,8 +15,13 @@ namespace ControlPersonalAppWeb.Models
         public string Rut;
         public DateTime Fecha;
         public string Entrada;
+        public string EntradaOficial;
         public string Salida;
+        public string SalidaOficial;
+        public string HorasExtras;
         public string HorasTrabajadas;
+        public string Horas;
+        public string Atraso;
         public string Campo;
         public string Contratado;
         public Image foto;

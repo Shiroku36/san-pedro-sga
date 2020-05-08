@@ -22,7 +22,9 @@ namespace ControlPersonalAppWeb.Utils
         public static byte[] FotoCarnet { get; set; }
         public static string campo = "";
         public static string tipo = "";
-        public static string hora = "";
+        public static string entrada = "";
+        public static string salida = "";
+        public static string almuerzo = "";
         public static int email = 1;
         public static string mensaje = "";
         public static string activa = "";

@@ -317,6 +317,16 @@
     <Property Name="AporteEmpleadorSeguroCesantia" Type="varchar" MaxLength="100" />
     <Property Name="Subsidio" Type="varchar" MaxLength="100" />
     <Property Name="DatosEmpresa" Type="varchar" MaxLength="100" />
+    <Property Name="Entrada" Type="varchar" MaxLength="50" />
+    <Property Name="Salida" Type="varchar" MaxLength="50" />
+    <Property Name="EntradaA" Type="varchar" MaxLength="50" />
+    <Property Name="SalidaA" Type="varchar" MaxLength="50" />
+    <Property Name="Horas" Type="varchar" MaxLength="50" />
+    <Property Name="Atributo2" Type="int" />
+    <Property Name="Atributo3" Type="varchar" MaxLength="100" />
+    <Property Name="Atributo4" Type="varchar" MaxLength="100" />
+    <Property Name="Atributo5" Type="varchar" MaxLength="100" />
+    <Property Name="Atributo1" Type="int" />
   </EntityType>
   <EntityType Name="Vacaciones">
     <Key>

@@ -349,5 +349,15 @@
     <Property Name="AporteEmpleadorSeguroCesantia" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
     <Property Name="Subsidio" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
     <Property Name="DatosEmpresa" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="Entrada" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="Salida" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="EntradaA" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="SalidaA" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="Horas" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="Atributo2" Type="Int32" />
+    <Property Name="Atributo3" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="Atributo4" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="Atributo5" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="Atributo1" Type="Int32" />
   </EntityType>
 </Schema>

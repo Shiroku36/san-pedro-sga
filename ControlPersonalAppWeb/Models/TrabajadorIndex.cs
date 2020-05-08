@@ -16,6 +16,10 @@ namespace ControlPersonalAppWeb.Models
         public string Gerente { get; set; }
         public string Empresa { get; set; }
         public string Contratado { get; set; }
+        public string Entrada { get; set; }
+        public string EntradaA { get; set; }
+        public string Salida { get; set; }
+        public string SalidaA { get; set; }
 
     }
 }
