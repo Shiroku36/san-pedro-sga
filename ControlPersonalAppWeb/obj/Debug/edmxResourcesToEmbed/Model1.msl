@@ -202,6 +202,16 @@
     <EntitySetMapping Name="Trabajador">
       <EntityTypeMapping TypeName="DBManejoPersonalModel.Trabajador">
         <MappingFragment StoreEntitySet="Trabajador">
+          <ScalarProperty Name="Atributo1" ColumnName="Atributo1" />
+          <ScalarProperty Name="Atributo5" ColumnName="Atributo5" />
+          <ScalarProperty Name="Atributo4" ColumnName="Atributo4" />
+          <ScalarProperty Name="Atributo3" ColumnName="Atributo3" />
+          <ScalarProperty Name="Atributo2" ColumnName="Atributo2" />
+          <ScalarProperty Name="Horas" ColumnName="Horas" />
+          <ScalarProperty Name="SalidaA" ColumnName="SalidaA" />
+          <ScalarProperty Name="EntradaA" ColumnName="EntradaA" />
+          <ScalarProperty Name="Salida" ColumnName="Salida" />
+          <ScalarProperty Name="Entrada" ColumnName="Entrada" />
           <ScalarProperty Name="DatosEmpresa" ColumnName="DatosEmpresa" />
           <ScalarProperty Name="Subsidio" ColumnName="Subsidio" />
           <ScalarProperty Name="AporteEmpleadorSeguroCesantia" ColumnName="AporteEmpleadorSeguroCesantia" />

@@ -11,12 +11,10 @@ namespace ControlPersonalAppWeb
 {
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel;
-
+    
     public partial class Trabajador
     {
         public int Id { get; set; }
-        [DisplayName ("Nombre")]
         public string Nombre { get; set; }
         public string ApellidoPaterno { get; set; }
         public string ApellidoMaterno { get; set; }
@@ -160,5 +158,15 @@ namespace ControlPersonalAppWeb
         public string AporteEmpleadorSeguroCesantia { get; set; }
         public string Subsidio { get; set; }
         public string DatosEmpresa { get; set; }
+        public string Entrada { get; set; }
+        public string Salida { get; set; }
+        public string EntradaA { get; set; }
+        public string SalidaA { get; set; }
+        public string Horas { get; set; }
+        public Nullable<int> Atributo2 { get; set; }
+        public string Atributo3 { get; set; }
+        public string Atributo4 { get; set; }
+        public string Atributo5 { get; set; }
+        public Nullable<int> Atributo1 { get; set; }
     }
 }
