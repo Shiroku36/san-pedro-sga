@@ -11,7 +11,8 @@ namespace ControlPersonalAppWeb
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel;
+
     public partial class Campos
     {
         public int Id { get; set; }
@@ -23,6 +24,7 @@ namespace ControlPersonalAppWeb
         public string Correo { get; set; }
         public string Telefono { get; set; }
         public string Asistente { get; set; }
+        [DisplayName("Telefono asistente")]
         public string TelefonoAsistente { get; set; }
     }
 }

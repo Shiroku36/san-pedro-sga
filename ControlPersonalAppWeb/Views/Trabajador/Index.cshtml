@@ -13,16 +13,16 @@
     ControlPersonalAppWeb.Utils.SessionManager.mensaje = "";
 }
 <h1 class="display-4 text-center">Índice RR.HH.</h1>
-
+<hr />
 <div class="form-group">
     @if (cuenta.Permisos.Contains("TrabajadoresC"))
     {
         <a href='@Url.Action("Create", "Trabajador")'>
-            <button type="button" class="btn btn-primary float-right ml-2  mb-3">Crear Nuevo</button>
+            <label type="button" class="btn btn-primary float-right ml-2  mb-3">Crear Nuevo</label>
         </a>
     }
     <a href='@Url.Action("Hoy", "Registro")'>
-        <button type="button" class="btn btn-primary float-right  ">Registros del día</button>
+        <label type="button" class="btn btn-primary float-right  ">Registros del día</label>
     </a>
     <!--
     <a href='@Url.Action("Borrar", "Trabajador")'>
@@ -86,48 +86,48 @@
                     @if (cuenta.Permisos.Contains("RegistrosV"))
                     {
                         <a href='@Url.Action("Index", "Registro", new { id = item.Id })'>
-                            <button type="button" class="btn btn-dark">Registros</button>
+                            <label type="button" class="btn btn-dark">Registros</label>
                         </a>
                     }
 
                     @if (cuenta.Permisos.Contains("TrabajadoresE"))
                     {
                         <a href='@Url.Action("Edit", "Trabajador", new { id = item.Id })'>
-                            <button title="Editar" type="submit" class="btn btn-warning">Editar</button>
+                            <label title="Editar" type="submit" class="btn btn-warning">Editar</label>
                         </a>
                     }
                     <a href='@Url.Action("Details", "Trabajador", new { id = item.Id })'>
-                        <button title="Detalle" type="submit" class="btn btn-info">Detalle </button>
+                        <label title="Detalle" type="submit" class="btn btn-info">Detalle </label>
                     </a>
                     @if (cuenta.Permisos.Contains("TrabajadoresD"))
                     {
                         <a href='@Url.Action("Delete", "Trabajador", new { id = item.Id })' onclick="return confirm('¿Está seguro que desea eliminar el Trabajador?');" })>
-                            <button title="Eliminar" type="submit" class="btn btn-danger">Borrar</button>
+                            <label title="Eliminar" type="submit" class="btn btn-danger">Borrar</label>
                         </a>
                     }
 
                     @if (cuenta.Permisos.Contains("Sueldo"))
                     {
                         <a href='@Url.Action("Index", "Remuneracion", new { id = item.Id })'>
-                            <button title="Remuneración" type="submit" class="btn btn-light">Remuneracion</button>
+                            <label title="Remuneración" type="submit" class="btn btn-light">Remuneracion</label>
                         </a>
                     }
 
                     @if (cuenta.Permisos.Contains("TrabajadoresS"))
                     {
                         <a href='@Url.Action("PDFDetalle", "Trabajador", new { id = item.Id })'>
-                            <button title="Solicitud Contratación" type="submit" class="btn btn-success">
+                            <label title="Solicitud Contratación" type="submit" class="btn btn-success">
                                 Contrato
-                            </button>
+                            </label>
                         </a>
                     }
                     @if (cuenta.Permisos.Contains("TrabajadoresM"))
                     {
                         <a href='@Url.Action("Index", "Trabajador", new { id = item.Id })' target="_blank">
 
-                            <button title="Correo" type="submit" class="btn btn-light">
-                                <image src="~/Images/correo.png" style="width:32px;height:32px"></image>
-                            </button>
+                            <label title="Correo" type="submit" class="btn btn-light">
+                                Correo
+                            </label>
                         </a>
                     }
                 </td>

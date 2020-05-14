@@ -346,16 +346,6 @@
     <Content Include="Content\select2.css" />
     <Content Include="Content\select2.min.css" />
     <Content Include="ExcelLibrary.dll" />
-    <Content Include="Images\agregar.png" />
-    <Content Include="Images\contrato.png" />
-    <Content Include="Images\correo.png" />
-    <Content Include="Images\detalle.png" />
-    <Content Include="Images\editar.png" />
-    <Content Include="Images\editar2.png" />
-    <Content Include="Images\eliminar.png" />
-    <Content Include="Images\icons8-sobre-nosotros-96.png" />
-    <Content Include="Images\pago.png" />
-    <Content Include="Images\registro.png" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -685,6 +675,7 @@
     <Content Include="Scripts\popper-utils.js.map" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Images\" />
     <Folder Include="Views\Liquidaciones\" />
   </ItemGroup>
   <ItemGroup>
