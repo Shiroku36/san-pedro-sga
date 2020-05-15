@@ -43,14 +43,11 @@
 <div class="table-responsive">
     <table class="table table-hover" id="tabla">
         <tr class="bg-primary">
-            <th>
+            <th style="width:12%">
                 @Html.DisplayNameFor(model => model.Rut)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Nombre)
-            </th>
-            <th>
-                Apellidos
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Uid)
@@ -58,22 +55,15 @@
             <th>
                 Numero pulsera
             </th>
-            <th>
+            <th style="width:40%">
                 Accion
             </th>
         </tr>
             @foreach (var item in Model)
             {
                 <tr>
-                    <td>
-                        @item.Rut
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Nombre)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.ApellidoPaterno)
-                        @Html.DisplayFor(modelItem => item.ApellidoMaterno)
+                    <td>@item.Rut</td>
+                    <td>@Html.DisplayFor(modelItem => item.Nombre) @Html.DisplayFor(modelItem => item.ApellidoPaterno)@Html.DisplayFor(modelItem => item.ApellidoMaterno)
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.Uid)

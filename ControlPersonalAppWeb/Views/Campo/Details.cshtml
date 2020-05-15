@@ -101,12 +101,13 @@
                     @Html.DisplayNameFor(model => model.Coordenadas)
                 </td>
                 <td>
-                    <iframe src="@Model.Coordenadas" width="1" height="1" frameborder="0" style="border:0" allowfullscreen></iframe>
+                    <iframe src="@Model.Coordenadas" width="400" height="300" frameborder="0" style="border:0" allowfullscreen></iframe>
                 </td>
             </tr>
 
         </table>
     </div>
+
     <div class="form-group col-md-9 mx-auto my-5">
         @Html.ActionLink("Volver a la lista", "Index", null, new { @class = "btn btn-block btn-danger mt-3" })
     </div>

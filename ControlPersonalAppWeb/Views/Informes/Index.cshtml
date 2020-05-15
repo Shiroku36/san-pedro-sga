@@ -6,166 +6,154 @@
 <div class="col-lg-12">
     @using (Html.BeginForm())
     {
-        <div class="form-group col-lg-12">
-
-            <h2 class="display-4 text-center my-3">Informes</h2>
-            <hr />
-            <div class="row">
-
-                <input type="button" class="btn btn-primary col-sm-6 btn-block " value="Instruciones" onClick="mostrar(this)">
-
-                <div class="col-sm-6">
-                    <a ref='@Url.Action("Asistencias", "Trabajador")'>
-                        <button type="button" class="btn btn-primary btn-block ">Asistencias mensuales</button>
-                    </a>
-                </div>
-                
-
-            </div>
-            
-            <div class="my-4" id="oculto" style="display:none" >
-                <strong>Rut:</strong> Al poner solo el rut mostrará todos los registros de esa persona <br />
-                <strong>Inicio:</strong> al ingresar solo la fecha en este parametro, muestra todos los registros de 1 solo día<br />
-                <strong>Fin:</strong> Cuando esta inicio y fin, muestra los registros en ese rango de fechas<br />
-                <strong>Huerto:</strong> Muestra todos los registros del campo selecionado<br />
-                <strong>Horario general:</strong> Horario para las personas que no tengan asignado un horario<br />
-                Todas se pueden combinar entre si, por ejemplo un rango de fechas, un campo específico y una hora de inicio: devolverá
-                todos los registros de ese día en ese huerto calculando las horas trabajadas desde la hora selecionada
-            </div>
-
-        </div>
+        <h2 class="display-4 text-center my-3">Informes</h2>
+        <hr />
 
         @Html.AntiForgeryToken()
 
-    <div class="row">
+        <div class="row">
 
-        <div class="form-group col-sm-6">
-
-            <div class="card bg-info text-white mt-3">
-                <div class="card-header font-weight-normal">Registro por rut</div>
-                <div class="card-body">
-                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                    <div class="form-group">
-                        <label class="control-label">Rut</label>
-                        <input class="form-control" maxlength="10" type="text" id="Rut" name="Rut" oninput="checkRut(this)" placeholder="Rut...">
-                        <script src="~/Scripts/validarRUT.js"></script>
-                    </div>
+            <div class="form-group col-sm-6">
+                <button type="button" class="btn btn-primary  btn-block " onClick="mostrar(this)">Instruciones</button>
+                <div class="my-4" id="oculto" style="display:none">
+                    <strong>Rut:</strong> Al poner solo el rut mostrará todos los registros de esa persona <br />
+                    <strong>Inicio:</strong> al ingresar solo la fecha en este parametro, muestra todos los registros de 1 solo día<br />
+                    <strong>Fin:</strong> Cuando esta inicio y fin, muestra los registros en ese rango de fechas<br />
+                    <strong>Huerto:</strong> Muestra todos los registros del campo selecionado<br />
+                    <strong>Horario general:</strong> Horario para las personas que no tengan asignado un horario<br />
+                    Todas se pueden combinar entre si, por ejemplo un rango de fechas, un campo específico y una hora de inicio: devolverá
+                    todos los registros de ese día en ese huerto calculando las horas trabajadas desde la hora selecionada
                 </div>
-            </div>
-
-
-            <div class="card bg-info text-white mt-3">
-                <div class="card-header font-weight-normal">Registros por Huerto</div>
-                <div class="card-body">
-                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                    <div class="form-group">
-                        <label class="control-label">Nombre</label>
-                        @Html.DropDownList("Campo", new SelectList(ViewBag.campos), htmlAttributes: new { @class = "form-control" })
-                    </div>
-                </div>
-            </div>
-
-            <div class="card bg-dark text-white mt-3">
-                <div class="card-header font-weight-normal">Generar Informe</div>
-                <div class="card-body">
-
-                    <input type="radio" id="Tipo" value="PDF" name="subject" checked="checked" />PDF
-                    <input type="radio" id="Tipo" value="EXCEL" name="subject" /> EXCEL
-
-
-                    <input type="submit" value="Generar" class="btn btn-success btn-block mt-3" />
-                </div>
-            </div>
-
-
-            <div class="card bg-warning text-black mt-3">
-                <div class="card-header font-weight-normal">Gestión de atrasos</div>
-                <div class="card-body">
-
-
-                    <div class="form-group">
-                        <label class="control-label">Fecha </label>
-                        <input class="form-control" type="datetime-local" id="Inicio" required name="Inicio" min="2019-01-01">
-                    </div>
-
-                    <div class="form-group">
-                        <label class="control-label">Horas</label>
-                        <input class="form-control" type="number" value="2" id="Horas" required name="Horas" max="24">
-                    </div>
-
-                    <input type="submit" value="Buscar" class="btn btn-primary mt-2 btn-block" />
-
-                    <div class="card-footer mt-2">
-                        <h4 class="text-center font-weight-normal mt-2">Instruciones  Atrasos </h4>
-
-
-                        <div id="oculto2" class="row">
-                            <div class="col-sm-6">
-                                <strong>Fecha:</strong> Se elige el día y hora para mostrar a todas las personas que llegaron después de esa hora<br />
-                            </div>
-                            <div class="col-sm-6">
-                                <strong>Hora</strong> Agrega horas a la fecha elegida para mostrar hasta esa hora, el valor 2 busca desde 8:00 a 10:00<br />
-                            </div>
+                <div class="card bg-info text-white mt-3">
+                    <div class="card-header font-weight-normal">Registro por rut</div>
+                    <div class="card-body">
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                        <div class="form-group">
+                            <label class="control-label">Rut</label>
+                            <input class="form-control" maxlength="10" type="text" id="Rut" name="Rut" oninput="checkRut(this)" placeholder="Rut...">
+                            <script src="~/Scripts/validarRUT.js"></script>
                         </div>
                     </div>
-                    
                 </div>
+
+
+                
+
+                @Html.AntiForgeryToken()
+                <div class="card bg-info text-white mt-3">
+                    <div class="card-header font-weight-normal">Horario general</div>
+                    <div class="card-body">
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                        <div class="form-group">
+                            <label class="control-label">Entrada</label>
+                            <input class="form-control" maxlength="5" type="time" id="Entrada" name="Entrada" value="08:00" required="required">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label">Salida</label>
+                            <input class="form-control" maxlength="5" type="time" id="Salida" name="Salida" value="18:00" required="required">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label">H. almuerzo</label>
+                            <input class="form-control" maxlength="5" type="time" id="Almuerzo" name="Almuerzo" value="01:00" required="required">
+                        </div>
+
+                    </div>
                 </div>
+
+
+            </div>
+
+            <div class="form-group col-sm-6">
+
+                <a href='@Url.Action("Asistencias", "Trabajador")' class="btn btn-primary btn-block">Asistencias mensuales</a>
+
+                @Html.AntiForgeryToken()
+                <div class="card bg-info text-white mt-3">
+                    <div class="card-header font-weight-normal">Registros por rango de fechas</div>
+                    <div class="card-body">
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                        <div class="form-group">
+                            <label class="control-label">Inicio</label>
+                            <input class="form-control" type="date" id="Inicio" name="Inicio" min="2019-01-01">
+                            <!--<script src="~/Scripts/validarRUT.js"></script>-->
+                        </div>
+
+                        <div class="form-group">
+                            <label class="control-label">Fin</label>
+                            <input class="form-control" type="date" id="Fin" name="Fin" min="2019-01-01" max="2019">
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="card bg-info text-white mt-3">
+                    <div class="card-header font-weight-normal">Registros por Huerto</div>
+                    <div class="card-body">
+                        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                        <div class="form-group">
+                            <label class="control-label">Nombre</label>
+                            @Html.DropDownList("Campo", new SelectList(ViewBag.campos), htmlAttributes: new { @class = "form-control" })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card bg-dark text-white mt-3">
+                    <div class="card-header font-weight-normal">Generar Informe</div>
+                    <div class="card-body">
+
+                        <input type="radio" id="Tipo" value="PDF" name="subject" checked="checked" />PDF
+                        <input type="radio" id="Tipo" value="EXCEL" name="subject" /> EXCEL
+
+
+                        <input type="submit" value="Generar" class="btn btn-success btn-block mt-3" />
+                    </div>
+                </div>
+
+            </div>
 
         </div>
 
-        <div class="form-group col-sm-6">
-
-            @Html.AntiForgeryToken()
-            <div class="card bg-info text-white mt-3">
-                <div class="card-header font-weight-normal">Registros por rango de fechas</div>
-                <div class="card-body">
-                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                    <div class="form-group">
-                        <label class="control-label">Inicio</label>
-                        <input class="form-control" type="date" id="Inicio" name="Inicio" min="2019-01-01">
-                        <!--<script src="~/Scripts/validarRUT.js"></script>-->
-                    </div>
-
-                    <div class="form-group">
-                        <label class="control-label">Fin</label>
-                        <input class="form-control" type="date" id="Fin" name="Fin" min="2019-01-01" max="2019">
-                    </div>
-
-                </div>
-            </div>
-
-            @Html.AntiForgeryToken()
-            <div class="card bg-info text-white mt-3">
-                <div class="card-header font-weight-normal">Horario general</div>
-                <div class="card-body">
-                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                    <div class="form-group">
-                        <label class="control-label">Entrada</label>
-                        <input class="form-control" maxlength="5" type="time" id="Entrada" name="Entrada" value="08:00" required="required">
-                    </div>
-
-                    <div class="form-group">
-                        <label class="control-label">Salida</label>
-                        <input class="form-control" maxlength="5" type="time" id="Salida" name="Salida" value="18:00" required="required">
-                    </div>
-
-                    <div class="form-group">
-                        <label class="control-label">H. almuerzo</label>
-                        <input class="form-control" maxlength="5" type="time" id="Almuerzo" name="Almuerzo" value="01:00" required="required">
-                    </div>
-
-                </div>
-            </div>
-
-        </div>
-        
-    </div> 
-}
-
-
-    
+    }
 </div>
+
+<!--
+    <div class="card bg-warning text-black my-3 col-sm-6">
+        <div class="card-header font-weight-normal">Gestión de atrasos</div>
+        <div class="card-body">
+
+
+            <div class="form-group">
+                <label class="control-label">Fecha </label>
+                <input class="form-control" type="datetime-local" id="Inicio" required name="Inicio" min="2019-01-01">
+            </div>
+
+            <div class="form-group">
+                <label class="control-label">Horas</label>
+                <input class="form-control" type="number" value="2" id="Horas" required name="Horas" max="24">
+            </div>
+
+            <input type="submit" value="Buscar" class="btn btn-primary mt-2 btn-block" />
+
+            <div class="card-footer mt-2">
+                <h4 class="text-center font-weight-normal mt-2">Instruciones  Atrasos </h4>
+
+
+                <div id="oculto2" class="row">
+                    <div class="col-sm-6">
+                        <strong>Fecha:</strong> Se elige el día y hora para mostrar a todas las personas que llegaron después de esa hora<br />
+                    </div>
+                    <div class="col-sm-6">
+                        <strong>Hora</strong> Agrega horas a la fecha elegida para mostrar hasta esa hora, el valor 2 busca desde 8:00 a 10:00<br />
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+-->
+
 <script>
     function mostrar(enla) {
         obj = document.getElementById('oculto');
