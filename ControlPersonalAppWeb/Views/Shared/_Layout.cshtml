@@ -72,6 +72,7 @@
                 {
                     <li>@Html.ActionLink("Log", "Log", "Home")</li>
                 }
+                <li>@Html.ActionLink("Inventario", "Index", "Stock")</li>
                 @if (ControlPersonalAppWeb.Utils.SessionManager.CuentaAutenticada() == null)
                 {
                     <li>@Html.ActionLink("Inicio", "Index", "Home")</li>

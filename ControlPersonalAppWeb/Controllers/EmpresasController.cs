@@ -13,6 +13,7 @@ namespace ControlPersonalAppWeb.Controllers
     public class EmpresasController : Controller
     {
         private DBManejoPersonalEntities db = new DBManejoPersonalEntities();
+        private Cuentas cuenta = Utils.SessionManager.CuentaAutenticada();
 
         // GET: Empresas
         public ActionResult Index()

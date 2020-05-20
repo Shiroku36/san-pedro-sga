@@ -12,36 +12,42 @@
     </div>
     ControlPersonalAppWeb.Utils.SessionManager.mensaje = "";
 }
-<h2>Índice RR.HH.</h2>
+<h1 class="display-4 text-center">Índice RR.HH.</h1>
+<hr />
 <div class="form-group">
     @if (cuenta.Permisos.Contains("TrabajadoresC"))
     {
         <a href='@Url.Action("Create", "Trabajador")'>
-            <button type="button" class="btn btn-default">Crear Nuevo</button>
+            <label type="button" class="btn btn-primary float-right ml-2  mb-3">Crear Nuevo</label>
         </a>
     }
     <a href='@Url.Action("Hoy", "Registro")'>
-        <button type="button" class="btn btn-default">Registros del día</button>
+        <label type="button" class="btn btn-primary float-right  ">Registros del día</label>
     </a>
     <!--
     <a href='@Url.Action("Borrar", "Trabajador")'>
         <button type="button" class="btn btn-default">borrar</button>
     </a>-->
 </div>
-<div class="form-group-sm">
-    <input type="text" id="busqueda" onkeyup="buscar()" placeholder="Busqueda" class="input-group">
+
+<div class="clearfix"></div>
+<div class="row">
+    <div class="col-sm-2">
+        <h4 class="busqueda">Búsqueda: </h4>
+    </div>
+    <div class="col-sm-8 form-label-group">
+        <input type="text" id="busqueda" onkeyup="buscar()" class="mb-3 mt-1 form-control">
+    </div>
 </div>
-<table class="table" id="tabla">
-    <thead>
-        <tr>
-            <th>
+
+<div class="table-responsive">
+    <table class="table table-hover" id="tabla">
+        <tr class="bg-primary">
+            <th style="width:12%">
                 @Html.DisplayNameFor(model => model.Rut)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Nombre)
-            </th>
-            <th>
-                Apellidos
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Uid)
@@ -49,108 +55,84 @@
             <th>
                 Numero pulsera
             </th>
-            <th></th>
+            <th style="width:40%">
+                Accion
+            </th>
         </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-        <tr>
-            <td>
-                @item.Rut
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Nombre)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ApellidoPaterno)
-                @Html.DisplayFor(modelItem => item.ApellidoMaterno)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Uid)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Gerente)
-            </td>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @item.Rut
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Nombre) @Html.DisplayFor(modelItem => item.ApellidoPaterno) @Html.DisplayFor(modelItem => item.ApellidoMaterno)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Uid)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Gerente)
+                    </td>
 
-            @if (cuenta.Permisos.Contains("RegistrosV"))
-            {
                 <td>
-                    <a href='@Url.Action("Index", "Registro", new { id = item.Id })'>
-                        <button type="button" class="btn btn-default">
-                            <image src="~/Images/registro.png" style="width:32px;height:32px"></image>
-                        </button>
-                    </a>
-                </td>
-            }
+                    @if (cuenta.Permisos.Contains("RegistrosV"))
+                    {
+                        <a href='@Url.Action("Index", "Registro", new { id = item.Id })'>
+                            <label type="button" class="btn btn-dark">Registros</label>
+                        </a>
+                    }
 
-            @if (cuenta.Permisos.Contains("TrabajadoresE"))
-            {
-                <td>
-                    <a href='@Url.Action("Edit", "Trabajador", new { id = item.Id })'>
-                        <button title="Editar" type="submit" class="btn btn-default">
-                            <image src="~/Images/editar.png" style="width:32px;height:32px"></image>
-                        </button>
+                    @if (cuenta.Permisos.Contains("TrabajadoresE"))
+                    {
+                        <a href='@Url.Action("Edit", "Trabajador", new { id = item.Id })'>
+                            <label title="Editar" type="submit" class="btn btn-warning">Editar</label>
+                        </a>
+                    }
+                    <a href='@Url.Action("Details", "Trabajador", new { id = item.Id })'>
+                        <label title="Detalle" type="submit" class="btn btn-info">Detalle </label>
                     </a>
-                </td>
-            }
-            <td>
-                <a href='@Url.Action("Details", "Trabajador", new { id = item.Id })'>
-                    <button title="Detalle" type="submit" class="btn btn-default">
-                        <image src="~/Images/detalle.png" style="width:32px;height:32px"></image>
-                    </button>
-                </a>
-            </td>
-            @if (cuenta.Permisos.Contains("TrabajadoresD"))
-            {
-                <td>
-                    <a href='@Url.Action("Delete", "Trabajador", new { id = item.Id })' onclick="return confirm('¿Está seguro que desea eliminar el Trabajador?');" })>
-                        <button title="Eliminar" type="submit" class="btn btn-default">
-                            <image src="~/Images/eliminar.png" style="width:32px;height:32px"></image>
-                        </button>
-                    </a>
-                </td>
-            }
+                    @if (cuenta.Permisos.Contains("TrabajadoresD"))
+                    {
+                        <a href='@Url.Action("Delete", "Trabajador", new { id = item.Id })' onclick="return confirm('¿Está seguro que desea eliminar el Trabajador?');" })>
+                            <label title="Eliminar" type="submit" class="btn btn-danger">Borrar</label>
+                        </a>
+                    }
 
-            @if (cuenta.Permisos.Contains("Sueldo"))
-            {
-                <td>
-                    <a href='@Url.Action("Index", "Remuneracion", new { id = item.Id })'>
-                        <button title="Remuneración" type="submit" class="btn btn-default">
-                            <image src="~/Images/pago.png" style="width:32px;height:32px"></image>
-                        </button>
-                    </a>
-                </td>
-            }
+                    @if (cuenta.Permisos.Contains("Sueldo"))
+                    {
+                        <a href='@Url.Action("Index", "Remuneracion", new { id = item.Id })'>
+                            <label title="Remuneración" type="submit" class="btn btn-light">Remuneracion</label>
+                        </a>
+                    }
 
-            @if (cuenta.Permisos.Contains("TrabajadoresS"))
-            {
-                <td>
-                    <a href='@Url.Action("PDFDetalle", "Trabajador", new { id = item.Id })'>
-                        <button title="Solicitud Contratación" type="submit" class="btn btn-default">
-                            <image src="~/Images/contrato.png" style="width:32px;height:32px"></image>
-                        </button>
-                    </a>
-                </td>
-            }
-            @if (cuenta.Permisos.Contains("TrabajadoresM"))
-            {
-                <td>
-                    <a href='@Url.Action("Index", "Trabajador", new { id = item.Id })' target="_blank">
+                    @if (cuenta.Permisos.Contains("TrabajadoresS"))
+                    {
+                        <a href='@Url.Action("PDFDetalle", "Trabajador", new { id = item.Id })'>
+                            <label title="Solicitud Contratación" type="submit" class="btn btn-success">
+                                Contrato
+                            </label>
+                        </a>
+                    }
+                    @if (cuenta.Permisos.Contains("TrabajadoresM"))
+                    {
+                        <a href='@Url.Action("Index", "Trabajador", new { id = item.Id })' target="_blank">
 
-                        <button title="Correo" type="submit" class="btn btn-default">
-                            <image src="~/Images/correo.png" style="width:32px;height:32px"></image>
-                        </button>
-                    </a>
+                            <label title="Correo" type="submit" class="btn btn-light">
+                                Correo
+                            </label>
+                        </a>
+                    }
                 </td>
+
+                </tr>
             }
-        </tr>
-        }
-    </tbody>
-</table>
+    </table>
+</div>
+
 <script>
     function buscar() {
-        var input, filter, table, tr, td1, td2, td3, td4, td5, i, txtValue1, txtValue2, txtValue3, txtValue4, txtValue5 ;
+        var input, filter, table, tr, td1, td2, td3, td4, td5, i, txtValue1, txtValue2, txtValue3, txtValue4, txtValue5;
         input = document.getElementById("busqueda");
         filter = input.value.toUpperCase();
         table = document.getElementById("tabla");
@@ -168,7 +150,7 @@
                 txtValue4 = td4.textContent || td4.innerText;
                 txtValue5 = td5.textContent || td5.innerText;
                 if (txtValue1.toUpperCase().indexOf(filter) > -1 || txtValue2.toUpperCase().indexOf(filter) > -1 || txtValue3.toUpperCase().indexOf(filter) > -1 ||
-                    txtValue4.toUpperCase().indexOf(filter) > -1 || txtValue5.toUpperCase().indexOf(filter) > -1)    {
+                    txtValue4.toUpperCase().indexOf(filter) > -1 || txtValue5.toUpperCase().indexOf(filter) > -1) {
                     tr[i].style.display = "";
                 } else {
                     tr[i].style.display = "none";

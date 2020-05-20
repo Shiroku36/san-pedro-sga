@@ -20,5 +20,7 @@ namespace ControlPersonalAppWeb
         public Nullable<System.DateTime> Periodo { get; set; }
         public string Retiro { get; set; }
         public string Voluntario { get; set; }
+        public string Empresa { get; set; }
+        public Nullable<int> EmpresaId { get; set; }
     }
 }

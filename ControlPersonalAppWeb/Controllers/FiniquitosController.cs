@@ -13,6 +13,7 @@ namespace ControlPersonalAppWeb.Controllers
     public class FiniquitosController : Controller
     {
         private DBManejoPersonalEntities db = new DBManejoPersonalEntities();
+        private Cuentas cuenta = Utils.SessionManager.CuentaAutenticada();
 
         // GET: Finiquitos
         public ActionResult Index(int? id)

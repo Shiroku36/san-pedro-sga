@@ -11,7 +11,8 @@ namespace ControlPersonalAppWeb
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel;
+
     public partial class Vacaciones
     {
         public int Id { get; set; }
@@ -19,9 +20,13 @@ namespace ControlPersonalAppWeb
         public Nullable<double> Normales { get; set; }
         public Nullable<double> Progresivas { get; set; }
         public Nullable<double> Total { get; set; }
+        [DisplayName("Tomadas normales")]
         public Nullable<double> TomadasNormales { get; set; }
+        [DisplayName("Tomadas progresivas")]
         public Nullable<double> TomadasProgresivas { get; set; }
         public Nullable<double> Saldo { get; set; }
         public Nullable<int> IdTrabajador { get; set; }
+        public string Empresa { get; set; }
+        public Nullable<int> EmpresaId { get; set; }
     }
 }

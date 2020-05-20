@@ -28,6 +28,7 @@ namespace ControlPersonalAppWeb.Controllers
     {
 
         DBManejoPersonalEntities db = new DBManejoPersonalEntities();
+        private Cuentas cuenta = Utils.SessionManager.CuentaAutenticada();
         public ActionResult Borrar()
         {
             /*DBManejoPersonalEntities db = new DBManejoPersonalEntities();
@@ -307,8 +308,6 @@ namespace ControlPersonalAppWeb.Controllers
         [HttpPost]
         public ActionResult Asistencias(FormCollection collection)
         {
-            /*try
-            {*/
                 DBManejoPersonalEntities db = new DBManejoPersonalEntities();
                 string nombre = collection["id"];
                 Empresas empresa = db.Empresas.First(x => x.Nombre == nombre);
@@ -329,11 +328,6 @@ namespace ControlPersonalAppWeb.Controllers
                 AsistenciasPDF(dateTime, ids, empresa);
                 Utils.SessionManager.entrada = "8:00";
                 return RedirectToAction("Asistencias");
-            //}
-            //catch
-            //{
-                return View();
-            //}
         }
         public System.Drawing.Image GetImage(byte[] imageBytes)
         {
@@ -1041,7 +1035,10 @@ namespace ControlPersonalAppWeb.Controllers
                             raro = "*";
                         }   
                         DateTime horasTrabajadas = new DateTime();
-                        horasTrabajadas =  horasTrabajadas + (horasT - horasExtras);
+                        if(horasT>horasExtras)
+                        {
+                            horasTrabajadas = horasTrabajadas + (horasT - horasExtras);
+                        }
 
                         Registro registro = new Registro
                         {
@@ -1405,7 +1402,6 @@ namespace ControlPersonalAppWeb.Controllers
         {
             try
             {
-                DateTime temp;
                 DBManejoPersonalEntities database = new DBManejoPersonalEntities();
                 //Trabajador trabajadorNew = new Trabajador();
                 /*trabajadorNew.Nombre = collection["Nombre"].Replace(",","");
@@ -1664,7 +1660,6 @@ namespace ControlPersonalAppWeb.Controllers
         {
             try
             {
-                DateTime temp;
                 DBManejoPersonalEntities database = new DBManejoPersonalEntities();
                 string empresa = Utils.SessionManager.CuentaAutenticada().Empresa;
                 //Trabajador trabajadorNew = database.Trabajador.First(x => x.Id == id);

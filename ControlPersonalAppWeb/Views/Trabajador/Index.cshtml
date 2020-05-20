@@ -62,8 +62,11 @@
             @foreach (var item in Model)
             {
                 <tr>
-                    <td>@item.Rut</td>
-                    <td>@Html.DisplayFor(modelItem => item.Nombre) @Html.DisplayFor(modelItem => item.ApellidoPaterno)@Html.DisplayFor(modelItem => item.ApellidoMaterno)
+                    <td>
+                        @item.Rut
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Nombre) @Html.DisplayFor(modelItem => item.ApellidoPaterno) @Html.DisplayFor(modelItem => item.ApellidoMaterno)
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.Uid)

@@ -15,6 +15,19 @@
           <Property Name="Periodo" Type="date" />
           <Property Name="Retiro" Type="varchar" MaxLength="50" />
           <Property Name="Voluntario" Type="varchar" MaxLength="50" />
+          <Property Name="Empresa" Type="varchar" MaxLength="50" />
+          <Property Name="EmpresaId" Type="int" />
+        </EntityType>
+        <EntityType Name="AplicacionDePrograma">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="SolicitudId" Type="int" />
+          <Property Name="FechaInicio" Type="datetime" />
+          <Property Name="FechaFin" Type="datetime" />
+          <Property Name="Empresa" Type="varchar" MaxLength="50" />
+          <Property Name="EmpresaId" Type="int" />
         </EntityType>
         <EntityType Name="Campos">
           <Key>
@@ -47,6 +60,34 @@
           <Property Name="Nombre" Type="varchar" MaxLength="50" />
           <Property Name="IdEmpresa" Type="int" />
         </EntityType>
+        <EntityType Name="Comentario">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Trabajador" Type="varchar" MaxLength="300" />
+          <Property Name="TrabajadorId" Type="int" />
+          <Property Name="AplicacionDeProgramaId" Type="int" />
+          <Property Name="Fecha" Type="datetime" />
+          <Property Name="Comentario" Type="varchar(max)" />
+          <Property Name="Empresa" Type="varchar" MaxLength="50" />
+          <Property Name="EmpresaId" Type="int" />
+        </EntityType>
+        <EntityType Name="ControlInventario">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Producto" Type="varchar" MaxLength="50" />
+          <Property Name="ProductoId" Type="int" />
+          <Property Name="Cantidad" Type="int" />
+          <Property Name="Razon" Type="varchar(max)" />
+          <Property Name="Fecha" Type="datetime" />
+          <Property Name="Trabajador" Type="varchar" MaxLength="300" />
+          <Property Name="TrabajadorId" Type="int" />
+          <Property Name="Empresa" Type="varchar" MaxLength="50" />
+          <Property Name="EmpresaId" Type="int" />
+        </EntityType>
         <EntityType Name="Cuentas">
           <Key>
             <PropertyRef Name="Id" />
@@ -57,6 +98,9 @@
           <Property Name="Empresa" Type="varchar" MaxLength="50" />
           <Property Name="Nivel" Type="int" Nullable="false" />
           <Property Name="Permisos" Type="varchar" MaxLength="512" />
+          <Property Name="Trabajador" Type="varchar" MaxLength="300" />
+          <Property Name="TrabajadorId" Type="int" />
+          <Property Name="EmpresaId" Type="int" />
         </EntityType>
         <EntityType Name="Empresas">
           <Key>
@@ -78,6 +122,8 @@
           <Property Name="CajaDeCompensacion" Type="varchar" MaxLength="50" />
           <Property Name="TextoLiquidacion" Type="varchar(max)" />
           <Property Name="Logo" Type="image" />
+          <Property Name="Invocada" Type="varbinary" MaxLength="128" />
+          <Property Name="NombreAnterior" Type="nchar" MaxLength="10" />
         </EntityType>
         <EntityType Name="Finiquito">
           <Key>
@@ -123,6 +169,22 @@
           <Property Name="IdTrabajador" Type="int" />
           <Property Name="Fijo" Type="bit" />
         </EntityType>
+        <EntityType Name="Ingreso">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Productos" Type="varchar(max)" />
+          <Property Name="Fecha" Type="datetime" />
+          <Property Name="Ubicacion" Type="varchar" MaxLength="50" />
+          <Property Name="Proveedor" Type="varchar" MaxLength="50" />
+          <Property Name="ProveedorRut" Type="varchar" MaxLength="50" />
+          <Property Name="ProveedorId" Type="int" />
+          <Property Name="Trabajador" Type="varchar(max)" />
+          <Property Name="TrabajadorId" Type="int" />
+          <Property Name="Empresa" Type="varchar" MaxLength="50" />
+          <Property Name="EmpresaId" Type="int" />
+        </EntityType>
         <EntityType Name="Licencia">
           <Key>
             <PropertyRef Name="Id" />
@@ -133,6 +195,20 @@
           <Property Name="Hasta" Type="date" />
           <Property Name="Causa" Type="varchar" MaxLength="50" />
           <Property Name="IdTrabajador" Type="int" />
+          <Property Name="Empresa" Type="varchar" MaxLength="50" />
+          <Property Name="EmpresaId" Type="int" />
+        </EntityType>
+        <EntityType Name="Log">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Fecha" Type="datetime" />
+          <Property Name="Empresa" Type="varchar" MaxLength="50" />
+          <Property Name="EmpresaId" Type="int" />
+          <Property Name="Usuario" Type="varchar" MaxLength="50" />
+          <Property Name="UsuarioId" Type="int" />
+          <Property Name="Accion" Type="varbinary(max)" />
         </EntityType>
         <EntityType Name="Prestamo">
           <Key>
@@ -145,6 +221,25 @@
           <Property Name="Interes" Type="float" />
           <Property Name="Inicio" Type="date" />
           <Property Name="IdTrabajador" Type="int" />
+          <Property Name="Empresa" Type="varchar" MaxLength="50" />
+          <Property Name="EmpresaId" Type="int" />
+        </EntityType>
+        <EntityType Name="Producto">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nombre" Type="varchar" MaxLength="100" />
+          <Property Name="Unidad" Type="int" />
+          <Property Name="Tipo" Type="varchar" MaxLength="50" />
+          <Property Name="StockMin" Type="int" />
+          <Property Name="RetirarBajo0" Type="bit" />
+          <Property Name="Activo" Type="bit" />
+          <Property Name="Descripcion" Type="varchar(max)" />
+          <Property Name="Foto" Type="image" />
+          <Property Name="Miniatura" Type="image" />
+          <Property Name="Empresa" Type="varchar" MaxLength="50" />
+          <Property Name="EmpresaId" Type="int" />
         </EntityType>
         <EntityType Name="RegistroTrabajador">
           <Key>
@@ -156,6 +251,36 @@
           <Property Name="Foto" Type="image" Nullable="false" />
           <Property Name="Campo" Type="varchar" MaxLength="20" Nullable="false" />
           <Property Name="Empresa" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="IdTrabajador" Type="int" />
+          <Property Name="NombreTrabajador" Type="varchar" MaxLength="300" />
+        </EntityType>
+        <EntityType Name="Solicitud">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Trabajador" Type="varchar" MaxLength="300" />
+          <Property Name="TrabajadorId" Type="int" />
+          <Property Name="Productos" Type="varchar(max)" />
+          <Property Name="Observación" Type="varchar(max)" />
+          <Property Name="Origen" Type="varchar" MaxLength="50" />
+          <Property Name="Destino" Type="varchar" MaxLength="50" />
+          <Property Name="Estado" Type="varchar" MaxLength="50" />
+          <Property Name="Fecha" Type="datetime" />
+          <Property Name="Empresa" Type="varchar" MaxLength="50" />
+          <Property Name="EmpresaId" Type="int" />
+        </EntityType>
+        <EntityType Name="Stock">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Producto" Type="varchar" MaxLength="50" />
+          <Property Name="ProductoId" Type="int" />
+          <Property Name="Cantidad" Type="int" />
+          <Property Name="Ubicacion" Type="varchar" MaxLength="50" />
+          <Property Name="SolicitudId" Type="int" />
+          <Property Name="IngresoId" Type="int" />
         </EntityType>
         <EntityType Name="sysdiagrams">
           <Key>
@@ -172,7 +297,7 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Nombre" Type="nchar" MaxLength="10" />
+          <Property Name="Nombre" Type="varchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="Trabajador">
           <Key>
@@ -346,20 +471,30 @@
           <Property Name="TomadasProgresivas" Type="float" />
           <Property Name="Saldo" Type="float" />
           <Property Name="IdTrabajador" Type="int" />
+          <Property Name="Empresa" Type="varchar" MaxLength="50" />
+          <Property Name="EmpresaId" Type="int" />
         </EntityType>
         <EntityContainer Name="DBManejoPersonalModelStoreContainer">
           <EntitySet Name="AFP" EntityType="Self.AFP" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AplicacionDePrograma" EntityType="Self.AplicacionDePrograma" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Campos" EntityType="Self.Campos" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Cargo" EntityType="Self.Cargo" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="CentroDeCostos" EntityType="Self.CentroDeCostos" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Comentario" EntityType="Self.Comentario" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ControlInventario" EntityType="Self.ControlInventario" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Cuentas" EntityType="Self.Cuentas" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Empresas" EntityType="Self.Empresas" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Finiquito" EntityType="Self.Finiquito" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="HorasExtras" EntityType="Self.HorasExtras" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="HyD" EntityType="Self.HyD" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Ingreso" EntityType="Self.Ingreso" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Licencia" EntityType="Self.Licencia" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Log" EntityType="Self.Log" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Prestamo" EntityType="Self.Prestamo" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Producto" EntityType="Self.Producto" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="RegistroTrabajador" EntityType="Self.RegistroTrabajador" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Solicitud" EntityType="Self.Solicitud" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Stock" EntityType="Self.Stock" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TipoContrato" EntityType="Self.TipoContrato" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Trabajador" EntityType="Self.Trabajador" Schema="dbo" store:Type="Tables" />
@@ -386,6 +521,14 @@
           <EntitySet Name="Finiquito" EntityType="DBManejoPersonalModel.Finiquito" />
           <EntitySet Name="AFP" EntityType="DBManejoPersonalModel.AFP" />
           <EntitySet Name="Trabajador" EntityType="DBManejoPersonalModel.Trabajador" />
+          <EntitySet Name="AplicacionDePrograma" EntityType="DBManejoPersonalModel.AplicacionDePrograma" />
+          <EntitySet Name="Comentario" EntityType="DBManejoPersonalModel.Comentario" />
+          <EntitySet Name="ControlInventario" EntityType="DBManejoPersonalModel.ControlInventario" />
+          <EntitySet Name="Log" EntityType="DBManejoPersonalModel.Log" />
+          <EntitySet Name="Solicitud" EntityType="DBManejoPersonalModel.Solicitud" />
+          <EntitySet Name="Ingreso" EntityType="DBManejoPersonalModel.Ingreso" />
+          <EntitySet Name="Stock" EntityType="DBManejoPersonalModel.Stock" />
+          <EntitySet Name="Producto" EntityType="DBManejoPersonalModel.Producto" />
           </EntityContainer>
         <EntityType Name="Campos">
           <Key>
@@ -412,6 +555,9 @@
           <Property Name="Empresa" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="Nivel" Type="Int32" Nullable="false" />
           <Property Name="Permisos" Type="String" MaxLength="512" FixedLength="false" Unicode="false" />
+          <Property Name="TrabajadorId" Type="Int32" />
+          <Property Name="Trabajador" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+          <Property Name="EmpresaId" Type="Int32" />
         </EntityType>
         <EntityType Name="Empresas">
           <Key>
@@ -433,6 +579,8 @@
           <Property Name="CajaDeCompensacion" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="TextoLiquidacion" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="Logo" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="Invocada" Type="Binary" MaxLength="128" FixedLength="false" />
+          <Property Name="NombreAnterior" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
         </EntityType>
         <EntityType Name="RegistroTrabajador">
           <Key>
@@ -444,6 +592,8 @@
           <Property Name="Foto" Type="Binary" Nullable="false" MaxLength="Max" FixedLength="false" />
           <Property Name="Campo" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="Empresa" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="IdTrabajador" Type="Int32" />
+          <Property Name="NombreTrabajador" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="sysdiagrams">
           <Key>
@@ -475,13 +625,15 @@
           <Property Name="Hasta" Type="DateTime" Precision="0" />
           <Property Name="Causa" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="IdTrabajador" Type="Int32" />
+          <Property Name="Empresa" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="EmpresaId" Type="Int32" />
         </EntityType>
         <EntityType Name="TipoContrato">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" />
-          <Property Name="Nombre" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="Nombre" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="Prestamo">
           <Key>
@@ -494,6 +646,8 @@
           <Property Name="Interes" Type="Double" />
           <Property Name="Inicio" Type="DateTime" Precision="0" />
           <Property Name="IdTrabajador" Type="Int32" />
+          <Property Name="Empresa" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="EmpresaId" Type="Int32" />
         </EntityType>
         <EntityType Name="HyD">
           <Key>
@@ -521,6 +675,8 @@
           <Property Name="TomadasProgresivas" Type="Double" />
           <Property Name="Saldo" Type="Double" />
           <Property Name="IdTrabajador" Type="Int32" />
+          <Property Name="Empresa" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="EmpresaId" Type="Int32" />
         </EntityType>
         <EntityType Name="Cargo">
           <Key>
@@ -569,6 +725,8 @@
           <Property Name="Periodo" Type="DateTime" Precision="0" />
           <Property Name="Retiro" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="Voluntario" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Empresa" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="EmpresaId" Type="Int32" />
         </EntityType>
         <EntityType Name="Trabajador">
           <Key>
@@ -729,6 +887,118 @@
           <Property Name="Atributo5" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
           <Property Name="Atributo1" Type="Int32" />
         </EntityType>
+        <EntityType Name="AplicacionDePrograma">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SolicitudId" Type="Int32" />
+          <Property Name="FechaInicio" Type="DateTime" Precision="3" />
+          <Property Name="FechaFin" Type="DateTime" Precision="3" />
+          <Property Name="Empresa" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="EmpresaId" Type="Int32" />
+        </EntityType>
+        <EntityType Name="Comentario">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Trabajador" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+          <Property Name="TrabajadorId" Type="Int32" />
+          <Property Name="AplicacionDeProgramaId" Type="Int32" />
+          <Property Name="Fecha" Type="DateTime" Precision="3" />
+          <Property Name="Comentario1" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Empresa" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="EmpresaId" Type="Int32" />
+        </EntityType>
+        <EntityType Name="ControlInventario">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Producto" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ProductoId" Type="Int32" />
+          <Property Name="Cantidad" Type="Int32" />
+          <Property Name="Razon" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Fecha" Type="DateTime" Precision="3" />
+          <Property Name="Trabajador" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+          <Property Name="TrabajadorId" Type="Int32" />
+          <Property Name="Empresa" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="EmpresaId" Type="Int32" />
+        </EntityType>
+        <EntityType Name="Log">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Fecha" Type="DateTime" Precision="3" />
+          <Property Name="Empresa" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="EmpresaId" Type="Int32" />
+          <Property Name="Usuario" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="UsuarioId" Type="Int32" />
+          <Property Name="Accion" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <EntityType Name="Solicitud">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Trabajador" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+          <Property Name="TrabajadorId" Type="Int32" />
+          <Property Name="Productos" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Observación" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Origen" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Destino" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Estado" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Fecha" Type="DateTime" Precision="3" />
+          <Property Name="Empresa" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="EmpresaId" Type="Int32" />
+        </EntityType>
+        <EntityType Name="Ingreso">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Productos" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Fecha" Type="DateTime" Precision="3" />
+          <Property Name="Ubicacion" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Proveedor" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ProveedorRut" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ProveedorId" Type="Int32" />
+          <Property Name="Trabajador" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="TrabajadorId" Type="Int32" />
+          <Property Name="Empresa" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="EmpresaId" Type="Int32" />
+        </EntityType>
+        <EntityType Name="Stock">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Producto" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ProductoId" Type="Int32" />
+          <Property Name="Cantidad" Type="Int32" />
+          <Property Name="Ubicacion" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="SolicitudId" Type="Int32" />
+          <Property Name="IngresoId" Type="Int32" />
+        </EntityType>
+        <EntityType Name="Producto">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="Unidad" Type="Int32" />
+          <Property Name="Tipo" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="StockMin" Type="Int32" />
+          <Property Name="RetirarBajo0" Type="Boolean" />
+          <Property Name="Activo" Type="Boolean" />
+          <Property Name="Descripcion" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Foto" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="Miniatura" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="Empresa" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="EmpresaId" Type="Int32" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -754,6 +1024,9 @@
           <EntitySetMapping Name="Cuentas">
             <EntityTypeMapping TypeName="DBManejoPersonalModel.Cuentas">
               <MappingFragment StoreEntitySet="Cuentas">
+                <ScalarProperty Name="EmpresaId" ColumnName="EmpresaId" />
+                <ScalarProperty Name="Trabajador" ColumnName="Trabajador" />
+                <ScalarProperty Name="TrabajadorId" ColumnName="TrabajadorId" />
                 <ScalarProperty Name="Permisos" ColumnName="Permisos" />
                 <ScalarProperty Name="Nivel" ColumnName="Nivel" />
                 <ScalarProperty Name="Empresa" ColumnName="Empresa" />
@@ -766,6 +1039,8 @@
           <EntitySetMapping Name="Empresas">
             <EntityTypeMapping TypeName="DBManejoPersonalModel.Empresas">
               <MappingFragment StoreEntitySet="Empresas">
+                <ScalarProperty Name="NombreAnterior" ColumnName="NombreAnterior" />
+                <ScalarProperty Name="Invocada" ColumnName="Invocada" />
                 <ScalarProperty Name="Logo" ColumnName="Logo" />
                 <ScalarProperty Name="TextoLiquidacion" ColumnName="TextoLiquidacion" />
                 <ScalarProperty Name="CajaDeCompensacion" ColumnName="CajaDeCompensacion" />
@@ -788,6 +1063,8 @@
           <EntitySetMapping Name="RegistroTrabajador">
             <EntityTypeMapping TypeName="DBManejoPersonalModel.RegistroTrabajador">
               <MappingFragment StoreEntitySet="RegistroTrabajador">
+                <ScalarProperty Name="NombreTrabajador" ColumnName="NombreTrabajador" />
+                <ScalarProperty Name="IdTrabajador" ColumnName="IdTrabajador" />
                 <ScalarProperty Name="Empresa" ColumnName="Empresa" />
                 <ScalarProperty Name="Campo" ColumnName="Campo" />
                 <ScalarProperty Name="Foto" ColumnName="Foto" />
@@ -822,6 +1099,8 @@
           <EntitySetMapping Name="Licencia">
             <EntityTypeMapping TypeName="DBManejoPersonalModel.Licencia">
               <MappingFragment StoreEntitySet="Licencia">
+                <ScalarProperty Name="EmpresaId" ColumnName="EmpresaId" />
+                <ScalarProperty Name="Empresa" ColumnName="Empresa" />
                 <ScalarProperty Name="IdTrabajador" ColumnName="IdTrabajador" />
                 <ScalarProperty Name="Causa" ColumnName="Causa" />
                 <ScalarProperty Name="Hasta" ColumnName="Hasta" />
@@ -842,6 +1121,8 @@
           <EntitySetMapping Name="Prestamo">
             <EntityTypeMapping TypeName="DBManejoPersonalModel.Prestamo">
               <MappingFragment StoreEntitySet="Prestamo">
+                <ScalarProperty Name="EmpresaId" ColumnName="EmpresaId" />
+                <ScalarProperty Name="Empresa" ColumnName="Empresa" />
                 <ScalarProperty Name="IdTrabajador" ColumnName="IdTrabajador" />
                 <ScalarProperty Name="Inicio" ColumnName="Inicio" />
                 <ScalarProperty Name="Interes" ColumnName="Interes" />
@@ -869,6 +1150,8 @@
           <EntitySetMapping Name="Vacaciones">
             <EntityTypeMapping TypeName="DBManejoPersonalModel.Vacaciones">
               <MappingFragment StoreEntitySet="Vacaciones">
+                <ScalarProperty Name="EmpresaId" ColumnName="EmpresaId" />
+                <ScalarProperty Name="Empresa" ColumnName="Empresa" />
                 <ScalarProperty Name="IdTrabajador" ColumnName="IdTrabajador" />
                 <ScalarProperty Name="Saldo" ColumnName="Saldo" />
                 <ScalarProperty Name="TomadasProgresivas" ColumnName="TomadasProgresivas" />
@@ -924,6 +1207,8 @@
           <EntitySetMapping Name="AFP">
             <EntityTypeMapping TypeName="DBManejoPersonalModel.AFP">
               <MappingFragment StoreEntitySet="AFP">
+                <ScalarProperty Name="EmpresaId" ColumnName="EmpresaId" />
+                <ScalarProperty Name="Empresa" ColumnName="Empresa" />
                 <ScalarProperty Name="Voluntario" ColumnName="Voluntario" />
                 <ScalarProperty Name="Retiro" ColumnName="Retiro" />
                 <ScalarProperty Name="Periodo" ColumnName="Periodo" />
@@ -1088,6 +1373,126 @@
                 <ScalarProperty Name="Rut" ColumnName="Rut" />
                 <ScalarProperty Name="ApellidoMaterno" ColumnName="ApellidoMaterno" />
                 <ScalarProperty Name="ApellidoPaterno" ColumnName="ApellidoPaterno" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AplicacionDePrograma">
+            <EntityTypeMapping TypeName="DBManejoPersonalModel.AplicacionDePrograma">
+              <MappingFragment StoreEntitySet="AplicacionDePrograma">
+                <ScalarProperty Name="EmpresaId" ColumnName="EmpresaId" />
+                <ScalarProperty Name="Empresa" ColumnName="Empresa" />
+                <ScalarProperty Name="FechaFin" ColumnName="FechaFin" />
+                <ScalarProperty Name="FechaInicio" ColumnName="FechaInicio" />
+                <ScalarProperty Name="SolicitudId" ColumnName="SolicitudId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Comentario">
+            <EntityTypeMapping TypeName="DBManejoPersonalModel.Comentario">
+              <MappingFragment StoreEntitySet="Comentario">
+                <ScalarProperty Name="EmpresaId" ColumnName="EmpresaId" />
+                <ScalarProperty Name="Empresa" ColumnName="Empresa" />
+                <ScalarProperty Name="Comentario1" ColumnName="Comentario" />
+                <ScalarProperty Name="Fecha" ColumnName="Fecha" />
+                <ScalarProperty Name="AplicacionDeProgramaId" ColumnName="AplicacionDeProgramaId" />
+                <ScalarProperty Name="TrabajadorId" ColumnName="TrabajadorId" />
+                <ScalarProperty Name="Trabajador" ColumnName="Trabajador" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ControlInventario">
+            <EntityTypeMapping TypeName="DBManejoPersonalModel.ControlInventario">
+              <MappingFragment StoreEntitySet="ControlInventario">
+                <ScalarProperty Name="EmpresaId" ColumnName="EmpresaId" />
+                <ScalarProperty Name="Empresa" ColumnName="Empresa" />
+                <ScalarProperty Name="TrabajadorId" ColumnName="TrabajadorId" />
+                <ScalarProperty Name="Trabajador" ColumnName="Trabajador" />
+                <ScalarProperty Name="Fecha" ColumnName="Fecha" />
+                <ScalarProperty Name="Razon" ColumnName="Razon" />
+                <ScalarProperty Name="Cantidad" ColumnName="Cantidad" />
+                <ScalarProperty Name="ProductoId" ColumnName="ProductoId" />
+                <ScalarProperty Name="Producto" ColumnName="Producto" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Log">
+            <EntityTypeMapping TypeName="DBManejoPersonalModel.Log">
+              <MappingFragment StoreEntitySet="Log">
+                <ScalarProperty Name="Accion" ColumnName="Accion" />
+                <ScalarProperty Name="UsuarioId" ColumnName="UsuarioId" />
+                <ScalarProperty Name="Usuario" ColumnName="Usuario" />
+                <ScalarProperty Name="EmpresaId" ColumnName="EmpresaId" />
+                <ScalarProperty Name="Empresa" ColumnName="Empresa" />
+                <ScalarProperty Name="Fecha" ColumnName="Fecha" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Solicitud">
+            <EntityTypeMapping TypeName="DBManejoPersonalModel.Solicitud">
+              <MappingFragment StoreEntitySet="Solicitud">
+                <ScalarProperty Name="EmpresaId" ColumnName="EmpresaId" />
+                <ScalarProperty Name="Empresa" ColumnName="Empresa" />
+                <ScalarProperty Name="Fecha" ColumnName="Fecha" />
+                <ScalarProperty Name="Estado" ColumnName="Estado" />
+                <ScalarProperty Name="Destino" ColumnName="Destino" />
+                <ScalarProperty Name="Origen" ColumnName="Origen" />
+                <ScalarProperty Name="Observación" ColumnName="Observación" />
+                <ScalarProperty Name="Productos" ColumnName="Productos" />
+                <ScalarProperty Name="TrabajadorId" ColumnName="TrabajadorId" />
+                <ScalarProperty Name="Trabajador" ColumnName="Trabajador" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Ingreso">
+            <EntityTypeMapping TypeName="DBManejoPersonalModel.Ingreso">
+              <MappingFragment StoreEntitySet="Ingreso">
+                <ScalarProperty Name="EmpresaId" ColumnName="EmpresaId" />
+                <ScalarProperty Name="Empresa" ColumnName="Empresa" />
+                <ScalarProperty Name="TrabajadorId" ColumnName="TrabajadorId" />
+                <ScalarProperty Name="Trabajador" ColumnName="Trabajador" />
+                <ScalarProperty Name="ProveedorId" ColumnName="ProveedorId" />
+                <ScalarProperty Name="ProveedorRut" ColumnName="ProveedorRut" />
+                <ScalarProperty Name="Proveedor" ColumnName="Proveedor" />
+                <ScalarProperty Name="Ubicacion" ColumnName="Ubicacion" />
+                <ScalarProperty Name="Fecha" ColumnName="Fecha" />
+                <ScalarProperty Name="Productos" ColumnName="Productos" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Stock">
+            <EntityTypeMapping TypeName="DBManejoPersonalModel.Stock">
+              <MappingFragment StoreEntitySet="Stock">
+                <ScalarProperty Name="IngresoId" ColumnName="IngresoId" />
+                <ScalarProperty Name="SolicitudId" ColumnName="SolicitudId" />
+                <ScalarProperty Name="Ubicacion" ColumnName="Ubicacion" />
+                <ScalarProperty Name="Cantidad" ColumnName="Cantidad" />
+                <ScalarProperty Name="ProductoId" ColumnName="ProductoId" />
+                <ScalarProperty Name="Producto" ColumnName="Producto" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Producto">
+            <EntityTypeMapping TypeName="DBManejoPersonalModel.Producto">
+              <MappingFragment StoreEntitySet="Producto">
+                <ScalarProperty Name="EmpresaId" ColumnName="EmpresaId" />
+                <ScalarProperty Name="Empresa" ColumnName="Empresa" />
+                <ScalarProperty Name="Miniatura" ColumnName="Miniatura" />
+                <ScalarProperty Name="Foto" ColumnName="Foto" />
+                <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
+                <ScalarProperty Name="Activo" ColumnName="Activo" />
+                <ScalarProperty Name="RetirarBajo0" ColumnName="RetirarBajo0" />
+                <ScalarProperty Name="StockMin" ColumnName="StockMin" />
+                <ScalarProperty Name="Tipo" ColumnName="Tipo" />
+                <ScalarProperty Name="Unidad" ColumnName="Unidad" />
                 <ScalarProperty Name="Nombre" ColumnName="Nombre" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>

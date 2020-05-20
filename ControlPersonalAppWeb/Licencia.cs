@@ -20,5 +20,7 @@ namespace ControlPersonalAppWeb
         public Nullable<System.DateTime> Hasta { get; set; }
         public string Causa { get; set; }
         public Nullable<int> IdTrabajador { get; set; }
+        public string Empresa { get; set; }
+        public Nullable<int> EmpresaId { get; set; }
     }
 }

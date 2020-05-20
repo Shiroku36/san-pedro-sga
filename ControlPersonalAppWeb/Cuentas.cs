@@ -20,5 +20,8 @@ namespace ControlPersonalAppWeb
         public string Empresa { get; set; }
         public int Nivel { get; set; }
         public string Permisos { get; set; }
+        public Nullable<int> TrabajadorId { get; set; }
+        public string Trabajador { get; set; }
+        public Nullable<int> EmpresaId { get; set; }
     }
 }

@@ -11,15 +11,18 @@ namespace ControlPersonalAppWeb
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel;
+
     public partial class Empresas
     {
         public int Id { get; set; }
         public string Nombre { get; set; }
-        public string NombreAnterior { get; set; }
         public string Rut { get; set; }
+        [DisplayName("Razol social")]
         public byte[] RazonSocial { get; set; }
+        [DisplayName("Nombre representante legal")]
         public string RepresentanteLegalNombre { get; set; }
+        [DisplayName("Rut representante legal")]
         public string RepresenntanteLegalRut { get; set; }
         public string Giro { get; set; }
         public string Dirección { get; set; }
@@ -27,9 +30,14 @@ namespace ControlPersonalAppWeb
         public string Ciudad { get; set; }
         public string Telefono { get; set; }
         public string Mutual { get; set; }
+        [DisplayName("Factor mutual")]
         public string FactorMutual { get; set; }
+        [DisplayName("Caja de compensanción")]
         public string CajaDeCompensacion { get; set; }
+        [DisplayName("Texto liquidación")]
         public string TextoLiquidacion { get; set; }
         public byte[] Logo { get; set; }
+        public byte[] Invocada { get; set; }
+        public string NombreAnterior { get; set; }
     }
 }

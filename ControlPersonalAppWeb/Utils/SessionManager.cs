@@ -64,7 +64,6 @@ namespace ControlPersonalAppWeb.Utils
         public static void Ingresar(Cuentas c)
         {
             var cookieSesion = new HttpCookie("Cuenta");
-            cookieSesion.Expires = DateTime.Now.AddDays(1);
             cookieSesion.Value = c.Id.ToString();
             HttpContext.Current.Response.Cookies.Add(cookieSesion);
         }

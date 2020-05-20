@@ -17,6 +17,14 @@
     <EntitySet Name="Finiquito" EntityType="DBManejoPersonalModel.Finiquito" />
     <EntitySet Name="AFP" EntityType="DBManejoPersonalModel.AFP" />
     <EntitySet Name="Trabajador" EntityType="DBManejoPersonalModel.Trabajador" />
+    <EntitySet Name="AplicacionDePrograma" EntityType="DBManejoPersonalModel.AplicacionDePrograma" />
+    <EntitySet Name="Comentario" EntityType="DBManejoPersonalModel.Comentario" />
+    <EntitySet Name="ControlInventario" EntityType="DBManejoPersonalModel.ControlInventario" />
+    <EntitySet Name="Log" EntityType="DBManejoPersonalModel.Log" />
+    <EntitySet Name="Solicitud" EntityType="DBManejoPersonalModel.Solicitud" />
+    <EntitySet Name="Ingreso" EntityType="DBManejoPersonalModel.Ingreso" />
+    <EntitySet Name="Stock" EntityType="DBManejoPersonalModel.Stock" />
+    <EntitySet Name="Producto" EntityType="DBManejoPersonalModel.Producto" />
   </EntityContainer>
   <EntityType Name="Campos">
     <Key>
@@ -43,6 +51,9 @@
     <Property Name="Empresa" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
     <Property Name="Nivel" Type="Int32" Nullable="false" />
     <Property Name="Permisos" Type="String" MaxLength="512" FixedLength="false" Unicode="false" />
+    <Property Name="TrabajadorId" Type="Int32" />
+    <Property Name="Trabajador" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+    <Property Name="EmpresaId" Type="Int32" />
   </EntityType>
   <EntityType Name="Empresas">
     <Key>
@@ -64,6 +75,8 @@
     <Property Name="CajaDeCompensacion" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
     <Property Name="TextoLiquidacion" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
     <Property Name="Logo" Type="Binary" MaxLength="Max" FixedLength="false" />
+    <Property Name="Invocada" Type="Binary" MaxLength="128" FixedLength="false" />
+    <Property Name="NombreAnterior" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
   </EntityType>
   <EntityType Name="RegistroTrabajador">
     <Key>
@@ -75,6 +88,8 @@
     <Property Name="Foto" Type="Binary" Nullable="false" MaxLength="Max" FixedLength="false" />
     <Property Name="Campo" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
     <Property Name="Empresa" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="IdTrabajador" Type="Int32" />
+    <Property Name="NombreTrabajador" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
   </EntityType>
   <EntityType Name="sysdiagrams">
     <Key>
@@ -106,13 +121,15 @@
     <Property Name="Hasta" Type="DateTime" Precision="0" />
     <Property Name="Causa" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
     <Property Name="IdTrabajador" Type="Int32" />
+    <Property Name="Empresa" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="EmpresaId" Type="Int32" />
   </EntityType>
   <EntityType Name="TipoContrato">
     <Key>
       <PropertyRef Name="Id" />
     </Key>
     <Property Name="Id" Type="Int32" Nullable="false" />
-    <Property Name="Nombre" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+    <Property Name="Nombre" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
   </EntityType>
   <EntityType Name="Prestamo">
     <Key>
@@ -125,6 +142,8 @@
     <Property Name="Interes" Type="Double" />
     <Property Name="Inicio" Type="DateTime" Precision="0" />
     <Property Name="IdTrabajador" Type="Int32" />
+    <Property Name="Empresa" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="EmpresaId" Type="Int32" />
   </EntityType>
   <EntityType Name="HyD">
     <Key>
@@ -152,6 +171,8 @@
     <Property Name="TomadasProgresivas" Type="Double" />
     <Property Name="Saldo" Type="Double" />
     <Property Name="IdTrabajador" Type="Int32" />
+    <Property Name="Empresa" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="EmpresaId" Type="Int32" />
   </EntityType>
   <EntityType Name="Cargo">
     <Key>
@@ -200,6 +221,8 @@
     <Property Name="Periodo" Type="DateTime" Precision="0" />
     <Property Name="Retiro" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
     <Property Name="Voluntario" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="Empresa" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="EmpresaId" Type="Int32" />
   </EntityType>
   <EntityType Name="Trabajador">
     <Key>
@@ -359,5 +382,117 @@
     <Property Name="Atributo4" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
     <Property Name="Atributo5" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
     <Property Name="Atributo1" Type="Int32" />
+  </EntityType>
+  <EntityType Name="AplicacionDePrograma">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="SolicitudId" Type="Int32" />
+    <Property Name="FechaInicio" Type="DateTime" Precision="3" />
+    <Property Name="FechaFin" Type="DateTime" Precision="3" />
+    <Property Name="Empresa" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="EmpresaId" Type="Int32" />
+  </EntityType>
+  <EntityType Name="Comentario">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Trabajador" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+    <Property Name="TrabajadorId" Type="Int32" />
+    <Property Name="AplicacionDeProgramaId" Type="Int32" />
+    <Property Name="Fecha" Type="DateTime" Precision="3" />
+    <Property Name="Comentario1" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="Empresa" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="EmpresaId" Type="Int32" />
+  </EntityType>
+  <EntityType Name="ControlInventario">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Producto" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="ProductoId" Type="Int32" />
+    <Property Name="Cantidad" Type="Int32" />
+    <Property Name="Razon" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="Fecha" Type="DateTime" Precision="3" />
+    <Property Name="Trabajador" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+    <Property Name="TrabajadorId" Type="Int32" />
+    <Property Name="Empresa" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="EmpresaId" Type="Int32" />
+  </EntityType>
+  <EntityType Name="Log">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Fecha" Type="DateTime" Precision="3" />
+    <Property Name="Empresa" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="EmpresaId" Type="Int32" />
+    <Property Name="Usuario" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="UsuarioId" Type="Int32" />
+    <Property Name="Accion" Type="Binary" MaxLength="Max" FixedLength="false" />
+  </EntityType>
+  <EntityType Name="Solicitud">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Trabajador" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+    <Property Name="TrabajadorId" Type="Int32" />
+    <Property Name="Productos" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="Observación" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="Origen" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="Destino" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="Estado" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="Fecha" Type="DateTime" Precision="3" />
+    <Property Name="Empresa" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="EmpresaId" Type="Int32" />
+  </EntityType>
+  <EntityType Name="Ingreso">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Productos" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="Fecha" Type="DateTime" Precision="3" />
+    <Property Name="Ubicacion" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="Proveedor" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="ProveedorRut" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="ProveedorId" Type="Int32" />
+    <Property Name="Trabajador" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="TrabajadorId" Type="Int32" />
+    <Property Name="Empresa" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="EmpresaId" Type="Int32" />
+  </EntityType>
+  <EntityType Name="Stock">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Producto" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="ProductoId" Type="Int32" />
+    <Property Name="Cantidad" Type="Int32" />
+    <Property Name="Ubicacion" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="SolicitudId" Type="Int32" />
+    <Property Name="IngresoId" Type="Int32" />
+  </EntityType>
+  <EntityType Name="Producto">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Nombre" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+    <Property Name="Unidad" Type="Int32" />
+    <Property Name="Tipo" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="StockMin" Type="Int32" />
+    <Property Name="RetirarBajo0" Type="Boolean" />
+    <Property Name="Activo" Type="Boolean" />
+    <Property Name="Descripcion" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="Foto" Type="Binary" MaxLength="Max" FixedLength="false" />
+    <Property Name="Miniatura" Type="Binary" MaxLength="Max" FixedLength="false" />
+    <Property Name="Empresa" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="EmpresaId" Type="Int32" />
   </EntityType>
 </Schema>

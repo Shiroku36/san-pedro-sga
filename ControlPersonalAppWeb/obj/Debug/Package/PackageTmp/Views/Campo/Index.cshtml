@@ -4,67 +4,74 @@
     ViewBag.Title = "Huertos";
     var cuenta = ControlPersonalAppWeb.Utils.SessionManager.CuentaAutenticada().Permisos;
 }
-<h2>Índice Huertos</h2>
-
+    <h1 class="display-4 text-center">Índice Huertos</h1>
+    <hr />
 @if(cuenta.Contains("HuertosV"))
 { 
     if(cuenta.Contains("HuertosC"))
     { 
         <a href='@Url.Action("Create", "Campo")'>
-            <button type="button" class="btn btn-default">Crear Nuevo</button>
+            <button type="button" class="btn btn-primary float-right mb-3">Crear Nuevo</button>
         </a>
     }
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Nombre)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Lugar)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Encargado)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Asistente)
-        </th>
-        <th></th>
-    </tr>
 
-    @foreach (var item in Model)
-    {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Nombre)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Lugar)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Encargado)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Asistente)
-            </td>
-            <td>
-                @if (cuenta.Contains("HuertosE"))
-                {
-                    <a href='@Url.Action("Edit", "Campo", new { id = item.Id })'>
-                        <button type="button" class="btn btn-default">Editar</button>
-                    </a>
-                }
-                <a href='@Url.Action("Details", "Campo", new { id = item.Id })'>
-                    <button type="button" class="btn btn-default">Detalle</button>
-                </a>
-                @if (cuenta.Contains("HuertosD"))
-                {
-                    <a href='@Url.Action("Delete", "Campo", new { id = item.Id })'>
-                        <button type="button" class="btn btn-default" onclick="return confirm('¿Está seguro que desea eliminar el Huerto?');" })>Borrar</button>
-                    </a>
-                }
-            </td>
+<div class="table-responsive">
+    <table class="table table-hover">
+        <tr class="bg-primary">
+
+            <th>
+                @Html.DisplayNameFor(model => model.Nombre)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Lugar)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Encargado)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Asistente)
+            </th>
+            <th>
+                Accion
+            </th>
         </tr>
-    }
 
-</table>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nombre)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Lugar)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Encargado)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Asistente)
+                </td>
+                <td>
+                    @if (cuenta.Contains("HuertosE"))
+                    {
+                        <a href='@Url.Action("Edit", "Campo", new { id = item.Id })'>
+                            <button type="button" class="btn btn-warning">Editar</button>
+                        </a>
+                    }
+                    <a href='@Url.Action("Details", "Campo", new { id = item.Id })'>
+                        <button type="button" class="btn btn-info">Detalle</button>
+                    </a>
+                    @if (cuenta.Contains("HuertosD"))
+                    {
+                        <a href='@Url.Action("Delete", "Campo", new { id = item.Id })'>
+                            <button type="button" class="btn btn-danger" onclick="return confirm('¿Está seguro que desea eliminar el Huerto?');" })>Borrar</button>
+                        </a>
+                    }
+                </td>
+            </tr>
+        }
+
+    </table>
+</div>
+
 }

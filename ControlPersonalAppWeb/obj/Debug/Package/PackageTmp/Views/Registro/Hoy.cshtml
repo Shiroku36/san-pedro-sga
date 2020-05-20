@@ -6,65 +6,67 @@
     var cuenta = ControlPersonalAppWeb.Utils.SessionManager.CuentaAutenticada();
 }
 
-<h2>Registros del día @DateTime.Now.ToLongDateString()</h2>
+<h2 class="display-4 text-center mb-2">Registros del día @DateTime.Now.ToLongDateString()</h2>
+
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-    <div class="form-group">
-        @Html.DropDownList("Campo", new SelectList(ViewBag.campos), htmlAttributes: new { @class = "form-control" })
-        <input type="submit" value="Filtrar" class="btn btn-default" />
+    <div class="form-group ">
+        @Html.DropDownList("Campo", new SelectList(ViewBag.campos), htmlAttributes: new { @class = "form-control " })
+        <input type="submit" value="Filtrar" class="btn btn-primary my-2" />
     </div>
 }
+
 <script src="~/Scripts/fechaHoy.js"></script>
-<table class="table">
-    <tr>
-        <th>
-            Nombre
-        </th>
-        <th>
-            Tipo
-        </th>
-        <th>
-            Hora
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Campo)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Foto)
-        </th>
-        <th></th>
-    </tr>
-
-    @foreach (var item in Model)
-    {
-    <tr>
-        <td>
-            <a href="/Registro/Index/@item.IdTrabajador"> @item.NombreTrabajador</a>
-        </td>
-        <td>
-            @if (item.Fecha.Hour < 12)
-            {
-                tipo = "Entrada";
-            }
-            else
-            {
-                tipo = "Salida";
-            }
-            @tipo
-        </td>
-        <td>
-            @item.Fecha.ToShortTimeString()
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Campo)
-        </td>
-        <td>
-            <img src="@String.Format("data:image/jpg;base64,{0}",System.Convert.ToBase64String(item.Foto))" width="110" />
-        </td>
+<div class="table-responsive">
+    <table class="table table-hover" id="tabla">
+        <tr class="bg-primary">
+            <th>
+                Nombre
+            </th>
+            <th>
+                Tipo
+            </th>
+            <th>
+                Hora
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Campo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Foto)
+            </th>
         </tr>
-    }
 
-</table>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    <a href="/Registro/Index/@item.IdTrabajador"> @item.NombreTrabajador</a>
+                </td>
+                <td>
+                    @if (item.Fecha.Hour < 12)
+                    {
+                        tipo = "Entrada";
+                    }
+                    else
+                    {
+                        tipo = "Salida";
+                    }
+                    @tipo
+                </td>
+                <td>
+                    @item.Fecha.ToShortTimeString()
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Campo)
+                </td>
+                <td>
+                    <img src="@String.Format("data:image/jpg;base64,{0}",System.Convert.ToBase64String(item.Foto))" width="110" />
+                </td>
+            </tr>
+        }
 
+    </table>
+</div>

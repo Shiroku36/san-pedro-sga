@@ -13,6 +13,7 @@ namespace ControlPersonalAppWeb.Controllers
     public class HorasExtrasController : Controller
     {
         private DBManejoPersonalEntities db = new DBManejoPersonalEntities();
+        private Cuentas cuenta = Utils.SessionManager.CuentaAutenticada();
 
         // GET: HorasExtras
         public ActionResult Index(int? id)

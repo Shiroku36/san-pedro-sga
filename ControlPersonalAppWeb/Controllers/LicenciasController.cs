@@ -13,6 +13,7 @@ namespace ControlPersonalAppWeb.Controllers
     public class LicenciasController : Controller
     {
         private DBManejoPersonalEntities db = new DBManejoPersonalEntities();
+        private Cuentas cuenta = Utils.SessionManager.CuentaAutenticada();
 
         // GET: Licencias
         public ActionResult Index(int? id)

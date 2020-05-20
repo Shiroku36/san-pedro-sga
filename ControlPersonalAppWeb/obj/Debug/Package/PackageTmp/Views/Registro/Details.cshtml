@@ -4,43 +4,56 @@
     ViewBag.Title = "Detalle";
     string foto = Model.Foto.ToString();
 }
-<h2>Detalle</h2>
+    <h2 class="display-4 text-center">Registro trabajador</h2>
 
 <div>
-    <h4>RegistroTrabajador</h4>
+    <h3 class="text-muted font-weight-light">Detalle</h3>
     <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Uid)
-        </dt>
+    <div class="col-sm-8 table-responsive">
+        <table class="mx-auto table-borderless table-hover tabla-detalle">
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.Uid)
+                </td>
 
-        <dd>
-            @Html.DisplayFor(model => model.Uid)
-        </dd>
+                <td>
+                    @Html.DisplayFor(model => model.Uid)
+                </td>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Fecha)
-        </dt>
+            </tr>
+            
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.Fecha)
+                </td>
 
-        <dd>
-            @Html.DisplayFor(model => model.Fecha)
-        </dd>
+                <td>
+                    @Html.DisplayFor(model => model.Fecha)
+                </td>
+            </tr>
+            
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.Campo)
+                </td>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Campo)
-        </dt>
+                <td>
+                    @Html.DisplayFor(model => model.Campo)
+                </td>
+            </tr>
 
-        <dd>
-            @Html.DisplayFor(model => model.Campo)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Foto)
-        </dt>
-        <dd>
-            <img src="@String.Format("data:image/jpg;base64,{0}",System.Convert.ToBase64String(Model.Foto))" width="400" />
-        </dd>
-    </dl>
-</div>
-<p>
-    @Html.ActionLink("Volver a la lista", "Index", new { id = ViewBag.idTrabajador })
-</p>
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.Foto)
+                </td>
+                <td>
+                    <img src="@String.Format("data:image/jpg;base64,{0}",System.Convert.ToBase64String(Model.Foto))" width="400" />
+                </td>
+            </tr>
+           
+            </table>
+    </div>
+    <div class="form-group col-md-9 mx-auto my-5">
+        @Html.ActionLink("Volver a la lista", "Index", new { id = ViewBag.idTrabajador }, new { @class = "btn btn-block btn-danger mt-3" } )
+    </div>
+    </div>

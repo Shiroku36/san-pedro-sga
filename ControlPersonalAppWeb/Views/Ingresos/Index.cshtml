@@ -1,0 +1,65 @@
+﻿@model IEnumerable<ControlPersonalAppWeb.Ingreso>
+
+@{
+    ViewBag.Title = "Ingresos";
+}
+
+<h2>Ingresos</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr class="bg-primary">
+        <th>
+            @Html.DisplayNameFor(model => model.Productos)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Fecha)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Ubicacion)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Proveedor)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ProveedorRut)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Trabajador)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Productos)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Fecha)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Ubicacion)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Proveedor)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ProveedorRut)
+        </td>
+        <td>
+            <a href="/Ingresos/Detail/@item.TrabajadorId">
+                @Html.DisplayFor(modelItem => item.Trabajador)
+            </a>
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
+            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
+        </td>
+    </tr>
+}
+
+</table>

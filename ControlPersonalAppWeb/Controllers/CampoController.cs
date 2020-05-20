@@ -9,6 +9,7 @@ namespace ControlPersonalAppWeb.Controllers
     public class CampoController : Controller
     {
         DBManejoPersonalEntities db = new DBManejoPersonalEntities();
+        private Cuentas cuenta = Utils.SessionManager.CuentaAutenticada();
         public string[] GetNombreCampos(string empresa)
         {
 

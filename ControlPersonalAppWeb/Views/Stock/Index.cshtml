@@ -1,0 +1,79 @@
+﻿@model IEnumerable<ControlPersonalAppWeb.Stock>
+
+@{
+    ViewBag.Title = "Inventario";
+}
+
+<h2>Inventario</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<label>Huerto</label>
+<input class="form-control" />
+<input type="submit" value="Filtrar" />
+<p>
+    @Html.ActionLink("Solicitudes", "Index", "Solicitudes")
+</p>
+<p>
+    @Html.ActionLink("Ingresos", "Index", "Ingresos")
+</p>
+<p>
+    @Html.ActionLink("Productos", "Index", "Productos")
+</p>
+<p>
+    @Html.ActionLink("Control Inventario", "Index", "ControlInventarios")
+</p>
+<table class="table">
+    <tr class="bg-primary">
+        <th>
+            @Html.DisplayNameFor(model => model.Producto)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ProductoId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Cantidad)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Ubicacion)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.SolicitudId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IngresoId)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Producto)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProductoId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Cantidad)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Ubicacion)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SolicitudId)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IngresoId)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+            </td>
+        </tr>
+    }
+
+</table>

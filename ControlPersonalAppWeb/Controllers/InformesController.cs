@@ -18,6 +18,7 @@ namespace ControlPersonalAppWeb.Controllers
     public class InformesController : Controller
     {
         DBManejoPersonalEntities db = new DBManejoPersonalEntities();
+        private Cuentas cuenta = Utils.SessionManager.CuentaAutenticada();
         public ActionResult Horas()
         {
             HttpPostedFileBase postedFile = Request.Files["Foto"];

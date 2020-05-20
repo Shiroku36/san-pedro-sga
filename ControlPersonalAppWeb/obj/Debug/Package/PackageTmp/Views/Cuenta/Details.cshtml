@@ -4,38 +4,48 @@
     ViewBag.Title = "Detalle";
 }
 
-<h2>Detalle</h2>
 
+<h2 class="display-4 text-center">Cuentas</h2>
 <div>
-    <h4>Cuentas</h4>
+    <h3 class="text-muted font-weight-light">Detalle</h3>
     <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Usuario)
-        </dt>
+    <div class="col-sm-8 table-responsive">
+        <table class="mx-auto table-borderless table-hover tabla-detalle">
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.Usuario)
+                </td>
 
-        <dd>
-            @Html.DisplayFor(model => model.Usuario)
-        </dd>
+                <td>
+                    @Html.DisplayFor(model => model.Usuario)
+                </td>
+            </tr>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Password)
-        </dt>
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.Password)
+                </td>
 
-        <dd>
-            @Html.DisplayFor(model => model.Password)
-        </dd>
+                <td>
+                    @Html.DisplayFor(model => model.Password)
+                </td>
+            </tr>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Empresa)
-        </dt>
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.Empresa)
+                </td>
 
-        <dd>
-            @Html.DisplayFor(model => model.Empresa)
-        </dd>
+                <td>
+                    @Html.DisplayFor(model => model.Empresa)
+                </td>
+            </tr>
 
-    </dl>
+
+        </table>
+    </div>
+
+    <div class="form-group col-md-9 mx-auto my-5">
+        @Html.ActionLink("Volver a la lista", "Index",null, new { @class = "btn btn-block btn-danger mt-3" })
+    </div>
 </div>
-<p>
-    @Html.ActionLink("Volver a la lista", "Index")
-</p>

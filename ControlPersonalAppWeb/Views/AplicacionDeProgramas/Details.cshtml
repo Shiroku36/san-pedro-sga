@@ -1,0 +1,66 @@
+﻿@model ControlPersonalAppWeb.AplicacionDePrograma
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>AplicacionDePrograma</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.SolicitudId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SolicitudId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.FechaInicio)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FechaInicio)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.FechaFin)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FechaFin)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Empresa)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Empresa)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EmpresaId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EmpresaId)
+        </dd>
+
+    </dl>
+</div>
+<label>Comentarios</label>
+<input type="hidden" name="Trabajador" value="@ViewBag.trabajador" />
+<input type="hidden" name="TrabajadorId" value="@ViewBag.trabajadorId" />
+<input type="hidden" name="AplicacionDeProgramaId" value="@ViewBag.aplicacionId" />
+<input class="form-control" type="text" />
+<p>
+    @Html.ActionLink("Agregar Comentario", "Create", "Comentarios") |
+</p>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

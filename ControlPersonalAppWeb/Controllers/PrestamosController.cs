@@ -13,6 +13,7 @@ namespace ControlPersonalAppWeb.Controllers
     public class PrestamosController : Controller
     {
         private DBManejoPersonalEntities db = new DBManejoPersonalEntities();
+        private Cuentas cuenta = Utils.SessionManager.CuentaAutenticada();
 
         // GET: Prestamos
         public ActionResult Index(int? id)

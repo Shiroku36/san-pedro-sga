@@ -13,6 +13,7 @@ namespace ControlPersonalAppWeb.Controllers
     public class VacacionesController : Controller
     {
         private DBManejoPersonalEntities db = new DBManejoPersonalEntities();
+        private Cuentas cuenta = Utils.SessionManager.CuentaAutenticada();
 
         // GET: Vacaciones
         public ActionResult Index(int? id)

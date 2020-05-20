@@ -21,5 +21,7 @@ namespace ControlPersonalAppWeb
         public Nullable<double> Interes { get; set; }
         public Nullable<System.DateTime> Inicio { get; set; }
         public Nullable<int> IdTrabajador { get; set; }
+        public string Empresa { get; set; }
+        public Nullable<int> EmpresaId { get; set; }
     }
 }

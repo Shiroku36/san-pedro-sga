@@ -11,22 +11,31 @@ namespace ControlPersonalAppWeb
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel;
+
     public partial class Finiquito
     {
         public int Id { get; set; }
         public string Causa { get; set; }
         public string Texto { get; set; }
+        [DisplayName("Fecha del documento")]
         public Nullable<System.DateTime> FechaDocumento { get; set; }
+        [DisplayName("Fecha del fin")]
         public Nullable<System.DateTime> FechaFin { get; set; }
+        [DisplayName("Dias de vacaciones")]
         public Nullable<double> DiasDeVacaciones { get; set; }
         public Nullable<int> Dias { get; set; }
+        [DisplayName("Sueldo mensual")]
         public Nullable<int> SueldoMensual { get; set; }
+        [DisplayName("Aviso previo")]
         public Nullable<int> AvisoPrevio { get; set; }
+        [DisplayName("Factor aviso previo")]
         public Nullable<int> FactorAvisoPrevio { get; set; }
         public Nullable<int> Indemnización { get; set; }
+        [DisplayName("Factor indemnización")]
         public Nullable<double> FactorIndemnizacion { get; set; }
         public Nullable<double> Vacaciones { get; set; }
+        [DisplayName("Factor vacaciones")]
         public Nullable<double> FactorVacaciones { get; set; }
         public Nullable<int> Total { get; set; }
         public Nullable<int> IdTrabajador { get; set; }

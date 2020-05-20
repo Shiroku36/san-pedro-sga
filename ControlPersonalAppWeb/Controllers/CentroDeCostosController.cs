@@ -13,6 +13,7 @@ namespace ControlPersonalAppWeb.Controllers
     public class CentroDeCostosController : Controller
     {
         private DBManejoPersonalEntities db = new DBManejoPersonalEntities();
+        private Cuentas cuenta = Utils.SessionManager.CuentaAutenticada();
 
         // GET: CentroDeCostos
         public ActionResult Index(int id)

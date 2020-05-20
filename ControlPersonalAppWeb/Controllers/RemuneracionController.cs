@@ -9,6 +9,7 @@ namespace ControlPersonalAppWeb.Controllers
     public class RemuneracionController : Controller
     {
         DBManejoPersonalEntities db = new DBManejoPersonalEntities();
+        private Cuentas cuenta = Utils.SessionManager.CuentaAutenticada();
         // GET: Remurenaciones
         public ActionResult Index(int id)
         {

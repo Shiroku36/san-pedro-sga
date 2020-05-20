@@ -15,6 +15,7 @@ namespace ControlPersonalAppWeb.Controllers
     public class RemuneracionesController : Controller
     {
         DBManejoPersonalEntities db = new DBManejoPersonalEntities();
+        private Cuentas cuenta = Utils.SessionManager.CuentaAutenticada();
         public ActionResult Liquidacion()
         {
 

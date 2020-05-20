@@ -1,8 +1,8 @@
-﻿using System;
+﻿using ControlPersonalAppWeb.Models;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity.Validation;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace ControlPersonalAppWeb.Controllers
@@ -11,12 +11,13 @@ namespace ControlPersonalAppWeb.Controllers
     {
 
         DBManejoPersonalEntities db = new DBManejoPersonalEntities();
+        private Cuentas cuenta = Utils.SessionManager.CuentaAutenticada();
         // GET: Cuenta
         public ActionResult Index()
         {
             DBManejoPersonalEntities database = new DBManejoPersonalEntities();
             string empresa = Utils.SessionManager.CuentaAutenticada().Empresa;
-            if(empresa == "JCP")
+            if (empresa == "JCP")
             {
                 return View(database.Cuentas.ToList());
             }
@@ -72,6 +73,8 @@ namespace ControlPersonalAppWeb.Controllers
         {
             //List<string> campos = new List<string>();
             string empresa = Utils.SessionManager.CuentaAutenticada().Empresa;
+            ViewBag.personas = db.Trabajador.Where(x => x.Empresa == empresa).Select(x => new TrabajadorIndex { Rut = x.Rut, Id = x.Id, Nombre = x.Nombre, ApellidoPaterno = x.ApellidoPaterno, ApellidoMaterno = x.ApellidoMaterno }).ToList();
+
             string[] nombres;
             if (empresa == "JCP")
             {

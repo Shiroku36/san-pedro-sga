@@ -13,6 +13,7 @@ namespace ControlPersonalAppWeb.Controllers
     public class AFPsController : Controller
     {
         private DBManejoPersonalEntities db = new DBManejoPersonalEntities();
+        private Cuentas cuenta = Utils.SessionManager.CuentaAutenticada();
 
         // GET: AFPs
         public ActionResult Index(int? id)

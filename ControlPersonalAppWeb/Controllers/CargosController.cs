@@ -13,6 +13,7 @@ namespace ControlPersonalAppWeb.Controllers
     public class CargosController : Controller
     {
         private DBManejoPersonalEntities db = new DBManejoPersonalEntities();
+        private Cuentas cuenta = Utils.SessionManager.CuentaAutenticada();
 
         // GET: Cargos
         public ActionResult Index(int id)

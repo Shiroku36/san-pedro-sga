@@ -41,5 +41,13 @@ namespace ControlPersonalAppWeb
         public virtual DbSet<Finiquito> Finiquito { get; set; }
         public virtual DbSet<AFP> AFP { get; set; }
         public virtual DbSet<Trabajador> Trabajador { get; set; }
+        public virtual DbSet<AplicacionDePrograma> AplicacionDePrograma { get; set; }
+        public virtual DbSet<Comentario> Comentario { get; set; }
+        public virtual DbSet<ControlInventario> ControlInventario { get; set; }
+        public virtual DbSet<Log> Log { get; set; }
+        public virtual DbSet<Solicitud> Solicitud { get; set; }
+        public virtual DbSet<Ingreso> Ingreso { get; set; }
+        public virtual DbSet<Stock> Stock { get; set; }
+        public virtual DbSet<Producto> Producto { get; set; }
     }
 }

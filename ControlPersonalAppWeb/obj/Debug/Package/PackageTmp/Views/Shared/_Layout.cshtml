@@ -16,87 +16,165 @@
         }
     }
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>@ViewBag.Title - IngenieriaJCP</title>
+
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
 </head>
-<body>
-    <div class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                @Html.ActionLink("SGA", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
-            </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <!--<li>@Html.ActionLink("Acerca de", "About", "Home")</li>-->
-                    @if (cuenta.Contains("HuertosV"))
+<body style="background-image: linear-gradient(90deg, rgba(245,247,250,1) 0%, rgba(180,191,208,1) 100%);">
+    <nav class="navbar sticky-top navbar-expand-lg navbar-light bg-primary">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            @Html.ActionLink("SGA", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+            <ul class="navbar-nav mx-auto ulnav">
+
+                <!--<li>@Html.ActionLink("Acerca de", "About", "Home")</li>-->
+                @if (cuenta.Contains("HuertosV"))
+                {
+                    <li>@Html.ActionLink("Huertos", "Index", "Campo")</li>
+                }
+                @if (cuenta.Contains("TrabajadoresV"))
+                {
+                    <li>@Html.ActionLink("RR.HH.", "Index", "Trabajador")</li>
+                }
+                @if (cuenta.Contains("InformesV"))
+                {
+                    <li>@Html.ActionLink("Informe", "Index", "Informes")</li>
+                }
+                @if (cuenta.Contains("Cosecha"))
+                {
+                    <li>@Html.ActionLink("Modulo Cosecha", "Index", "Cosecha")</li>
+                }
+                @if (cuenta.Contains("EmpresasV"))
+                {
+                    <li>@Html.ActionLink("Empresas", "Index", "Empresas")</li>
+                }
+                @if (cuenta.Contains("CuentasV"))
+                {
+                    <li> @Html.ActionLink("Cuentas", "Index", "Cuenta") </li>
+                }
+                @if (cuenta.Contains("Remuneracion"))
+                {
+                    <li>@Html.ActionLink("Remuneraciones", "Index", "HorasExtras")</li>
+                }
+                @if (ControlPersonalAppWeb.Utils.SessionManager.CuentaAutenticada() != null)
+                {
+                    if (ControlPersonalAppWeb.Utils.SessionManager.CuentaAutenticada().Usuario.Contains("Shiroku"))
                     {
-                        <li>@Html.ActionLink("Huertos", "Index", "Campo")</li>
+                        <li>@Html.ActionLink("Registros", "Registros", "Registro")</li>
                     }
-                    @if (cuenta.Contains("TrabajadoresV"))
-                    {
-                        <li>@Html.ActionLink("RR.HH.", "Index", "Trabajador")</li>
-                    }
-                    @if (cuenta.Contains("InformesV"))
-                    {
-                        <li>@Html.ActionLink("Informe", "Index", "Informes")</li>
-                    }
-                    @if (cuenta.Contains("Cosecha"))
-                    {
-                        <li>@Html.ActionLink("Modulo Cosecha", "Index", "Cosecha")</li>
-                    }
-                    @if (cuenta.Contains("EmpresasV"))
-                    {
-                        <li>@Html.ActionLink("Empresas", "Index", "Empresas")</li>
-                    }
-                    @if (cuenta.Contains("CuentasV"))
-                    {
-                        <li> @Html.ActionLink("Cuentas", "Index", "Cuenta") </li>
-                    }
-                    @if (cuenta.Contains("Remuneracion"))
-                    {
-                        <li>@Html.ActionLink("Remuneraciones", "Index", "HorasExtras")</li>
-                    }
-                    @if (ControlPersonalAppWeb.Utils.SessionManager.CuentaAutenticada() != null)
-                    {
-                        if (ControlPersonalAppWeb.Utils.SessionManager.CuentaAutenticada().Usuario.Contains("Shiroku"))
-                        {
-                            <li>@Html.ActionLink("Registros", "Registros", "Registro")</li>
-                        }
-                    }@if (cuenta.Contains("Log"))
-                    {
-                        <li>@Html.ActionLink("Log", "Log", "Home")</li>
-                    }
+                }@if (cuenta.Contains("Log"))
+                {
+                    <li>@Html.ActionLink("Log", "Log", "Home")</li>
+                }
+                @if (ControlPersonalAppWeb.Utils.SessionManager.CuentaAutenticada() == null)
+                {
+                    <li>@Html.ActionLink("Inicio", "Index", "Home")</li>
+                    <li>@Html.ActionLink("Sobre nosotros", "About", "Home")</li>
                     <li>@Html.ActionLink("Contacto", "Contact", "Home")</li>
-                </ul>
-                <ul class="nav navbar-nav navbar-right">
-                    @Html.Partial("UserOption")
-                </ul>
-                <!-- BUSCAR!!! AQUIII -->
-            </div>
+                }
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right">
+                @Html.Partial("UserOption")
+            </ul>
+
+            <!-- BUSCAR!!! AQUIII -->
         </div>
-    </div>
-    <div style="margin-left: 5%" class="container body-content col-lg-10">
+    </nav>
+    <div style="min-height:70vh" class="container mt-3">
         @if (ViewBag.Remuneracion != null)
         {
             @Html.Partial("Remuneraciones")
         }
         @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - IngenieriaJCP <img src="@Url.Content("~/Content/Jcp.JPG")" width="20" height="20" /></p>
-        </footer>
+
     </div>
+    <!-- Footer -->
+
+
+    <footer style="background:#007bff">
+        <div class="main-footer widgets-dark typo-light">
+            <div class="container">
+                <div class="row">
+
+                    <div class="col-xs-12 col-sm-6 col-md-3">
+                        <div class="widget subscribe no-box">
+                            <h3 class="widget-title">JCP<span></span></h3>
+                            <p>Somos una empresa dedicada a los sistemas de seguridad, sistemas de gestión, software a medida, sistema de monitoreo satelital y proyectos de ingeniería en general.</p>
+                        </div>
+                    </div>
+
+                    <div class="col-xs-12 col-sm-6 col-md-3">
+                        <div class="widget no-box">
+                            <h5 class="widget-title">Enlaces rapidos<span></span></h5>
+                            <ul class="thumbnail-widget">
+                                <li>
+                                    <div class="thumb-content"><a href="#.">Inicio</a></div>
+                                </li>
+                                <li>
+                                    <div class="thumb-content"><a href="#.">Sobre Nosotros</a></div>
+                                </li>
+                                <li>
+                                    <div class="thumb-content"><a href="#.">Contacto</a></div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="col-xs-12 col-sm-6 col-md-3">
+                        <div class="widget no-box">
+                            <h5 class="widget-title">Empieza<span></span></h5>
+                            <p>Crea tu sistema con nosotros</p>
+                            <btn class="btn btn-primary" href="#." target="_blank">Contactanos</btn>
+                        </div>
+                    </div>
+
+                    <div class="col-xs-12 col-sm-6 col-md-3">
+
+                        <div class="widget no-box">
+                            <h5 class="widget-title">Informacion contacto<span></span></h5>
+
+                            <p><a href="mailto:jcastro@ingenieriajcp.cl" style="color: #ff8d1e">jcastro@ingenieriajcp.cl</a></p>
+                            <ul class="social-footer2">
+                                <a href="https://www.facebook.com/" target="_blank" title="Facebook"><img alt="Facebook" width="30" height="30" src="~/images/facebook.svg"></a>
+                                <a href="https://www.twitter.com" target="_blank" title="Twitter"><img alt="Twitter" width="30" height="30" src="~/images/twitter.svg"></a>
+                                <a href="https://www.instagram.com" target="_blank" title="Twitter"><img alt="Twitter" width="30" height="30" src="~/images/instagram.svg"></a>
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-copyright">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12 text-center">
+                        <p>&copy; @DateTime.Now.Year - IngenieriaJCP </p>
+                        <!-- <img src="@Url.Content("~/Content/Jcp.JPG")" /> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
+
+    <script>
+        $(function () {
+            $('[data-toggle="popover"]').popover()
+        })
+    </script>
+
 </body>
 </html>

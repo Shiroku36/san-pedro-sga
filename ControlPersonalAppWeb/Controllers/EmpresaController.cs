@@ -8,6 +8,7 @@ namespace ControlPersonalAppWeb.Controllers
 {
     public class EmpresaController : Controller
     {
+        private Cuentas cuenta = Utils.SessionManager.CuentaAutenticada();
         // GET: Empresas
         public ActionResult Index()
         {
