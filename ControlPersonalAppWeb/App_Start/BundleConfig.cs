@@ -8,7 +8,9 @@ namespace ControlPersonalAppWeb
         public static void RegisterBundles(BundleCollection bundles)
         {
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
-                        "~/Scripts/jquery-3.3.1.min.js"));
+                        "~/Scripts/jquery-3.5.1.min.js"));
+            bundles.Add(new ScriptBundle("~/bundles/pooper").Include(
+                        "~/Scripts/popper.min.min.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
                         "~/Scripts/jquery.validate*"));
