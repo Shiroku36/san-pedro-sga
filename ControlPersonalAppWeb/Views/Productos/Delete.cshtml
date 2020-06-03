@@ -44,22 +44,6 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.RetirarBajo0)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.RetirarBajo0)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Activo)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Activo)
-        </dd>
-
-        <dt>
             @Html.DisplayNameFor(model => model.Descripcion)
         </dt>
 
@@ -72,31 +56,10 @@
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Foto)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Miniatura)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Miniatura)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Empresa)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Empresa)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.EmpresaId)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.EmpresaId)
+            @if (Model.Foto != null)
+            {
+                <img src="@String.Format("data:image/jpg;base64,{0}", System.Convert.ToBase64String(Model.Foto))" />
+            }
         </dd>
 
     </dl>

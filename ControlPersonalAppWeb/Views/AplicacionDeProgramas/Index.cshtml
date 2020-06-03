@@ -7,12 +7,12 @@
 <h2>Aplicacion de Programa</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @Html.ActionLink("Solicitudes", "Index", "Solicitudes")
 </p>
 <table class="table">
     <tr class="bg-primary">
         <th>
-            @Html.DisplayNameFor(model => model.SolicitudId)
+            <span>Solicitud</span>
         </th>
         <th>
             @Html.DisplayNameFor(model => model.FechaInicio)
@@ -23,25 +23,25 @@
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            <a href="/Solicitudes/Detail/@item.SolicitudId">
-                @Html.DisplayFor(modelItem => item.SolicitudId)
-            </a>
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.FechaInicio)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.FechaFin)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
-            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
-        </td>
-    </tr>
-}
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                <a href="/Solicitudes/Details/@item.SolicitudId">
+                    @Html.DisplayFor(modelItem => item.SolicitudId)
+                </a>
+            </td>
+            <td>
+                <span>@item.FechaInicio.Value.ToShortDateString()</span>
+            </td>
+            <td>
+                <span>@item.FechaFin.Value.ToShortDateString()</span>
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                @Html.ActionLink("Details", "Details", new { id = item.Id }) 
+            </td>
+        </tr>
+    }
 
 </table>

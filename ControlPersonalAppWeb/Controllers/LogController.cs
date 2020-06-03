@@ -18,9 +18,15 @@ namespace ControlPersonalAppWeb.Controllers
         // GET: Log
         public ActionResult Index()
         {
-            return View(db.Log.ToList());
+            Utils.SessionManager.log("Visitó log");
+            if (cuenta.EmpresaId==1)
+            {
+                ViewBag.empresa = cuenta.Empresa;
+                return View(db.Log.ToList().OrderByDescending(x => x.Fecha).ToList());
+            }
+            return View(db.Log.Where(x => x.EmpresaId == cuenta.EmpresaId).ToList().OrderByDescending(x => x.Fecha).ToList());
         }
-
+        /*
         // GET: Log/Details/5
         public ActionResult Details(int? id)
         {
@@ -47,10 +53,15 @@ namespace ControlPersonalAppWeb.Controllers
         // más información vea https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Fecha,Empresa,EmpresaId,Usuario,UsuarioId,Accion")] Log log)
+        public ActionResult Create([Bind(Include = "Id,Accion")] Log log)
         {
             if (ModelState.IsValid)
             {
+                log.Fecha = DateTime.Now;
+                log.Empresa = cuenta.Empresa;
+                log.EmpresaId = cuenta.EmpresaId;
+                log.Usuario = cuenta.Usuario;
+                log.UsuarioId = cuenta.Id;
                 db.Log.Add(log);
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -115,7 +126,7 @@ namespace ControlPersonalAppWeb.Controllers
             db.SaveChanges();
             return RedirectToAction("Index");
         }
-
+        */
         protected override void Dispose(bool disposing)
         {
             if (disposing)

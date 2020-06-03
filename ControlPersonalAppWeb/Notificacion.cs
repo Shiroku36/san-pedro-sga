@@ -12,12 +12,16 @@ namespace ControlPersonalAppWeb
     using System;
     using System.Collections.Generic;
     
-    public partial class sysdiagrams
+    public partial class Notificacion
     {
-        public string name { get; set; }
-        public int principal_id { get; set; }
-        public int diagram_id { get; set; }
-        public Nullable<int> version { get; set; }
-        public byte[] definition { get; set; }
+        public int Id { get; set; }
+        public Nullable<System.DateTime> Fecha { get; set; }
+        public string Correo { get; set; }
+        public Nullable<int> SolicitudId { get; set; }
+        public string Estado { get; set; }
+        public string Texto { get; set; }
+        public Nullable<int> CuentaId { get; set; }
+        public string Dato { get; set; }
+        public string Info { get; set; }
     }
 }

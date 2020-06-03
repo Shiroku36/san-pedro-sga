@@ -11,13 +11,15 @@ namespace ControlPersonalAppWeb
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel;
+
     public partial class HyD
     {
         public int Id { get; set; }
         public string Nombre { get; set; }
         public string Moneda { get; set; }
         public string Monto { get; set; }
+        [DisplayName("Período")]
         public Nullable<System.DateTime> Periodo { get; set; }
         public string Tipo { get; set; }
         public Nullable<int> IdTrabajador { get; set; }

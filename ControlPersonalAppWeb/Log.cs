@@ -20,6 +20,6 @@ namespace ControlPersonalAppWeb
         public Nullable<int> EmpresaId { get; set; }
         public string Usuario { get; set; }
         public Nullable<int> UsuarioId { get; set; }
-        public byte[] Accion { get; set; }
+        public string Accion { get; set; }
     }
 }

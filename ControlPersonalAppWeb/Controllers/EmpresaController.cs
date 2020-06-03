@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -12,8 +13,14 @@ namespace ControlPersonalAppWeb.Controllers
         // GET: Empresas
         public ActionResult Index()
         {
+            Utils.SessionManager.log("Index empresas");
             DBManejoPersonalEntities database = new DBManejoPersonalEntities();
-            return View(database.Empresas.ToList());
+            int id = (int)cuenta.EmpresaId;
+            if (cuenta.EmpresaId == 1)
+            {
+                return View(database.Empresas.ToList());
+            }
+            return View(database.Empresas.Where(x => x.InvocadaId == cuenta.EmpresaId).ToList());
         }
 
         // GET: Empresas/Details/5
@@ -21,12 +28,18 @@ namespace ControlPersonalAppWeb.Controllers
         {
             DBManejoPersonalEntities database = new DBManejoPersonalEntities();
             Empresas empresas = database.Empresas.First(x => x.Id == id);
+            Utils.SessionManager.log("Detalle empresa: " + empresas.Nombre);
             return View(empresas);
         }
 
         // GET: Empresas/Create
         public ActionResult Create()
         {
+            if(cuenta.Empresa!="JCP")
+            {
+                ViewBag.proveedor = true;
+            }
+            ViewBag.proveedor = true;
             return View();
         }
 
@@ -41,9 +54,12 @@ namespace ControlPersonalAppWeb.Controllers
                 DBManejoPersonalEntities database = new DBManejoPersonalEntities();
                 Empresas empresa = new Empresas();
                 empresa.Nombre = collection["Nombre"];  
+                empresa.Rut = formatearRut(collection["Rut"]);  
+                empresa.Invocada = cuenta.Empresa;  
+                empresa.InvocadaId = cuenta.EmpresaId;  
                 database.Empresas.Add(empresa);
                 database.SaveChanges();
-                Utils.SessionManager.log("Empresa creada : " + empresa.Nombre);
+                Utils.SessionManager.log("Empresa creada: " + empresa.Nombre);
                 return RedirectToAction("Index");
             }
             catch 
@@ -68,16 +84,19 @@ namespace ControlPersonalAppWeb.Controllers
             try
             {
                 DBManejoPersonalEntities database = new DBManejoPersonalEntities();
-                Empresas empresa = new Empresas();
-                Utils.SessionManager.log("Empresa editada : " + empresa.Nombre);
+                Empresas empresa = database.Empresas.First(x => x.Id == id);
+                Utils.SessionManager.log("Empresa editada: " + empresa.Nombre);
                 empresa.Nombre = collection["Nombre"];
+                empresa.Rut = collection["Rut"];
+                empresa.Invocada = cuenta.Empresa;
+                empresa.InvocadaId = cuenta.EmpresaId;      
                 database.SaveChanges();
                 return RedirectToAction("Index");
             }
             catch
             {
-                return View();
             }
+            return View();
         }
 
         // GET: Empresas/Delete/5
@@ -87,7 +106,7 @@ namespace ControlPersonalAppWeb.Controllers
             Empresas empresa = database.Empresas.First(x => x.Id == id);
             database.Empresas.Remove(empresa);
             database.SaveChanges();
-            Utils.SessionManager.log("Empresa eliminada : " + empresa.Nombre);
+            Utils.SessionManager.log("Empresa eliminada: " + empresa.Nombre);
             return RedirectToAction("Index");
         }
 
@@ -110,6 +129,33 @@ namespace ControlPersonalAppWeb.Controllers
         {
             DBManejoPersonalEntities database = new DBManejoPersonalEntities();
             return RedirectToAction("Index", "Campo", database.Campos.ToList());
+        }
+        public string formatearRut(string rut)
+        {
+            int cont = 0;
+            string format;
+            if (rut.Length == 0)
+            {
+                return "";
+            }
+            else
+            {
+                rut = rut.Replace(".", "");
+                rut = rut.Replace("-", "");
+                rut = rut.Replace(" ", "");
+                format = "-" + rut.Substring(rut.Length - 1);
+                for (int i = rut.Length - 2; i >= 0; i--)
+                {
+                    format = rut.Substring(i, 1) + format;
+                    cont++;
+                    if (cont == 3 && i != 0)
+                    {
+                        format = "." + format;
+                        cont = 0;
+                    }
+                }
+                return format;
+            }
         }
     }
 }

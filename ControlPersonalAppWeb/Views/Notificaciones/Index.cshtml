@@ -1,0 +1,65 @@
+﻿@model IEnumerable<ControlPersonalAppWeb.Notificacion>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Notificaciones</h2>
+
+<table class="table">
+    <tr class="bg-primary">
+        <th>
+            @Html.DisplayNameFor(model => model.Fecha)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Correo)
+        </th>
+        <th>
+            <span>Solicitud</span>
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Estado)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Texto)
+        </th>
+        <th>
+            Acción
+        </th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Fecha)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Correo)
+        </td>
+        <td>
+            <a href="/Solicitudes/Details/@item.SolicitudId">
+                @Html.DisplayFor(modelItem => item.SolicitudId)
+            </a>
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Estado)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Texto)
+        </td>
+        <td> 
+            @if(item.Estado == "Solicitado")
+            { 
+                using (Html.BeginForm())
+                {
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" value="@item.Id" name="Id" />
+                    <input type="submit" class="btn btn-primary mb-3" value="Aceptar" name="Accion"/>
+                    <input type="submit" class="btn btn-primary" value="Rechazar" name="Accion"/>
+                }
+            }
+        </td>
+    </tr>
+}
+
+</table>

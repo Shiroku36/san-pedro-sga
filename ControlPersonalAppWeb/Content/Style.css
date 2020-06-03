@@ -3,7 +3,10 @@ li a {
     color: black;
     margin-left: 1rem;
 }
-
+.dropdown:hover > .dropdown-menu  
+{
+    display:block;
+}
 .nav-link {
     color: black;
 }

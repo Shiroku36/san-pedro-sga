@@ -15,15 +15,7 @@
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Trabajador)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.TrabajadorId)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.TrabajadorId)
+            <a href="~/Trabajador/Details/@Model.TrabajadorId">@Model.Trabajador</a>
         </dd>
 
         <dt>
@@ -31,7 +23,10 @@
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Productos)
+            @foreach (var stock in ViewBag.productos)
+            {
+                <a href="~/Productos/Details/@stock.ProductoId">@stock.Producto</a><span>: @stock.Cantidad</span><br />
+            }
         </dd>
 
         <dt>
@@ -73,23 +68,6 @@
         <dd>
             @Html.DisplayFor(model => model.Fecha)
         </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Empresa)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Empresa)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.EmpresaId)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.EmpresaId)
-        </dd>
-
     </dl>
 </div>
 <p>

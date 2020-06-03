@@ -26,7 +26,7 @@
 <body style="background-image: linear-gradient(90deg, rgba(245,247,250,1) 0%, rgba(180,191,208,1) 100%);">
     <nav class="navbar sticky-top navbar-expand-lg navbar-light bg-primary">
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
+            <span class="navbar-toggler-icon "></span>
         </button>
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -72,13 +72,26 @@
                 {
                     <li>@Html.ActionLink("Log", "Log", "Home")</li>
                 }
+
+                <!--<li>@Html.ActionLink("Inventario", "Index", "Stock")</li>-->
+
+
+
                 @if (ControlPersonalAppWeb.Utils.SessionManager.CuentaAutenticada() == null)
                 {
                     <li>@Html.ActionLink("Inicio", "Index", "Home")</li>
                     <li>@Html.ActionLink("Sobre nosotros", "About", "Home")</li>
                     <li>@Html.ActionLink("Contacto", "Contact", "Home")</li>
                 }
+                else
+                {
+                    <li>@Html.ActionLink("Sistema gestion bodega", "NuevoModulo", "Home")</li>
+                    <li>@Html.ActionLink("Modulo cosecha", "NuevoModulo", "Home")</li>
+                }
+
             </ul>
+
+            
 
             <ul class="nav navbar-nav navbar-right">
                 @Html.Partial("UserOption")
@@ -115,13 +128,13 @@
                             <h5 class="widget-title">Enlaces rapidos<span></span></h5>
                             <ul class="thumbnail-widget">
                                 <li>
-                                    <div class="thumb-content"><a href="#.">Inicio</a></div>
+                                    <div class="thumb-content">@Html.ActionLink("Inicio", "Index", "Home")</div>
                                 </li>
                                 <li>
-                                    <div class="thumb-content"><a href="#.">Sobre Nosotros</a></div>
+                                    <div class="thumb-content">@Html.ActionLink("Sobre nosotros", "About", "Home")</div>
                                 </li>
                                 <li>
-                                    <div class="thumb-content"><a href="#.">Contacto</a></div>
+                                    <div class="thumb-content">@Html.ActionLink("Contacto", "Contact", "Home")</div>
                                 </li>
                             </ul>
                         </div>
@@ -131,7 +144,10 @@
                         <div class="widget no-box">
                             <h5 class="widget-title">Empieza<span></span></h5>
                             <p>Crea tu sistema con nosotros</p>
-                            <btn class="btn btn-primary" href="#." target="_blank">Contactanos</btn>
+                            <a href='@Url.Action("Contact", "Home")'>
+                                <btn class="btn btn-primary" target="_blank">Contactanos</btn>
+                            </a>
+                            
                         </div>
                     </div>
 
@@ -142,9 +158,9 @@
 
                             <p><a href="mailto:jcastro@ingenieriajcp.cl" style="color: #ff8d1e">jcastro@ingenieriajcp.cl</a></p>
                             <ul class="social-footer2">
-                                <a href="https://www.facebook.com/" target="_blank" title="Facebook"><img alt="Facebook" width="30" height="30" src="~/images/facebook.svg"></a>
-                                <a href="https://www.twitter.com" target="_blank" title="Twitter"><img alt="Twitter" width="30" height="30" src="~/images/twitter.svg"></a>
-                                <a href="https://www.instagram.com" target="_blank" title="Twitter"><img alt="Twitter" width="30" height="30" src="~/images/instagram.svg"></a>
+                                <a href="https://www.facebook.com/INGENIERIAJCP" target="_blank" title="Facebook"><img alt="Facebook" width="30" height="30" src="~/images/facebook.svg"></a>
+                                <!--<a href="https://www.twitter.com" target="_blank" title="Twitter"><img alt="Twitter" width="30" height="30" src="~/images/twitter.svg"></a>
+                                   <a href="https://www.instagram.com" target="_blank" title="Twitter"><img alt="Twitter" width="30" height="30" src="~/images/instagram.svg"></a>-->
                             </ul>
                         </div>
                     </div>
@@ -165,7 +181,7 @@
         </div>
     </footer>
 
-
+    @Scripts.Render("~/bundles/pooper")
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)

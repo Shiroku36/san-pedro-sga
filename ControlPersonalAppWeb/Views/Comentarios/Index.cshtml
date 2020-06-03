@@ -29,12 +29,12 @@
 @foreach (var item in Model) {
     <tr>
         <td>
-            <a href="/Trabajador/Detail/@item.TrabajadorId">
+            <a href="/Trabajador/Details/@item.TrabajadorId">
                 @Html.DisplayFor(modelItem => item.Trabajador)
             </a>
         </td>
         <td>
-            <a href="/AplicacionDeProgramas/Detail/@item.AplicacionDeProgramaId">
+            <a href="/AplicacionDeProgramas/Details/@item.AplicacionDeProgramaId">
                 @Html.DisplayFor(modelItem => item.AplicacionDeProgramaId)
             </a>
             

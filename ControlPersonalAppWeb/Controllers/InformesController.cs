@@ -82,218 +82,221 @@ namespace ControlPersonalAppWeb.Controllers
                     StreamReader csvreader = new StreamReader(hpf.InputStream);
                     var line1 = csvreader.ReadLine();
                     line1 = csvreader.ReadLine();
-                    var nombre = line1.Split(';');
-                    string nombreEquipo = nombre[2];
-                    document.Add((new Paragraph("Equipo: "+ nombreEquipo, fntHead) { Alignment = Element.ALIGN_CENTER }));
-                    document.Add(new Paragraph(new Chunk("\n")));
-                    hpf.InputStream.Position = 0;
-                    csvreader.DiscardBufferedData();
-                    line1 = csvreader.ReadLine();
-
-                    PdfPTable declaracion = new PdfPTable(1);
-                    //declaracion.WidthPercentage = 100f;
-                    int num = 4;
-                    PdfPTable table = new PdfPTable(num);
-                    //table.SetWidths(new int[] { 1, 2, 1, 1, 1, 1, 1 });
-                    List<string> titulos = new List<string>();
-                    titulos.Add("Fecha");
-                    titulos.Add("Horas trabajadas");
-                    titulos.Add("Tiempo inactivo");
-                    titulos.Add("Horas extras");
-                    int j;
-                    for (j = 0; j < num; j++)
+                    if(!String.IsNullOrEmpty(line1))
                     {
-                        PdfPCell cell = new PdfPCell();
-                        cell.BackgroundColor = BaseColor.GRAY;
-                        cell.AddElement(new Chunk(titulos[j], fntColumnHeader));
-                        table.AddCell(cell);
-                    }
+                        var nombre = line1.Split(';');
+                        string nombreEquipo = nombre[2];
+                        document.Add((new Paragraph("Equipo: "+ nombreEquipo, fntHead) { Alignment = Element.ALIGN_CENTER }));
+                        document.Add(new Paragraph(new Chunk("\n")));
+                        hpf.InputStream.Position = 0;
+                        csvreader.DiscardBufferedData();
+                        line1 = csvreader.ReadLine();
+
+                        PdfPTable declaracion = new PdfPTable(1);
+                        //declaracion.WidthPercentage = 100f;
+                        int num = 4;
+                        PdfPTable table = new PdfPTable(num);
+                        //table.SetWidths(new int[] { 1, 2, 1, 1, 1, 1, 1 });
+                        List<string> titulos = new List<string>();
+                        titulos.Add("Fecha");
+                        titulos.Add("Horas trabajadas");
+                        titulos.Add("Tiempo inactivo");
+                        titulos.Add("Horas extras");
+                        int j;
+                        for (j = 0; j < num; j++)
+                        {
+                            PdfPCell cell = new PdfPCell();
+                            cell.BackgroundColor = BaseColor.GRAY;
+                            cell.AddElement(new Chunk(titulos[j], fntColumnHeader));
+                            table.AddCell(cell);
+                        }
 
                     
-                    DateTime tiempoMuerto = DateTime.ParseExact("2000-01-02 00:00:00", "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
-                    DateTime horaAnterior = DateTime.ParseExact("2000-01-02 00:00:00", "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
-                    DateTime diaMaxHorasExtras = DateTime.ParseExact("2000-01-02 00:00:00", "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
-                    DateTime diaMaxTrabajado = DateTime.ParseExact("2000-01-02 00:00:00", "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
-                    DateTime salidaSabado = DateTime.ParseExact("2000-01-02 12:00:00", "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
-                    DateTime salida = DateTime.ParseExact("2000-01-02 17:30:00", "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
-                    DateTime trabajado = DateTime.ParseExact("2000-01-02 00:00:00", "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
-                    DateTime totalTrabajado = DateTime.ParseExact("2000-01-02 00:00:00", "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
-                    DateTime totalHoras = DateTime.ParseExact("2000-01-02 00:00:00", "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
-                    DateTime totalMuerto = DateTime.ParseExact("2000-01-02 00:00:00", "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
-                    DateTime horasxdia = DateTime.ParseExact("2000-01-02 00:00:00", "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
-                    DateTime maxHoras = DateTime.ParseExact("2000-01-02 00:00:00", "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
-                    DateTime maxDia = DateTime.ParseExact("2000-01-02 00:00:00", "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
-                    string anterior = "";
-                    while (!csvreader.EndOfStream)
-                    {
-                        var line = csvreader.ReadLine();
-                        var values = line.Split(';');
-                        string hora = values[7];
-                        string fecha = values[3];
-                        string date = fecha +" "+ hora;
-                        DateTime dateTime = DateTime.Parse(date);//, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+                        DateTime tiempoMuerto = DateTime.ParseExact("2000-01-02 00:00:00", "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+                        DateTime horaAnterior = DateTime.ParseExact("2000-01-02 00:00:00", "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+                        DateTime diaMaxHorasExtras = DateTime.ParseExact("2000-01-02 00:00:00", "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+                        DateTime diaMaxTrabajado = DateTime.ParseExact("2000-01-02 00:00:00", "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+                        DateTime salidaSabado = DateTime.ParseExact("2000-01-02 12:00:00", "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+                        DateTime salida = DateTime.ParseExact("2000-01-02 17:30:00", "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+                        DateTime trabajado = DateTime.ParseExact("2000-01-02 00:00:00", "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+                        DateTime totalTrabajado = DateTime.ParseExact("2000-01-02 00:00:00", "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+                        DateTime totalHoras = DateTime.ParseExact("2000-01-02 00:00:00", "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+                        DateTime totalMuerto = DateTime.ParseExact("2000-01-02 00:00:00", "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+                        DateTime horasxdia = DateTime.ParseExact("2000-01-02 00:00:00", "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+                        DateTime maxHoras = DateTime.ParseExact("2000-01-02 00:00:00", "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+                        DateTime maxDia = DateTime.ParseExact("2000-01-02 00:00:00", "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+                        string anterior = "";
+                        while (!csvreader.EndOfStream)
+                        {
+                            var line = csvreader.ReadLine();
+                            var values = line.Split(';');
+                            string hora = values[7];
+                            string fecha = values[3];
+                            string date = fecha +" "+ hora;
+                            DateTime dateTime = DateTime.Parse(date);//, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
                         
 
-                        if (anterior != fecha && anterior != "")
-                        {
-                            table.AddCell(new Phrase(anterior, fntCell));
-                            table.AddCell(new Phrase(trabajado.ToShortTimeString(), fntCell));
-                            table.AddCell(new Phrase(tiempoMuerto.ToShortTimeString(), fntCell));
-                            table.AddCell(new Phrase(horasxdia.ToShortTimeString(), fntCell));
-                            DateTime dia = DateTime.Parse(anterior);//, "yyyy-MM-dd", CultureInfo.InvariantCulture);
-                            if (TimeSpan.Compare(trabajado.TimeOfDay, maxDia.TimeOfDay) > 0)
+                            if (anterior != fecha && anterior != "")
                             {
-                                maxDia = DateTime.Parse(anterior+" "+trabajado.ToLongTimeString());//, "yyyy-MM-dd H:mm:ss", CultureInfo.InvariantCulture);
+                                table.AddCell(new Phrase(anterior, fntCell));
+                                table.AddCell(new Phrase(trabajado.ToShortTimeString(), fntCell));
+                                table.AddCell(new Phrase(tiempoMuerto.ToShortTimeString(), fntCell));
+                                table.AddCell(new Phrase(horasxdia.ToShortTimeString(), fntCell));
+                                DateTime dia = DateTime.Parse(anterior);//, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+                                if (TimeSpan.Compare(trabajado.TimeOfDay, maxDia.TimeOfDay) > 0)
+                                {
+                                    maxDia = DateTime.Parse(anterior+" "+trabajado.ToLongTimeString());//, "yyyy-MM-dd H:mm:ss", CultureInfo.InvariantCulture);
+                                }
+                                if (TimeSpan.Compare(horasxdia.TimeOfDay, maxHoras.TimeOfDay) > 0)
+                                {
+                                    maxHoras = DateTime.Parse(anterior + " " + horasxdia.ToLongTimeString());//, "yyyy-MM-dd H:mm:ss", CultureInfo.InvariantCulture);
+                                }
+                                totalHoras = totalHoras.AddHours(horasxdia.Hour);
+                                totalHoras = totalHoras.AddMinutes(horasxdia.Minute);
+                                totalHoras = totalHoras.AddSeconds(horasxdia.Second);
+
+
+                                totalTrabajado = totalTrabajado.AddHours(trabajado.Hour);
+                                totalTrabajado = totalTrabajado.AddMinutes(trabajado.Minute);
+                                totalTrabajado = totalTrabajado.AddSeconds(trabajado.Second);
+
+                                totalMuerto = totalMuerto.AddHours(tiempoMuerto.Hour);
+                                totalMuerto = totalMuerto.AddMinutes(tiempoMuerto.Minute);
+                                totalMuerto = totalMuerto.AddSeconds(tiempoMuerto.Second);
+
+                                trabajado = DateTime.ParseExact("2000-01-02 00:00:00", "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+                                horasxdia = DateTime.ParseExact("2000-01-02 00:00:00", "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+                                tiempoMuerto = DateTime.ParseExact("2000-01-02 00:00:00", "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+                                horaAnterior = DateTime.ParseExact("2000-01-02 00:00:00", "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
                             }
-                            if (TimeSpan.Compare(horasxdia.TimeOfDay, maxHoras.TimeOfDay) > 0)
+                            DateTime desde = new DateTime();
+                            DateTime hasta = new DateTime();
+                            try
                             {
-                                maxHoras = DateTime.Parse(anterior + " " + horasxdia.ToLongTimeString());//, "yyyy-MM-dd H:mm:ss", CultureInfo.InvariantCulture);
+                                desde = DateTime.Parse(values[3] + " " + values[4]);//, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
+                                hasta = DateTime.Parse(values[5] + " " + values[6]);//, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
                             }
-                            totalHoras = totalHoras.AddHours(horasxdia.Hour);
-                            totalHoras = totalHoras.AddMinutes(horasxdia.Minute);
-                            totalHoras = totalHoras.AddSeconds(horasxdia.Second);
-
-
-                            totalTrabajado = totalTrabajado.AddHours(trabajado.Hour);
-                            totalTrabajado = totalTrabajado.AddMinutes(trabajado.Minute);
-                            totalTrabajado = totalTrabajado.AddSeconds(trabajado.Second);
-
-                            totalMuerto = totalMuerto.AddHours(tiempoMuerto.Hour);
-                            totalMuerto = totalMuerto.AddMinutes(tiempoMuerto.Minute);
-                            totalMuerto = totalMuerto.AddSeconds(tiempoMuerto.Second);
-
-                            trabajado = DateTime.ParseExact("2000-01-02 00:00:00", "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
-                            horasxdia = DateTime.ParseExact("2000-01-02 00:00:00", "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
-                            tiempoMuerto = DateTime.ParseExact("2000-01-02 00:00:00", "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
-                            horaAnterior = DateTime.ParseExact("2000-01-02 00:00:00", "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
-                        }
-                        DateTime desde = new DateTime();
-                        DateTime hasta = new DateTime();
-                        try
-                        {
-                            desde = DateTime.Parse(values[3] + " " + values[4]);//, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
-                            hasta = DateTime.Parse(values[5] + " " + values[6]);//, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
-                        }
-                        catch
-                        {
-                            ViewBag.texto = "Archivo "+nombreEquipo +" no válido";
-                            document.Dispose();
-                            document.Close();
-                            writer.Dispose();
-                            writer.Close();
-                            hpf = null;
-                            return View();
-                        }
-                        if(horaAnterior.Year!=2000 )
-                        {
-                            tiempoMuerto = tiempoMuerto.Add((desde-horaAnterior));
-                        }
-                        horaAnterior = hasta;
-                        desde = desde.AddHours(horario);
-                        hasta = hasta.AddHours(horario);
-                        int diaHorario = (int)desde.DayOfWeek;
-
-                        if (diaHorario == 6)
-                        {
-                            if (TimeSpan.Compare(desde.TimeOfDay, salidaSabado.TimeOfDay) > 0)
+                            catch
                             {
-                                horasxdia = horasxdia.AddHours(dateTime.Hour);
-                                horasxdia = horasxdia.AddMinutes(dateTime.Minute);
-                                horasxdia = horasxdia.AddSeconds(dateTime.Second);
+                                ViewBag.texto = "Archivo "+nombreEquipo +" no válido";
+                                document.Dispose();
+                                document.Close();
+                                writer.Dispose();
+                                writer.Close();
+                                hpf = null;
+                                return View();
                             }
-                            else if (TimeSpan.Compare(hasta.TimeOfDay, salidaSabado.TimeOfDay) > 0)
+                            if(horaAnterior.Year!=2000 )
                             {
-                                horasxdia = horasxdia.AddHours(hasta.Hour - 12);
-                                horasxdia = horasxdia.AddMinutes(hasta.Minute);
-                                horasxdia = horasxdia.AddSeconds(hasta.Second);
+                                tiempoMuerto = tiempoMuerto.Add((desde-horaAnterior));
                             }
+                            horaAnterior = hasta;
+                            desde = desde.AddHours(horario);
+                            hasta = hasta.AddHours(horario);
+                            int diaHorario = (int)desde.DayOfWeek;
+
+                            if (diaHorario == 6)
+                            {
+                                if (TimeSpan.Compare(desde.TimeOfDay, salidaSabado.TimeOfDay) > 0)
+                                {
+                                    horasxdia = horasxdia.AddHours(dateTime.Hour);
+                                    horasxdia = horasxdia.AddMinutes(dateTime.Minute);
+                                    horasxdia = horasxdia.AddSeconds(dateTime.Second);
+                                }
+                                else if (TimeSpan.Compare(hasta.TimeOfDay, salidaSabado.TimeOfDay) > 0)
+                                {
+                                    horasxdia = horasxdia.AddHours(hasta.Hour - 12);
+                                    horasxdia = horasxdia.AddMinutes(hasta.Minute);
+                                    horasxdia = horasxdia.AddSeconds(hasta.Second);
+                                }
+                            }
+                            else
+                            {
+                                if (TimeSpan.Compare(desde.TimeOfDay, salida.TimeOfDay) > 0)
+                                {
+                                    horasxdia = horasxdia.AddHours(dateTime.Hour);
+                                    horasxdia = horasxdia.AddMinutes(dateTime.Minute);
+                                    horasxdia = horasxdia.AddSeconds(dateTime.Second);
+                                }
+                                else if (TimeSpan.Compare(hasta.TimeOfDay, salida.TimeOfDay) > 0)
+                                {
+                                    horasxdia = horasxdia.AddHours(hasta.Hour - 17);
+                                    horasxdia = horasxdia.AddMinutes(hasta.Minute - 30);
+                                    horasxdia = horasxdia.AddSeconds(hasta.Second);
+                                }
+                            }
+
+                            trabajado = trabajado.AddHours(dateTime.Hour);
+                            trabajado = trabajado.AddMinutes(dateTime.Minute);
+                            trabajado = trabajado.AddSeconds(dateTime.Second);
+
+
+                            anterior = fecha;
+
+                        }
+
+                        document.Add(table);
+                        document.Add(new Paragraph(new Chunk("\n")));
+                         PdfPTable totales = new PdfPTable(2);
+
+                        totales.AddCell((new Paragraph("Total horas trabajadas", fntCell) { Alignment = Element.ALIGN_CENTER }));
+                        if (totalTrabajado.Day != 2)
+                        {
+                            int hour = totalTrabajado.Hour + (totalTrabajado.Day-2)*24;
+                            int min = totalTrabajado.Minute;
+                            totales.AddCell((new Paragraph(hour + ":" + min, fntCell) { Alignment = Element.ALIGN_CENTER }));
                         }
                         else
                         {
-                            if (TimeSpan.Compare(desde.TimeOfDay, salida.TimeOfDay) > 0)
-                            {
-                                horasxdia = horasxdia.AddHours(dateTime.Hour);
-                                horasxdia = horasxdia.AddMinutes(dateTime.Minute);
-                                horasxdia = horasxdia.AddSeconds(dateTime.Second);
-                            }
-                            else if (TimeSpan.Compare(hasta.TimeOfDay, salida.TimeOfDay) > 0)
-                            {
-                                horasxdia = horasxdia.AddHours(hasta.Hour - 17);
-                                horasxdia = horasxdia.AddMinutes(hasta.Minute - 30);
-                                horasxdia = horasxdia.AddSeconds(hasta.Second);
-                            }
+                            totales.AddCell((new Paragraph(totalTrabajado.ToShortTimeString(), fntCell) { Alignment = Element.ALIGN_CENTER }));
                         }
 
-                        trabajado = trabajado.AddHours(dateTime.Hour);
-                        trabajado = trabajado.AddMinutes(dateTime.Minute);
-                        trabajado = trabajado.AddSeconds(dateTime.Second);
+                        totales.AddCell((new Paragraph("Total horas extras", fntCell) { Alignment = Element.ALIGN_CENTER }));
+                        if (totalHoras.Day != 2)
+                        {
+                            int hour = totalHoras.Hour + (totalHoras.Day - 2) * 24;
+                            int min = totalHoras.Minute;
+                            totales.AddCell((new Paragraph(hour + ":" + min, fntCell) { Alignment = Element.ALIGN_CENTER }));
+                        }
+                        else
+                        {
+                            totales.AddCell((new Paragraph(totalHoras.ToShortTimeString(), fntCell) { Alignment = Element.ALIGN_CENTER }));
+                        }
 
-
-                        anterior = fecha;
-
-                    }
-
-                    document.Add(table);
-                    document.Add(new Paragraph(new Chunk("\n")));
-                     PdfPTable totales = new PdfPTable(2);
-
-                    totales.AddCell((new Paragraph("Total horas trabajadas", fntCell) { Alignment = Element.ALIGN_CENTER }));
-                    if (totalTrabajado.Day != 2)
-                    {
-                        int hour = totalTrabajado.Hour + (totalTrabajado.Day-2)*24;
-                        int min = totalTrabajado.Minute;
-                        totales.AddCell((new Paragraph(hour + ":" + min, fntCell) { Alignment = Element.ALIGN_CENTER }));
-                    }
-                    else
-                    {
-                        totales.AddCell((new Paragraph(totalTrabajado.ToShortTimeString(), fntCell) { Alignment = Element.ALIGN_CENTER }));
-                    }
-
-                    totales.AddCell((new Paragraph("Total horas extras", fntCell) { Alignment = Element.ALIGN_CENTER }));
-                    if (totalHoras.Day != 2)
-                    {
-                        int hour = totalHoras.Hour + (totalHoras.Day - 2) * 24;
-                        int min = totalHoras.Minute;
-                        totales.AddCell((new Paragraph(hour + ":" + min, fntCell) { Alignment = Element.ALIGN_CENTER }));
-                    }
-                    else
-                    {
-                        totales.AddCell((new Paragraph(totalHoras.ToShortTimeString(), fntCell) { Alignment = Element.ALIGN_CENTER }));
-                    }
-
-                    totales.AddCell((new Paragraph("Total tiempo inactivo", fntCell) { Alignment = Element.ALIGN_CENTER }));
-                    if (totalMuerto.Day != 2)
-                    {
-                        int hour = totalMuerto.Hour + (totalMuerto.Day - 2) * 24;
-                        int min = totalMuerto.Minute;
-                        totales.AddCell((new Paragraph(hour + ":" + min, fntCell) { Alignment = Element.ALIGN_CENTER }));
-                    }
-                    else
-                    {
-                        totales.AddCell((new Paragraph(totalHoras.ToShortTimeString(), fntCell) { Alignment = Element.ALIGN_CENTER }));
-                    }
-                    totales.AddCell((new Paragraph("Día más trabajado", fntCell) { Alignment = Element.ALIGN_CENTER }));
-                    totales.AddCell((new Paragraph(maxDia.ToShortDateString(), fntCell) { Alignment = Element.ALIGN_CENTER }));
-                    document.Add(totales);
-                    document.Add(new Paragraph(new Chunk("\n")));
-                    document.NewPage();
-                    listaHorasTrabajadas.Add(new Equipo() { Nombre = nombreEquipo, Horas = totalTrabajado });
-                    listaHorasExtras.Add(new Equipo() { Nombre = nombreEquipo, Horas = totalHoras });
-                    listaHorasMuertas.Add(new Equipo() { Nombre = nombreEquipo, Horas = totalMuerto });
-                    if (DateTime.Compare(totalHoras, maxHorasExtras) > 0)
-                    {
-                        nombreEquipoHorasExtras = nombreEquipo;
-                        maxHorasExtras = totalHoras;
-                    }
-                    if (DateTime.Compare(totalTrabajado, maxHorasTrabajadas) > 0)
-                    {
-                        nombreEquipoHorasTrabajadas = nombreEquipo;
-                        maxHorasTrabajadas = totalTrabajado;
-                    }
-                    if (DateTime.Compare(totalMuerto, maxHorasMuertas) > 0)
-                    {
-                        nombreEquipoHorasMuertas = nombreEquipo;
-                        maxHorasMuertas = totalMuerto;
+                        totales.AddCell((new Paragraph("Total tiempo inactivo", fntCell) { Alignment = Element.ALIGN_CENTER }));
+                        if (totalMuerto.Day != 2)
+                        {
+                            int hour = totalMuerto.Hour + (totalMuerto.Day - 2) * 24;
+                            int min = totalMuerto.Minute;
+                            totales.AddCell((new Paragraph(hour + ":" + min, fntCell) { Alignment = Element.ALIGN_CENTER }));
+                        }
+                        else
+                        {
+                            totales.AddCell((new Paragraph(totalHoras.ToShortTimeString(), fntCell) { Alignment = Element.ALIGN_CENTER }));
+                        }
+                        totales.AddCell((new Paragraph("Día más trabajado", fntCell) { Alignment = Element.ALIGN_CENTER }));
+                        totales.AddCell((new Paragraph(maxDia.ToShortDateString(), fntCell) { Alignment = Element.ALIGN_CENTER }));
+                        document.Add(totales);
+                        document.Add(new Paragraph(new Chunk("\n")));
+                        document.NewPage();
+                        listaHorasTrabajadas.Add(new Equipo() { Nombre = nombreEquipo, Horas = totalTrabajado });
+                        listaHorasExtras.Add(new Equipo() { Nombre = nombreEquipo, Horas = totalHoras });
+                        listaHorasMuertas.Add(new Equipo() { Nombre = nombreEquipo, Horas = totalMuerto });
+                        if (DateTime.Compare(totalHoras, maxHorasExtras) > 0)
+                        {
+                            nombreEquipoHorasExtras = nombreEquipo;
+                            maxHorasExtras = totalHoras;
+                        }
+                        if (DateTime.Compare(totalTrabajado, maxHorasTrabajadas) > 0)
+                        {
+                            nombreEquipoHorasTrabajadas = nombreEquipo;
+                            maxHorasTrabajadas = totalTrabajado;
+                        }
+                        if (DateTime.Compare(totalMuerto, maxHorasMuertas) > 0)
+                        {
+                            nombreEquipoHorasMuertas = nombreEquipo;
+                            maxHorasMuertas = totalMuerto;
+                        }
                     }
                 }
 
@@ -454,9 +457,10 @@ namespace ControlPersonalAppWeb.Controllers
 
         public ActionResult Index()
         {
-            
+
             //List<Campos> campos = new List<Campos>();
 
+            Utils.SessionManager.log("Index informes");
             Cuentas cuenta = Utils.SessionManager.CuentaAutenticada();
             string empresa = cuenta.Empresa;
             string[] nombres;
@@ -760,6 +764,7 @@ namespace ControlPersonalAppWeb.Controllers
                 {
                     ids = collection["centros"].Split(new char[] { ',' });
                 }
+                Utils.SessionManager.log("Asistencias informe");
                 AsistenciasPDF(dateTime, ids, empresa);
                 return RedirectToAction("Asistencias");
             }

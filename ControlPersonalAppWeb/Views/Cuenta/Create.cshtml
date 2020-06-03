@@ -5,7 +5,6 @@
     var cuenta = ControlPersonalAppWeb.Utils.SessionManager.CuentaAutenticada();
 }
 
-
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
@@ -19,14 +18,19 @@
                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                 <div class="form-group col-md-10 mx-auto">
                     @Html.LabelFor(model => model.Usuario, htmlAttributes: new { @class = "control-label font-weight-normal" })
-                    @Html.EditorFor(model => model.Usuario, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.EditorFor(model => model.Usuario, new { htmlAttributes = new { @class = "form-control" , required = "required"} })
                     @Html.ValidationMessageFor(model => model.Usuario, "", new { @class = "text-danger" })
                 </div>
 
                 <div class="form-group col-md-10 mx-auto">
                     @Html.LabelFor(model => model.Password, htmlAttributes: new { @class = "control-label font-weight-normal" })
-                    @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control", @type = "password" , required = "required"} })
                     @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group col-md-10 mx-auto">
+                    <label >Confirmar password</label>
+                    <input class="form-control" type="password" id="Confirmar"  oninput="password()" required/>
                 </div>
 
                 <div class="form-group col-md-10 mx-auto">
@@ -35,25 +39,27 @@
                     @Html.ValidationMessageFor(model => model.Empresa, "", new { @class = "text-danger" })
                 </div>
             </div>
-            <div class="dropdown  col-sm-5 mx-auto">
+            <div class="dropdown  col-sm-6 mx-auto">
                 <div id="myDropdown" class="dropdown-content">
                     <div class=" ">
                         @Html.LabelFor(model => model.Trabajador, htmlAttributes: new { @class = "control-label font-weight-normal" })
-                        <input class="form-control py-2 " type="text" placeholder="Busqueda trabajador" id="myInput" onkeyup="filterFunction()">
-                        <div style="max-height:30vh" class="list-group position-absolute overflow-auto">
-                            @foreach (var persona in ViewBag.personas)
-                            {
-
-                                <a class="list-group-item list-group-item-action" style="display:none" href='persona.Id'>@persona.Nombre @persona.ApellidoPaterno @persona.ApellidoMaterno - @persona.Rut   </a>
-                            }
+                        <!--<input class="form-control py-2 " type="text" placeholder="Busqueda trabajador" id="myInput" onkeyup="filterFunction()">-->
+                        <div style="max-height:20vh" class="list-group position-absolute overflow-auto">
+                            <select name="TrabajadorId" id="TrabajadorId" class="form-control py-2">
+                                @foreach (var persona in ViewBag.personas)
+                                {
+                                    <option value="persona.Id">@persona.Nombre @persona.ApellidoPaterno @persona.ApellidoMaterno - @persona.Rut</option>
+                                    <!--<a class="list-group-item list-group-item-action" style="display:none" href='persona.Id'>@persona.Nombre @persona.ApellidoPaterno @persona.ApellidoMaterno - @persona.Rut   </a>-->
+                                }
+                            </select>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        
-        
+
+
 
 
         <div class="form-group col-md-8 mx-auto">
@@ -118,7 +124,21 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+    <script>
+    function password(){
+        var todo = document.getElementById("Password");
+        var todo2 = document.getElementById("Confirmar");
 
+        if (todo.value != todo2.value) {
+            todo2.setCustomValidity("Las contraseñas no coinciden");
+            return false;
+        }
+        else
+        {
+            todo2.setCustomValidity('');
+        }
+    }
+    </script>
     <script>
         function filterFunction() {
             var input, filter, a, i;
@@ -142,6 +162,3 @@
         }
     </script>
 }
-    </script>
-        /**/
-        /**/

@@ -18,7 +18,7 @@ namespace ControlPersonalAppWeb
         public int Id { get; set; }
         public string Nombre { get; set; }
         public string Rut { get; set; }
-        [DisplayName("Razol social")]
+        [DisplayName("Razón Social")]
         public byte[] RazonSocial { get; set; }
         [DisplayName("Nombre representante legal")]
         public string RepresentanteLegalNombre { get; set; }
@@ -30,14 +30,15 @@ namespace ControlPersonalAppWeb
         public string Ciudad { get; set; }
         public string Telefono { get; set; }
         public string Mutual { get; set; }
-        [DisplayName("Factor mutual")]
+        [DisplayName("Factor Mutual")]
         public string FactorMutual { get; set; }
-        [DisplayName("Caja de compensanción")]
+        [DisplayName("Caja de compensación")]
         public string CajaDeCompensacion { get; set; }
         [DisplayName("Texto liquidación")]
         public string TextoLiquidacion { get; set; }
         public byte[] Logo { get; set; }
-        public byte[] Invocada { get; set; }
+        public string Invocada { get; set; }
         public string NombreAnterior { get; set; }
+        public Nullable<int> InvocadaId { get; set; }
     }
 }

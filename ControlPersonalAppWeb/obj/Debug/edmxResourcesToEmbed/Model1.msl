@@ -32,30 +32,6 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="Empresas">
-      <EntityTypeMapping TypeName="DBManejoPersonalModel.Empresas">
-        <MappingFragment StoreEntitySet="Empresas">
-          <ScalarProperty Name="NombreAnterior" ColumnName="NombreAnterior" />
-          <ScalarProperty Name="Invocada" ColumnName="Invocada" />
-          <ScalarProperty Name="Logo" ColumnName="Logo" />
-          <ScalarProperty Name="TextoLiquidacion" ColumnName="TextoLiquidacion" />
-          <ScalarProperty Name="CajaDeCompensacion" ColumnName="CajaDeCompensacion" />
-          <ScalarProperty Name="FactorMutual" ColumnName="FactorMutual" />
-          <ScalarProperty Name="Mutual" ColumnName="Mutual" />
-          <ScalarProperty Name="Telefono" ColumnName="Telefono" />
-          <ScalarProperty Name="Ciudad" ColumnName="Ciudad" />
-          <ScalarProperty Name="Comuna" ColumnName="Comuna" />
-          <ScalarProperty Name="Dirección" ColumnName="Dirección" />
-          <ScalarProperty Name="Giro" ColumnName="Giro" />
-          <ScalarProperty Name="RepresenntanteLegalRut" ColumnName="RepresenntanteLegalRut" />
-          <ScalarProperty Name="RepresentanteLegalNombre" ColumnName="RepresentanteLegalNombre" />
-          <ScalarProperty Name="RazonSocial" ColumnName="RazonSocial" />
-          <ScalarProperty Name="Rut" ColumnName="Rut" />
-          <ScalarProperty Name="Nombre" ColumnName="Nombre" />
-          <ScalarProperty Name="Id" ColumnName="Id" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="RegistroTrabajador">
       <EntityTypeMapping TypeName="DBManejoPersonalModel.RegistroTrabajador">
         <MappingFragment StoreEntitySet="RegistroTrabajador">
@@ -67,17 +43,6 @@
           <ScalarProperty Name="Fecha" ColumnName="Fecha" />
           <ScalarProperty Name="Uid" ColumnName="Uid" />
           <ScalarProperty Name="Id" ColumnName="Id" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="sysdiagrams">
-      <EntityTypeMapping TypeName="DBManejoPersonalModel.sysdiagrams">
-        <MappingFragment StoreEntitySet="sysdiagrams">
-          <ScalarProperty Name="definition" ColumnName="definition" />
-          <ScalarProperty Name="version" ColumnName="version" />
-          <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
-          <ScalarProperty Name="principal_id" ColumnName="principal_id" />
-          <ScalarProperty Name="name" ColumnName="name" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -102,14 +67,6 @@
           <ScalarProperty Name="Hasta" ColumnName="Hasta" />
           <ScalarProperty Name="Dias" ColumnName="Dias" />
           <ScalarProperty Name="Desde" ColumnName="Desde" />
-          <ScalarProperty Name="Id" ColumnName="Id" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="TipoContrato">
-      <EntityTypeMapping TypeName="DBManejoPersonalModel.TipoContrato">
-        <MappingFragment StoreEntitySet="TipoContrato">
-          <ScalarProperty Name="Nombre" ColumnName="Nombre" />
           <ScalarProperty Name="Id" ColumnName="Id" />
         </MappingFragment>
       </EntityTypeMapping>
@@ -377,6 +334,7 @@
     <EntitySetMapping Name="AplicacionDePrograma">
       <EntityTypeMapping TypeName="DBManejoPersonalModel.AplicacionDePrograma">
         <MappingFragment StoreEntitySet="AplicacionDePrograma">
+          <ScalarProperty Name="Ubicacion" ColumnName="Ubicacion" />
           <ScalarProperty Name="EmpresaId" ColumnName="EmpresaId" />
           <ScalarProperty Name="Empresa" ColumnName="Empresa" />
           <ScalarProperty Name="FechaFin" ColumnName="FechaFin" />
@@ -394,52 +352,6 @@
           <ScalarProperty Name="Comentario1" ColumnName="Comentario" />
           <ScalarProperty Name="Fecha" ColumnName="Fecha" />
           <ScalarProperty Name="AplicacionDeProgramaId" ColumnName="AplicacionDeProgramaId" />
-          <ScalarProperty Name="TrabajadorId" ColumnName="TrabajadorId" />
-          <ScalarProperty Name="Trabajador" ColumnName="Trabajador" />
-          <ScalarProperty Name="Id" ColumnName="Id" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="ControlInventario">
-      <EntityTypeMapping TypeName="DBManejoPersonalModel.ControlInventario">
-        <MappingFragment StoreEntitySet="ControlInventario">
-          <ScalarProperty Name="EmpresaId" ColumnName="EmpresaId" />
-          <ScalarProperty Name="Empresa" ColumnName="Empresa" />
-          <ScalarProperty Name="TrabajadorId" ColumnName="TrabajadorId" />
-          <ScalarProperty Name="Trabajador" ColumnName="Trabajador" />
-          <ScalarProperty Name="Fecha" ColumnName="Fecha" />
-          <ScalarProperty Name="Razon" ColumnName="Razon" />
-          <ScalarProperty Name="Cantidad" ColumnName="Cantidad" />
-          <ScalarProperty Name="ProductoId" ColumnName="ProductoId" />
-          <ScalarProperty Name="Producto" ColumnName="Producto" />
-          <ScalarProperty Name="Id" ColumnName="Id" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="Log">
-      <EntityTypeMapping TypeName="DBManejoPersonalModel.Log">
-        <MappingFragment StoreEntitySet="Log">
-          <ScalarProperty Name="Accion" ColumnName="Accion" />
-          <ScalarProperty Name="UsuarioId" ColumnName="UsuarioId" />
-          <ScalarProperty Name="Usuario" ColumnName="Usuario" />
-          <ScalarProperty Name="EmpresaId" ColumnName="EmpresaId" />
-          <ScalarProperty Name="Empresa" ColumnName="Empresa" />
-          <ScalarProperty Name="Fecha" ColumnName="Fecha" />
-          <ScalarProperty Name="Id" ColumnName="Id" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="Solicitud">
-      <EntityTypeMapping TypeName="DBManejoPersonalModel.Solicitud">
-        <MappingFragment StoreEntitySet="Solicitud">
-          <ScalarProperty Name="EmpresaId" ColumnName="EmpresaId" />
-          <ScalarProperty Name="Empresa" ColumnName="Empresa" />
-          <ScalarProperty Name="Fecha" ColumnName="Fecha" />
-          <ScalarProperty Name="Estado" ColumnName="Estado" />
-          <ScalarProperty Name="Destino" ColumnName="Destino" />
-          <ScalarProperty Name="Origen" ColumnName="Origen" />
-          <ScalarProperty Name="Observación" ColumnName="Observación" />
-          <ScalarProperty Name="Productos" ColumnName="Productos" />
           <ScalarProperty Name="TrabajadorId" ColumnName="TrabajadorId" />
           <ScalarProperty Name="Trabajador" ColumnName="Trabajador" />
           <ScalarProperty Name="Id" ColumnName="Id" />
@@ -466,12 +378,124 @@
     <EntitySetMapping Name="Stock">
       <EntityTypeMapping TypeName="DBManejoPersonalModel.Stock">
         <MappingFragment StoreEntitySet="Stock">
+          <ScalarProperty Name="Activo" ColumnName="Activo" />
+          <ScalarProperty Name="RetirarBajo0" ColumnName="RetirarBajo0" />
+          <ScalarProperty Name="ControlId" ColumnName="ControlId" />
+          <ScalarProperty Name="Tipo" ColumnName="Tipo" />
+          <ScalarProperty Name="UbicacionId" ColumnName="UbicacionId" />
+          <ScalarProperty Name="EmpresaId" ColumnName="EmpresaId" />
+          <ScalarProperty Name="Empresa" ColumnName="Empresa" />
           <ScalarProperty Name="IngresoId" ColumnName="IngresoId" />
           <ScalarProperty Name="SolicitudId" ColumnName="SolicitudId" />
           <ScalarProperty Name="Ubicacion" ColumnName="Ubicacion" />
           <ScalarProperty Name="Cantidad" ColumnName="Cantidad" />
           <ScalarProperty Name="ProductoId" ColumnName="ProductoId" />
           <ScalarProperty Name="Producto" ColumnName="Producto" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Notificacion">
+      <EntityTypeMapping TypeName="DBManejoPersonalModel.Notificacion">
+        <MappingFragment StoreEntitySet="Notificacion">
+          <ScalarProperty Name="Info" ColumnName="Info" />
+          <ScalarProperty Name="Dato" ColumnName="Dato" />
+          <ScalarProperty Name="CuentaId" ColumnName="CuentaId" />
+          <ScalarProperty Name="Texto" ColumnName="Texto" />
+          <ScalarProperty Name="Estado" ColumnName="Estado" />
+          <ScalarProperty Name="SolicitudId" ColumnName="SolicitudId" />
+          <ScalarProperty Name="Correo" ColumnName="Correo" />
+          <ScalarProperty Name="Fecha" ColumnName="Fecha" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ControlInventario">
+      <EntityTypeMapping TypeName="DBManejoPersonalModel.ControlInventario">
+        <MappingFragment StoreEntitySet="ControlInventario">
+          <ScalarProperty Name="Ubicacion" ColumnName="Ubicacion" />
+          <ScalarProperty Name="EmpresaId" ColumnName="EmpresaId" />
+          <ScalarProperty Name="Empresa" ColumnName="Empresa" />
+          <ScalarProperty Name="TrabajadorId" ColumnName="TrabajadorId" />
+          <ScalarProperty Name="Trabajador" ColumnName="Trabajador" />
+          <ScalarProperty Name="Fecha" ColumnName="Fecha" />
+          <ScalarProperty Name="Razon" ColumnName="Razon" />
+          <ScalarProperty Name="Productos" ColumnName="Productos" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Solicitud">
+      <EntityTypeMapping TypeName="DBManejoPersonalModel.Solicitud">
+        <MappingFragment StoreEntitySet="Solicitud">
+          <ScalarProperty Name="EmpresaId" ColumnName="EmpresaId" />
+          <ScalarProperty Name="Empresa" ColumnName="Empresa" />
+          <ScalarProperty Name="Fecha" ColumnName="Fecha" />
+          <ScalarProperty Name="Estado" ColumnName="Estado" />
+          <ScalarProperty Name="Destino" ColumnName="Destino" />
+          <ScalarProperty Name="Origen" ColumnName="Origen" />
+          <ScalarProperty Name="Observación" ColumnName="Observación" />
+          <ScalarProperty Name="Productos" ColumnName="Productos" />
+          <ScalarProperty Name="TrabajadorId" ColumnName="TrabajadorId" />
+          <ScalarProperty Name="Trabajador" ColumnName="Trabajador" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TipoContrato">
+      <EntityTypeMapping TypeName="DBManejoPersonalModel.TipoContrato">
+        <MappingFragment StoreEntitySet="TipoContrato">
+          <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Log">
+      <EntityTypeMapping TypeName="DBManejoPersonalModel.Log">
+        <MappingFragment StoreEntitySet="Log">
+          <ScalarProperty Name="Accion" ColumnName="Accion" />
+          <ScalarProperty Name="UsuarioId" ColumnName="UsuarioId" />
+          <ScalarProperty Name="Usuario" ColumnName="Usuario" />
+          <ScalarProperty Name="EmpresaId" ColumnName="EmpresaId" />
+          <ScalarProperty Name="Empresa" ColumnName="Empresa" />
+          <ScalarProperty Name="Fecha" ColumnName="Fecha" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Empresas">
+      <EntityTypeMapping TypeName="DBManejoPersonalModel.Empresas">
+        <MappingFragment StoreEntitySet="Empresas">
+          <ScalarProperty Name="InvocadaId" ColumnName="InvocadaId" />
+          <ScalarProperty Name="NombreAnterior" ColumnName="NombreAnterior" />
+          <ScalarProperty Name="Invocada" ColumnName="Invocada" />
+          <ScalarProperty Name="Logo" ColumnName="Logo" />
+          <ScalarProperty Name="TextoLiquidacion" ColumnName="TextoLiquidacion" />
+          <ScalarProperty Name="CajaDeCompensacion" ColumnName="CajaDeCompensacion" />
+          <ScalarProperty Name="FactorMutual" ColumnName="FactorMutual" />
+          <ScalarProperty Name="Mutual" ColumnName="Mutual" />
+          <ScalarProperty Name="Telefono" ColumnName="Telefono" />
+          <ScalarProperty Name="Ciudad" ColumnName="Ciudad" />
+          <ScalarProperty Name="Comuna" ColumnName="Comuna" />
+          <ScalarProperty Name="Dirección" ColumnName="Dirección" />
+          <ScalarProperty Name="Giro" ColumnName="Giro" />
+          <ScalarProperty Name="RepresenntanteLegalRut" ColumnName="RepresenntanteLegalRut" />
+          <ScalarProperty Name="RepresentanteLegalNombre" ColumnName="RepresentanteLegalNombre" />
+          <ScalarProperty Name="RazonSocial" ColumnName="RazonSocial" />
+          <ScalarProperty Name="Rut" ColumnName="Rut" />
+          <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Datos">
+      <EntityTypeMapping TypeName="DBManejoPersonalModel.Datos">
+        <MappingFragment StoreEntitySet="Datos">
+          <ScalarProperty Name="Campo" ColumnName="Campo" />
+          <ScalarProperty Name="Empresa" ColumnName="Empresa" />
+          <ScalarProperty Name="Llave" ColumnName="Llave" />
+          <ScalarProperty Name="EmpresaId" ColumnName="EmpresaId" />
+          <ScalarProperty Name="Valor" ColumnName="Valor" />
           <ScalarProperty Name="Id" ColumnName="Id" />
         </MappingFragment>
       </EntityTypeMapping>
@@ -484,8 +508,6 @@
           <ScalarProperty Name="Miniatura" ColumnName="Miniatura" />
           <ScalarProperty Name="Foto" ColumnName="Foto" />
           <ScalarProperty Name="Descripcion" ColumnName="Descripcion" />
-          <ScalarProperty Name="Activo" ColumnName="Activo" />
-          <ScalarProperty Name="RetirarBajo0" ColumnName="RetirarBajo0" />
           <ScalarProperty Name="StockMin" ColumnName="StockMin" />
           <ScalarProperty Name="Tipo" ColumnName="Tipo" />
           <ScalarProperty Name="Unidad" ColumnName="Unidad" />

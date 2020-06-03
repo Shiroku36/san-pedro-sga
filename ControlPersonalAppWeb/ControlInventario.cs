@@ -11,18 +11,20 @@ namespace ControlPersonalAppWeb
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel;
+
     public partial class ControlInventario
     {
         public int Id { get; set; }
-        public string Producto { get; set; }
-        public Nullable<int> ProductoId { get; set; }
-        public Nullable<int> Cantidad { get; set; }
+        public string Productos { get; set; }
+        [DisplayName("Razón")]
         public string Razon { get; set; }
         public Nullable<System.DateTime> Fecha { get; set; }
         public string Trabajador { get; set; }
         public Nullable<int> TrabajadorId { get; set; }
         public string Empresa { get; set; }
         public Nullable<int> EmpresaId { get; set; }
+        [DisplayName("Ubicación")]
+        public string Ubicacion { get; set; }
     }
 }

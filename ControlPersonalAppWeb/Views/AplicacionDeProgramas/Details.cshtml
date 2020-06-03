@@ -1,13 +1,13 @@
 ﻿@model ControlPersonalAppWeb.AplicacionDePrograma
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = "Detalle Aplicacin de programa";
 }
 
-<h2>Details</h2>
+<h2>Aplicación de programa</h2>
 
 <div>
-    <h4>AplicacionDePrograma</h4>
+    <h4>Detalle</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
@@ -15,7 +15,8 @@
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.SolicitudId)
+            <a href="~/Solicitudes/Details/@Model.SolicitudId">
+            @Html.DisplayFor(model => model.SolicitudId)</a>
         </dd>
 
         <dt>
@@ -23,7 +24,7 @@
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.FechaInicio)
+            <span>@Model.FechaInicio.Value.ToShortDateString()</span>
         </dd>
 
         <dt>
@@ -31,35 +32,34 @@
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.FechaFin)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Empresa)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Empresa)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.EmpresaId)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.EmpresaId)
+            <span>@Model.FechaFin.Value.ToShortDateString()</span>
         </dd>
 
     </dl>
+    @if (ViewBag.comentarios != null)
+    {
+        <label>Comentarios</label>
+        <hr />
+        foreach (var comentario in ViewBag.comentarios)
+        {
+            <div class="col-auto mb-1">
+                <a href="/Trabajador/Details/@comentario.TrabajadorId"> @comentario.Trabajador </a>
+                <span>@comentario.Fecha.ToString()</span>
+            </div>
+            <div class="col-auto mb-4 ml-3">
+                <span>@comentario.Comentario1</span>
+            </div>
+            <hr />
+        }
+    }
 </div>
-<label>Comentarios</label>
-<input type="hidden" name="Trabajador" value="@ViewBag.trabajador" />
-<input type="hidden" name="TrabajadorId" value="@ViewBag.trabajadorId" />
-<input type="hidden" name="AplicacionDeProgramaId" value="@ViewBag.aplicacionId" />
-<input class="form-control" type="text" />
-<p>
-    @Html.ActionLink("Agregar Comentario", "Create", "Comentarios") |
-</p>
+@using (Html.BeginForm("Create", "Comentarios", new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="AplicacionDeProgramaId" value="@Model.Id" />
+    <input name="Comentario1" class="form-control mb-4" />
+    <input type="submit" value="Agregar comentario" class="btn btn-primary mb-4" />
+}
 <p>
     @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
     @Html.ActionLink("Back to List", "Index")

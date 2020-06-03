@@ -50,8 +50,8 @@ namespace ControlPersonalAppWeb.Controllers
                 SmtpClient SmtpServer = new SmtpClient();
                 mail.From = new MailAddress("notificacionjcp@ingenieriajcp.cl",
                 "SGA JCP", System.Text.Encoding.UTF8);
-                //mail.To.Add("jcastro@ingenieriajcp.cl");
-                mail.To.Add("emilio.silva1@hotmail.com");
+                mail.To.Add("jcastro@ingenieriajcp.cl");
+                //mail.To.Add("emilio.silva1@hotmail.com");
                 mail.Bcc.Add("sebastianct36@outlook.com");
                 mail.Subject = "Solicitud de Contacto de " + nombre ;
                 Utils.SessionManager.email = 2;

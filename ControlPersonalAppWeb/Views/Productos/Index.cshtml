@@ -9,7 +9,8 @@
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
-<table class="table">
+@Html.Partial("Busqueda")
+<table class="table" id="tabla">
     <tr class="bg-primary">
         <th>
             @Html.DisplayNameFor(model => model.Nombre)
@@ -24,12 +25,6 @@
             @Html.DisplayNameFor(model => model.StockMin)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.RetirarBajo0)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Activo)
-        </th>
-        <th>
             @Html.DisplayNameFor(model => model.Descripcion)
         </th>
         <th>
@@ -38,38 +33,38 @@
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Nombre)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Unidad)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Tipo)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.StockMin)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.RetirarBajo0)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Activo)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Descripcion)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Miniatura)
-        </td>
-        <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
-            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
-        </td>
-    </tr>
-}
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Nombre)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Unidad)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Tipo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StockMin)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Descripcion)
+            </td>
+            <td>
+                @if (item.Miniatura != null)
+                {
+                    <img src="@String.Format("data:image/jgp;base64,{0}", System.Convert.ToBase64String(item.Miniatura))" />
+                }
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+            </td>
+        </tr>
+    }
 
 </table>
+
+<script src="~/Scripts/Busqueda.js"></script>

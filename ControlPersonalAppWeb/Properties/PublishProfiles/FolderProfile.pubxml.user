@@ -19,10 +19,10 @@ edite el archivo MSBuild. Visite https://go.microsoft.com/fwlink/?LinkID=208121 
       <publishTime>05/15/2020 08:22:22</publishTime>
     </File>
     <File Include="bin/ControlPersonalAppWeb.dll">
-      <publishTime>05/15/2020 16:29:54</publishTime>
+      <publishTime>05/21/2020 21:37:50</publishTime>
     </File>
     <File Include="bin/ControlPersonalAppWeb.pdb">
-      <publishTime>05/15/2020 16:29:54</publishTime>
+      <publishTime>05/21/2020 21:37:50</publishTime>
     </File>
     <File Include="bin/DocumentFormat.OpenXml.dll">
       <publishTime>05/15/2020 08:22:22</publishTime>
@@ -37,7 +37,7 @@ edite el archivo MSBuild. Visite https://go.microsoft.com/fwlink/?LinkID=208121 
       <publishTime>05/15/2020 08:22:22</publishTime>
     </File>
     <File Include="bin/es/System.Web.Mvc.resources.dll">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/19/2020 22:50:42</publishTime>
     </File>
     <File Include="bin/es/System.Web.Optimization.resources.dll">
       <publishTime>05/15/2020 08:22:22</publishTime>
@@ -55,55 +55,55 @@ edite el archivo MSBuild. Visite https://go.microsoft.com/fwlink/?LinkID=208121 
       <publishTime>05/15/2020 08:22:22</publishTime>
     </File>
     <File Include="bin/itextsharp.dll">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/19/2020 22:50:42</publishTime>
     </File>
     <File Include="bin/Microsoft.AspNet.TelemetryCorrelation.dll">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/19/2020 22:50:42</publishTime>
     </File>
     <File Include="bin/Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/19/2020 22:50:42</publishTime>
     </File>
     <File Include="bin/Microsoft.Web.Infrastructure.dll">
       <publishTime>05/15/2020 08:22:22</publishTime>
     </File>
     <File Include="bin/Newtonsoft.Json.dll">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/19/2020 22:50:42</publishTime>
     </File>
     <File Include="bin/roslyn/csc.exe">
       <publishTime>05/15/2020 08:22:23</publishTime>
     </File>
     <File Include="bin/roslyn/csc.exe.config">
-      <publishTime>05/15/2020 08:22:23</publishTime>
+      <publishTime>08/08/2018 12:18:12</publishTime>
     </File>
     <File Include="bin/roslyn/csc.rsp">
       <publishTime>05/15/2020 08:22:23</publishTime>
     </File>
     <File Include="bin/roslyn/csi.exe">
-      <publishTime>05/15/2020 08:22:23</publishTime>
+      <publishTime>08/08/2018 05:38:48</publishTime>
     </File>
     <File Include="bin/roslyn/csi.exe.config">
-      <publishTime>05/15/2020 08:22:23</publishTime>
+      <publishTime>08/08/2018 12:18:34</publishTime>
     </File>
     <File Include="bin/roslyn/csi.rsp">
       <publishTime>05/15/2020 08:22:23</publishTime>
     </File>
     <File Include="bin/roslyn/Microsoft.Build.Tasks.CodeAnalysis.dll">
-      <publishTime>05/15/2020 08:22:23</publishTime>
+      <publishTime>08/08/2018 05:38:48</publishTime>
     </File>
     <File Include="bin/roslyn/Microsoft.CodeAnalysis.CSharp.dll">
-      <publishTime>05/15/2020 08:22:23</publishTime>
+      <publishTime>08/08/2018 05:38:48</publishTime>
     </File>
     <File Include="bin/roslyn/Microsoft.CodeAnalysis.CSharp.Scripting.dll">
-      <publishTime>05/15/2020 08:22:23</publishTime>
+      <publishTime>08/08/2018 05:38:48</publishTime>
     </File>
     <File Include="bin/roslyn/Microsoft.CodeAnalysis.dll">
-      <publishTime>05/15/2020 08:22:23</publishTime>
+      <publishTime>08/08/2018 05:38:48</publishTime>
     </File>
     <File Include="bin/roslyn/Microsoft.CodeAnalysis.Scripting.dll">
-      <publishTime>05/15/2020 08:22:23</publishTime>
+      <publishTime>08/08/2018 05:38:48</publishTime>
     </File>
     <File Include="bin/roslyn/Microsoft.CodeAnalysis.VisualBasic.dll">
-      <publishTime>05/15/2020 08:22:23</publishTime>
+      <publishTime>08/08/2018 05:38:48</publishTime>
     </File>
     <File Include="bin/roslyn/Microsoft.CSharp.Core.targets">
       <publishTime>05/15/2020 08:22:23</publishTime>
@@ -115,19 +115,25 @@ edite el archivo MSBuild. Visite https://go.microsoft.com/fwlink/?LinkID=208121 
       <publishTime>05/15/2020 08:22:23</publishTime>
     </File>
     <File Include="bin/roslyn/Microsoft.Managed.Core.targets">
-      <publishTime>05/15/2020 08:22:23</publishTime>
+      <publishTime>08/08/2018 12:09:42</publishTime>
     </File>
     <File Include="bin/roslyn/Microsoft.VisualBasic.Core.targets">
       <publishTime>05/15/2020 08:22:23</publishTime>
+    </File>
+    <File Include="bin/roslyn/Microsoft.Win32.Primitives.dll">
+      <publishTime>11/05/2016 18:55:32</publishTime>
     </File>
     <File Include="bin/roslyn/System.AppContext.dll">
       <publishTime>05/15/2020 08:22:23</publishTime>
     </File>
     <File Include="bin/roslyn/System.Collections.Immutable.dll">
-      <publishTime>05/15/2020 08:22:23</publishTime>
+      <publishTime>05/16/2018 03:29:34</publishTime>
     </File>
     <File Include="bin/roslyn/System.Console.dll">
       <publishTime>05/15/2020 08:22:23</publishTime>
+    </File>
+    <File Include="bin/roslyn/System.Diagnostics.DiagnosticSource.dll">
+      <publishTime>11/05/2016 18:55:52</publishTime>
     </File>
     <File Include="bin/roslyn/System.Diagnostics.FileVersionInfo.dll">
       <publishTime>05/15/2020 08:22:23</publishTime>
@@ -135,8 +141,14 @@ edite el archivo MSBuild. Visite https://go.microsoft.com/fwlink/?LinkID=208121 
     <File Include="bin/roslyn/System.Diagnostics.StackTrace.dll">
       <publishTime>05/15/2020 08:22:23</publishTime>
     </File>
+    <File Include="bin/roslyn/System.Globalization.Calendars.dll">
+      <publishTime>11/05/2016 18:56:02</publishTime>
+    </File>
     <File Include="bin/roslyn/System.IO.Compression.dll">
       <publishTime>05/15/2020 08:22:23</publishTime>
+    </File>
+    <File Include="bin/roslyn/System.IO.Compression.ZipFile.dll">
+      <publishTime>11/05/2016 18:56:04</publishTime>
     </File>
     <File Include="bin/roslyn/System.IO.FileSystem.dll">
       <publishTime>05/15/2020 08:22:23</publishTime>
@@ -150,8 +162,17 @@ edite el archivo MSBuild. Visite https://go.microsoft.com/fwlink/?LinkID=208121 
     <File Include="bin/roslyn/System.IO.Pipes.dll">
       <publishTime>05/15/2020 08:22:23</publishTime>
     </File>
+    <File Include="bin/roslyn/System.Net.Http.dll">
+      <publishTime>11/05/2016 18:56:30</publishTime>
+    </File>
+    <File Include="bin/roslyn/System.Net.Sockets.dll">
+      <publishTime>11/05/2016 18:56:34</publishTime>
+    </File>
     <File Include="bin/roslyn/System.Reflection.Metadata.dll">
-      <publishTime>05/15/2020 08:22:23</publishTime>
+      <publishTime>05/16/2018 03:29:44</publishTime>
+    </File>
+    <File Include="bin/roslyn/System.Runtime.InteropServices.RuntimeInformation.dll">
+      <publishTime>11/05/2016 18:57:00</publishTime>
     </File>
     <File Include="bin/roslyn/System.Security.AccessControl.dll">
       <publishTime>05/15/2020 08:22:23</publishTime>
@@ -177,6 +198,9 @@ edite el archivo MSBuild. Visite https://go.microsoft.com/fwlink/?LinkID=208121 
     <File Include="bin/roslyn/System.Text.Encoding.CodePages.dll">
       <publishTime>05/15/2020 08:22:23</publishTime>
     </File>
+    <File Include="bin/roslyn/System.Threading.Tasks.Extensions.dll">
+      <publishTime>11/05/2016 18:57:24</publishTime>
+    </File>
     <File Include="bin/roslyn/System.ValueTuple.dll">
       <publishTime>05/15/2020 08:22:23</publishTime>
     </File>
@@ -196,34 +220,52 @@ edite el archivo MSBuild. Visite https://go.microsoft.com/fwlink/?LinkID=208121 
       <publishTime>05/15/2020 08:22:23</publishTime>
     </File>
     <File Include="bin/roslyn/vbc.exe.config">
-      <publishTime>05/15/2020 08:22:23</publishTime>
+      <publishTime>08/08/2018 12:18:18</publishTime>
     </File>
     <File Include="bin/roslyn/vbc.rsp">
       <publishTime>05/15/2020 08:22:23</publishTime>
     </File>
     <File Include="bin/roslyn/VBCSCompiler.exe">
-      <publishTime>05/15/2020 08:22:23</publishTime>
+      <publishTime>08/08/2018 05:38:48</publishTime>
     </File>
     <File Include="bin/roslyn/VBCSCompiler.exe.config">
-      <publishTime>05/15/2020 08:22:23</publishTime>
+      <publishTime>08/08/2018 12:18:16</publishTime>
     </File>
     <File Include="bin/SpreadsheetLight.dll">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/19/2020 22:50:42</publishTime>
+    </File>
+    <File Include="bin/System.Buffers.dll">
+      <publishTime>02/19/2020 10:05:18</publishTime>
     </File>
     <File Include="bin/System.Diagnostics.DiagnosticSource.dll">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/19/2020 22:50:42</publishTime>
     </File>
     <File Include="bin/System.IO.FileSystem.Primitives.dll">
       <publishTime>05/15/2020 08:22:23</publishTime>
     </File>
     <File Include="bin/System.IO.Packaging.dll">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/19/2020 22:50:42</publishTime>
+    </File>
+    <File Include="bin/System.Memory.dll">
+      <publishTime>02/19/2020 10:05:18</publishTime>
+    </File>
+    <File Include="bin/System.Numerics.Vectors.dll">
+      <publishTime>05/15/2018 13:29:44</publishTime>
+    </File>
+    <File Include="bin/System.Runtime.CompilerServices.Unsafe.dll">
+      <publishTime>02/21/2020 03:58:04</publishTime>
+    </File>
+    <File Include="bin/System.Security.AccessControl.dll">
+      <publishTime>11/15/2019 08:41:04</publishTime>
+    </File>
+    <File Include="bin/System.Security.Principal.Windows.dll">
+      <publishTime>11/15/2019 08:41:16</publishTime>
     </File>
     <File Include="bin/System.Web.Helpers.dll">
       <publishTime>05/15/2020 08:22:22</publishTime>
     </File>
     <File Include="bin/System.Web.Mvc.dll">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/19/2020 22:50:42</publishTime>
     </File>
     <File Include="bin/System.Web.Optimization.dll">
       <publishTime>05/15/2020 08:22:22</publishTime>
@@ -247,28 +289,28 @@ edite el archivo MSBuild. Visite https://go.microsoft.com/fwlink/?LinkID=208121 
       <publishTime>05/15/2020 08:22:22</publishTime>
     </File>
     <File Include="Content/bootstrap-grid.css">
-      <publishTime>05/15/2020 08:22:21</publishTime>
+      <publishTime>05/19/2020 22:50:42</publishTime>
     </File>
     <File Include="Content/bootstrap-grid.css.map">
-      <publishTime>05/15/2020 08:22:21</publishTime>
+      <publishTime>05/19/2020 22:50:42</publishTime>
     </File>
     <File Include="Content/bootstrap-grid.min.css">
-      <publishTime>05/15/2020 08:22:21</publishTime>
+      <publishTime>05/19/2020 22:50:42</publishTime>
     </File>
     <File Include="Content/bootstrap-grid.min.css.map">
-      <publishTime>05/15/2020 08:22:21</publishTime>
+      <publishTime>05/19/2020 22:50:42</publishTime>
     </File>
     <File Include="Content/bootstrap-reboot.css">
-      <publishTime>05/15/2020 08:22:21</publishTime>
+      <publishTime>05/19/2020 22:50:42</publishTime>
     </File>
     <File Include="Content/bootstrap-reboot.css.map">
-      <publishTime>05/15/2020 08:22:21</publishTime>
+      <publishTime>05/19/2020 22:50:42</publishTime>
     </File>
     <File Include="Content/bootstrap-reboot.min.css">
-      <publishTime>05/15/2020 08:22:21</publishTime>
+      <publishTime>05/19/2020 22:50:42</publishTime>
     </File>
     <File Include="Content/bootstrap-reboot.min.css.map">
-      <publishTime>05/15/2020 08:22:21</publishTime>
+      <publishTime>05/19/2020 22:50:42</publishTime>
     </File>
     <File Include="Content/bootstrap-theme.css">
       <publishTime>01/26/2019 15:50:00</publishTime>
@@ -283,16 +325,16 @@ edite el archivo MSBuild. Visite https://go.microsoft.com/fwlink/?LinkID=208121 
       <publishTime>01/26/2019 15:49:59</publishTime>
     </File>
     <File Include="Content/bootstrap.css">
-      <publishTime>05/15/2020 08:22:21</publishTime>
+      <publishTime>05/19/2020 22:50:42</publishTime>
     </File>
     <File Include="Content/bootstrap.css.map">
-      <publishTime>05/15/2020 08:22:21</publishTime>
+      <publishTime>05/19/2020 22:50:42</publishTime>
     </File>
     <File Include="Content/bootstrap.min.css">
-      <publishTime>05/15/2020 08:22:21</publishTime>
+      <publishTime>05/19/2020 22:50:42</publishTime>
     </File>
     <File Include="Content/bootstrap.min.css.map">
-      <publishTime>05/15/2020 08:22:21</publishTime>
+      <publishTime>05/19/2020 22:50:42</publishTime>
     </File>
     <File Include="Content/Jcp.JPG">
       <publishTime>05/15/2020 08:22:21</publishTime>
@@ -313,7 +355,7 @@ edite el archivo MSBuild. Visite https://go.microsoft.com/fwlink/?LinkID=208121 
       <publishTime>05/15/2020 08:22:21</publishTime>
     </File>
     <File Include="favicon.ico">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/19/2020 22:50:42</publishTime>
     </File>
     <File Include="fonts/glyphicons-halflings-regular.eot">
       <publishTime>01/26/2019 15:49:59</publishTime>
@@ -363,56 +405,59 @@ edite el archivo MSBuild. Visite https://go.microsoft.com/fwlink/?LinkID=208121 
     <File Include="Images/registro.png">
       <publishTime>06/18/2019 01:25:49</publishTime>
     </File>
+    <File Include="libman.json">
+      <publishTime>05/19/2020 22:50:42</publishTime>
+    </File>
     <File Include="Model1.edmx.diagram">
-      <publishTime>05/15/2020 08:22:21</publishTime>
+      <publishTime>05/19/2020 22:50:42</publishTime>
     </File>
     <File Include="Scripts/bootstrap.bundle.js">
-      <publishTime>05/15/2020 08:22:21</publishTime>
+      <publishTime>05/19/2020 22:50:42</publishTime>
     </File>
     <File Include="Scripts/bootstrap.bundle.js.map">
-      <publishTime>05/15/2020 08:22:21</publishTime>
+      <publishTime>05/19/2020 22:50:42</publishTime>
     </File>
     <File Include="Scripts/bootstrap.bundle.min.js">
-      <publishTime>05/15/2020 08:22:21</publishTime>
+      <publishTime>05/19/2020 22:50:42</publishTime>
     </File>
     <File Include="Scripts/bootstrap.bundle.min.js.map">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/19/2020 22:50:42</publishTime>
     </File>
     <File Include="Scripts/bootstrap.js">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/19/2020 22:50:42</publishTime>
     </File>
     <File Include="Scripts/bootstrap.js.map">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/19/2020 22:50:42</publishTime>
     </File>
     <File Include="Scripts/bootstrap.min.js">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/19/2020 22:50:42</publishTime>
     </File>
     <File Include="Scripts/bootstrap.min.js.map">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/19/2020 22:50:42</publishTime>
     </File>
     <File Include="Scripts/esm/popper-utils.js">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/19/2020 22:50:42</publishTime>
     </File>
     <File Include="Scripts/esm/popper-utils.js.map">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/19/2020 22:50:42</publishTime>
     </File>
     <File Include="Scripts/esm/popper-utils.min.js">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/19/2020 22:50:42</publishTime>
     </File>
     <File Include="Scripts/esm/popper-utils.min.js.map">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/19/2020 22:50:42</publishTime>
     </File>
     <File Include="Scripts/esm/popper.js">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/19/2020 22:50:42</publishTime>
     </File>
     <File Include="Scripts/esm/popper.js.map">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/19/2020 22:50:42</publishTime>
     </File>
     <File Include="Scripts/esm/popper.min.js">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/19/2020 22:50:42</publishTime>
     </File>
     <File Include="Scripts/esm/popper.min.js.map">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/19/2020 22:50:42</publishTime>
     </File>
     <File Include="Scripts/fechaHoy.js">
       <publishTime>05/15/2020 08:22:22</publishTime>
@@ -595,7 +640,7 @@ edite el archivo MSBuild. Visite https://go.microsoft.com/fwlink/?LinkID=208121 
       <publishTime>05/15/2020 08:22:22</publishTime>
     </File>
     <File Include="Scripts/index.js.flow">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/18/2020 07:11:39</publishTime>
     </File>
     <File Include="Scripts/jquery-3.3.1.js">
       <publishTime>05/15/2020 08:22:22</publishTime>
@@ -615,47 +660,65 @@ edite el archivo MSBuild. Visite https://go.microsoft.com/fwlink/?LinkID=208121 
     <File Include="Scripts/jquery-3.3.1.slim.min.map">
       <publishTime>05/15/2020 08:22:22</publishTime>
     </File>
+    <File Include="Scripts/jquery-3.5.1.js">
+      <publishTime>05/19/2020 22:50:42</publishTime>
+    </File>
+    <File Include="Scripts/jquery-3.5.1.min.js">
+      <publishTime>05/19/2020 22:50:42</publishTime>
+    </File>
+    <File Include="Scripts/jquery-3.5.1.min.map">
+      <publishTime>05/19/2020 22:50:42</publishTime>
+    </File>
+    <File Include="Scripts/jquery-3.5.1.slim.js">
+      <publishTime>05/19/2020 22:50:42</publishTime>
+    </File>
+    <File Include="Scripts/jquery-3.5.1.slim.min.js">
+      <publishTime>05/19/2020 22:50:42</publishTime>
+    </File>
+    <File Include="Scripts/jquery-3.5.1.slim.min.map">
+      <publishTime>05/19/2020 22:50:42</publishTime>
+    </File>
     <File Include="Scripts/jquery.validate.js">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/19/2020 22:50:42</publishTime>
     </File>
     <File Include="Scripts/jquery.validate.min.js">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/19/2020 22:50:42</publishTime>
     </File>
     <File Include="Scripts/jquery.validate.unobtrusive.js">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/19/2020 22:50:42</publishTime>
     </File>
     <File Include="Scripts/jquery.validate.unobtrusive.min.js">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/19/2020 22:50:42</publishTime>
     </File>
     <File Include="Scripts/modernizr-2.8.3.js">
       <publishTime>05/15/2020 08:22:22</publishTime>
     </File>
     <File Include="Scripts/popper-utils.js">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/19/2020 22:50:42</publishTime>
     </File>
     <File Include="Scripts/popper-utils.js.map">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/19/2020 22:50:42</publishTime>
     </File>
     <File Include="Scripts/popper-utils.min.js">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/19/2020 22:50:42</publishTime>
     </File>
     <File Include="Scripts/popper-utils.min.js.map">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/19/2020 22:50:42</publishTime>
     </File>
     <File Include="Scripts/popper.js">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/19/2020 22:50:42</publishTime>
     </File>
     <File Include="Scripts/popper.js.map">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/19/2020 22:50:42</publishTime>
     </File>
     <File Include="Scripts/popper.min.js">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/19/2020 22:50:42</publishTime>
     </File>
     <File Include="Scripts/popper.min.js.map">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/19/2020 22:50:42</publishTime>
     </File>
     <File Include="Scripts/README.md">
-      <publishTime>05/15/2020 08:22:21</publishTime>
+      <publishTime>05/18/2020 07:11:38</publishTime>
     </File>
     <File Include="Scripts/select2.full.js">
       <publishTime>05/15/2020 08:22:22</publishTime>
@@ -670,220 +733,220 @@ edite el archivo MSBuild. Visite https://go.microsoft.com/fwlink/?LinkID=208121 
       <publishTime>05/15/2020 08:22:22</publishTime>
     </File>
     <File Include="Scripts/src/index.js">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/18/2020 07:11:38</publishTime>
     </File>
     <File Include="Scripts/src/methods/defaults.js">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/18/2020 07:11:38</publishTime>
     </File>
     <File Include="Scripts/src/methods/destroy.js">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/18/2020 07:11:37</publishTime>
     </File>
     <File Include="Scripts/src/methods/disableEventListeners.js">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/18/2020 07:11:37</publishTime>
     </File>
     <File Include="Scripts/src/methods/enableEventListeners.js">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/18/2020 07:11:37</publishTime>
     </File>
     <File Include="Scripts/src/methods/placements.js">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/18/2020 07:11:37</publishTime>
     </File>
     <File Include="Scripts/src/methods/update.js">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/18/2020 07:11:37</publishTime>
     </File>
     <File Include="Scripts/src/modifiers/applyStyle.js">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/18/2020 07:11:37</publishTime>
     </File>
     <File Include="Scripts/src/modifiers/arrow.js">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/19/2020 22:50:42</publishTime>
     </File>
     <File Include="Scripts/src/modifiers/computeStyle.js">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/18/2020 07:11:37</publishTime>
     </File>
     <File Include="Scripts/src/modifiers/flip.js">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/18/2020 07:11:36</publishTime>
     </File>
     <File Include="Scripts/src/modifiers/hide.js">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/18/2020 07:11:36</publishTime>
     </File>
     <File Include="Scripts/src/modifiers/index.js">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/18/2020 07:11:36</publishTime>
     </File>
     <File Include="Scripts/src/modifiers/inner.js">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/18/2020 07:11:36</publishTime>
     </File>
     <File Include="Scripts/src/modifiers/keepTogether.js">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/18/2020 07:11:36</publishTime>
     </File>
     <File Include="Scripts/src/modifiers/offset.js">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/18/2020 07:11:36</publishTime>
     </File>
     <File Include="Scripts/src/modifiers/preventOverflow.js">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/18/2020 07:11:36</publishTime>
     </File>
     <File Include="Scripts/src/modifiers/shift.js">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/18/2020 07:11:36</publishTime>
     </File>
     <File Include="Scripts/src/utils/clockwise.js">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/18/2020 07:11:36</publishTime>
     </File>
     <File Include="Scripts/src/utils/computeAutoPlacement.js">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/18/2020 07:11:36</publishTime>
     </File>
     <File Include="Scripts/src/utils/debounce.js">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/18/2020 07:11:36</publishTime>
     </File>
     <File Include="Scripts/src/utils/find.js">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/18/2020 07:11:36</publishTime>
     </File>
     <File Include="Scripts/src/utils/findCommonOffsetParent.js">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/18/2020 07:11:35</publishTime>
     </File>
     <File Include="Scripts/src/utils/findIndex.js">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/18/2020 07:11:35</publishTime>
     </File>
     <File Include="Scripts/src/utils/getBordersSize.js">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/19/2020 22:50:42</publishTime>
     </File>
     <File Include="Scripts/src/utils/getBoundaries.js">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/18/2020 07:11:35</publishTime>
     </File>
     <File Include="Scripts/src/utils/getBoundingClientRect.js">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/18/2020 07:11:35</publishTime>
     </File>
     <File Include="Scripts/src/utils/getClientRect.js">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/18/2020 07:11:35</publishTime>
     </File>
     <File Include="Scripts/src/utils/getFixedPositionOffsetParent.js">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/18/2020 07:11:35</publishTime>
     </File>
     <File Include="Scripts/src/utils/getOffsetParent.js">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/18/2020 07:11:35</publishTime>
     </File>
     <File Include="Scripts/src/utils/getOffsetRect.js">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/18/2020 07:11:35</publishTime>
     </File>
     <File Include="Scripts/src/utils/getOffsetRectRelativeToArbitraryNode.js">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/19/2020 22:50:42</publishTime>
     </File>
     <File Include="Scripts/src/utils/getOppositePlacement.js">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/18/2020 07:11:35</publishTime>
     </File>
     <File Include="Scripts/src/utils/getOppositeVariation.js">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/18/2020 07:11:35</publishTime>
     </File>
     <File Include="Scripts/src/utils/getOuterSizes.js">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/18/2020 07:11:34</publishTime>
     </File>
     <File Include="Scripts/src/utils/getParentNode.js">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/18/2020 07:11:34</publishTime>
     </File>
     <File Include="Scripts/src/utils/getPopperOffsets.js">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/18/2020 07:11:34</publishTime>
     </File>
     <File Include="Scripts/src/utils/getReferenceNode.js">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/18/2020 07:11:34</publishTime>
     </File>
     <File Include="Scripts/src/utils/getReferenceOffsets.js">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/18/2020 07:11:34</publishTime>
     </File>
     <File Include="Scripts/src/utils/getRoot.js">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/18/2020 07:11:34</publishTime>
     </File>
     <File Include="Scripts/src/utils/getRoundedOffsets.js">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/18/2020 07:11:34</publishTime>
     </File>
     <File Include="Scripts/src/utils/getScroll.js">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/18/2020 07:11:34</publishTime>
     </File>
     <File Include="Scripts/src/utils/getScrollParent.js">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/18/2020 07:11:34</publishTime>
     </File>
     <File Include="Scripts/src/utils/getStyleComputedProperty.js">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/18/2020 07:11:33</publishTime>
     </File>
     <File Include="Scripts/src/utils/getSupportedPropertyName.js">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/18/2020 07:11:33</publishTime>
     </File>
     <File Include="Scripts/src/utils/getViewportOffsetRectRelativeToArtbitraryNode.js">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/18/2020 07:11:33</publishTime>
     </File>
     <File Include="Scripts/src/utils/getWindow.js">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/18/2020 07:11:33</publishTime>
     </File>
     <File Include="Scripts/src/utils/getWindowSizes.js">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/18/2020 07:11:33</publishTime>
     </File>
     <File Include="Scripts/src/utils/includeScroll.js">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/18/2020 07:11:33</publishTime>
     </File>
     <File Include="Scripts/src/utils/index.js">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/18/2020 07:11:33</publishTime>
     </File>
     <File Include="Scripts/src/utils/isBrowser.js">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/18/2020 07:11:33</publishTime>
     </File>
     <File Include="Scripts/src/utils/isFixed.js">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/18/2020 07:11:33</publishTime>
     </File>
     <File Include="Scripts/src/utils/isFunction.js">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/18/2020 07:11:33</publishTime>
     </File>
     <File Include="Scripts/src/utils/isIE.js">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/18/2020 07:11:33</publishTime>
     </File>
     <File Include="Scripts/src/utils/isModifierEnabled.js">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/18/2020 07:11:32</publishTime>
     </File>
     <File Include="Scripts/src/utils/isModifierRequired.js">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/18/2020 07:11:32</publishTime>
     </File>
     <File Include="Scripts/src/utils/isNumeric.js">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/18/2020 07:11:32</publishTime>
     </File>
     <File Include="Scripts/src/utils/isOffsetContainer.js">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/18/2020 07:11:32</publishTime>
     </File>
     <File Include="Scripts/src/utils/removeEventListeners.js">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/18/2020 07:11:32</publishTime>
     </File>
     <File Include="Scripts/src/utils/runModifiers.js">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/18/2020 07:11:32</publishTime>
     </File>
     <File Include="Scripts/src/utils/setAttributes.js">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/18/2020 07:11:32</publishTime>
     </File>
     <File Include="Scripts/src/utils/setStyles.js">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/18/2020 07:11:32</publishTime>
     </File>
     <File Include="Scripts/src/utils/setupEventListeners.js">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/18/2020 07:11:32</publishTime>
     </File>
     <File Include="Scripts/umd/popper-utils.js">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/19/2020 22:50:42</publishTime>
     </File>
     <File Include="Scripts/umd/popper-utils.js.map">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/19/2020 22:50:42</publishTime>
     </File>
     <File Include="Scripts/umd/popper-utils.min.js">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/19/2020 22:50:42</publishTime>
     </File>
     <File Include="Scripts/umd/popper-utils.min.js.map">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/19/2020 22:50:42</publishTime>
     </File>
     <File Include="Scripts/umd/popper.js">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/19/2020 22:50:42</publishTime>
     </File>
     <File Include="Scripts/umd/popper.js.flow">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/18/2020 07:11:31</publishTime>
     </File>
     <File Include="Scripts/umd/popper.js.map">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/19/2020 22:50:42</publishTime>
     </File>
     <File Include="Scripts/umd/popper.min.js">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/19/2020 22:50:42</publishTime>
     </File>
     <File Include="Scripts/umd/popper.min.js.map">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/19/2020 22:50:42</publishTime>
     </File>
     <File Include="Scripts/validarCuenta.js">
       <publishTime>05/15/2020 08:22:22</publishTime>
@@ -909,17 +972,32 @@ edite el archivo MSBuild. Visite https://go.microsoft.com/fwlink/?LinkID=208121 
     <File Include="Views/AFPs/Index.cshtml">
       <publishTime>05/15/2020 08:22:22</publishTime>
     </File>
+    <File Include="Views/AplicacionDeProgramas/Create.cshtml">
+      <publishTime>05/19/2020 22:50:42</publishTime>
+    </File>
+    <File Include="Views/AplicacionDeProgramas/Delete.cshtml">
+      <publishTime>05/19/2020 22:50:42</publishTime>
+    </File>
+    <File Include="Views/AplicacionDeProgramas/Details.cshtml">
+      <publishTime>05/19/2020 22:50:42</publishTime>
+    </File>
+    <File Include="Views/AplicacionDeProgramas/Edit.cshtml">
+      <publishTime>05/19/2020 22:50:42</publishTime>
+    </File>
+    <File Include="Views/AplicacionDeProgramas/Index.cshtml">
+      <publishTime>05/19/2020 22:50:42</publishTime>
+    </File>
     <File Include="Views/Campo/Create.cshtml">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/19/2020 22:50:42</publishTime>
     </File>
     <File Include="Views/Campo/Details.cshtml">
-      <publishTime>05/15/2020 15:47:35</publishTime>
+      <publishTime>05/19/2020 22:50:42</publishTime>
     </File>
     <File Include="Views/Campo/Edit.cshtml">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/19/2020 22:50:42</publishTime>
     </File>
     <File Include="Views/Campo/Index.cshtml">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/19/2020 22:50:42</publishTime>
     </File>
     <File Include="Views/Cargos/Create.cshtml">
       <publishTime>05/15/2020 08:22:22</publishTime>
@@ -951,23 +1029,41 @@ edite el archivo MSBuild. Visite https://go.microsoft.com/fwlink/?LinkID=208121 
     <File Include="Views/CentroDeCostos/Index.cshtml">
       <publishTime>05/15/2020 08:22:22</publishTime>
     </File>
+    <File Include="Views/Comentarios/Index.cshtml">
+      <publishTime>05/19/2020 22:50:42</publishTime>
+    </File>
+    <File Include="Views/ControlInventarios/Create.cshtml">
+      <publishTime>05/19/2020 22:50:42</publishTime>
+    </File>
+    <File Include="Views/ControlInventarios/Delete.cshtml">
+      <publishTime>05/19/2020 22:50:42</publishTime>
+    </File>
+    <File Include="Views/ControlInventarios/Details.cshtml">
+      <publishTime>05/19/2020 22:50:42</publishTime>
+    </File>
+    <File Include="Views/ControlInventarios/Edit.cshtml">
+      <publishTime>05/19/2020 22:50:42</publishTime>
+    </File>
+    <File Include="Views/ControlInventarios/Index.cshtml">
+      <publishTime>05/19/2020 22:50:42</publishTime>
+    </File>
     <File Include="Views/Cosecha/Index.cshtml">
       <publishTime>05/15/2020 08:22:22</publishTime>
     </File>
     <File Include="Views/Cuenta/Create.cshtml">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/19/2020 22:50:42</publishTime>
     </File>
     <File Include="Views/Cuenta/Details.cshtml">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/19/2020 22:50:42</publishTime>
     </File>
     <File Include="Views/Cuenta/Edit.cshtml">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/19/2020 22:50:42</publishTime>
     </File>
     <File Include="Views/Cuenta/Index.cshtml">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/19/2020 22:50:42</publishTime>
     </File>
     <File Include="Views/Cuenta/Login.cshtml">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/19/2020 22:50:42</publishTime>
     </File>
     <File Include="Views/Empresa/Create.cshtml">
       <publishTime>05/15/2020 08:22:22</publishTime>
@@ -979,7 +1075,7 @@ edite el archivo MSBuild. Visite https://go.microsoft.com/fwlink/?LinkID=208121 
       <publishTime>05/15/2020 08:22:22</publishTime>
     </File>
     <File Include="Views/Empresa/Index.cshtml">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/19/2020 22:50:42</publishTime>
     </File>
     <File Include="Views/Empresas/Create.cshtml">
       <publishTime>05/15/2020 08:22:22</publishTime>
@@ -991,10 +1087,10 @@ edite el archivo MSBuild. Visite https://go.microsoft.com/fwlink/?LinkID=208121 
       <publishTime>05/15/2020 08:22:22</publishTime>
     </File>
     <File Include="Views/Empresas/Edit.cshtml">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/19/2020 22:50:42</publishTime>
     </File>
     <File Include="Views/Empresas/Index.cshtml">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/19/2020 22:50:42</publishTime>
     </File>
     <File Include="Views/ERP/Index.cshtml">
       <publishTime>05/15/2020 08:22:22</publishTime>
@@ -1015,16 +1111,19 @@ edite el archivo MSBuild. Visite https://go.microsoft.com/fwlink/?LinkID=208121 
       <publishTime>05/15/2020 08:22:22</publishTime>
     </File>
     <File Include="Views/Home/About.cshtml">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/21/2020 21:09:47</publishTime>
     </File>
     <File Include="Views/Home/Contact.cshtml">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/21/2020 22:19:15</publishTime>
     </File>
     <File Include="Views/Home/Index.cshtml">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/21/2020 21:09:47</publishTime>
     </File>
     <File Include="Views/Home/Log.cshtml">
       <publishTime>05/15/2020 08:22:22</publishTime>
+    </File>
+    <File Include="Views/Home/NuevoModulo.cshtml">
+      <publishTime>05/21/2020 21:09:47</publishTime>
     </File>
     <File Include="Views/HorasExtras/Create.cshtml">
       <publishTime>05/15/2020 08:22:22</publishTime>
@@ -1039,7 +1138,7 @@ edite el archivo MSBuild. Visite https://go.microsoft.com/fwlink/?LinkID=208121 
       <publishTime>05/15/2020 08:22:22</publishTime>
     </File>
     <File Include="Views/HorasExtras/Index.cshtml">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/19/2020 22:50:42</publishTime>
     </File>
     <File Include="Views/HyDs/Create.cshtml">
       <publishTime>05/15/2020 08:22:22</publishTime>
@@ -1063,7 +1162,22 @@ edite el archivo MSBuild. Visite https://go.microsoft.com/fwlink/?LinkID=208121 
       <publishTime>05/15/2020 08:22:22</publishTime>
     </File>
     <File Include="Views/Informes/Index.cshtml">
-      <publishTime>05/15/2020 15:47:35</publishTime>
+      <publishTime>05/19/2020 22:50:42</publishTime>
+    </File>
+    <File Include="Views/Ingresos/Create.cshtml">
+      <publishTime>05/19/2020 22:50:42</publishTime>
+    </File>
+    <File Include="Views/Ingresos/Delete.cshtml">
+      <publishTime>05/19/2020 22:50:42</publishTime>
+    </File>
+    <File Include="Views/Ingresos/Details.cshtml">
+      <publishTime>05/19/2020 22:50:42</publishTime>
+    </File>
+    <File Include="Views/Ingresos/Edit.cshtml">
+      <publishTime>05/19/2020 22:50:42</publishTime>
+    </File>
+    <File Include="Views/Ingresos/Index.cshtml">
+      <publishTime>05/19/2020 22:50:42</publishTime>
     </File>
     <File Include="Views/Licencias/Create.cshtml">
       <publishTime>05/15/2020 08:22:22</publishTime>
@@ -1080,6 +1194,21 @@ edite el archivo MSBuild. Visite https://go.microsoft.com/fwlink/?LinkID=208121 
     <File Include="Views/Licencias/Index.cshtml">
       <publishTime>05/15/2020 08:22:22</publishTime>
     </File>
+    <File Include="Views/Log/Create.cshtml">
+      <publishTime>05/17/2020 06:18:38</publishTime>
+    </File>
+    <File Include="Views/Log/Delete.cshtml">
+      <publishTime>05/17/2020 06:18:41</publishTime>
+    </File>
+    <File Include="Views/Log/Details.cshtml">
+      <publishTime>05/17/2020 06:18:43</publishTime>
+    </File>
+    <File Include="Views/Log/Edit.cshtml">
+      <publishTime>05/17/2020 06:18:46</publishTime>
+    </File>
+    <File Include="Views/Log/Index.cshtml">
+      <publishTime>05/18/2020 04:56:57</publishTime>
+    </File>
     <File Include="Views/Prestamos/Create.cshtml">
       <publishTime>05/15/2020 08:22:22</publishTime>
     </File>
@@ -1095,29 +1224,44 @@ edite el archivo MSBuild. Visite https://go.microsoft.com/fwlink/?LinkID=208121 
     <File Include="Views/Prestamos/Index.cshtml">
       <publishTime>05/15/2020 08:22:22</publishTime>
     </File>
+    <File Include="Views/Productos/Create.cshtml">
+      <publishTime>05/19/2020 22:50:42</publishTime>
+    </File>
+    <File Include="Views/Productos/Delete.cshtml">
+      <publishTime>05/19/2020 22:50:42</publishTime>
+    </File>
+    <File Include="Views/Productos/Details.cshtml">
+      <publishTime>05/19/2020 22:50:42</publishTime>
+    </File>
+    <File Include="Views/Productos/Edit.cshtml">
+      <publishTime>05/19/2020 22:50:42</publishTime>
+    </File>
+    <File Include="Views/Productos/Index.cshtml">
+      <publishTime>05/19/2020 22:50:42</publishTime>
+    </File>
     <File Include="Views/Registro/Busqueda.cshtml">
       <publishTime>05/15/2020 08:22:22</publishTime>
     </File>
     <File Include="Views/Registro/Create.cshtml">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/19/2020 22:50:42</publishTime>
     </File>
     <File Include="Views/Registro/Details.cshtml">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/19/2020 22:50:42</publishTime>
     </File>
     <File Include="Views/Registro/Edit.cshtml">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/19/2020 22:50:42</publishTime>
     </File>
     <File Include="Views/Registro/Hoy.cshtml">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/19/2020 22:50:42</publishTime>
     </File>
     <File Include="Views/Registro/Index.cshtml">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/19/2020 22:50:42</publishTime>
     </File>
     <File Include="Views/Registro/Lista.cshtml">
       <publishTime>05/15/2020 08:22:22</publishTime>
     </File>
     <File Include="Views/Registro/Registros.cshtml">
-      <publishTime>05/15/2020 08:23:35</publishTime>
+      <publishTime>05/19/2020 22:50:42</publishTime>
     </File>
     <File Include="Views/Remuneracion/Index.cshtml">
       <publishTime>05/15/2020 08:22:22</publishTime>
@@ -1135,16 +1279,46 @@ edite el archivo MSBuild. Visite https://go.microsoft.com/fwlink/?LinkID=208121 
       <publishTime>05/15/2020 08:22:22</publishTime>
     </File>
     <File Include="Views/Shared/Remuneraciones.cshtml">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/19/2020 22:50:42</publishTime>
     </File>
     <File Include="Views/Shared/UserOption.cshtml">
       <publishTime>05/15/2020 08:22:22</publishTime>
     </File>
     <File Include="Views/Shared/_Layout.cshtml">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/21/2020 21:09:47</publishTime>
+    </File>
+    <File Include="Views/Solicitudes/Create.cshtml">
+      <publishTime>05/19/2020 22:50:42</publishTime>
+    </File>
+    <File Include="Views/Solicitudes/Delete.cshtml">
+      <publishTime>05/19/2020 22:50:42</publishTime>
+    </File>
+    <File Include="Views/Solicitudes/Details.cshtml">
+      <publishTime>05/19/2020 22:50:42</publishTime>
+    </File>
+    <File Include="Views/Solicitudes/Edit.cshtml">
+      <publishTime>05/19/2020 22:50:42</publishTime>
+    </File>
+    <File Include="Views/Solicitudes/Index.cshtml">
+      <publishTime>05/19/2020 22:50:42</publishTime>
+    </File>
+    <File Include="Views/Stock/Create.cshtml">
+      <publishTime>05/19/2020 22:50:42</publishTime>
+    </File>
+    <File Include="Views/Stock/Delete.cshtml">
+      <publishTime>05/19/2020 22:50:42</publishTime>
+    </File>
+    <File Include="Views/Stock/Details.cshtml">
+      <publishTime>05/19/2020 22:50:42</publishTime>
+    </File>
+    <File Include="Views/Stock/Edit.cshtml">
+      <publishTime>05/19/2020 22:50:42</publishTime>
+    </File>
+    <File Include="Views/Stock/Index.cshtml">
+      <publishTime>05/19/2020 22:50:42</publishTime>
     </File>
     <File Include="Views/Trabajador/Asistencias.cshtml">
-      <publishTime>05/15/2020 15:47:35</publishTime>
+      <publishTime>05/19/2020 22:50:42</publishTime>
     </File>
     <File Include="Views/Trabajador/Cargar.cshtml">
       <publishTime>05/15/2020 08:22:22</publishTime>
@@ -1153,22 +1327,22 @@ edite el archivo MSBuild. Visite https://go.microsoft.com/fwlink/?LinkID=208121 
       <publishTime>05/15/2020 08:22:22</publishTime>
     </File>
     <File Include="Views/Trabajador/Create.cshtml">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/19/2020 22:50:42</publishTime>
     </File>
     <File Include="Views/Trabajador/Details.cshtml">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/19/2020 22:50:42</publishTime>
     </File>
     <File Include="Views/Trabajador/Edit.cshtml">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/19/2020 22:50:42</publishTime>
     </File>
     <File Include="Views/Trabajador/Index.cshtml">
-      <publishTime>05/15/2020 23:03:59</publishTime>
+      <publishTime>05/19/2020 22:50:42</publishTime>
     </File>
     <File Include="Views/Trabajador/PorDia.cshtml">
       <publishTime>05/15/2020 08:22:22</publishTime>
     </File>
     <File Include="Views/Trabajadores/Create.cshtml">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/19/2020 22:50:42</publishTime>
     </File>
     <File Include="Views/Trabajadores/Delete.cshtml">
       <publishTime>05/15/2020 08:22:22</publishTime>
@@ -1180,7 +1354,7 @@ edite el archivo MSBuild. Visite https://go.microsoft.com/fwlink/?LinkID=208121 
       <publishTime>05/15/2020 08:22:22</publishTime>
     </File>
     <File Include="Views/Trabajadores/Index.cshtml">
-      <publishTime>05/15/2020 08:22:22</publishTime>
+      <publishTime>05/19/2020 22:50:42</publishTime>
     </File>
     <File Include="Views/Vacaciones/Create.cshtml">
       <publishTime>05/15/2020 08:22:22</publishTime>
@@ -1204,7 +1378,7 @@ edite el archivo MSBuild. Visite https://go.microsoft.com/fwlink/?LinkID=208121 
       <publishTime>05/15/2020 08:22:22</publishTime>
     </File>
     <File Include="Web.config">
-      <publishTime>05/15/2020 15:52:33</publishTime>
+      <publishTime>05/21/2020 21:38:00</publishTime>
     </File>
   </ItemGroup>
 </Project>

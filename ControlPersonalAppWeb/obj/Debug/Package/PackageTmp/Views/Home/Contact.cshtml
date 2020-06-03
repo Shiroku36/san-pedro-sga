@@ -6,47 +6,116 @@
 
 
 
-<div class="container jumbotron">
-    <div class="row">
-        <div class="col-md-3">
-            <div class="contact-info">
-                <img width="50" height="50" src="~/images/correo.svg" alt="image" />
-                <h3 class="mb-3">Contactanos</h3>
-                <h5>Nos gustaria escuchar tus peticiones!</h5>
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="container jumbotron">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="contact-info">
+                    <img width="50" height="50" src="~/images/correo.svg" alt="image" />
+                    <h3 class="mb-3">Contactanos</h3>
+                    <h5>Nos gustaria escuchar tus peticiones!</h5>
+                </div>
             </div>
-        </div>
-        <div class="col-md-9">
-            <div class="contact-form">
-                <div class="form-group">
-                    <label class="control-label col-sm-4" for="fname">Primer nombre:</label>
-                    <div class="col-sm-10">
-                        <input type="text" class="form-control" id="fname" placeholder="Ingresa primer nombre" name="fname">
+
+            <div  class="col-md-9">
+                <div class="contact-form">
+                    <div class="form-group">
+                        <label class="control-label col-sm-4" for="fname">Nombre:</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="fname" placeholder="Ingresa nombre" name="nombre" required>
+                        </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label col-sm-4" for="lname">Segundo nombre:</label>
-                    <div class="col-sm-10">
-                        <input type="text" class="form-control" id="lname" placeholder="Ingresa segundo nombre" name="lname">
+                    <div class="form-group">
+                        <label class="control-label col-sm-4" for="lname">Número teléfono:</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="lname" placeholder="Ingresa número de teléfono" name="telefono" required>
+                        </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label col-sm-4" for="email">Email:</label>
-                    <div class="col-sm-10">
-                        <input type="email" class="form-control" id="email" placeholder="Ingresa email" name="email">
+                    <div class="form-group">
+                        <label class="control-label col-sm-4" for="email">Email:</label>
+                        <div class="col-sm-10">
+                            <input type="email" class="form-control" id="email" placeholder="Ingresa email" name="email" required>
+                        </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label col-sm-4" for="comment">Comentario:</label>
-                    <div class="col-sm-10">
-                        <textarea class="form-control" rows="5" id="comment" placeholder="Ingresa el comentario"></textarea>
+                    <div class="form-group">
+                        <label class="control-label col-sm-4" for="comment">Comentario:</label>
+                        <div class="col-sm-10">
+                            <textarea class="form-control" rows="5" id="comment" placeholder="Ingresa el comentario" name="comentario" required></textarea>
+                        </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-sm-offset-2 col-sm-10">
-                        <button type="button" class="btn btn-lg btn-block btn-primary">Enviar</button>
+
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10 align-content-center">
+
+                            <button id="boton" type="submit" class="btn btn-lg btn-block btn-primary">
+                                <span id="botonText">
+                                    Enviar
+                                </span>
+                                <span id="cargando" class=" spinner-border text-warning" role="status">
+                                </span>
+
+
+                            </button>
+
+                        </div>
+                    </div>
+
+
+                    <div class="col-sm-10">
+                        @if (ViewBag.alerta == 1)
+                        {
+                            <div class="my-3 alert alert-success" role="alert">
+                                ¡Tu correo ha sido enviado!
+                            </div>
+                        }
+                        @if (ViewBag.alerta == 2)
+                        {
+                            <div class="my-3 alert alert-warning" role="alert">
+                                Hemos tenido un problema enviado tu correo, intente nuevamente
+                            </div>
+                        }
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+}
+    <script>
+
+    var alerta = @Html.Raw(Json.Encode((ViewBag.alerta)));
+
+    var spinner = document.getElementById("cargando");
+    var boton = document.getElementById("boton");
+
+    if (alerta!=0) {
+        spinner.style.display = "none";
+        document.getElementById("botonText").innerHTML = "Enviar"
+    }
+
+    var fo = function() {
+
+        if (
+            document.getElementById("fname").value != "" &&
+            document.getElementById("lname").value != "" &&
+            document.getElementById("email").value != "" &&
+            document.getElementById("comment").value != ""
+            ){
+
+        document.getElementById("botonText").innerHTML = "Enviando"
+        spinner.style.display = "inline-block";
+
+    }
+
+
+    }
+
+    spinner.style.display = "none";
+
+        boton.addEventListener("click", fo)
+
+
+    </script>
+
+

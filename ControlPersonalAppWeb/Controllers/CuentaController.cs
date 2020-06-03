@@ -15,8 +15,17 @@ namespace ControlPersonalAppWeb.Controllers
         // GET: Cuenta
         public ActionResult Index()
         {
+            Utils.SessionManager.log("Index cuentas");
             DBManejoPersonalEntities database = new DBManejoPersonalEntities();
             string empresa = Utils.SessionManager.CuentaAutenticada().Empresa;
+            List<Cuentas> cuentitas = db.Cuentas.ToList();
+            foreach ( var cuentita in cuentitas)
+            {
+                string empre = cuentita.Empresa;
+                int id = db.Empresas.First(x => x.Nombre == empre).Id;
+                cuentita.EmpresaId = id;
+            }
+            db.SaveChanges();
             if (empresa == "JCP")
             {
                 return View(database.Cuentas.ToList());
@@ -102,7 +111,13 @@ namespace ControlPersonalAppWeb.Controllers
                 cuentas.Usuario = collection["Usuario"];
                 cuentas.Password = collection["Password"];
                 cuentas.Empresa = collection["Empresa"];
+                string empresa = cuenta.Empresa;
+                cuenta.EmpresaId = db.Empresas.First(x => x.Nombre == empresa).Id;
                 cuentas.Permisos = collection["Permisos"];
+                cuentas.TrabajadorId = Convert.ToInt32(collection["TrabajadorId"]);
+                int idd = (int)cuentas.TrabajadorId;
+                Trabajador trabajador = db.Trabajador.First(x => x.Id == idd);
+                cuentas.Trabajador = trabajador.Nombre + " " + trabajador.ApellidoPaterno + " " + trabajador.ApellidoMaterno;
                 database.Cuentas.Add(cuentas);
                 database.SaveChanges();
                 Utils.SessionManager.log("Cuenta creada : " + cuentas.Usuario);
@@ -119,6 +134,7 @@ namespace ControlPersonalAppWeb.Controllers
         {
             Cuentas cuentas = db.Cuentas.First(x => x.Id == id);
             string empresa = Utils.SessionManager.CuentaAutenticada().Empresa;
+            ViewBag.personas = db.Trabajador.Where(x => x.Empresa == empresa).Select(x => new TrabajadorIndex { Rut = x.Rut, Id = x.Id, Nombre = x.Nombre, ApellidoPaterno = x.ApellidoPaterno, ApellidoMaterno = x.ApellidoMaterno }).ToList();
             string[] nombres;
             if (empresa == "JCP")
             {
@@ -147,7 +163,13 @@ namespace ControlPersonalAppWeb.Controllers
                 cuentas.Usuario = collection["Usuario"];
                 cuentas.Password = collection["Password"];
                 cuentas.Empresa = collection["Empresa"];
+                string empresa = cuenta.Empresa;
+                cuenta.EmpresaId = db.Empresas.First(x => x.Nombre == empresa).Id;
                 cuentas.Permisos = collection["Permisos"];
+                cuentas.TrabajadorId = Convert.ToInt32(collection["TrabajadorId"]);
+                int idd =(int) cuentas.TrabajadorId;
+                Trabajador trabajador = db.Trabajador.First(x => x.Id == idd);
+                cuentas.Trabajador = trabajador.Nombre + " " + trabajador.ApellidoPaterno + " " + trabajador.ApellidoMaterno;
                 database.SaveChanges();
                 return RedirectToAction("Index");
             }

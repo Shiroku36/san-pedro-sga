@@ -1,4 +1,5 @@
 ﻿<!DOCTYPE html>
+
 <html>
 <head>
     @{
@@ -70,7 +71,7 @@
                     }
                 }@if (cuenta.Contains("Log"))
                 {
-                    <li>@Html.ActionLink("Log", "Log", "Home")</li>
+                    <li>@Html.ActionLink("Log", "Index", "Log")</li>
                 }
 
                 <!--<li>@Html.ActionLink("Inventario", "Index", "Stock")</li>-->
@@ -85,13 +86,27 @@
                 }
                 else
                 {
-                    <li>@Html.ActionLink("Sistema gestion bodega", "NuevoModulo", "Home")</li>
+
                     <li>@Html.ActionLink("Modulo cosecha", "NuevoModulo", "Home")</li>
                 }
 
             </ul>
 
-            
+            <div class="dropdown">
+                <button data-toggle="dropdown" class="btn btn-primary dropdown-toggle">Sistema gestion bodega</button>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item">@Html.ActionLink("Sistema gestion bodega", "Index", "Stock")</a>
+                    <a class="dropdown-item">@Html.ActionLink("Ingresos", "Index", "Ingresos")</a>
+                    <a class="dropdown-item">@Html.ActionLink("Control inventario", "Index", "ControlInventarios")</a>
+                    <a class="dropdown-item">@Html.ActionLink("Solicitudes", "Index", "Solicitudes")</a>
+                    <a class="dropdown-item">@Html.ActionLink("Aplicaciones de programa", "Index", "AplicacionDeProgramas")</a>
+                    <a class="dropdown-item">@Html.ActionLink("Productos", "Index", "Productos")</a>
+                    <a class="dropdown-item">@Html.ActionLink("Proveedores", "Index", "Empresa")</a>
+                    <a class="dropdown-item">@Html.ActionLink("Tipos de productos", "Tipos", "Stock")</a>
+                    <a class="dropdown-item">@Html.ActionLink("Unidades", "Unidades", "Stock")</a>
+                    <a class="dropdown-item">@Html.ActionLink("Notificaciones", "Index", "Notificaciones")</a>
+                </div>
+            </div>
 
             <ul class="nav navbar-nav navbar-right">
                 @Html.Partial("UserOption")
@@ -147,7 +162,7 @@
                             <a href='@Url.Action("Contact", "Home")'>
                                 <btn class="btn btn-primary" target="_blank">Contactanos</btn>
                             </a>
-                            
+
                         </div>
                     </div>
 
@@ -181,16 +196,16 @@
         </div>
     </footer>
 
-    @Scripts.Render("~/bundles/pooper")
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
-    @RenderSection("scripts", required: false)
-
-    <script>
-        $(function () {
-            $('[data-toggle="popover"]').popover()
-        })
-    </script>
-
 </body>
 </html>
+
+@Scripts.Render("~/bundles/pooper")
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/bootstrap")
+@RenderSection("scripts", required: false)
+
+<script>
+    $(function () {
+        $('[data-toggle="popover"]').popover()
+    })
+</script>

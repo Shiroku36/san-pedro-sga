@@ -20,77 +20,69 @@
             </div>
 
             <div  class="col-md-9">
-                
-                <form id="form">
-
-                    <div class="contact-form">
-                        <div class="form-group">
-                            <label class="control-label col-sm-4" for="fname">Nombre:</label>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control" id="fname" placeholder="Ingresa nombre" name="nombre" required>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label col-sm-4" for="lname">Número teléfono:</label>
-                            <div class="col-sm-10">
-                                <input type="text" class="form-control" id="lname" placeholder="Ingresa número de teléfono" name="telefono" required>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label col-sm-4" for="email">Email:</label>
-                            <div class="col-sm-10">
-                                <input type="email" class="form-control" id="email" placeholder="Ingresa email" name="email" required>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label col-sm-4" for="comment">Comentario:</label>
-                            <div class="col-sm-10">
-                                <textarea class="form-control" rows="5" id="comment" placeholder="Ingresa el comentario" name="comentario" required></textarea>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <div class="col-sm-offset-2 col-sm-10 align-content-center">
-
-                                <button id="boton" type="submit" class="btn btn-lg btn-block btn-primary">
-                                    <span id="botonText">
-                                        Enviar
-                                    </span>
-                                    <span id="cargando" class=" spinner-border text-warning" role="status">
-                                    </span>
-
-
-                                </button>
-
-                            </div>
-                        </div>
-
-
+                <div class="contact-form">
+                    <div class="form-group">
+                        <label class="control-label col-sm-4" for="fname">Nombre:</label>
                         <div class="col-sm-10">
-                            @if (ViewBag.alerta == 1)
-                            {
-                                <div class="my-3 alert alert-success" role="alert">
-                                    ¡Tu correo ha sido enviado!
-                                </div>
-                            }
-                            @if (ViewBag.alerta == 2)
-                            {
-                                <div class="my-3 alert alert-warning" role="alert">
-                                    Hemos tenido un problema enviado tu correo, intente nuevamente
-                                </div>
-                            }
+                            <input type="text" class="form-control" id="fname" placeholder="Ingresa nombre" name="nombre" required>
                         </div>
-
                     </div>
-                </form>
+                    <div class="form-group">
+                        <label class="control-label col-sm-4" for="lname">Número teléfono:</label>
+                        <div class="col-sm-10">
+                            <input type="text" class="form-control" id="lname" placeholder="Ingresa número de teléfono" name="telefono" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-4" for="email">Email:</label>
+                        <div class="col-sm-10">
+                            <input type="email" class="form-control" id="email" placeholder="Ingresa email" name="email" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label col-sm-4" for="comment">Comentario:</label>
+                        <div class="col-sm-10">
+                            <textarea class="form-control" rows="5" id="comment" placeholder="Ingresa el comentario" name="comentario" required></textarea>
+                        </div>
+                    </div>
 
-                
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10 align-content-center">
+
+                            <button id="boton" type="submit" class="btn btn-lg btn-block btn-primary">
+                                <span id="botonText">
+                                    Enviar
+                                </span>
+                                <span id="cargando" class=" spinner-border text-warning" role="status" style="display:none">
+                                </span>
+
+
+                            </button>
+
+                        </div>
+                    </div>
+
+
+                    <div class="col-sm-10">
+                        @if (ViewBag.alerta == 1)
+                        {
+                            <div class="my-3 alert alert-success" role="alert">
+                                ¡Tu correo ha sido enviado!
+                            </div>
+                        }
+                        @if (ViewBag.alerta == 2)
+                        {
+                            <div class="my-3 alert alert-warning" role="alert">
+                                Hemos tenido un problema enviado tu correo, intente nuevamente
+                            </div>
+                        }
+                    </div>
+                </div>
             </div>
-            
         </div>
     </div>
 }
-    <script>
+<script>
 
     var alerta = @Html.Raw(Json.Encode((ViewBag.alerta)));
 
@@ -102,26 +94,24 @@
         document.getElementById("botonText").innerHTML = "Enviar"
     }
 
+    var fo = function() {
 
+        if (
+            document.getElementById("fname").value != "" &&
+            document.getElementById("lname").value != "" &&
+            document.getElementById("email").value != "" &&
+            document.getElementById("comment").value != ""
+            ){
+
+        document.getElementById("botonText").innerHTML = "Enviando"
+        spinner.style.display = "inline-block";
+    }
+    }
 
     spinner.style.display = "none";
 
-        boton.addEventListener("click", () => {
+    boton.addEventListener("click", fo)
 
-            if (
-                document.getElementById("fname").value != "" &&
-                document.getElementById("lname").value != "" &&
-                document.getElementById("email").value != "" &&
-                document.getElementById("comment").value != ""
-                ){
-
-            document.getElementById("botonText").innerHTML = "Enviando"
-            spinner.style.display = "inline-block";
-
-        }
-
-
-    })
 
     </script>
 

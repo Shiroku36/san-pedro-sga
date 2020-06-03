@@ -18,9 +18,9 @@ namespace ControlPersonalAppWeb
         public int Id { get; set; }
         public string Causa { get; set; }
         public string Texto { get; set; }
-        [DisplayName("Fecha del documento")]
+        [DisplayName("Fecha documento")]
         public Nullable<System.DateTime> FechaDocumento { get; set; }
-        [DisplayName("Fecha del fin")]
+        [DisplayName("Fecha fin")]
         public Nullable<System.DateTime> FechaFin { get; set; }
         [DisplayName("Dias de vacaciones")]
         public Nullable<double> DiasDeVacaciones { get; set; }

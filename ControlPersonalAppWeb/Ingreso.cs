@@ -18,6 +18,7 @@ namespace ControlPersonalAppWeb
         public int Id { get; set; }
         public string Productos { get; set; }
         public Nullable<System.DateTime> Fecha { get; set; }
+        [DisplayName("Ubicación")]
         public string Ubicacion { get; set; }
         public string Proveedor { get; set; }
         [DisplayName("Proveedor rut")]

@@ -22,79 +22,80 @@ namespace ControlPersonalAppWeb
         [DisplayName("Apellido materno")]
         public string ApellidoMaterno { get; set; }
         public string Rut { get; set; }
-        [DisplayName("Tipo de cuenta")]
+        [DisplayName("Tipo cuenta")]
         public string TipoCuenta { get; set; }
         public string Banco { get; set; }
-        [DisplayName("Número de cuenta")]
+        [DisplayName("Numero cuenta")]
         public string NumeroCuenta { get; set; }
         public string Contratado { get; set; }
-        [DisplayName("Código personal")]
+        [DisplayName("Códidgo personal")]
         public string CodPersonal { get; set; }
         [DisplayName("Estado civil")]
         public string EstadoCivil { get; set; }
         public string Nacionalidad { get; set; }
-        [DisplayName("Fecha de nacimiento")]
+        [DisplayName("Fecha nacimiento")]
         public Nullable<System.DateTime> FechaNacimiento { get; set; }
         public string Direccion { get; set; }
         public string Sexo { get; set; }
         public string Ciudad { get; set; }
         public string Telefono { get; set; }
+        [DisplayName("Correo")]
         public string Email { get; set; }
         [DisplayName("Cargas familiares")]
         public string CargasFamiliares { get; set; }
-        [DisplayName("Tramo asignación familiar")]
+        [DisplayName("Trampo asignación familiar")]
         public string TrampoAsignacionFamiliar { get; set; }
         [DisplayName("Cargas simples")]
         public Nullable<int> CargasSimples { get; set; }
         [DisplayName("Cargas maternales")]
         public Nullable<int> CargasMaternales { get; set; }
-        [DisplayName("Cargas inválidas")]
+        [DisplayName("Cargas invalidas")]
         public Nullable<int> CargasInvalidas { get; set; }
-        [DisplayName("Régimen previcional")]
+        [DisplayName("Regimen previcional")]
         public string RegimenPrevicional { get; set; }
-        [DisplayName("Asignación familiar")]
+        [DisplayName("Asignacion familiar")]
         public string AsignacionFamiliar { get; set; }
-        [DisplayName("Asignación familiar retroactiva")]
+        [DisplayName("Asignacion familiar retroactiva")]
         public string AsignacionFamiliarRetroactiva { get; set; }
         [DisplayName("Reintegro cargas familiares")]
         public string ReintegroCargasFamiliares { get; set; }
         [DisplayName("Solicitud trabajador joven")]
         public string SolicitudTrabajadorJoven { get; set; }
         public string AFP { get; set; }
-        [DisplayName("Tipo línea AFP")]
+        [DisplayName("TipoLinea AFP")]
         public string TipoLineaAFP { get; set; }
         [DisplayName("Renta imponible AFP")]
         public string RentaImponibleAFP { get; set; }
-        [DisplayName("Cotización obligatoria AFP")]
+        [DisplayName("Cotizacion obligatoria AFP")]
         public string CotizacionObligatoriaAFP { get; set; }
         public string SIS { get; set; }
         [DisplayName("Ahorro voluntario AFP")]
         public string AhorroVoluntarioAFP { get; set; }
-        [DisplayName("Renta imp. sustitutiva")]
+        [DisplayName("RentaImp sustitutiva")]
         public string RentaImpSustitutiva { get; set; }
-        [DisplayName("Tasa pactada sus.")]
+        [DisplayName("Tasa pactada Sus")]
         public string TasaPactadaSus { get; set; }
-        [DisplayName("Aporte indem. sus.")]
+        [DisplayName("Aporte indem. Sus")]
         public string AporteIndemSus { get; set; }
-        [DisplayName("Numero periodo sus.")]
+        [DisplayName("N. Periodos Sus")]
         public string NPeriodosSus { get; set; }
-        [DisplayName("Periodo desde sus.")]
+        [DisplayName("Períodos desde Sus")]
         public Nullable<System.DateTime> PeriodosDesdeSus { get; set; }
         [DisplayName("Puesto trabajo pesado")]
         public string PuestoTrabajoPesado { get; set; }
-        [DisplayName("Periodo hasta sus.")]
+        [DisplayName("Perodo hasta Sus")]
         public Nullable<System.DateTime> PerodoHastaSus { get; set; }
-        [DisplayName("Procentaje trabajo pesado")]
+        [DisplayName("Porcentaje trabajo pesado")]
         public string PorcentajeTrabajoPesado { get; set; }
         [DisplayName("Monto trabajo pesado")]
         public string MontoTrabajoPesado { get; set; }
-        [DisplayName("Código movimiento de personal")]
+        [DisplayName("Código movimiento personal")]
         public string CodigoMovimientoDePersonal { get; set; }
-        [DisplayName("Incio movimiento personal")]
+        [DisplayName("Inicio movimiento personal")]
         public Nullable<System.DateTime> InicioMovimientoPersonal { get; set; }
         [DisplayName("Fin movimiento personal")]
         public Nullable<System.DateTime> FinMovimientoPersonal { get; set; }
-        [DisplayName("Tramo AFP")]
+        [DisplayName("Trampo AFP")]
         public string TrampoAFP { get; set; }
         public string Jubiulado { get; set; }
         [DisplayName("Seguro cesantia")]
@@ -103,22 +104,22 @@ namespace ControlPersonalAppWeb
         public string Salud { get; set; }
         [DisplayName("Nombre emergencia")]
         public string NombreEmer { get; set; }
-        [DisplayName("Vínculo emergencia")]
+        [DisplayName("Vinculo emergencia")]
         public string VinculoEmer { get; set; }
-        [DisplayName("Dirección emergencia")]
+        [DisplayName("Direccion emergencia")]
         public string DireccionEmer { get; set; }
-        [DisplayName("Teléfono emergencia")]
+        [DisplayName("Telefono emergencia")]
         public string TelefonoEmer { get; set; }
         public string Cargo { get; set; }
-        [DisplayName("Nombre del jefe")]
+        [DisplayName("Nombre jefe")]
         public string NombreJefe { get; set; }
         public string Campo { get; set; }
         public string Empleador { get; set; }
         public string Contrato { get; set; }
         public string Jornada { get; set; }
-        [DisplayName("Fecha de ingreso")]
+        [DisplayName("Fecha ingreso")]
         public Nullable<System.DateTime> FechaIngreso { get; set; }
-        [DisplayName("Fecha de término")]
+        [DisplayName("Fecha termino")]
         public Nullable<System.DateTime> FechaTermino { get; set; }
         [DisplayName("Sueldo base")]
         public Nullable<int> SueldoBase { get; set; }
@@ -134,39 +135,37 @@ namespace ControlPersonalAppWeb
         public Nullable<int> Colacion { get; set; }
         [DisplayName("Movilización")]
         public Nullable<int> Movilizacion { get; set; }
-        [DisplayName("Días de vacaciones por año")]
+        [DisplayName("Dias vacaciones al Año")]
         public Nullable<int> DiasVacacionesAño { get; set; }
         [DisplayName("Jefe directo")]
         public string JefeDirecto { get; set; }
-        [DisplayName("Gerente")]
         public string Gerente { get; set; }
         [DisplayName("Foto carnet")]
         public byte[] FotoCarnet { get; set; }
-        [DisplayName("Foto")]
         public byte[] Foto { get; set; }
         public string Uid { get; set; }
         public string Empresa { get; set; }
         public string APVI { get; set; }
-        [DisplayName("Código APVI")]
+        [DisplayName("Codigo APVI")]
         public string CodigoAPVI { get; set; }
-        [DisplayName("Número APVI")]
+        [DisplayName("Numero APVI")]
         public string NumeroAPVI { get; set; }
-        [DisplayName("Forma de pago APVI")]
+        [DisplayName("Forma pago APVI")]
         public string FormaPagoAPVI { get; set; }
         [DisplayName("Cotización APVI")]
         public string CotizacionAPVI { get; set; }
-        [DisplayName("Cotización de depositos convenidos")]
+        [DisplayName("Cotización depositos convenidos")]
         public string CotizaciónDepositosConvenidos { get; set; }
         public string APVC { get; set; }
-        [DisplayName("Código APVC")]
+        [DisplayName("Codigo APVC")]
         public string CodigoAPVC { get; set; }
-        [DisplayName("Número APVC")]
+        [DisplayName("Numero APVC")]
         public string NumeroAPVC { get; set; }
-        [DisplayName("Forma de pago APVC")]
+        [DisplayName("Forma pago APVC")]
         public string FormaPagoAPVC { get; set; }
-        [DisplayName("Cotización trabajador APVC")]
+        [DisplayName("Cotizacion trabajador APVC")]
         public string CotizacionTrabajadorAPVC { get; set; }
-        [DisplayName("Cotización empleador APVC")]
+        [DisplayName("Cotizacion empleador APVC")]
         public string CotizacionEmpleadorAPVC { get; set; }
         [DisplayName("Afiliado voluntario")]
         public string AfiliadoVoluntario { get; set; }
@@ -174,25 +173,25 @@ namespace ControlPersonalAppWeb
         public string RutAV { get; set; }
         [DisplayName("Apellido paterno AV")]
         public string ApellidoPaternoAV { get; set; }
-        [DisplayName("Apellido materno AV")]
+        [DisplayName("Apellido Materno AV")]
         public string ApellidoMaternoAV { get; set; }
-        [DisplayName("Nombre AV")]
+        [DisplayName("Nombres AV")]
         public string NombresAV { get; set; }
-        [DisplayName("Código movimiento personal AV")]
+        [DisplayName("Codigo movimiento personal AV")]
         public string CodigoMovimientoPersonalAV { get; set; }
         [DisplayName("Desde AV")]
         public Nullable<System.DateTime> DesdeAV { get; set; }
         [DisplayName("Hasta AV")]
         public Nullable<System.DateTime> HastaAV { get; set; }
-        [DisplayName("AFP AV")]
+        [DisplayName("")]
         public string AFPAV { get; set; }
-        [DisplayName("Monto capitalización voluntario")]
+        [DisplayName("Monto capitalizacion voluntaria")]
         public string MontoCapitalizacionVoluntaria { get; set; }
         [DisplayName("Monto AV")]
         public string MontoAV { get; set; }
-        [DisplayName("Peridos AV")]
+        [DisplayName("Periodos AV")]
         public string PeriodosAV { get; set; }
-        [DisplayName("Código excaja")]
+        [DisplayName("Codigo excaja")]
         public string CodigoExcaja { get; set; }
         [DisplayName("Tasa excaja")]
         public string TasaExcaja { get; set; }
@@ -200,9 +199,9 @@ namespace ControlPersonalAppWeb
         public string RentaImponibleIPS { get; set; }
         [DisplayName("Cotización obligatoria IPS")]
         public string CotizacionObligatoriaIPS { get; set; }
-        [DisplayName("Renta imponible desahucio")]
+        [DisplayName("Renta imponible Desahucio")]
         public string RentaImponibleDesahucio { get; set; }
-        [DisplayName("Código excaja desahucio")]
+        [DisplayName("Codigo excaja desahucio")]
         public string CodigoExcajaDesahucio { get; set; }
         [DisplayName("Tasa cotización desahucio")]
         public string TasaCotizacionDesahucio { get; set; }
@@ -210,59 +209,59 @@ namespace ControlPersonalAppWeb
         public string CotizaciónDesahucio { get; set; }
         [DisplayName("Cotización fonasa")]
         public string CotizacionFonasa { get; set; }
-        [DisplayName("Cotización ISL")]
+        [DisplayName("Cotizacion ISL")]
         public string CotizacionISL { get; set; }
-        [DisplayName("Bonificación ley")]
+        [DisplayName("Bonificacion ley")]
         public string BonificacionLey { get; set; }
         [DisplayName("Descuento por cargas familiares ISL")]
         public string DescuentoPorCargasFamiliaresISL { get; set; }
         [DisplayName("Bonos gobierno")]
         public string BonosGobierno { get; set; }
-        [DisplayName("Código intitucion salud")]
+        [DisplayName("Codigo intitucion salud")]
         public string CodigoIntitucionSalud { get; set; }
-        [DisplayName("Número fun")]
+        [DisplayName("Numero Fun")]
         public string NumeroFun { get; set; }
-        [DisplayName("Renta imponible Isapre")]
+        [DisplayName("Renta imponible isapre")]
         public string RentaImponibleIsapre { get; set; }
-        [DisplayName("Modena del plan pactado isapre")]
+        [DisplayName("Moneda del plan pactado isapre")]
         public string MonedaDelPlanPactadoIsapre { get; set; }
-        [DisplayName("Cotización pactada")]
+        [DisplayName("Cotizacion pactada")]
         public string CotizacionPactada { get; set; }
-        [DisplayName("Cotización isapre")]
+        [DisplayName("Cotizacion isapre")]
         public string CotizacionIsapre { get; set; }
-        [DisplayName("Cotización isapre AV")]
+        [DisplayName("Cotizacion isapre AV")]
         public string CotizacionIsapreAV { get; set; }
         [DisplayName("Monto GES")]
         public string MontoGES { get; set; }
-        [DisplayName("Código CCAF")]
+        [DisplayName("Codigo CCAF")]
         public string CodigoCCAF { get; set; }
         [DisplayName("Renta imponible CCAF")]
         public string RentaImponibleCCAF { get; set; }
-        [DisplayName("Créditos personales CCAF")]
+        [DisplayName("Creditos personales CCAF")]
         public string CreditosPersonalesCCAF { get; set; }
         [DisplayName("Descuento dental CCAF")]
         public string DescuentoDentalCCAF { get; set; }
         [DisplayName("Descuentos por leasing")]
         public string DescuentosPorLeasing { get; set; }
-        [DisplayName("Descuento por seguro de vida CCAF")]
+        [DisplayName("Descuento por seguro de vidaCCAF")]
         public string DescuentoPorSeguroDeVidaCCAF { get; set; }
-        [DisplayName("Otros descuentros CCAF")]
+        [DisplayName("Otros descuentos CCAF")]
         public string OtrosDescuentosCCAF { get; set; }
-        [DisplayName("Cotización CCAF no afialados a isapres")]
+        [DisplayName("Cotización CCAF no afinilados isapres")]
         public string CotizacionCCAFNoAfiniladosIsapres { get; set; }
         [DisplayName("Descuento cargas familiares CCAF")]
         public string DescuentoCargasFamiliaresCCAF { get; set; }
         [DisplayName("Otros descuentos CCAF 1")]
         public string OtrosDescuentosCCAF1 { get; set; }
-        [DisplayName("Otros descuentos CCAD 2")]
+        [DisplayName("Otros descuentos CCAF 2")]
         public string OtrosDescuentosCCAF2 { get; set; }
         [DisplayName("Bonos gobierno CCAF")]
         public string BonosGobiernoCCAF { get; set; }
-        [DisplayName("Código sucursal CCAF")]
+        [DisplayName("Codigo sucursal CCAF")]
         public string CodigoSucursalCCAF { get; set; }
-        [DisplayName("Código mutualidad")]
+        [DisplayName("Codigo mutualidad")]
         public string CodigoMutualidad { get; set; }
-        [DisplayName("Renta impobible mutual")]
+        [DisplayName("Renta imponible mutual")]
         public string RentaImponibleMutual { get; set; }
         [DisplayName("Cotización accidente mutual")]
         public string CotizacionAccidenteMutual { get; set; }
@@ -270,9 +269,9 @@ namespace ControlPersonalAppWeb
         public string SucursalParaPagoMutual { get; set; }
         [DisplayName("Renta imponible seguro censantía")]
         public string RentaImponibleSeguroCensantia { get; set; }
-        [DisplayName("Aporte trabajador seguro cesantía")]
+        [DisplayName("Aporte trabajador seguro censatia")]
         public string AporteTrabajadorSeguroCensatia { get; set; }
-        [DisplayName("Aporte empleador seguro cesantía")]
+        [DisplayName("Aporte empleador seguro cesantia")]
         public string AporteEmpleadorSeguroCesantia { get; set; }
         public string Subsidio { get; set; }
         [DisplayName("Datos empresa")]

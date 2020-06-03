@@ -1,0 +1,58 @@
+﻿@model IEnumerable<ControlPersonalAppWeb.Datos>
+
+@{
+    ViewBag.Title = "Tipos";
+}
+
+<h2>Tipos de producto</h2>
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <input class="form-control mb-2" id="tipo" name="Value" />
+    <input type="hidden" value="Tipos" name="Tipo" />
+    if (ViewBag.id != null)
+    {
+        <input type="hidden" value="@ViewBag.id" name="Id" />
+    }
+    <input type="submit" class="btn btn-primary mb-3" value="Agregar" />
+}
+<table class="table">
+    <tr class="bg-primary">
+        <th>
+            <span>Tipo</span>
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            @if (!String.IsNullOrEmpty(item.Campo))
+            {
+                <td>
+                    @Html.DisplayFor(modelItem => item.Campo)
+                </td>
+                <td>
+                    @using (Html.BeginForm())
+                    {
+                        <input type="hidden" value="@item.Llave" name="Llave" />
+                        <input type="hidden" value="Tipos" name="Tipo" />
+                        if (ViewBag.id != null)
+                        {
+                            <input type="hidden" value="@ViewBag.id" name="Id" />
+                        }
+                        <input type="submit" class="btn btn-primary" value="Eliminar" />
+                    }
+                </td>
+            }
+        </tr>
+    }
+
+</table>
+
+<script>
+    document.getElementById("tipo").onkeypress = function (e) {
+        /^[a-zA-Z0-9]+$/.test(this.value) // return true or false
+    };
+</script>

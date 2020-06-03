@@ -9,49 +9,19 @@
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
         <h4>Solicitud</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         @Html.HiddenFor(model => model.Id)
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.Trabajador, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Trabajador, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Trabajador, "", new { @class = "text-danger" })
-            </div>
-        </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.TrabajadorId, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.TrabajadorId, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.TrabajadorId, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Productos, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Productos, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Productos, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Observación, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Observación, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Observación, "", new { @class = "text-danger" })
-            </div>
-        </div>
 
         <div class="form-group">
             @Html.LabelFor(model => model.Origen, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Origen, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.Origen, new { htmlAttributes = new { @class = "form-control", @readonly = true } })
                 @Html.ValidationMessageFor(model => model.Origen, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -59,40 +29,52 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Destino, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Destino, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.DropDownListFor(model => model.Destino, new SelectList(ViewBag.campos), htmlAttributes: new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.Destino, "", new { @class = "text-danger" })
             </div>
         </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.Estado, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Estado, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Estado, "", new { @class = "text-danger" })
-            </div>
+        <div id="contenedor">
+            @foreach (var stock in ViewBag.stocks)
+            {
+                <div class="form-group extra">
+                    <label class="control-label col-md-2">Producto</label>
+                    <div class="col-md-10">
+                        <select id="Producto" name="Producto" class="form-control producto" required>
+                            @foreach (var producto in ViewBag.productos)
+                            {
+                                if (producto.Id == stock.ProductoId)
+                                {
+                                    <option selected>@producto.Nombre</option>
+                                }
+                                else
+                                {
+                                    <option>@producto.Nombre</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group extra">
+                    <label class="control-label col-md-2">Cantidad</label>
+                    <div class="col-md-10">
+                        <input id="Cantidad" name="Cantidad" value="@stock.Cantidad" class="form-control" required />
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div id="botones" class="form-group col-md-10">
+            <button type="button" class="btn btn-primary col-auto" id="agregar" onclick="agregarProducto()">Agregar producto</button>
+            <button type="button" class="btn btn-primary col-auto" id="eliminar" style="display:none" onclick="eliminarProducto()">Eliminar producto</button>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.Fecha, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.Observación, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Fecha, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Fecha, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Empresa, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Empresa, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Empresa, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.EmpresaId, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.EmpresaId, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.EmpresaId, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.Observación, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Observación, "", new { @class = "text-danger" })
             </div>
         </div>
 
@@ -107,3 +89,95 @@
 <div>
     @Html.ActionLink("Back to List", "Index")
 </div>
+
+<script>
+    var stocks = @Html.Raw(Json.Encode(ViewBag.stocks));
+    var items = stocks.length-1;
+    var eliminar = document.getElementById("eliminar");
+    function agregarEliminar()
+    {
+        if (items > 0)
+        {
+            eliminar.style.display = "inline-block";
+        }
+    }
+
+    agregarEliminar();
+
+    function cargarHuertos()
+    {
+        var productos = @Html.Raw(Json.Encode(ViewBag.productos));
+        var selects = document.getElementsByClassName('producto');
+        var i;
+        var j;
+        for (j = items; j < selects.length; j++)
+        {
+            var select = selects[j];
+            for (i = select.length; i >= 0; i--)
+            {
+                select.remove(i);
+            }
+            for (var product in productos)
+            {
+                select.add( new Option( productos[product].Nombre ) );
+            }
+        }
+    }
+    function eliminarProducto()
+    {
+        var selects = document.getElementsByClassName('extra');
+        console.log(selects);
+        console.log(selects.length);
+        console.log(items);
+        selects[items].remove();
+        selects[items-1].remove();
+        items = items - 1;
+        if (items == 0)
+        {
+            eliminar.style.display = "none";
+        }
+    }
+    function agregarProducto()
+    {
+        var contenedor = document.getElementById("contenedor");
+        var divExternoProducto = document.createElement("div");
+        divExternoProducto.className = "form-group extra";
+        var labelProducto = document.createElement("label");
+        var textoProducto = document.createTextNode("Producto");
+        labelProducto.appendChild(textoProducto);
+        labelProducto.className = "control-label col-md-2";
+        var divInternoProducto = document.createElement("div");
+        divInternoProducto.className = "col-md-10";
+        divExternoProducto.appendChild(labelProducto);
+        var select = document.createElement("select");
+        select.id = "Producto";
+        select.name = "Producto";
+        select.className = "form-control producto";
+        select.required = "required";
+        divInternoProducto.appendChild(select);
+        divExternoProducto.appendChild(divInternoProducto);
+        contenedor.appendChild(divExternoProducto);
+
+        var divExternoCantidad = document.createElement("div");
+        divExternoCantidad.className = "form-group extra";
+        var labelCantidad = document.createElement("label");
+        var textoCantidad = document.createTextNode("Cantidad");
+        labelCantidad.appendChild(textoCantidad);
+        labelCantidad.className = "control-label col-md-2";
+        var divInternoCantidad = document.createElement("div");
+        divInternoCantidad.className = "col-md-10";
+        divExternoCantidad.appendChild(labelCantidad);
+        var cantidad = document.createElement("input");
+        cantidad.id = "Cantidad";
+        cantidad.name = "Cantidad";
+        cantidad.className = "form-control";
+        cantidad.required = "required";
+        divInternoCantidad.appendChild(cantidad);
+        divExternoCantidad.appendChild(divInternoCantidad);
+        contenedor.appendChild(divExternoCantidad);
+        items = items + 1;
+        cargarHuertos();
+        agregarEliminar();
+    }
+    //window.onload = cargarHuertos();
+</script>

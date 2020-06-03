@@ -20,9 +20,15 @@ namespace ControlPersonalAppWeb
         public Nullable<int> ProductoId { get; set; }
         public Nullable<int> Cantidad { get; set; }
         public string Ubicacion { get; set; }
-        [DisplayName("Solicitud")]
         public Nullable<int> SolicitudId { get; set; }
-        [DisplayName("Ingreso")]
         public Nullable<int> IngresoId { get; set; }
+        public string Empresa { get; set; }
+        public Nullable<int> EmpresaId { get; set; }
+        public Nullable<int> UbicacionId { get; set; }
+        public string Tipo { get; set; }
+        public Nullable<int> ControlId { get; set; }
+        [DisplayName("Retirar bajo 0")]
+        public Nullable<bool> RetirarBajo0 { get; set; }
+        public Nullable<bool> Activo { get; set; }
     }
 }

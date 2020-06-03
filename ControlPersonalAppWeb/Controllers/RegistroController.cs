@@ -140,6 +140,8 @@ namespace ControlPersonalAppWeb.Controllers
             DBManejoPersonalEntities database = new DBManejoPersonalEntities();
             RegistroTrabajador registroTrabajador = database.RegistroTrabajador.First(x => x.Id == id);
             ViewBag.idTrabajador = idTrabajador;
+            Trabajador trabajador = db.Trabajador.First(x => x.Id== idTrabajador);
+            Utils.SessionManager.log("Detalle registro: " + trabajador.Nombre + " "+ trabajador.ApellidoMaterno + " " + trabajador.ApellidoMaterno);
             return View(registroTrabajador);
         }
 
@@ -186,8 +188,8 @@ namespace ControlPersonalAppWeb.Controllers
                 };
                 database.RegistroTrabajador.Add(registro);
                 database.SaveChanges();
-                Utils.SessionManager.log("Registros Creado: " + database.Trabajador.First(x => x.Id == id).Nombre);
-                Utils.SessionManager.log("");
+                Trabajador trabajador = db.Trabajador.First(x => x.Id == id);
+                Utils.SessionManager.log("Detalle registro: " + trabajador.Nombre + " " + trabajador.ApellidoMaterno + " " + trabajador.ApellidoMaterno);
                 return RedirectToAction("Index", new { id = id});
             }
             catch (DbEntityValidationException e)
@@ -228,7 +230,8 @@ namespace ControlPersonalAppWeb.Controllers
                 registroTrabajador.Campo = collection["Campo"];
                 database.SaveChanges();
                 int idT = Convert.ToInt32(collection["idTrabajador"]);
-                Utils.SessionManager.log("Registros Creado: " + database.Trabajador.First(x => x.Id == idT).Nombre);
+                Trabajador trabajador = db.Trabajador.First(x => x.Id == idT);
+                Utils.SessionManager.log("Editar registro: " + trabajador.Nombre + " " + trabajador.ApellidoMaterno + " " + trabajador.ApellidoMaterno);
                 return RedirectToAction("Index", new { id = collection["idTrabajador"] });
             }
             catch
@@ -242,7 +245,7 @@ namespace ControlPersonalAppWeb.Controllers
         {
             DBManejoPersonalEntities database = new DBManejoPersonalEntities();
             RegistroTrabajador registroTrabajador = database.RegistroTrabajador.First(x => x.Id == id);
-            Utils.SessionManager.log("Registros eliminado: " + registroTrabajador.Fecha +" "+registroTrabajador.Uid);
+            Utils.SessionManager.log("Eliminar registro : " + registroTrabajador.Fecha +" "+registroTrabajador.Uid);
             database.RegistroTrabajador.Remove(registroTrabajador);
             database.SaveChanges();
             return RedirectToAction("Index", new { id = Utils.SessionManager.trabajadorID});

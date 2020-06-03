@@ -18,7 +18,8 @@ namespace ControlPersonalAppWeb.Controllers
         // GET: Comentarios
         public ActionResult Index()
         {
-            return View(db.Comentario.ToList());
+            Utils.SessionManager.log("Index comentarios");
+            return View(db.Comentario.Where(x => x.EmpresaId == cuenta.EmpresaId).ToList());
         }
 
         // GET: Comentarios/Details/5
@@ -33,6 +34,7 @@ namespace ControlPersonalAppWeb.Controllers
             {
                 return HttpNotFound();
             }
+            Utils.SessionManager.log("Detalle comentario: " + comentario.Id);
             return View(comentario);
         }
 
@@ -47,13 +49,19 @@ namespace ControlPersonalAppWeb.Controllers
         // más información vea https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Trabajador,TrabajadorId,AplicacionDeProgramaId,Fecha,Comentario1,Empresa,EmpresaId")] Comentario comentario)
+        public ActionResult Create([Bind(Include = "Id,AplicacionDeProgramaId,Comentario1")] Comentario comentario)
         {
             if (ModelState.IsValid)
             {
+                comentario.Trabajador = cuenta.Trabajador;
+                comentario.TrabajadorId = cuenta.TrabajadorId;
+                comentario.Fecha = DateTime.Now;
+                comentario.Empresa = cuenta.Empresa;
+                comentario.EmpresaId = cuenta.EmpresaId;
                 db.Comentario.Add(comentario);
                 db.SaveChanges();
-                return RedirectToAction("Index");
+                Utils.SessionManager.log("Agregar comentario: " + comentario.Id);
+                return RedirectToAction("Details","AplicacionDeProgramas",new { id = comentario.AplicacionDeProgramaId });
             }
 
             return View(comentario);

@@ -16,9 +16,14 @@ namespace ControlPersonalAppWeb.Controllers
         private Cuentas cuenta = Utils.SessionManager.CuentaAutenticada();
 
         // GET: AplicacionDeProgramas
-        public ActionResult Index()
+        public ActionResult Index(int? id)
         {
-            return View(db.AplicacionDePrograma.ToList());
+            Utils.SessionManager.log("Index aplicaciones de programa");
+            if (id != null)
+            {
+                return View(db.AplicacionDePrograma.Where(x => x.SolicitudId == id));
+            }
+            return View(db.AplicacionDePrograma.Where(x => x.EmpresaId == cuenta.EmpresaId).ToList());
         }
 
         // GET: AplicacionDeProgramas/Details/5
@@ -33,12 +38,16 @@ namespace ControlPersonalAppWeb.Controllers
             {
                 return HttpNotFound();
             }
+            Utils.SessionManager.log("Detalle aplicacion de programa: " + aplicacionDePrograma.Id);
+            int idd = aplicacionDePrograma.Id;
+            ViewBag.comentarios = db.Comentario.Where(x => x.AplicacionDeProgramaId == idd).ToList();
             return View(aplicacionDePrograma);
         }
 
         // GET: AplicacionDeProgramas/Create
-        public ActionResult Create()
+        public ActionResult Create(int id)
         {
+            ViewBag.solicitudId = id;
             return View();
         }
 
@@ -47,18 +56,21 @@ namespace ControlPersonalAppWeb.Controllers
         // más información vea https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,SolicitudId,FechaInicio,FechaFin,Empresa,EmpresaId")] AplicacionDePrograma aplicacionDePrograma)
+        public ActionResult Create([Bind(Include = "Id,SolicitudId,FechaInicio,FechaFin")] AplicacionDePrograma aplicacionDePrograma)
         {
             if (ModelState.IsValid)
             {
+                aplicacionDePrograma.Empresa = cuenta.Empresa;
+                aplicacionDePrograma.EmpresaId = cuenta.EmpresaId;
                 db.AplicacionDePrograma.Add(aplicacionDePrograma);
                 db.SaveChanges();
+                Utils.SessionManager.log("Crear aplicacion de programa: "+ aplicacionDePrograma.Id );
                 return RedirectToAction("Index");
             }
 
             return View(aplicacionDePrograma);
         }
-
+        
         // GET: AplicacionDeProgramas/Edit/5
         public ActionResult Edit(int? id)
         {
@@ -83,13 +95,16 @@ namespace ControlPersonalAppWeb.Controllers
         {
             if (ModelState.IsValid)
             {
+                aplicacionDePrograma.Empresa = cuenta.Empresa;
+                aplicacionDePrograma.EmpresaId = cuenta.EmpresaId;
                 db.Entry(aplicacionDePrograma).State = EntityState.Modified;
                 db.SaveChanges();
+                Utils.SessionManager.log("Editar aplicacion de programa: " + aplicacionDePrograma.Id);
                 return RedirectToAction("Index");
             }
             return View(aplicacionDePrograma);
         }
-
+        /*
         // GET: AplicacionDeProgramas/Delete/5
         public ActionResult Delete(int? id)
         {
@@ -114,8 +129,7 @@ namespace ControlPersonalAppWeb.Controllers
             db.AplicacionDePrograma.Remove(aplicacionDePrograma);
             db.SaveChanges();
             return RedirectToAction("Index");
-        }
-
+        }*/
         protected override void Dispose(bool disposing)
         {
             if (disposing)

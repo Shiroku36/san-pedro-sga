@@ -6,82 +6,106 @@
 }
 
 
-@using (Html.BeginForm()) 
+@using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
         <h4 class="text-center display-4">Cuentas</h4>
         <h3 class="text-muted font-weight-light">Crear</h3>
         <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <div class="form-group col-md-8 mx-auto">
-            @Html.LabelFor(model => model.Usuario, htmlAttributes: new { @class = "control-label font-weight-normal" })
-                @Html.EditorFor(model => model.Usuario, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Usuario, "", new { @class = "text-danger" })
+        <div class="row">
+            <div class="col-sm-6">
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="form-group col-md-10 mx-auto">
+                    @Html.LabelFor(model => model.Usuario, htmlAttributes: new { @class = "control-label font-weight-normal" })
+                    @Html.EditorFor(model => model.Usuario, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Usuario, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group col-md-10 mx-auto">
+                    @Html.LabelFor(model => model.Password, htmlAttributes: new { @class = "control-label font-weight-normal" })
+                    @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group col-md-10 mx-auto">
+                    @Html.LabelFor(model => model.Empresa, htmlAttributes: new { @class = "control-label font-weight-normal" })
+                    @Html.DropDownListFor(model => model.Empresa, new SelectList(ViewBag.Empresas), htmlAttributes: new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.Empresa, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="dropdown  col-sm-5 mx-auto">
+                <div id="myDropdown" class="dropdown-content">
+                    <div class=" ">
+                        @Html.LabelFor(model => model.Trabajador, htmlAttributes: new { @class = "control-label font-weight-normal" })
+                        <input class="form-control py-2 " type="text" placeholder="Busqueda trabajador" id="myInput" onkeyup="filterFunction()">
+                        <div style="max-height:30vh" class="list-group position-absolute overflow-auto">
+                            @foreach (var persona in ViewBag.personas)
+                            {
+
+                                <a class="list-group-item list-group-item-action" style="display:none" href='persona.Id'>@persona.Nombre @persona.ApellidoPaterno @persona.ApellidoMaterno - @persona.Rut   </a>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <div class="form-group col-md-8 mx-auto">
-            @Html.LabelFor(model => model.Password, htmlAttributes: new { @class = "control-label font-weight-normal" })
-                @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
-        </div>
+        
+        
 
-        <div class="form-group col-md-8 mx-auto">
-            @Html.LabelFor(model => model.Empresa, htmlAttributes: new { @class = "control-label font-weight-normal" })
-                @Html.DropDownListFor(model => model.Empresa, new SelectList(ViewBag.Empresas), htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.Empresa, "", new { @class = "text-danger" })
-        </div>
+
         <div class="form-group col-md-8 mx-auto">
             @Html.LabelFor(model => model.Permisos, htmlAttributes: new { @class = "control-label font-weight-normal" })
             <br />
-                <label>Huertos</label><br />
-                <label><input type="checkbox" id="Permisos" name="Permisos" value="HuertosV" class="custom-checkbox chkCheckBoxId" />Ver</label>
-                <label><input type="checkbox" id="Permisos" name="Permisos" value="HuertosC" class="custom-checkbox chkCheckBoxId" />Crear</label>
-                <label><input type="checkbox" id="Permisos" name="Permisos" value="HuertosE" class="custom-checkbox chkCheckBoxId" />Editar </label>
-                <label><input type="checkbox" id="Permisos" name="Permisos" value="HuertosD" class="custom-checkbox chkCheckBoxId" />Eliminar </label><br />
+            <label>Huertos</label><br />
+            <label><input type="checkbox" id="Permisos" name="Permisos" value="HuertosV" class="custom-checkbox chkCheckBoxId" />Ver</label>
+            <label><input type="checkbox" id="Permisos" name="Permisos" value="HuertosC" class="custom-checkbox chkCheckBoxId" />Crear</label>
+            <label><input type="checkbox" id="Permisos" name="Permisos" value="HuertosE" class="custom-checkbox chkCheckBoxId" />Editar </label>
+            <label><input type="checkbox" id="Permisos" name="Permisos" value="HuertosD" class="custom-checkbox chkCheckBoxId" />Eliminar </label><br />
 
-                <label>Huertos habilitados</label><br />
-                @foreach (var campo in ViewBag.Campos)
-                {
-                    <label><input type="checkbox" id="Permisos" name="Permisos" value="@campo" class="custom-checkbox chkCheckBoxId" />@campo</label>
-                }<br />
+            <label>Huertos habilitados</label><br />
+            @foreach (var campo in ViewBag.Campos)
+            {
+                <label><input type="checkbox" id="Permisos" name="Permisos" value="@campo" class="custom-checkbox chkCheckBoxId" />@campo</label>
+            }<br />
+            <label>Trabajadores</label><br />
+            <label><input type="checkbox" id="Permisos" name="Permisos" value="TrabajadoresV" class="custom-checkbox chkCheckBoxId" />Ver</label>
+            <label><input type="checkbox" id="Permisos" name="Permisos" value="TrabajadoresC" class="custom-checkbox chkCheckBoxId" />Crear</label>
+            <label><input type="checkbox" id="Permisos" name="Permisos" value="TrabajadoresE" class="custom-checkbox chkCheckBoxId" />Editar </label>
+            <label><input type="checkbox" id="Permisos" name="Permisos" value="TrabajadoresD" class="custom-checkbox chkCheckBoxId" />Eliminar </label><br />
+            <label><input type="checkbox" id="Permisos" name="Permisos" value="TrabajadoresS" class="custom-checkbox chkCheckBoxId" />Solicitud Contracion </label><br />
+            <label><input type="checkbox" id="Permisos" name="Permisos" value="TrabajadoresM" class="custom-checkbox chkCheckBoxId" />Correo </label><br />
+            <label>Registros</label><br />
+            <label><input type="checkbox" id="Permisos" name="Permisos" value="RegistrosV" class="custom-checkbox chkCheckBoxId" />Ver </label>
+            <label><input type="checkbox" id="Permisos" name="Permisos" value="RegistrosC" class="custom-checkbox chkCheckBoxId" />Crear </label>
+            <label><input type="checkbox" id="Permisos" name="Permisos" value="RegistrosE" class="custom-checkbox chkCheckBoxId" />Editar </label>
+            <label><input type="checkbox" id="Permisos" name="Permisos" value="RegistrosD" class="custom-checkbox chkCheckBoxId" />Eliminar </label><br />
+            @if (cuenta.Empresa == "JCP")
+            {
+                <label>Empresas</label><br />
+                <label><input type="checkbox" id="Permisos" name="Permisos" value="EmpresasV" class="custom-checkbox chkCheckBoxId" /> Ver </label>
+                <label><input type="checkbox" id="Permisos" name="Permisos" value="EmpresasC" class="custom-checkbox chkCheckBoxId" /> Crear </label>
+                <label><input type="checkbox" id="Permisos" name="Permisos" value="EmpresasE" class="custom-checkbox chkCheckBoxId" /> Editar </label>
+                <label><input type="checkbox" id="Permisos" name="Permisos" value="EmpresasD" class="custom-checkbox chkCheckBoxId" /> Borrar </label><br />
+                <label><input type="checkbox" id="Permisos" name="Permisos" value="ERP" class="custom-checkbox chkCheckBoxId" />Ver ERP</label><br />
+                <label><input type="checkbox" id="Permisos" name="Permisos" value="Cosecha" class="custom-checkbox chkCheckBoxId" />Ver Cosecha</label><br />
+                <label><input type="checkbox" id="Permisos" name="Permisos" value="Log" class="custom-checkbox chkCheckBoxId" />Ver Log</label><br />
+                <label><input type="checkbox" id="Permisos" name="Permisos" value="Sueldo" class="custom-checkbox chkCheckBoxId" />Ver Sueldo</label><br />
+                <label><input type="checkbox" id="Permisos" name="Permisos" value="Remuneracion" class="custom-checkbox chkCheckBoxId" />Remuneraciones</label><br />
+            }
+            <label>Cuentas</label><br />
+            <label><input type="checkbox" id="Permisos" name="Permisos" value="CuentasV" class="custom-checkbox chkCheckBoxId" />Ver </label>
+            <label><input type="checkbox" id="Permisos" name="Permisos" value="CuentasC" class="custom-checkbox chkCheckBoxId" />Crear </label>
+            <label><input type="checkbox" id="Permisos" name="Permisos" value="CuentasE" class="custom-checkbox chkCheckBoxId" />Editar </label>
+            <label><input type="checkbox" id="Permisos" name="Permisos" value="CuentasD" class="custom-checkbox chkCheckBoxId" />Borrar </label><br />
+            <label>Informes</label><br />
+            <label><input type="checkbox" id="Permisos" name="Permisos" value="InformesV" class="custom-checkbox chkCheckBoxId" />Ver </label>
+            <label><input type="checkbox" id="Permisos" name="Permisos" value="InformesA" class="custom-checkbox chkCheckBoxId" />Atrasos</label><br />
+            @Html.ValidationMessageFor(model => model.Nivel, "", new { @class = "text-danger" })
+        </div>
 
-                <label>Trabajadores</label><br />
-                <label><input type="checkbox" id="Permisos" name="Permisos" value="TrabajadoresV" class="custom-checkbox chkCheckBoxId" />Ver</label>
-                <label><input type="checkbox" id="Permisos" name="Permisos" value="TrabajadoresC" class="custom-checkbox chkCheckBoxId" />Crear</label>
-                <label><input type="checkbox" id="Permisos" name="Permisos" value="TrabajadoresE" class="custom-checkbox chkCheckBoxId" />Editar </label>
-                <label><input type="checkbox" id="Permisos" name="Permisos" value="TrabajadoresD" class="custom-checkbox chkCheckBoxId" />Eliminar </label><br />
-                <label><input type="checkbox" id="Permisos" name="Permisos" value="TrabajadoresS" class="custom-checkbox chkCheckBoxId" />Solicitud Contracion </label><br />
-                <label><input type="checkbox" id="Permisos" name="Permisos" value="TrabajadoresM" class="custom-checkbox chkCheckBoxId" />Correo </label><br />
-                <label>Registros</label><br />
-                <label><input type="checkbox" id="Permisos" name="Permisos" value="RegistrosV" class="custom-checkbox chkCheckBoxId" />Ver </label>
-                <label><input type="checkbox" id="Permisos" name="Permisos" value="RegistrosC" class="custom-checkbox chkCheckBoxId" />Crear </label>
-                <label><input type="checkbox" id="Permisos" name="Permisos" value="RegistrosE" class="custom-checkbox chkCheckBoxId" />Editar </label>
-                <label><input type="checkbox" id="Permisos" name="Permisos" value="RegistrosD" class="custom-checkbox chkCheckBoxId" />Eliminar </label><br />
-                @if (cuenta.Empresa == "JCP")
-                {
-                    <label>Empresas</label><br />
-                    <label><input type="checkbox" id="Permisos" name="Permisos" value="EmpresasV" class="custom-checkbox chkCheckBoxId" /> Ver </label>
-                    <label><input type="checkbox" id="Permisos" name="Permisos" value="EmpresasC" class="custom-checkbox chkCheckBoxId" /> Crear </label>
-                    <label><input type="checkbox" id="Permisos" name="Permisos" value="EmpresasE" class="custom-checkbox chkCheckBoxId" /> Editar </label>
-                    <label><input type="checkbox" id="Permisos" name="Permisos" value="EmpresasD" class="custom-checkbox chkCheckBoxId" /> Borrar </label><br />
-                    <label><input type="checkbox" id="Permisos" name="Permisos" value="ERP" class="custom-checkbox chkCheckBoxId" />Ver ERP</label><br />
-                    <label><input type="checkbox" id="Permisos" name="Permisos" value="Cosecha" class="custom-checkbox chkCheckBoxId" />Ver Cosecha</label><br />
-                    <label><input type="checkbox" id="Permisos" name="Permisos" value="Log" class="custom-checkbox chkCheckBoxId" />Ver Log</label><br />
-                    <label><input type="checkbox" id="Permisos" name="Permisos" value="Sueldo" class="custom-checkbox chkCheckBoxId" />Ver Sueldo</label><br />
-                    <label><input type="checkbox" id="Permisos" name="Permisos" value="Remuneracion" class="custom-checkbox chkCheckBoxId" />Remuneraciones</label><br />
-                }
-                <label>Cuentas</label><br />
-                <label><input type="checkbox" id="Permisos" name="Permisos" value="CuentasV" class="custom-checkbox chkCheckBoxId" />Ver </label>
-                <label><input type="checkbox" id="Permisos" name="Permisos" value="CuentasC" class="custom-checkbox chkCheckBoxId" />Crear </label>
-                <label><input type="checkbox" id="Permisos" name="Permisos" value="CuentasE" class="custom-checkbox chkCheckBoxId" />Editar </label>
-                <label><input type="checkbox" id="Permisos" name="Permisos" value="CuentasD" class="custom-checkbox chkCheckBoxId" />Borrar </label><br />
-                <label>Informes</label><br />
-                <label><input type="checkbox" id="Permisos" name="Permisos" value="InformesV" class="custom-checkbox chkCheckBoxId" />Ver </label>
-                <label><input type="checkbox" id="Permisos" name="Permisos" value="InformesA" class="custom-checkbox chkCheckBoxId" />Atrasos</label><br />
-                @Html.ValidationMessageFor(model => model.Nivel, "", new { @class = "text-danger" })
-            </div>
 
 
         <div class="form-group col-md-9 mx-auto my-5">
@@ -94,4 +118,30 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+
+    <script>
+        function filterFunction() {
+            var input, filter, a, i;
+            input = document.getElementById("myInput");
+            filter = input.value.toUpperCase();
+            div = document.getElementById("myDropdown");
+            a = div.getElementsByTagName("a");
+            for (i = 0; i < a.length; i++) {
+                if (filter.length > 0) {
+                    txtValue = a[i].textContent || a[i].innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        a[i].style.display = "";
+                    } else {
+                        a[i].style.display = "none";
+                    }
+                }
+                else {
+                    a[i].style.display = "none";
+                }
+            }
+        }
+    </script>
 }
+    </script>
+        /**/
+        /**/

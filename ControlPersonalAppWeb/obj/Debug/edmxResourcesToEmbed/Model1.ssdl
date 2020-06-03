@@ -23,6 +23,7 @@
     <Property Name="FechaFin" Type="datetime" />
     <Property Name="Empresa" Type="varchar" MaxLength="50" />
     <Property Name="EmpresaId" Type="int" />
+    <Property Name="Ubicacion" Type="varchar" MaxLength="50" />
   </EntityType>
   <EntityType Name="Campos">
     <Key>
@@ -73,15 +74,14 @@
       <PropertyRef Name="Id" />
     </Key>
     <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-    <Property Name="Producto" Type="varchar" MaxLength="50" />
-    <Property Name="ProductoId" Type="int" />
-    <Property Name="Cantidad" Type="int" />
+    <Property Name="Productos" Type="varchar" MaxLength="50" />
     <Property Name="Razon" Type="varchar(max)" />
     <Property Name="Fecha" Type="datetime" />
     <Property Name="Trabajador" Type="varchar" MaxLength="300" />
     <Property Name="TrabajadorId" Type="int" />
     <Property Name="Empresa" Type="varchar" MaxLength="50" />
     <Property Name="EmpresaId" Type="int" />
+    <Property Name="Ubicacion" Type="varchar" MaxLength="50" />
   </EntityType>
   <EntityType Name="Cuentas">
     <Key>
@@ -97,6 +97,17 @@
     <Property Name="TrabajadorId" Type="int" />
     <Property Name="EmpresaId" Type="int" />
   </EntityType>
+  <EntityType Name="Datos">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Valor" Type="varchar" MaxLength="50" />
+    <Property Name="EmpresaId" Type="int" />
+    <Property Name="Llave" Type="varchar" MaxLength="50" />
+    <Property Name="Empresa" Type="varchar(max)" />
+    <Property Name="Campo" Type="varchar(max)" />
+  </EntityType>
   <EntityType Name="Empresas">
     <Key>
       <PropertyRef Name="Id" />
@@ -106,7 +117,7 @@
     <Property Name="Rut" Type="varchar" MaxLength="50" />
     <Property Name="RazonSocial" Type="varbinary" MaxLength="256" />
     <Property Name="RepresentanteLegalNombre" Type="varchar" MaxLength="50" />
-    <Property Name="RepresenntanteLegalRut" Type="nvarchar" MaxLength="50" />
+    <Property Name="RepresenntanteLegalRut" Type="varchar" MaxLength="50" />
     <Property Name="Giro" Type="varchar" MaxLength="256" />
     <Property Name="Dirección" Type="varchar" MaxLength="256" />
     <Property Name="Comuna" Type="varchar" MaxLength="50" />
@@ -117,8 +128,9 @@
     <Property Name="CajaDeCompensacion" Type="varchar" MaxLength="50" />
     <Property Name="TextoLiquidacion" Type="varchar(max)" />
     <Property Name="Logo" Type="image" />
-    <Property Name="Invocada" Type="varbinary" MaxLength="128" />
-    <Property Name="NombreAnterior" Type="nchar" MaxLength="10" />
+    <Property Name="Invocada" Type="varchar" MaxLength="50" />
+    <Property Name="NombreAnterior" Type="varchar" MaxLength="50" />
+    <Property Name="InvocadaId" Type="int" />
   </EntityType>
   <EntityType Name="Finiquito">
     <Key>
@@ -203,7 +215,21 @@
     <Property Name="EmpresaId" Type="int" />
     <Property Name="Usuario" Type="varchar" MaxLength="50" />
     <Property Name="UsuarioId" Type="int" />
-    <Property Name="Accion" Type="varbinary(max)" />
+    <Property Name="Accion" Type="varchar(max)" />
+  </EntityType>
+  <EntityType Name="Notificacion">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Fecha" Type="datetime" />
+    <Property Name="Correo" Type="varchar(max)" />
+    <Property Name="SolicitudId" Type="int" />
+    <Property Name="Estado" Type="varchar" MaxLength="50" />
+    <Property Name="Texto" Type="varchar(max)" />
+    <Property Name="CuentaId" Type="int" />
+    <Property Name="Dato" Type="varchar(max)" />
+    <Property Name="Info" Type="varchar(max)" />
   </EntityType>
   <EntityType Name="Prestamo">
     <Key>
@@ -225,11 +251,9 @@
     </Key>
     <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="Nombre" Type="varchar" MaxLength="100" />
-    <Property Name="Unidad" Type="int" />
+    <Property Name="Unidad" Type="varchar" MaxLength="50" />
     <Property Name="Tipo" Type="varchar" MaxLength="50" />
     <Property Name="StockMin" Type="int" />
-    <Property Name="RetirarBajo0" Type="bit" />
-    <Property Name="Activo" Type="bit" />
     <Property Name="Descripcion" Type="varchar(max)" />
     <Property Name="Foto" Type="image" />
     <Property Name="Miniatura" Type="image" />
@@ -276,16 +300,13 @@
     <Property Name="Ubicacion" Type="varchar" MaxLength="50" />
     <Property Name="SolicitudId" Type="int" />
     <Property Name="IngresoId" Type="int" />
-  </EntityType>
-  <EntityType Name="sysdiagrams">
-    <Key>
-      <PropertyRef Name="diagram_id" />
-    </Key>
-    <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
-    <Property Name="principal_id" Type="int" Nullable="false" />
-    <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-    <Property Name="version" Type="int" />
-    <Property Name="definition" Type="varbinary(max)" />
+    <Property Name="Empresa" Type="varchar" MaxLength="50" />
+    <Property Name="EmpresaId" Type="int" />
+    <Property Name="UbicacionId" Type="int" />
+    <Property Name="Tipo" Type="varchar" MaxLength="50" />
+    <Property Name="ControlId" Type="int" />
+    <Property Name="RetirarBajo0" Type="bit" />
+    <Property Name="Activo" Type="bit" />
   </EntityType>
   <EntityType Name="TipoContrato">
     <Key>
@@ -478,6 +499,7 @@
     <EntitySet Name="Comentario" EntityType="Self.Comentario" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="ControlInventario" EntityType="Self.ControlInventario" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Cuentas" EntityType="Self.Cuentas" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Datos" EntityType="Self.Datos" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Empresas" EntityType="Self.Empresas" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Finiquito" EntityType="Self.Finiquito" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="HorasExtras" EntityType="Self.HorasExtras" Schema="dbo" store:Type="Tables" />
@@ -485,12 +507,12 @@
     <EntitySet Name="Ingreso" EntityType="Self.Ingreso" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Licencia" EntityType="Self.Licencia" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Log" EntityType="Self.Log" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Notificacion" EntityType="Self.Notificacion" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Prestamo" EntityType="Self.Prestamo" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Producto" EntityType="Self.Producto" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="RegistroTrabajador" EntityType="Self.RegistroTrabajador" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Solicitud" EntityType="Self.Solicitud" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Stock" EntityType="Self.Stock" Schema="dbo" store:Type="Tables" />
-    <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="TipoContrato" EntityType="Self.TipoContrato" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Trabajador" EntityType="Self.Trabajador" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Vacaciones" EntityType="Self.Vacaciones" Schema="dbo" store:Type="Tables" />

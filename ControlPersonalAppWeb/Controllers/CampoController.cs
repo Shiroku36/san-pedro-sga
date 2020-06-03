@@ -31,6 +31,7 @@ namespace ControlPersonalAppWeb.Controllers
         // GET: Campo
         public ActionResult Index()
         {
+            Utils.SessionManager.log("Index huertos");
             DBManejoPersonalEntities database = new DBManejoPersonalEntities();
             Cuentas cuenta = Utils.SessionManager.CuentaAutenticada();
             string empresa = cuenta.Empresa;
@@ -59,6 +60,7 @@ namespace ControlPersonalAppWeb.Controllers
         {
             DBManejoPersonalEntities database = new DBManejoPersonalEntities();
             Campos campo = database.Campos.First(x => x.Id == id);
+            Utils.SessionManager.log("Detalle huerto: "+ campo.Nombre);
             return View(campo);
         } 
 
@@ -89,7 +91,7 @@ namespace ControlPersonalAppWeb.Controllers
                 };
                 database.Campos.Add(campo);
                 database.SaveChanges();
-                Utils.SessionManager.log("Campo creado: "+ campo.Nombre);
+                Utils.SessionManager.log("Huerto creado: "+ campo.Nombre);
                 return RedirectToAction("Index");
             }
             catch
@@ -115,7 +117,7 @@ namespace ControlPersonalAppWeb.Controllers
                 DBManejoPersonalEntities database = new DBManejoPersonalEntities();
                 string empresa = Utils.SessionManager.CuentaAutenticada().Empresa;
                 Campos campo = database.Campos.First(x => x.Id == id);
-                Utils.SessionManager.log("Campo creado: " + campo.Nombre);
+                Utils.SessionManager.log("Huerto editado: " + campo.Nombre);
                 campo.Nombre = collection["Nombre"];
                 campo.Empresa = collection["Empresa"];
                 campo.Lugar = collection["Lugar"];
@@ -140,7 +142,7 @@ namespace ControlPersonalAppWeb.Controllers
         {
             DBManejoPersonalEntities database = new DBManejoPersonalEntities();
             Campos Campo = database.Campos.First(x => x.Id == id);
-            Utils.SessionManager.log("Campo eliminado: " + Campo.Nombre);
+            Utils.SessionManager.log("Huerto eliminado: " + Campo.Nombre);
             database.Campos.Remove(Campo);
             database.SaveChanges();
             return RedirectToAction("Index");

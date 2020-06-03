@@ -1,28 +1,18 @@
 ﻿@model ControlPersonalAppWeb.Trabajador
 
 @{
-    ViewBag.Title = "Detalle";
+    ViewBag.Title = "Detalle Trabajador";
 }
 
 
 
-    <h2 class="display-4 text-center">Detalle</h2>
+    <h2 class="display-4 text-center">Trabajador</h2>
     <div>
         <h3 class="text-muted font-weight-light">Detalle</h3>
         <hr />
         <div class="col-sm-8 table-responsive">
             <table class="mx-auto table-borderless table-hover tabla-detalle">
-
-                <tr>
-                    <td>
-                        @Html.DisplayNameFor(model => model.Empresa)
-                    </td>
-
-                    <td>
-                        @Html.DisplayFor(model => model.Empresa)
-                    </td>
-                </tr>
-
+                
                 <tr>
                     <td>
                         @Html.DisplayNameFor(model => model.Nombre)

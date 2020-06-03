@@ -430,3 +430,12 @@ C:\repos\SGA\ControlPersonalAppWeb\bin\roslyn\System.Net.Http.dll
 C:\repos\SGA\ControlPersonalAppWeb\bin\roslyn\System.Net.Sockets.dll
 C:\repos\SGA\ControlPersonalAppWeb\bin\roslyn\System.Runtime.InteropServices.RuntimeInformation.dll
 C:\repos\SGA\ControlPersonalAppWeb\bin\roslyn\System.Threading.Tasks.Extensions.dll
+C:\Users\Shiroku\source\repos\SGA3\SGA\ControlPersonalAppWeb\bin\roslyn\System.IO.Pipes.AccessControl.dll
+C:\Users\Shiroku\source\repos\SGA3\SGA\ControlPersonalAppWeb\bin\roslyn\System.IO.Pipes.dll
+C:\Users\Shiroku\source\repos\SGA3\SGA\ControlPersonalAppWeb\bin\System.Security.AccessControl.dll
+C:\Users\Shiroku\source\repos\SGA3\SGA\ControlPersonalAppWeb\bin\System.Security.Principal.Windows.dll
+C:\Users\Shiroku\source\repos\SGA3\SGA\ControlPersonalAppWeb\bin\System.Security.AccessControl.xml
+C:\Users\Shiroku\source\repos\SGA3\SGA\ControlPersonalAppWeb\bin\System.Security.Principal.Windows.xml
+C:\Users\Shiroku\source\repos\SGA3\SGA\ControlPersonalAppWeb\bin\roslyn\System.Security.AccessControl.dll
+C:\Users\Shiroku\source\repos\SGA3\SGA\ControlPersonalAppWeb\bin\roslyn\System.Security.Claims.dll
+C:\Users\Shiroku\source\repos\SGA3\SGA\ControlPersonalAppWeb\bin\roslyn\System.Security.Principal.Windows.dll

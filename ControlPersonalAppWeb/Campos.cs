@@ -22,9 +22,10 @@ namespace ControlPersonalAppWeb
         public string Coordenadas { get; set; }
         public string Encargado { get; set; }
         public string Correo { get; set; }
+        [DisplayName("Teléfono")]
         public string Telefono { get; set; }
         public string Asistente { get; set; }
-        [DisplayName("Telefono asistente")]
+        [DisplayName("Teléfono asistente")]
         public string TelefonoAsistente { get; set; }
     }
 }

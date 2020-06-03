@@ -31,18 +31,11 @@ namespace ControlPersonalAppWeb.Controllers
         private Cuentas cuenta = Utils.SessionManager.CuentaAutenticada();
         public ActionResult Borrar()
         {
-            /*DBManejoPersonalEntities db = new DBManejoPersonalEntities();
-            var trabajadores = db.Trabajador.ToList(); 
-            foreach( var trabajador in trabajadores)
-            {
-                if (trabajador.Id >= 2704) // && trabajador.Id <= 890)
-                    db.Trabajador.Remove(trabajador);
-            }
-            db.SaveChanges();*/
             return RedirectToAction("Index");
         }
         public ActionResult Cargar()
         {
+            Utils.SessionManager.log("Cargar trabajadores, ¡Nadie debe estar aquí!");
             DBManejoPersonalEntities db = new DBManejoPersonalEntities();
             string empresa = ControlPersonalAppWeb.Utils.SessionManager.CuentaAutenticada().Empresa;
             var empresas = db.Empresas.Select(x => x.Nombre).ToList(); ;
@@ -56,6 +49,7 @@ namespace ControlPersonalAppWeb.Controllers
         [HttpPost]
         public ActionResult Cargar(FormCollection collection)
         {
+            Utils.SessionManager.log("Cargar trabajadores, ¡Nadie debe estar aquí!");
             DBManejoPersonalEntities db = new DBManejoPersonalEntities();
             string empresa = collection["empresa"];
             string mensaje = "";
@@ -326,6 +320,7 @@ namespace ControlPersonalAppWeb.Controllers
                     ids = collection["centros"].Split(new char[] { ',' });
                 }
                 AsistenciasPDF(dateTime, ids, empresa);
+                Utils.SessionManager.log("Asistencias mensuales");
                 Utils.SessionManager.entrada = "8:00";
                 return RedirectToAction("Asistencias");
         }
@@ -759,7 +754,6 @@ namespace ControlPersonalAppWeb.Controllers
                 }
             }
             ViewBag.trabajadores = trabajadores;
-            Utils.SessionManager.log("Consulta por día");
             return View(registros.OrderByDescending(x => x.Fecha));
         }
         [HttpPost]
@@ -793,6 +787,7 @@ namespace ControlPersonalAppWeb.Controllers
                 }
             }
             ViewBag.trabajadores = trabajadores;
+            Utils.SessionManager.log("Consulta por día");
             return View(registros.OrderByDescending(x => x.Fecha));
         }
         public ActionResult PDFDetalle(int id)
@@ -800,7 +795,7 @@ namespace ControlPersonalAppWeb.Controllers
             DBManejoPersonalEntities database = new DBManejoPersonalEntities();
             Trabajador trabajador = database.Trabajador.First(x => x.Id == id);
             List<RegistroTrabajador> registros = database.RegistroTrabajador.Where(x => x.Uid == trabajador.Uid).ToList();
-            Utils.SessionManager.log("Solicitud de : "+ trabajador.Nombre + " " + trabajador.ApellidoPaterno + " " + trabajador.ApellidoMaterno);
+            Utils.SessionManager.log("Solicitud de: "+ trabajador.Nombre + " " + trabajador.ApellidoPaterno + " " + trabajador.ApellidoMaterno);
             generarPDFDetalle(trabajador, "Detalle", Utils.SessionManager.email);
             return RedirectToAction("Index");
         }
@@ -834,12 +829,12 @@ namespace ControlPersonalAppWeb.Controllers
 
             if (Utils.SessionManager.tipo == "PDF")
             {
-                Utils.SessionManager.log("Pdf campo");
+                Utils.SessionManager.log("PDF huerto: " + campo.Nombre);
                 GenerarPDFRegistros(trabajadores, null, "Huerto "+campo.Nombre, registrosLista);
             }
             else
             {
-                Utils.SessionManager.log("Excel campo");
+                Utils.SessionManager.log("Excel campo" + campo.Nombre);
                 GenerarExcel(trabajadores, "Huerto " + campo.Nombre, registrosLista);
             }
             return RedirectToAction("Index","Campo");
@@ -1099,7 +1094,7 @@ namespace ControlPersonalAppWeb.Controllers
             if (Utils.SessionManager.tipo == "PDF")
             {
                 GenerarPDFRegistros(trabajadores, null, "Consolidado", registrosLista);
-                Utils.SessionManager.log("Pdf consolidado");
+                Utils.SessionManager.log("PDF consolidado");
             }
             else
             {
@@ -1129,7 +1124,7 @@ namespace ControlPersonalAppWeb.Controllers
             if (Utils.SessionManager.tipo == "PDF")
             {
                 GenerarPDFRegistros(trabajadores, null, "Registro", registros);
-                Utils.SessionManager.log("Pdf registro");
+                Utils.SessionManager.log("PDF registro");
             }
             else
             {
@@ -1168,7 +1163,7 @@ namespace ControlPersonalAppWeb.Controllers
             }
             if (Utils.SessionManager.tipo == "PDF")
             {
-                Utils.SessionManager.log("Pdf registro por fecha");
+                Utils.SessionManager.log("PDF registro por fecha");
                 GenerarPDFRegistros(trabajadores, null, "Registro", registros);
             }
             else
@@ -1318,14 +1313,16 @@ namespace ControlPersonalAppWeb.Controllers
                     }).ToList());
                 }
             }
+            Utils.SessionManager.log("Index trabajadores");
 
-             return View(trabajadores);
+            return View(trabajadores);
         }
         // GET: Trabajador/Details/5
         public ActionResult Details(int id)
         {
             DBManejoPersonalEntities database = new DBManejoPersonalEntities();
             Trabajador trabajador = database.Trabajador.First(x => x.Id == id);
+            Utils.SessionManager.log("Detalle trabajador: " + trabajador.Nombre + " " + trabajador.ApellidoPaterno + " " + trabajador.ApellidoMaterno);
             return View(trabajador);
         }
         // GET: Trabajador/Create
@@ -1514,7 +1511,7 @@ namespace ControlPersonalAppWeb.Controllers
                 catch { }
                 database.Trabajador.Add(trabajadorNew);
                 database.SaveChanges();
-                Utils.SessionManager.log("Trabajador creado : " + trabajadorNew.Nombre + " "+trabajadorNew.ApellidoPaterno + " "+ trabajadorNew.ApellidoMaterno);
+                Utils.SessionManager.log("Crear trabajador: " + trabajadorNew.Nombre + " "+trabajadorNew.ApellidoPaterno + " "+ trabajadorNew.ApellidoMaterno);
                 return RedirectToAction("Index");
             }
             catch (DbEntityValidationException e)
@@ -1716,6 +1713,7 @@ namespace ControlPersonalAppWeb.Controllers
                 trabajadorNew.SueldoBruto = Convert.ToInt32(collection["SueldoBruto"]);
                 trabajadorNew.Gerente = collection["Gerente"];*/
 
+                Utils.SessionManager.log("Editar trabajador: " + trabajadorNew.Nombre + " " + trabajadorNew.ApellidoPaterno + " " + trabajadorNew.ApellidoMaterno);
                 trabajadorNew.Rut = formatearRut(trabajadorNew.Rut);
                 HttpPostedFileBase postedFile = Request.Files["Foto"];
                 if (postedFile != null && postedFile.ContentLength > 0)
@@ -1791,7 +1789,6 @@ namespace ControlPersonalAppWeb.Controllers
                     return RedirectToAction("Index");
                 }
                 //database.SaveChanges();
-                Utils.SessionManager.log("Trabajador editado : " + database.Trabajador.First(x => x.Id == id).Nombre);
 
                 return RedirectToAction("Index");
             }
@@ -1823,8 +1820,8 @@ namespace ControlPersonalAppWeb.Controllers
         public ActionResult Delete(int id)
         {
             DBManejoPersonalEntities database = new DBManejoPersonalEntities();
-            Utils.SessionManager.log("Trabajador eliminado : " + database.Trabajador.First(x => x.Id == id).Nombre);
             Trabajador trabajador = database.Trabajador.First(x => x.Id == id);
+            Utils.SessionManager.log("Eliminar trabajador: " + trabajador.Nombre + " " + trabajador.ApellidoPaterno + " " + trabajador.ApellidoMaterno);
             database.Trabajador.Remove(trabajador);
             database.SaveChanges();
             return RedirectToAction("Index");
