@@ -4,11 +4,11 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Notificaciones</h2>
-
+<h1 class="display-4 text-center">Notificaciones</h1>
+<hr />
 <table class="table">
     <tr class="bg-primary">
-        <th>
+        <th style="width:15%">
             @Html.DisplayNameFor(model => model.Fecha)
         </th>
         <th>
@@ -23,43 +23,66 @@
         <th>
             @Html.DisplayNameFor(model => model.Texto)
         </th>
-        <th>
-            Acción
+        <th style="width:18%">
+            Accion
         </th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Fecha)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Correo)
-        </td>
-        <td>
-            <a href="/Solicitudes/Details/@item.SolicitudId">
-                @Html.DisplayFor(modelItem => item.SolicitudId)
-            </a>
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Estado)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Texto)
-        </td>
-        <td> 
-            @if(item.Estado == "Solicitado")
-            { 
-                using (Html.BeginForm())
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Fecha)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Correo)
+            </td>
+            <td>
+                <a href="/Solicitudes/Details/@item.SolicitudId">
+                    @Html.DisplayFor(modelItem => item.SolicitudId)
+                </a>
+            </td>
+            <td class="estado">@Html.DisplayFor(modelItem => item.Estado)</td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Texto)
+            </td>
+            <td>
+                @if (item.Estado == "Solicitado")
                 {
-                    @Html.AntiForgeryToken()
-                    <input type="hidden" value="@item.Id" name="Id" />
-                    <input type="submit" class="btn btn-primary mb-3" value="Aceptar" name="Accion"/>
-                    <input type="submit" class="btn btn-primary" value="Rechazar" name="Accion"/>
+                    using (Html.BeginForm())    
+                    {
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" value="@item.Id" name="Id" />
+                            <input type="submit" class="btn btn-success" value="Aceptar" name="Accion" />
+                            <input type="submit" class="btn btn-danger" value="Rechazar" name="Accion" />
+                        
+                    }
                 }
-            }
-        </td>
-    </tr>
-}
-
+                else if (item.Estado == "Aceptada")
+                {
+                    <a class="btn btn-success btn-block disabled">Aceptada</a>
+                }
+                else
+                {
+                    <a class="btn btn-danger btn-block disabled">Rechazada</a>
+                }
+            </td>
+        </tr>
+    }
 </table>
+@Scripts.Render("~/bundles/jquery")
+<script>
+    $('.estado').each(function () {
+        let estado = $(this)
+        let texto = $(this).text()
+        console.log(texto)
+        if (texto == 'Aceptada') {
+            estado.addClass('text-success');
+        } else if (texto == 'Rechazada') {
+            estado.addClass('text-danger');
+        } else {
+            estado.addClass('text-dark');
+        }
+    });
+
+</script>

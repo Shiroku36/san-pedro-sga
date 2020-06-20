@@ -4,43 +4,33 @@
     ViewBag.Title = "Crear Aplicacion de Programa";
 }
 
-<h2>Aplicacion de Programa</h2>
-
-@using (Html.BeginForm()) 
+@using (Html.BeginForm())
 {
+    <h4 class="text-center display-4">Aplicacion de Programa</h4>
+    <h3 class="text-muted font-weight-light">Crear</h3>
+    <hr />
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
-        <h4>Crear</h4>
-        <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
         <input type="hidden" name="SolicitudId" value="@ViewBag.solicitudId" />
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.FechaInicio, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                <input class="form-control" type="date" id="FechaInicio" name="FechaInicio" min="2020-01-01" required>
-                @Html.ValidationMessageFor(model => model.FechaInicio, "", new { @class = "text-danger" })
-            </div>
+        <div class="form-group col-md-8 mx-auto">
+            @Html.LabelFor(model => model.FechaInicio, htmlAttributes: new { @class = "control-label" })
+            <input class="form-control" type="date" id="FechaInicio" name="FechaInicio" min="2020-01-01" required>
+            @Html.ValidationMessageFor(model => model.FechaInicio, "", new { @class = "text-danger" })
         </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.FechaFin, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                <input class="form-control" type="date" id="FechaFin" name="FechaFin" min="2020-01-01" required>
-                @Html.ValidationMessageFor(model => model.FechaFin, "", new { @class = "text-danger" })
-            </div>
+        <div class="form-group col-md-8 mx-auto">
+            @Html.LabelFor(model => model.FechaFin, htmlAttributes: new { @class = "control-label" })
+            <input class="form-control" type="date" id="FechaFin" name="FechaFin" min="2020-01-01" required>
+            @Html.ValidationMessageFor(model => model.FechaFin, "", new { @class = "text-danger" })
         </div>
 
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Crear" class="btn btn-primary" />
-            </div>
+        <div class="form-group col-md-9 mx-auto my-5">
+            <input type="submit" value="Guardar" class="btn btn-primary btn-block" />
+            @Html.ActionLink("Volver a la lista", "Index", null, new { @class = "btn btn-block btn-danger mt-3" })
         </div>
     </div>
 }
-
-<div>
-    @Html.ActionLink("Back to List", "Index")
-</div>

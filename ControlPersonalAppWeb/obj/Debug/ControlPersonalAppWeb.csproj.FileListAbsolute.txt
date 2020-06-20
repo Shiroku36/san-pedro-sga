@@ -439,3 +439,7 @@ C:\Users\Shiroku\source\repos\SGA3\SGA\ControlPersonalAppWeb\bin\System.Security
 C:\Users\Shiroku\source\repos\SGA3\SGA\ControlPersonalAppWeb\bin\roslyn\System.Security.AccessControl.dll
 C:\Users\Shiroku\source\repos\SGA3\SGA\ControlPersonalAppWeb\bin\roslyn\System.Security.Claims.dll
 C:\Users\Shiroku\source\repos\SGA3\SGA\ControlPersonalAppWeb\bin\roslyn\System.Security.Principal.Windows.dll
+C:\repos\SGA\ControlPersonalAppWeb\bin\System.Security.AccessControl.dll
+C:\repos\SGA\ControlPersonalAppWeb\bin\System.Security.Principal.Windows.dll
+C:\repos\SGA\ControlPersonalAppWeb\bin\System.Security.AccessControl.xml
+C:\repos\SGA\ControlPersonalAppWeb\bin\System.Security.Principal.Windows.xml

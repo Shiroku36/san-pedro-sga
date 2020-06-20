@@ -4,68 +4,83 @@
     ViewBag.Title = "Details";
 }
 
-<h2>Details</h2>
+<h2 class="display-4 text-center">Ingreso</h2>
+
 
 <div>
-    <h4>Ingreso</h4>
+    <h3 class="text-muted font-weight-light">Detalle</h3>
     <hr />
-    <dl class="dl-horizontal">
+    <div class="col-sm-8 table-responsive">
+        <table class="mx-auto table-borderless table-hover tabla-detalle">
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Trabajador)
-        </dt>
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.Trabajador)
+                </td>
 
-        <dd>
-            <a href="~/Trabajador/Details/@Model.TrabajadorId">@Model.Trabajador</a>
-        </dd>
+                <td>
+                    <a href="~/Trabajador/Details/@Model.TrabajadorId">@Model.Trabajador</a>
+                </td>
+            </tr>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Productos)
-        </dt>
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.Productos)
+                </td>
 
-        <dd>
-            @foreach (var stock in ViewBag.productos)
-            {
-                <a href="~/Productos/Details/@stock.ProductoId">@stock.Producto</a><span>: @stock.Cantidad</span><br />
-            }
-        </dd>
+                <td>
+                    @foreach (var stock in ViewBag.productos)
+                    {
+                        <a href="~/Productos/Details/@stock.ProductoId">@stock.Producto</a><span>: @stock.Cantidad</span><br />
+                    }
+                </td>
+            </tr>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Fecha)
-        </dt>
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.Fecha)
+                </td>
 
-        <dd>
-            @Html.DisplayFor(model => model.Fecha)
-        </dd>
+                <td>
+                    @Html.DisplayFor(model => model.Fecha)
+                </td>
+            </tr>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Ubicacion)
-        </dt>
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.Ubicacion)
+                </td>
 
-        <dd>
-            @Html.DisplayFor(model => model.Ubicacion)
-        </dd>
+                <td>
+                    @Html.DisplayFor(model => model.Ubicacion)
+                </td>
+            </tr>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Proveedor)
-        </dt>
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.Proveedor)
+                </td>
 
-        <dd>
-            @Html.DisplayFor(model => model.Proveedor)
-        </dd>
+                <td>
+                    @Html.DisplayFor(model => model.Proveedor)
+                </td>
+            </tr>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.ProveedorRut)
-        </dt>
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.ProveedorRut)
+                </td>
 
-        <dd>
-            @Html.DisplayFor(model => model.ProveedorRut)
-        </dd>
+                <td>
+                    @Html.DisplayFor(model => model.ProveedorRut)
+                </td>
+
+            </tr>
+        </table>
 
 
-    </dl>
+    </div>
+    <div class="form-group col-md-9 mx-auto my-5">
+        @Html.ActionLink("Volver a la lista", "Index", null, new { @class = "btn btn-block btn-danger mt-3" })
+    </div>
 </div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>

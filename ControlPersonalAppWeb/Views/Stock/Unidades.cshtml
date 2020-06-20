@@ -4,19 +4,21 @@
     ViewBag.Title = "Unidades";
 }
 
-<h2>Unidades</h2>
+<h1 class="display-4 text-center">Unidades</h1>
+<hr />
 @using (Html.BeginForm("Tipos", "Stock", new { enctype = "multipart/form-data" }))
 {
     @Html.AntiForgeryToken()
-
-    <input class="form-control mb-2" id="tipo" name="Value" />
+    <span class="d-block">Agregar unidades</span>
+    <input class="form-control my-2 col-8 float-left" id="tipo" name="Value" />
     <input type="hidden" value="Unidades" name="Tipo" />
     if (ViewBag.id != null)
     {
         <input type="hidden" value="@ViewBag.id" name="Id" />
     }
-    <input type="submit" class="btn btn-primary mb-3" value="Agregar" />
+    <input type="submit" class="btn btn-primary mb-4 col-2 float-right mt-2" value="Agregar" />
 }
+<div class="clearfix"></div>
 <table class="table">
     <tr class="bg-primary">
         <th>
@@ -42,7 +44,7 @@
                         {
                             <input type="hidden" value="@ViewBag.id" name="Id" />
                         }
-                        <input type="submit" class="btn btn-primary" value="Eliminar" />
+                        <input type="submit" class="btn btn-danger" value="Eliminar" />
                     }
                 </td>
             }

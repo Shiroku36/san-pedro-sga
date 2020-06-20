@@ -4,63 +4,86 @@
     ViewBag.Title = "Detalle Aplicacin de programa";
 }
 
-<h2>Aplicación de programa</h2>
+<h2 class="display-4 text-center">Aplicacion del programa</h2>
+
 
 <div>
-    <h4>Detalle</h4>
+    <h3 class="text-muted font-weight-light">Detalle</h3>
     <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.SolicitudId)
-        </dt>
+    <div class="col-sm-8 table-responsive">
+        <table class="mx-auto table-borderless table-hover tabla-detalle">
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.SolicitudId)
+                </td>
 
-        <dd>
-            <a href="~/Solicitudes/Details/@Model.SolicitudId">
-            @Html.DisplayFor(model => model.SolicitudId)</a>
-        </dd>
+                <td>
+                    <a href="~/Solicitudes/Details/@Model.SolicitudId">
+                        @Html.DisplayFor(model => model.SolicitudId)
+                    </a>
+                </td>
+            </tr>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.FechaInicio)
-        </dt>
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.FechaInicio)
+                </td>
 
-        <dd>
-            <span>@Model.FechaInicio.Value.ToShortDateString()</span>
-        </dd>
+                <td>
+                    <span>@Model.FechaInicio.Value.ToShortDateString()</span>
+                </td>
+            </tr>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.FechaFin)
-        </dt>
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.FechaFin)
+                </td>
 
-        <dd>
-            <span>@Model.FechaFin.Value.ToShortDateString()</span>
-        </dd>
+                <td>
+                    <span>@Model.FechaFin.Value.ToShortDateString()</span>
+                </td>
+            </tr>
 
-    </dl>
-    @if (ViewBag.comentarios != null)
-    {
-        <label>Comentarios</label>
-        <hr />
-        foreach (var comentario in ViewBag.comentarios)
-        {
-            <div class="col-auto mb-1">
-                <a href="/Trabajador/Details/@comentario.TrabajadorId"> @comentario.Trabajador </a>
-                <span>@comentario.Fecha.ToString()</span>
-            </div>
-            <div class="col-auto mb-4 ml-3">
-                <span>@comentario.Comentario1</span>
-            </div>
-            <hr />
-        }
-    }
+            <tr>
+                <td>Comentarios</td>
+                @if (ViewBag.comentarios != null)
+                {
+
+                    <td>
+                        <hr />
+                        @foreach (var comentario in ViewBag.comentarios)
+                        {
+                            <div class="row mb-1 w-100">
+                                <a class="col-3" href="/Trabajador/Details/@comentario.TrabajadorId"> @comentario.Trabajador </a>
+                                <span class="col-3">@comentario.Fecha.ToString()</span>
+                                <span class="col-6">@comentario.Comentario1</span>
+                            </div>
+
+                            <hr />
+                        }
+                    </td>
+                }
+
+
+            </tr>
+
+
+        </table>
+    </div>
 </div>
-@using (Html.BeginForm("Create", "Comentarios", new { enctype = "multipart/form-data" }))
-{
+
+
+@using (Html.BeginForm("Create", "Comentarios", new { enctype = "multipart/form-data" })){
     @Html.AntiForgeryToken()
+<div class="form-group col-md-9 mx-auto my-5">
+    <label>Agregar Comentario</label>
     <input type="hidden" name="AplicacionDeProgramaId" value="@Model.Id" />
     <input name="Comentario1" class="form-control mb-4" />
     <input type="submit" value="Agregar comentario" class="btn btn-primary mb-4" />
+</div>
+    
 }
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>
+    <div class="form-group col-md-9 mx-auto my-5">
+        @Html.ActionLink("Editar", "Edit", new { id = Model.Id }, new { @class = "btn btn-block btn-warning mt-3" })
+        @Html.ActionLink("Volver a la lista", "Index", null, new { @class = "btn btn-block btn-danger mt-3" })
+    </div>

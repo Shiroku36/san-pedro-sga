@@ -34,7 +34,7 @@ namespace ControlPersonalAppWeb.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.productos = db.Stock.Where(x => x.SolicitudId == id).ToList();
+            ViewBag.productos = db.Stock.Where(x => x.ControlId == id).ToList();
             Utils.SessionManager.log("Detalle control inventario: " + controlInventario.Id);
             return View(controlInventario);
         }
@@ -44,7 +44,7 @@ namespace ControlPersonalAppWeb.Controllers
         {
             ViewBag.campos = GetNombreCampos(cuenta.Empresa);
             int empresaId = (int)cuenta.EmpresaId;
-            ViewBag.productos = db.Stock.Where(x => x.EmpresaId == cuenta.EmpresaId && x.Tipo == "Producto").ToList();
+            ViewBag.productos = db.Stock.Where(x => x.EmpresaId == cuenta.EmpresaId && x.Tipo == "Producto" && x.Cantidad > 0).ToList();
             return View();
         }
 
@@ -63,7 +63,7 @@ namespace ControlPersonalAppWeb.Controllers
                 controlInventario.Empresa = cuenta.Empresa;
                 controlInventario.EmpresaId = cuenta.EmpresaId;
                 controlInventario.Productos = "";
-                string[] productos = collection["Productos"].Split(new char[] { ',' });
+                string[] productos = collection["Producto"].Split(new char[] { ',' });
                 string[] cantidades = collection["Cantidad"].Split(new char[] { ',' });
                 db.ControlInventario.Add(controlInventario);
                 db.SaveChanges();
@@ -86,7 +86,7 @@ namespace ControlPersonalAppWeb.Controllers
                     {
                         controlInventario.Productos = controlInventario.Productos + producto.Nombre + ", ";
                     }
-                    agregarStock(producto, (int)stock.Cantidad, controlInventario);
+                    agregarStock(producto, Convert.ToInt32(cantidades[i]), controlInventario);
                 }
                 db.SaveChanges();
                 Utils.SessionManager.log("Crear control inventario: " + controlInventario.Id);
