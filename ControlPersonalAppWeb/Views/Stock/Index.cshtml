@@ -4,66 +4,69 @@
     ViewBag.Title = "Inventario";
 }
 
-<h2>Inventario</h2>
+
+<h1 class="display-4 text-center">Sistema gestión bodega</h1>
+<hr />
 
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    <div class="row">
-        <div class="col-md-4">
-            <div class="col-2">
-                <label>Búsqueda</label>
-            </div>
-            <div class="col-12">
-                <input type="text" id="busqueda" onkeyup="buscar()" class="form-control">
-            </div>
+<div class="row">
+    <div class="col-md-4">
+        <div class="col-2">
+            <label>Búsqueda</label>
         </div>
-        <div class="col-md-4 mb-3">
-            <div class="col-2">
-                <label>Huerto</label>
-            </div>
-            <div class="col-12">
-                <select name="Huerto" class="form-control">
-                    @foreach (var campo in ViewBag.campos)
-                    {
-                        if (ViewBag.campo == campo)
-                        {
-                            <option selected>@campo</option>
-                        }
-                        else
-                        {
-                            <option>@campo</option>
-                        }
-                    }
-                </select>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="col-2">
-                <label>Tipo</label>
-            </div>
-            <div class="col-12">
-                <select name="Tipo" class="form-control">
-                    @foreach (var tipo in ViewBag.tipos)
-                    {
-                        if (ViewBag.tipo == tipo)
-                        {
-                            <option selected>@tipo</option>
-                        }
-                        else
-                        {
-                            <option>@tipo</option>
-                        }
-                    }
-                </select>
-            </div>
-        </div>
-        <div class="mt-4 col-2">
-            <input type="submit" class="btn btn-primary mx-auto mb-3" value="Filtrar" />
+        <div class="col-12">
+            <input type="text" id="busqueda" onkeyup="buscar()" class="form-control">
         </div>
     </div>
+    <div class="col-md-4 mb-3">
+        <div class="col-2">
+            <label>Huerto</label>
+        </div>
+        <div class="col-12">
+            <select name="Huerto" class="form-control">
+                @foreach (var campo in ViewBag.campos)
+                {
+                    if (ViewBag.campo == campo)
+                    {
+                        <option selected>@campo</option>
+                    }
+                    else
+                    {
+                        <option>@campo</option>
+                    }
+                }
+            </select>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="col-2">
+            <label>Tipo</label>
+        </div>
+        <div class="col-12">
+            <select name="Tipo" class="form-control">
+                @foreach (var tipo in ViewBag.tipos)
+                {
+                    if (ViewBag.tipo == tipo)
+                    {
+                        <option selected>@tipo</option>
+                    }
+                    else
+                    {
+                        <option>@tipo</option>
+                    }
+                }
+            </select>
+        </div>
+    </div>
+    <div class="col-2 mt-2">
+        <input type="submit" class="btn btn-primary mx-auto " value="Filtrar" />
+    </div>
+</div>
 }
-<table class="table table-hover" id="tabla">
+<div class="table-responsive mt-3">
+    <table class="table table-hover" id="tabla">
     <tr class="bg-primary">
         <th>
             @Html.DisplayNameFor(model => model.Producto)
@@ -110,5 +113,7 @@
     }
 
 </table>
+
+</div>
 
 <script src="~/Scripts/Busqueda.js"></script>

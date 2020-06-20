@@ -19,6 +19,7 @@ namespace ControlPersonalAppWeb.Utils
         public static List<RegistroTrabajador> registros = new List<RegistroTrabajador>();
         public static DateTime inicio = new DateTime();
         public static DateTime fin = new DateTime();
+        public static List<Notificacion> notificaciones = new List<Notificacion>();
 
         public static byte[] FotoCarnet { get; set; }
         public static byte[] FotoPruducto { get; set; }
@@ -31,6 +32,18 @@ namespace ControlPersonalAppWeb.Utils
         public static int email = 1;
         public static string mensaje = "";
         public static string activa = "";
+
+        public static List<Notificacion>  getNotificaciones() {
+            int id;
+            if (CuentaAutenticada()!=null)
+            {
+                id = CuentaAutenticada().Id;
+                notificaciones = db.Notificacion.Where(x => x.CuentaId == id && x.Estado == "Solicitado").ToList().OrderByDescending(x => x.Fecha).ToList();
+            }
+            return notificaciones;
+        }
+
+
         public static void log(string Accion)
         {
             Log log = new Log()

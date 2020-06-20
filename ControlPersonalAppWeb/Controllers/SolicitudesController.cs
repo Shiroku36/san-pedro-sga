@@ -44,7 +44,7 @@ namespace ControlPersonalAppWeb.Controllers
         {
             ViewBag.campos = GetNombreCampos(cuenta.Empresa);
             int empresaId =(int) cuenta.EmpresaId;
-            ViewBag.productos = db.Stock.Where(x => x.EmpresaId == cuenta.EmpresaId && x.Tipo == "Producto").ToList();
+            ViewBag.productos = db.Stock.Where(x => x.EmpresaId == cuenta.EmpresaId && x.Tipo == "Producto" && x.Cantidad>0).ToList();
             //ViewBag.productos = db.Producto.Where(x => x.EmpresaId == empresaId).ToList();
             return View();
         }
@@ -107,6 +107,8 @@ namespace ControlPersonalAppWeb.Controllers
                 Utils.SessionManager.log("Crear notificacion: " + notificacion.Id);
                 db.Notificacion.Add(notificacion);
                 db.SaveChanges();
+                int id = cuenta.Id; 
+                Utils.SessionManager.notificaciones = db.Notificacion.Where(x => x.CuentaId == id && x.Estado == "Solicitado").ToList().OrderByDescending(x => x.Fecha).ToList();
                 return RedirectToAction("Index");
             }
 

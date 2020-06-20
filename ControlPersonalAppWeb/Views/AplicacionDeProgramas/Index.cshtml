@@ -4,44 +4,48 @@
     ViewBag.Title = "Aplicacion de Programa";
 }
 
-<h2>Aplicacion de Programa</h2>
+<h1 class="display-4 text-center">Aplicacion de Programa</h1>
+<hr />
 
-<p>
-    @Html.ActionLink("Solicitudes", "Index", "Solicitudes")
-</p>
-<table class="table">
-    <tr class="bg-primary">
-        <th>
-            <span>Solicitud</span>
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.FechaInicio)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.FechaFin)
-        </th>
-        <th></th>
-    </tr>
-
-    @foreach (var item in Model)
-    {
-        <tr>
-            <td>
-                <a href="/Solicitudes/Details/@item.SolicitudId">
-                    @Html.DisplayFor(modelItem => item.SolicitudId)
-                </a>
-            </td>
-            <td>
-                <span>@item.FechaInicio.Value.ToShortDateString()</span>
-            </td>
-            <td>
-                <span>@item.FechaFin.Value.ToShortDateString()</span>
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-                @Html.ActionLink("Details", "Details", new { id = item.Id }) 
-            </td>
+<div class="clearfix"></div>
+<div class="table-responsive">
+    <table class="table">
+        <tr class="bg-primary">
+            <th>
+                <span>Solicitud</span>
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FechaInicio)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FechaFin)
+            </th>
+            <th>
+                Accion  
+            </th>
         </tr>
-    }
 
-</table>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    <a href="/Solicitudes/Details/@item.SolicitudId">
+                        @Html.DisplayFor(modelItem => item.SolicitudId)
+                    </a>
+                </td>
+                <td>
+                    <span>@item.FechaInicio.Value.ToShortDateString()</span>
+                </td>
+                <td>
+                    <span>@item.FechaFin.Value.ToShortDateString()</span>
+                </td>
+                <td>
+                    @Html.ActionLink("Editar", "Edit", new { id = item.Id }, new { @class = "btn btn-warning" })
+                    @Html.ActionLink("Detalles", "Details", new { id = item.Id }, new { @class = "btn btn-info" })
+                </td>
+            </tr>
+        }
+
+    </table>
+
+</div>

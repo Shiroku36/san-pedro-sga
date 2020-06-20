@@ -3,66 +3,84 @@
 @{
     ViewBag.Title = "Details";
 }
-
-<h2>Details</h2>
+<h4 class="text-center display-4">Productos</h4>
+<h3 class="text-muted font-weight-light">Detalles</h3>
+<hr />
 
 <div>
-    <h4>Producto</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Nombre)
-        </dt>
+    <div class="col-sm-8 table-responsive">
+        <table class="mx-auto table-borderless table-hover tabla-detalle">
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.Nombre)
+                </td>
 
-        <dd>
-            @Html.DisplayFor(model => model.Nombre)
-        </dd>
+                <td>
+                    @Html.DisplayFor(model => model.Nombre)
+                </td>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Unidad)
-        </dt>
+            </tr>
+            
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.Unidad)
+                </td>
 
-        <dd>
-            @Html.DisplayFor(model => model.Unidad)
-        </dd>
+                <td>
+                    @Html.DisplayFor(model => model.Unidad)
+                </td>
+            </tr>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Tipo)
-        </dt>
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.Tipo)
+                </td>
 
-        <dd>
-            @Html.DisplayFor(model => model.Tipo)
-        </dd>
+                <td>
+                    @Html.DisplayFor(model => model.Tipo)
+                </td>
+            </tr>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.StockMin)
-        </dt>
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.StockMin)
+                </td>
 
-        <dd>
-            @Html.DisplayFor(model => model.StockMin)
-        </dd>
+                <td>
+                    @Html.DisplayFor(model => model.StockMin)
+                </td>
+            </tr>
+            
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.Descripcion)
+                </td>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Descripcion)
-        </dt>
+                <td>
+                    @Html.DisplayFor(model => model.Descripcion)
+                </td>
+            </tr>
 
-        <dd>
-            @Html.DisplayFor(model => model.Descripcion)
-        </dd>
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.Foto)
+                </td>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Foto)
-        </dt>
+                <td>
+                    @if (Model.Foto != null)
+                    {
+                        <img style="width:100%" src="@String.Format("data:image/jpg;base64,{0}", System.Convert.ToBase64String(Model.Foto))" />
+                    }
+                </td>
+            </tr>
 
-        <dd>
-            @if (Model.Foto != null)
-            {
-                <img src="@String.Format("data:image/jpg;base64,{0}", System.Convert.ToBase64String(Model.Foto))" />
-            }
-        </dd>
-    </dl>
+            
+        </table>
+    </div>
 </div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>
+<div class="form-group col-md-9 mx-auto my-5">
+    @Html.ActionLink("Editar", "Edit", new { id = Model.Id }, new { @class = "btn btn-warning btn-block " })
+    @Html.ActionLink("Volver a la lista", "Index", null, new { @class = "btn btn-block btn-danger mt-3" })
+</div>
+       
+    

@@ -4,12 +4,14 @@
     ViewBag.Title = "Productos";
 }
 
-<h2>Productos</h2>
+<h1 class="display-4 text-center">Productos</h1>
+<hr />
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-@Html.Partial("Busqueda")
+
+@Html.ActionLink("Crear producto", "Create", null, new { @class = "btn btn-primary my-2 float-right" })
+<div style="margin-top:24px">
+    @Html.Partial("Busqueda")
+</div>
 <table class="table" id="tabla">
     <tr class="bg-primary">
         <th>
@@ -30,7 +32,9 @@
         <th>
             @Html.DisplayNameFor(model => model.Miniatura)
         </th>
-        <th></th>
+        <th>
+            Accion
+        </th>
     </tr>
 
     @foreach (var item in Model)
@@ -58,13 +62,16 @@
                 }
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-                @Html.ActionLink("Details", "Details", new { id = item.Id }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                @Html.ActionLink("Editar", "Edit", new { id = item.Id }, new { @class = "btn btn-warning" })
+                @Html.ActionLink("Detalles", "Details", new { id = item.Id }, new { @class = "btn btn-info" })
+                @Html.ActionLink("Eliminar", "Delete", new { id = item.Id }, new { @class = "btn btn-danger" })
+                
             </td>
         </tr>
     }
 
 </table>
-
+@{
+    @Html.Partial("Del")
+}
 <script src="~/Scripts/Busqueda.js"></script>

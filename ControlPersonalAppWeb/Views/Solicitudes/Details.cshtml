@@ -4,73 +4,91 @@
     ViewBag.Title = "Details";
 }
 
-<h2>Details</h2>
+    <h2 class="display-4 text-center">Solicitud</h2>
 
-<div>
-    <h4>Solicitud</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Trabajador)
-        </dt>
+    <div>
+        <h3 class="text-muted font-weight-light">Detalle</h3>
+        <hr />
+        <div class="col-sm-8 table-responsive">
+            <table class="mx-auto table-borderless table-hover tabla-detalle">
+                <tr>
+                    <td>
+                        @Html.DisplayNameFor(model => model.Trabajador)
+                    </td>
 
-        <dd>
-            <a href="~/Trabajador/Details/@Model.TrabajadorId">@Model.Trabajador</a>
-        </dd>
+                    <td>
+                        <a href="~/Trabajador/Details/@Model.TrabajadorId">@Model.Trabajador</a>
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td>
+                        @Html.DisplayNameFor(model => model.Productos)
+                    </td>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Productos)
-        </dt>
+                    <td>
+                        @foreach (var stock in ViewBag.productos)
+                        {
+                            <a href="~/Productos/Details/@stock.ProductoId">@stock.Producto</a><span>: @stock.Cantidad</span><br />
+                        }
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td>
+                        @Html.DisplayNameFor(model => model.Observación)
+                    </td>
 
-        <dd>
-            @foreach (var stock in ViewBag.productos)
-            {
-                <a href="~/Productos/Details/@stock.ProductoId">@stock.Producto</a><span>: @stock.Cantidad</span><br />
-            }
-        </dd>
+                    <td>
+                        @Html.DisplayFor(model => model.Observación)
+                    </td>
+                </tr>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Observación)
-        </dt>
+                <tr>
+                    <td>
+                        @Html.DisplayNameFor(model => model.Origen)
+                    </td>
 
-        <dd>
-            @Html.DisplayFor(model => model.Observación)
-        </dd>
+                    <td>
+                        @Html.DisplayFor(model => model.Origen)
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td>
+                        @Html.DisplayNameFor(model => model.Destino)
+                    </td>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Origen)
-        </dt>
+                    <td>
+                        @Html.DisplayFor(model => model.Destino)
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td>
+                        @Html.DisplayNameFor(model => model.Estado)
+                    </td>
 
-        <dd>
-            @Html.DisplayFor(model => model.Origen)
-        </dd>
+                    <td>
+                        @Html.DisplayFor(model => model.Estado)
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td>
+                        @Html.DisplayNameFor(model => model.Fecha)
+                    </td>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Destino)
-        </dt>
+                    <td>
+                        @Html.DisplayFor(model => model.Fecha)
+                    </td>
+                </tr>
+                
 
-        <dd>
-            @Html.DisplayFor(model => model.Destino)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Estado)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Estado)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Fecha)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Fecha)
-        </dd>
-    </dl>
-</div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>
+                
+            </table>
+        </div>
+        <div class="form-group col-md-9 mx-auto my-5">
+            @Html.ActionLink("Volver a la lista", "Index", null, new { @class = "btn btn-block btn-danger mt-3" })
+        </div>
+    </div>

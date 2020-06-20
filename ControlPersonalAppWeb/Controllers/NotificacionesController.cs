@@ -18,7 +18,7 @@ namespace ControlPersonalAppWeb.Controllers
         // GET: Notificaciones
         public ActionResult Index()
         {
-            return View(db.Notificacion.Where(x => x.CuentaId == cuenta.Id).ToList());
+            return View(db.Notificacion.Where(x => x.CuentaId == cuenta.Id).ToList().OrderByDescending(x => x.Fecha).ToList());
         }
         [HttpPost]
         public ActionResult Index(FormCollection collection)
@@ -46,7 +46,8 @@ namespace ControlPersonalAppWeb.Controllers
                 notificacion.Estado = "Rechazada";
             }
             db.SaveChanges();
-            return View(db.Notificacion.Where(x => x.CuentaId == cuenta.Id).ToList());
+            Utils.SessionManager.notificaciones.Remove(Utils.SessionManager.notificaciones.First(x => x.Id == id));
+            return View(db.Notificacion.Where(x => x.CuentaId == cuenta.Id).ToList().OrderByDescending(x => x.Fecha).ToList());
         }
         /*
         // GET: Notificaciones/Details/5

@@ -1,38 +1,47 @@
-﻿<div id="contenedor">
-    <div class="form-group">
-        <label class="control-label col-md-2">Producto</label>
-        <div class="col-md-10">
-            @if (ViewBag.ingreso != null && ViewBag.ingreso)
-            {
-                <select id="Producto 0" name="Producto" class="form-control producto ubicacion" required></select>
-            }
-            else
-            {
-                <select id="Producto 0" name="Producto" class="form-control producto ubicacion" onchange="maximo(this)" required></select>
-            }
+﻿<div id="contenedor" class=" col-md-8 mx-auto ">
+    <div class="card bg-primary mb-3 prod">
+        <div class="row card-body">
+            <div class="form-group col-md-6 ">
+                <label class="control-label">Producto</label>
+                @if (ViewBag.ingreso != null && ViewBag.ingreso)
+                {
+                    <select id="Producto 0" name="Producto" class="form-control producto ubicacion" required></select>
+                }
+                else
+                {
+                    <select id="Producto 0" name="Producto" class="form-control producto ubicacion" onchange="maximo(this)" required></select>
+                }
+            </div>
+
+            <div class="form-group col-md-6">
+                <label class="control-label">Cantidad</label>
+                @if (ViewBag.ingreso != null && ViewBag.ingreso)
+                {
+                    <input type="number" id="Cantidad 0" name="Cantidad" class="form-control ubicacion cantidad " required />
+                }
+                else
+                {
+                    <input type="number" id="Cantidad 0" name="Cantidad" class="form-control ubicacion cantidad" required oninput="maximoAceptable(this)" />
+                }
+            </div>
         </div>
     </div>
 
-    <div class="form-group">
-        <label class="control-label col-md-2">Cantidad</label>
-        <div class="col-md-10">
-            @if (ViewBag.ingreso != null && ViewBag.ingreso)
-            {
-                <input type="number" id="Cantidad 0" name="Cantidad" class="form-control ubicacion" required />
-            }
-            else
-            {
-                <input type="number" id="Cantidad 0" name="Cantidad" class="form-control ubicacion" required oninput="maximoAceptable(this)" />
-            }
-        </div>
-    </div>
+
 </div>
-<div id="botones" class="form-group col-md-10">
-    <button type="button" class="btn btn-primary col-auto" id="agregar" onclick="agregarProducto()">Agregar producto</button>
-    <button type="button" class="btn btn-primary col-auto" id="eliminar" style="display:none" onclick="eliminarProducto(this)">Eliminar producto</button>
+<div id="botones" class="form-group col-md-8 mx-auto">
+    <button type="button" class="btn btn-primary " id="agregar" onclick="agregarProducto()">Agregar producto</button>
+    <button type="button" class="btn btn-danger " id="eliminar" style="display:none" onclick="eliminarProducto(this)">Eliminar producto</button>
+    
+    <button type="submit" class="d-none" id="btnval"></button>
 </div>
 
+
+
+
+@Scripts.Render("~/bundles/jquery")
 <script>
+    var superamaximo = true
     var items = 0;
     var eliminar = document.getElementById("eliminar");
     var stocks = @Html.Raw(Json.Encode(ViewBag.productos));
@@ -47,9 +56,11 @@
             eliminar.style.display = "inline-block";
         }
     }
+
     //Cuando es un ingreso, debe cargar todos los productos, mas no activar el límite de la cantidad
     function cargarHuertosIngreso(inicio)
     {
+        inicio = inicio || items;
         var productos = document.getElementsByClassName('producto');
         var i, j;
         //Para cada select encontrado
@@ -57,10 +68,10 @@
         {
             var producto = productos[j];
             //Se sacan todos los productos que ya tenía por si cambia de huerto
-            for (i = producto.length; i >= 0; i--) {
-                producto.remove(i);
+            for (i = producto.length; i > 0; i--) {
+                producto.remove(i - 1);
             }
-            
+
             //Para cada producto en la lista que viene
             for (var i in products)
             {
@@ -68,25 +79,32 @@
             }
         }
     }
+
     //Carga los huertos cuando se carga la página o cuando se agrega uno nuevo
     //le agrega la cantidad máxima a cada uno
     function cargarHuertos(inicio)
     {
+
         //Inicio le dice de donde empezar, así no modifica los ya creados
         //Obtiene todos los select de clase producto
         var productos = document.getElementsByClassName('producto');
         var i, j;
+        //El origen es de donde hay que poner los productos
+        var origen = document.getElementById("Origen") || document.getElementById("Ubicacion");
+
+        if (stocks.length == 0) {
+            return;
+        }
         //Para cada select encontrado
         for (j = inicio; j < productos.length; j++)
         {
             var producto = productos[j];
             //Se sacan todos los productos que ya tenía por si cambia de huerto
-            for (i = producto.length; i >= 0; i--)
+            for (i = producto.length; i > 0; i--)
             {
-                producto.remove(i);
+                producto.remove(i-1);
             }
-            //El origen es de donde hay que poner los productos
-            var origen = document.getElementById("Origen") || document.getElementById("Ubicacion");
+
             //Para cada producto en la lista que viene
             for (var i in stocks)
             {
@@ -97,6 +115,7 @@
                     producto.add(new Option(stock.Producto));
                 }
             }
+
             //Siempre quedará el primer producto como primero, así que busca cual es y le pone su cantidad
             i = 0;
             while (producto.options[0].text != stocks[i].Producto || origen.value != stocks[i].Ubicacion)
@@ -131,10 +150,27 @@
         while (stocks[i].Ubicacion != origen.value || stocks[i].Producto != producto.value) {
             i++;
         }
+        console.log(cantidad.value)
+        if (cantidad.value === 0) {
+            reset();
+            cantidad.setCustomValidity("La cantidad no puede ser 0")
+            $('#btnval').click();
+            return;
+        }
+        let str = new String(cantidad.value);
+        if (str.includes('+') || str.includes('-')) {
+            console.log("a")
+            cantidad.value = stocks[i].Cantidad;
+        }
+
         //Comprueba si es mayor y la reemplaza a la máxima, además da una alerta del máximo
         if (cantidad.value > stocks[i].Cantidad) {
             cantidad.value = stocks[i].Cantidad;
-            alert("Cantidad máxima: " + stocks[i].Cantidad);
+            reset();
+            cantidad.setCustomValidity("Cantidad máxima: " + stocks[i].Cantidad)
+            $('#btnval').click();
+        } else {
+            cantidad.setCustomValidity("")
         }
 
     }
@@ -144,8 +180,7 @@
         //Selecciona todos los productos y cantidades agregados fuera del primero, todos los demás tienen
         //una clase llamado extra
         var selects = document.getElementsByClassName('extra');
-        selects[items].remove();
-        selects[items-1].remove();
+        selects[items].parentElement.parentElement.remove();
         items = items - 1;
         //Comprueba si hay más productos agregados, si queda solo 1, oculta el boton eliminar
         if (items == 0)
@@ -158,18 +193,17 @@
         items = items + 1;
         var contenedor = document.getElementById("contenedor");
         var divExternoProducto = document.createElement("div");
-        divExternoProducto.className = "form-group extra";
+        divExternoProducto.className = "form-group extra col-md-6"
         var labelProducto = document.createElement("label");
         var textoProducto = document.createTextNode("Producto");
         labelProducto.appendChild(textoProducto);
-        labelProducto.className = "control-label col-md-2";
+        labelProducto.className = "control-label";
         var divInternoProducto = document.createElement("div");
-        divInternoProducto.className = "col-md-10";
         divExternoProducto.appendChild(labelProducto);
         var select = document.createElement("select");
         select.id = "Producto " + items;
         select.name = "Producto";
-        select.className = "form-control producto ubicacion";
+        select.className = "form-control producto ubicacion cantidad";
         select.required = "required";
         if (!ingreso)
         {
@@ -177,16 +211,25 @@
         }
         divInternoProducto.appendChild(select);
         divExternoProducto.appendChild(divInternoProducto);
-        contenedor.appendChild(divExternoProducto);
 
+        // cambio
+        let divproducto = document.createElement("div")
+        divproducto.className = "card bg-primary mb-3"
+        let row = document.createElement("div")
+        row.className = "row card-body "
+
+        row.appendChild(divExternoProducto)
+        divproducto.appendChild(row)
+        contenedor.appendChild(divproducto);
+
+        //fin cambio
         var divExternoCantidad = document.createElement("div");
-        divExternoCantidad.className = "form-group extra";
+        divExternoCantidad.className = "form-group extra col-md-6";
         var labelCantidad = document.createElement("label");
         var textoCantidad = document.createTextNode("Cantidad");
         labelCantidad.appendChild(textoCantidad);
-        labelCantidad.className = "control-label col-md-2";
+        labelCantidad.className = "control-label";
         var divInternoCantidad = document.createElement("div");
-        divInternoCantidad.className = "col-md-10";
         divExternoCantidad.appendChild(labelCantidad);
         var cantidad = document.createElement("input");
         cantidad.id = "Cantidad " + items;
@@ -200,7 +243,8 @@
         }
         divInternoCantidad.appendChild(cantidad);
         divExternoCantidad.appendChild(divInternoCantidad);
-        contenedor.appendChild(divExternoCantidad);
+        //cambio
+        row.appendChild(divExternoCantidad);
         if (ingreso)
         {
             cargarHuertosIngreso(items);
@@ -213,9 +257,52 @@
     }
 
     if (ingreso) {
-        window.onload = cargarHuertosIngreso(0);
+        window.addEventListener("load", function () {
+            cargarHuertosIngreso(0)
+            validbtn()
+        })
+    } else {
+        window.addEventListener("load", function () {
+            cargarHuertos(0)
+            validbtn()
+        });
     }
-    else {
-        window.onload = cargarHuertos(0);
+
+    function validbtn() {
+        let val = function () {
+            let productos = new Array()
+            $('.producto option:selected').each(function () {
+                productos.push($(this).text())
+            })
+            let uniqueNames = []
+            $.each(productos, function (i, el) {
+                if ($.inArray(el, uniqueNames) === -1) uniqueNames.push(el);
+            })
+            if (productos.length > 1 && JSON.stringify(productos) !== JSON.stringify(uniqueNames)) {
+                $('.producto')[0].setCustomValidity('Hay algunos productos repetidos')
+            } else {
+                $('.producto')[0].setCustomValidity('')
+            }
+        }
+        $('#btnsubmit').on('click', val)
     }
+    function reset() {
+        try {
+            console.log("dest")
+            $('#Destino')[0].setCustomValidity('')
+        } catch (e) { }
+        $('.producto').each(function (i,el) {
+            el.setCustomValidity('')
+        })
+        $('.ubicacion').each(function (i,el) {
+            el.setCustomValidity('')
+        })
+    }
+
+    var input = document.querySelector('.cantidad');
+    input.addEventListener('keyup', function (event) {
+        if (event.which != 8 && event.which != 0 && event.which < 48 || event.which > 57) {
+            this.value = this.value.replace(/\D/g, "");
+        }
+    });
 </script>
