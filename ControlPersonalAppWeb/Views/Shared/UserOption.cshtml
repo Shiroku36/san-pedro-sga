@@ -5,7 +5,7 @@
 }
 @if(cuenta !=null)
 { 
-    <li><a href="@Url.Action("Index","Trabajadores")">@cuenta.Usuario - @cuenta.Empresa</a></li>
+    <li><a>@cuenta.Usuario - @cuenta.Empresa</a></li>
     <li><a href="@Url.Action("Salir","Cuenta")">Salir</a></li>
 }
 else

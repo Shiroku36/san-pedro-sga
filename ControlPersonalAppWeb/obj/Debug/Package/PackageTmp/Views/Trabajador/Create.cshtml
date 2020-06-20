@@ -19,220 +19,226 @@
         {
             <h2 align="center" style="color:red"><strong>@ViewBag.texto</strong></h2>
         }
-        <div>
-            @if (String.IsNullOrEmpty(ViewBag.aviso))
+    <div>
+        @if (String.IsNullOrEmpty(ViewBag.aviso))
+        {
+            <input type="hidden" name="aviso" id="aviso" />
+        }
+        else
+        {
+            <input type="hidden" name="aviso" value="Avisado" />
+        }
+        correo
+        <h3 class="text-center font-weight-normal">Antecedentes persona a contratar</h3>
+
+        <div class="form-group col-md-8 mx-auto">
+            @Html.LabelFor(model => model.Nombre, htmlAttributes: new { @class = "control-label font-weight-normal" })
+            @Html.EditorFor(model => model.Nombre, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Nombre, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group col-md-8 mx-auto">
+            <label class="control-label font-weight-normal">Apellido Paterno</label>
+            @Html.EditorFor(model => model.ApellidoPaterno, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.ApellidoPaterno, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group col-md-8 mx-auto">
+            <label class="control-label font-weight-normal">Apellido Materno</label>
+            @Html.EditorFor(model => model.ApellidoMaterno, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.ApellidoMaterno, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group col-md-8 mx-auto">
+            @Html.LabelFor(model => model.Rut, htmlAttributes: new { @class = "control-label font-weight-normal" })
+            @if (Model != null)
             {
-                <input type="hidden" name="aviso" id="aviso" />
+                <input class="form-control" maxlength="12" type="text" id="Rut" value="@Model.Rut" name="Rut" required onchange="cuenta();" placeholder="">
             }
             else
             {
-                <input type="hidden" name="aviso" value="Avisado" />
+                <input class="form-control" maxlength="12" type="text" id="Rut" name="Rut" required onchange="cuenta();" placeholder="">
             }
-
-            <h3 class="text-center font-weight-normal">Antecedentes persona a contratar</h3>
-
-            <div class="form-group col-md-8 mx-auto">
-                @Html.LabelFor(model => model.Nombre, htmlAttributes: new { @class = "control-label font-weight-normal" })
-                @Html.EditorFor(model => model.Nombre, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Nombre, "", new { @class = "text-danger" })
-            </div>
-
-            <div class="form-group col-md-8 mx-auto">
-                <label class="control-label font-weight-normal">Apellido Paterno</label>
-                @Html.EditorFor(model => model.ApellidoPaterno, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.ApellidoPaterno, "", new { @class = "text-danger" })
-            </div>
-
-            <div class="form-group col-md-8 mx-auto">
-                <label class="control-label font-weight-normal">Apellido Materno</label>
-                @Html.EditorFor(model => model.ApellidoMaterno, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.ApellidoMaterno, "", new { @class = "text-danger" })
-            </div>
-
-            <div class="form-group col-md-8 mx-auto">
-                @Html.LabelFor(model => model.Rut, htmlAttributes: new { @class = "control-label font-weight-normal" })
-                @if (Model != null)
-                {
-                    <input class="form-control" maxlength="12" type="text" id="Rut" value="@Model.Rut" name="Rut" required onchange="cuenta();" placeholder="">
-                }
-                else
-                {
-                    <input class="form-control" maxlength="12" type="text" id="Rut" name="Rut" required onchange="cuenta();" placeholder="">
-                }
-                <script src="~/Scripts/validarRUT.js"></script>
-            </div>
-
-            <div class="form-group col-md-8 mx-auto">
-                <label class="control-label font-weight-normal">Tipo de cuenta</label>
-                @Html.DropDownListFor(model => model.TipoCuenta, new SelectList(new string[] { "Cuenta Rut", "Cuenta Vista", "Cuenta Corriente" }), htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.TipoCuenta, "", new { @class = "text-danger" })
-            </div>
-
-            <div class="form-group col-md-8 mx-auto">
-                @Html.LabelFor(model => model.Banco, htmlAttributes: new { @class = "control-label font-weight-normal" })
-                @Html.DropDownListFor(model => model.Banco, new SelectList(new string[] { "Estado", "BICE", "Santantder", "BCI", "Chile", "ITAU", "Falabella", "Scotiabank", "Security" }), htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.Banco, "", new { @class = "text-danger" })
-            </div>
-
-            <div class="form-group col-md-8 mx-auto">
-                <label class="control-label font-weight-normal">Número de cuenta</label>
-                @if (Model != null)
-                {
-                    <input class="form-control" type="number" value="@Model.NumeroCuenta" id="NumeroCuenta" name="NumeroCuenta">
-                }
-                else
-                {
-                    <input class="form-control" type="number" id="NumeroCuenta" name="NumeroCuenta">
-                }
-                <script src="~/Scripts/validarCuenta.js"></script>
-            </div>
-
-            <div class="form-group col-md-8 mx-auto">
-                @Html.LabelFor(model => model.Contratado, htmlAttributes: new { @class = "control-label font-weight-normal" })
-                @Html.DropDownListFor(model => model.Contratado, new SelectList(new string[] { "No", "Si" }), htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.Contratado, "", new { @class = "text-danger" })
-            </div>
-
-            <div class="form-group col-md-8 mx-auto">
-                @Html.LabelFor(model => model.Uid, htmlAttributes: new { @class = "control-label font-weight-normal" })
-                @Html.EditorFor(model => model.Uid, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Uid, "", new { @class = "text-danger" })
-            </div>
-
-            <div class="form-group col-md-8 mx-auto">
-                <label class="control-label font-weight-normal">Numero Pulsera</label>
-                @Html.EditorFor(model => model.Gerente, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Gerente, "", new { @class = "text-danger" })
-            </div>
-
-            <div class="form-group col-md-8 mx-auto">
-                <label class="control-label font-weight-normal">Código</label>
-                @Html.EditorFor(model => model.CodPersonal, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.CodPersonal, "", new { @class = "text-danger" })
-            </div>
-
-            <div class="form-group col-md-8 mx-auto">
-                <label class="control-label font-weight-normal">Estado civil</label>
-                @Html.DropDownListFor(model => model.EstadoCivil, new SelectList(new string[] { "Soltero/a", "Casado/a", "Viudo/a", "Divorciado/a", "Separado/a", "Viudo/Separado" }), htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.EstadoCivil, "", new { @class = "text-danger" })
-            </div>
-
-            <div class="form-group col-md-8 mx-auto">
-                <label class="control-label font-weight-normal">Fecha de nacimiento</label>
-
-                @if (Model.FechaNacimiento == null || Model.FechaNacimiento.Value.ToShortDateString() == "01-01-0001")
-                {
-                    <input class="form-control" type="date" id="FechaNacimiento" value="" name="FechaNacimiento" min="1930-01-01">
-                }
-                else
-                {
-                    <input class="form-control" type="date" value="@Model.FechaNacimiento.Value.ToString("yyyy-MM-dd")" id="FechaNacimiento" name="FechaNacimiento" min="1930-01-01"
-                           max="2002-01-01">
-                }
-            </div>
-
-            <div class="form-group col-md-8 mx-auto">
-                <label class="control-label font-weight-normal">Dirección</label>
-
-                @Html.EditorFor(model => model.Direccion, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Direccion, "", new { @class = "text-danger" })
-            </div>
-
-            <div class="form-group col-md-8 mx-auto">
-                @Html.LabelFor(model => model.Sexo, htmlAttributes: new { @class = "control-label font-weight-normal" })
-
-                @Html.DropDownListFor(model => model.Sexo, new SelectList(new string[] { "Masculino", "Femenino" }), htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.Sexo, "", new { @class = "text-danger" })
-            </div>
-
-            <div class="form-group col-md-8 mx-auto">
-                @Html.LabelFor(model => model.Ciudad, htmlAttributes: new { @class = "control-label font-weight-normal" })
-
-                @Html.EditorFor(model => model.Ciudad, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Ciudad, "", new { @class = "text-danger" })
-            </div>
-
-            <div class="form-group col-md-8 mx-auto">
-                <label class="control-label font-weight-normal">Cargas familiares</label>
-
-                @Html.DropDownListFor(model => model.CargasFamiliares, new SelectList(new string[] { "No", "Si" }), htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.CargasFamiliares, "", new { @class = "text-danger" })
-            </div>
-
-            <div class="form-group col-md-8 mx-auto">
-                @Html.LabelFor(model => model.CargasSimples, htmlAttributes: new { @class = "control-label font-weight-normal" })
-
-                @Html.EditorFor(model => model.CargasSimples, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.CargasSimples, "", new { @class = "text-danger" })
-
-            </div>
-
-            <div class="form-group col-md-8 mx-auto">
-                @Html.LabelFor(model => model.AFP, htmlAttributes: new { @class = "control-label font-weight-normal" })
-
-                @Html.DropDownListFor(model => model.AFP,
-               new SelectList(new string[]
-               {"00. No está en AFP", "08. Provida", "29. Planvital", "34. Modelo", "05. Habitat", "03. Cuprum", "33. Capital", "35. Uno" }), htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.AFP, "", new { @class = "text-danger" })
-            </div>
-
-            <div class="form-group col-md-8 mx-auto">
-                @Html.LabelFor(model => model.Salud, htmlAttributes: new { @class = "control-label font-weight-normal" })
-
-                @Html.DropDownListFor(model => model.Salud,
-                new SelectList(new string[] {"","00. Sin Isapre",
-                                            "01. Banmédica",
-                                            "02. Consalud",
-                                            "03. VidaTres",
-                                            "04. Colmena",
-                                            "05. Isapre Cruz Blanca S.A.",
-                                            "07. Fonasa",
-                                            "09. Chuquicamata",
-                                            "10. Nueva Masvida",
-                                            "11. Institución de Salud Previsional Fusat Ltda.",
-                                            "12. Isapre Bco. Estado",
-                                            "20. Río Blanco",
-                                            "21. San Lorenzo isapre Ltda.",
-                                            "25. Cruz del Norte" }), htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.Salud, "", new { @class = "text-danger" })
-            </div>
-
-            <div class="form-group col-md-8 mx-auto">
-                @Html.LabelFor(model => model.Telefono, htmlAttributes: new { @class = "control-label font-weight-normal" })
-
-                @Html.EditorFor(model => model.Telefono, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Telefono, "", new { @class = "text-danger" })
-            </div>
-
-            <h3 class="text-center font-weight-normal">En caso de emergencia</h3>
-            <div class="form-group col-md-8 mx-auto">
-                <label class="control-label font-weight-normal">Nombre</label>
-
-                @Html.EditorFor(model => model.NombreEmer, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.NombreEmer, "", new { @class = "text-danger" })
-            </div>
-
-            <div class="form-group col-md-8 mx-auto">
-                <label class="control-label font-weight-normal">Vínculo</label>
-
-                @Html.DropDownListFor(model => model.VinculoEmer, new SelectList(new string[] { "Esposo/a", "Amigo/a", "Pareja", "Padre", "Madre", "Hermano/a", "Hijo/a", "Primo/a" }), htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.VinculoEmer, "", new { @class = "text-danger" })
-            </div>
-
-            <div class="form-group col-md-8 mx-auto">
-                <label class="control-label font-weight-normal">Dirección</label>
-
-                @Html.EditorFor(model => model.DireccionEmer, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.DireccionEmer, "", new { @class = "text-danger" })
-            </div>
-
-            <div class="form-group col-md-8 mx-auto">
-                <label class="control-label font-weight-normal">Telefono</label>
-
-                @Html.EditorFor(model => model.TelefonoEmer, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.TelefonoEmer, "", new { @class = "text-danger" })
-            </div>
+            <script src="~/Scripts/validarRUT.js"></script>
         </div>
+
+        <div class="form-group col-md-8 mx-auto">
+            <label class="control-label font-weight-normal">Tipo de cuenta</label>
+            @Html.DropDownListFor(model => model.TipoCuenta, new SelectList(new string[] { "Cuenta Rut", "Cuenta Vista", "Cuenta Corriente" }), htmlAttributes: new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.TipoCuenta, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group col-md-8 mx-auto">
+            @Html.LabelFor(model => model.Banco, htmlAttributes: new { @class = "control-label font-weight-normal" })
+            @Html.DropDownListFor(model => model.Banco, new SelectList(new string[] { "Estado", "BICE", "Santantder", "BCI", "Chile", "ITAU", "Falabella", "Scotiabank", "Security" }), htmlAttributes: new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.Banco, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group col-md-8 mx-auto">
+            <label class="control-label font-weight-normal">Número de cuenta</label>
+            @if (Model != null)
+            {
+                <input class="form-control" type="number" value="@Model.NumeroCuenta" id="NumeroCuenta" name="NumeroCuenta">
+            }
+            else
+            {
+                <input class="form-control" type="number" id="NumeroCuenta" name="NumeroCuenta">
+            }
+            <script src="~/Scripts/validarCuenta.js"></script>
+        </div>
+
+        <div class="form-group col-md-8 mx-auto">
+            @Html.LabelFor(model => model.Contratado, htmlAttributes: new { @class = "control-label font-weight-normal" })
+            @Html.DropDownListFor(model => model.Contratado, new SelectList(new string[] { "No", "Si" }), htmlAttributes: new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.Contratado, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group col-md-8 mx-auto">
+            @Html.LabelFor(model => model.Uid, htmlAttributes: new { @class = "control-label font-weight-normal" })
+            @Html.EditorFor(model => model.Uid, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Uid, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group col-md-8 mx-auto">
+            <label class="control-label font-weight-normal">Numero Pulsera</label>
+            @Html.EditorFor(model => model.Gerente, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Gerente, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group col-md-8 mx-auto">
+            <label class="control-label font-weight-normal">Código</label>
+            @Html.EditorFor(model => model.CodPersonal, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.CodPersonal, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group col-md-8 mx-auto">
+            @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label font-weight-normal" })
+            @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" , @type = "email"} })
+            @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+        </div>
+        
+        <div class="form-group col-md-8 mx-auto">
+            <label class="control-label font-weight-normal">Estado civil</label>
+            @Html.DropDownListFor(model => model.EstadoCivil, new SelectList(new string[] { "Soltero/a", "Casado/a", "Viudo/a", "Divorciado/a", "Separado/a", "Viudo/Separado" }), htmlAttributes: new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.EstadoCivil, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group col-md-8 mx-auto">
+            <label class="control-label font-weight-normal">Fecha de nacimiento</label>
+
+            @if (Model.FechaNacimiento == null || Model.FechaNacimiento.Value.ToShortDateString() == "01-01-0001")
+            {
+                <input class="form-control" type="date" id="FechaNacimiento" value="" name="FechaNacimiento" min="1930-01-01">
+            }
+            else
+            {
+                <input class="form-control" type="date" value="@Model.FechaNacimiento.Value.ToString("yyyy-MM-dd")" id="FechaNacimiento" name="FechaNacimiento" min="1930-01-01"
+                       max="2002-01-01">
+            }
+        </div>
+
+        <div class="form-group col-md-8 mx-auto">
+            <label class="control-label font-weight-normal">Dirección</label>
+
+            @Html.EditorFor(model => model.Direccion, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Direccion, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group col-md-8 mx-auto">
+            @Html.LabelFor(model => model.Sexo, htmlAttributes: new { @class = "control-label font-weight-normal" })
+
+            @Html.DropDownListFor(model => model.Sexo, new SelectList(new string[] { "Masculino", "Femenino" }), htmlAttributes: new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.Sexo, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group col-md-8 mx-auto">
+            @Html.LabelFor(model => model.Ciudad, htmlAttributes: new { @class = "control-label font-weight-normal" })
+
+            @Html.EditorFor(model => model.Ciudad, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Ciudad, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group col-md-8 mx-auto">
+            <label class="control-label font-weight-normal">Cargas familiares</label>
+
+            @Html.DropDownListFor(model => model.CargasFamiliares, new SelectList(new string[] { "No", "Si" }), htmlAttributes: new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.CargasFamiliares, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group col-md-8 mx-auto">
+            @Html.LabelFor(model => model.CargasSimples, htmlAttributes: new { @class = "control-label font-weight-normal" })
+
+            @Html.EditorFor(model => model.CargasSimples, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.CargasSimples, "", new { @class = "text-danger" })
+
+        </div>
+
+        <div class="form-group col-md-8 mx-auto">
+            @Html.LabelFor(model => model.AFP, htmlAttributes: new { @class = "control-label font-weight-normal" })
+
+            @Html.DropDownListFor(model => model.AFP,
+           new SelectList(new string[]
+           {"00. No está en AFP", "08. Provida", "29. Planvital", "34. Modelo", "05. Habitat", "03. Cuprum", "33. Capital", "35. Uno" }), htmlAttributes: new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.AFP, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group col-md-8 mx-auto">
+            @Html.LabelFor(model => model.Salud, htmlAttributes: new { @class = "control-label font-weight-normal" })
+
+            @Html.DropDownListFor(model => model.Salud,
+            new SelectList(new string[] {"","00. Sin Isapre",
+                                        "01. Banmédica",
+                                        "02. Consalud",
+                                        "03. VidaTres",
+                                        "04. Colmena",
+                                        "05. Isapre Cruz Blanca S.A.",
+                                        "07. Fonasa",
+                                        "09. Chuquicamata",
+                                        "10. Nueva Masvida",
+                                        "11. Institución de Salud Previsional Fusat Ltda.",
+                                        "12. Isapre Bco. Estado",
+                                        "20. Río Blanco",
+                                        "21. San Lorenzo isapre Ltda.",
+                                        "25. Cruz del Norte" }), htmlAttributes: new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.Salud, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group col-md-8 mx-auto">
+            @Html.LabelFor(model => model.Telefono, htmlAttributes: new { @class = "control-label font-weight-normal" })
+
+            @Html.EditorFor(model => model.Telefono, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Telefono, "", new { @class = "text-danger" })
+        </div>
+
+        <h3 class="text-center font-weight-normal">En caso de emergencia</h3>
+        <div class="form-group col-md-8 mx-auto">
+            <label class="control-label font-weight-normal">Nombre</label>
+
+            @Html.EditorFor(model => model.NombreEmer, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.NombreEmer, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group col-md-8 mx-auto">
+            <label class="control-label font-weight-normal">Vínculo</label>
+
+            @Html.DropDownListFor(model => model.VinculoEmer, new SelectList(new string[] { "Esposo/a", "Amigo/a", "Pareja", "Padre", "Madre", "Hermano/a", "Hijo/a", "Primo/a" }), htmlAttributes: new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.VinculoEmer, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group col-md-8 mx-auto">
+            <label class="control-label font-weight-normal">Dirección</label>
+
+            @Html.EditorFor(model => model.DireccionEmer, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.DireccionEmer, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group col-md-8 mx-auto">
+            <label class="control-label font-weight-normal">Telefono</label>
+
+            @Html.EditorFor(model => model.TelefonoEmer, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.TelefonoEmer, "", new { @class = "text-danger" })
+        </div>
+    </div>
 
         <div>
             <h3 class="text-center font-weight-normal">Antecedentes del cargo</h3>
@@ -278,8 +284,7 @@
             {
                 <div class="form-group col-md-8 mx-auto">
                     @Html.LabelFor(model => model.Jornada, htmlAttributes: new { @class = "control-label font-weight-normal" })
-
-                    @Html.DropDownListFor(model => model.Jornada, new SelectList(new string[] { "A 8:00 a 12:00 HRS y 12:45 a 17:45 HRS Lunes a Viernes", "label 8:00 a 15:30 HRS Lunes a Sábado", "C 7:00 a 11:00 y 11:30 a 15:00 HRS Lunes a Sábado", "D 8:00 a 12:00 HRS y 13:00 a 18:00 HRS Lunes a Viernes" }), htmlAttributes: new { @class = "form-control" })
+                    @Html.DropDownListFor(model => model.Jornada, new SelectList(new string[] { "A 8:00 a 12:00 HRS y 12:45 a 17:45 HRS Lunes a Viernes", "B 8:00 a 15:30 HRS Lunes a Sábado", "C 7:00 a 11:00 y 11:30 a 15:00 HRS Lunes a Sábado", "D 8:00 a 12:00 HRS y 13:00 a 18:00 HRS Lunes a Viernes" }), htmlAttributes: new { @class = "form-control" })
                     @Html.ValidationMessageFor(model => model.Jornada, "", new { @class = "text-danger" })
                 </div>
             }

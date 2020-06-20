@@ -114,7 +114,7 @@
         <div class="form-group col-md-8 mx-auto">
             <label class="control-label font-weight-normal">Fecha de nacimiento</label>
 
-            @if (Model.FechaNacimiento == null || Model.FechaNacimiento.Value.ToShortDateString() == "01-01-0001")
+            @if (Model.FechaNacimiento == null || Model.FechaNacimiento.Value.ToShortDateString() == "01/01/0001")
             {
                 <input class="form-control" type="date" id="FechaNacimiento" value="" name="FechaNacimiento" min="1930-01-01">
             }
@@ -123,6 +123,15 @@
                 <input class="form-control" type="date" value="@Model.FechaNacimiento.Value.ToString("yyyy-MM-dd")" id="FechaNacimiento" name="FechaNacimiento" min="1930-01-01"
                        max="2002-01-01">
             }
+            <script>
+                function fecha() {
+                    var fecnac = @Model.FechaNacimiento.Value.ToShortDateString();
+                    var fecha = document.getElementById("FechaNacimiento");
+                    console.log(fecha.value);
+                    console.log(fecnac);
+                }
+                window.onload = fecha;
+            </script>
         </div>
 
         <div class="form-group col-md-8 mx-auto">
@@ -273,9 +282,39 @@
                 <div class="form-group col-md-8 mx-auto">
                     @Html.LabelFor(model => model.Jornada, htmlAttributes: new { @class = "control-label font-weight-normal" })
 
-                    @Html.DropDownListFor(model => model.Jornada, new SelectList(new string[] { "A 8:00 a 12:00 HRS y 12:45 a 17:45 HRS Lunes a Viernes", "label 8:00 a 15:30 HRS Lunes a Sábado", "C 7:00 a 11:00 y 11:30 a 15:00 HRS Lunes a Sábado", "D 8:00 a 12:00 HRS y 13:00 a 18:00 HRS Lunes a Viernes" }), htmlAttributes: new { @class = "form-control" })
+                    @Html.DropDownListFor(model => model.Jornada, new SelectList(new string[] { "A 8:00 a 12:00 HRS y 12:45 a 17:45 HRS Lunes a Viernes", "B 8:00 a 15:30 HRS Lunes a Sábado", "C 7:00 a 11:00 y 11:30 a 15:00 HRS Lunes a Sábado", "D 8:00 a 12:00 HRS y 13:00 a 18:00 HRS Lunes a Viernes" }), htmlAttributes: new { @class = "form-control" , @OnChange="jornada()"})
                     @Html.ValidationMessageFor(model => model.Jornada, "", new { @class = "text-danger" })
                 </div>
+                <script>
+                    function jornada() {
+                        var seleccion = document.getElementById("Jornada");
+                        var tipo = seleccion.options[seleccion.selectedIndex].text
+                        if (tipo[0] == "A") {
+                            document.getElementById("Entrada").value = "08:00"
+                            document.getElementById("Salida").value = "12:00"
+                            document.getElementById("EntradaA").value = "12:45"
+                            document.getElementById("SalidaA").value = "17:45"
+                        }
+                        if (tipo[0] == "B") {
+                            document.getElementById("Entrada").value = "08:00"
+                            document.getElementById("Salida").value = "12:00"
+                            document.getElementById("EntradaA").value = "12:00"
+                            document.getElementById("SalidaA").value = "15:30"
+                        }
+                        if (tipo[0] == "C") {
+                            document.getElementById("Entrada").value = "07:00"
+                            document.getElementById("Salida").value = "11:00"
+                            document.getElementById("EntradaA").value = "11:30"
+                            document.getElementById("SalidaA").value = "15:00"
+                        }
+                        if (tipo[0] == "D") {
+                            document.getElementById("Entrada").value = "08:00"
+                            document.getElementById("Salida").value = "12:00"
+                            document.getElementById("EntradaA").value = "13:00"
+                            document.getElementById("SalidaA").value = "18:00"
+                        }
+                    }
+                </script>
             }
             else
             {
@@ -315,7 +354,7 @@
             <div class="form-group col-md-8 mx-auto">
                 <label class="control-label font-weight-normal">Fecha de ingreso</label>
 
-                @if (Model.FechaIngreso == null || Model.FechaIngreso.Value.ToShortDateString() == "01-01-0001")
+                @if (Model.FechaIngreso == null || Model.FechaIngreso.Value.ToShortDateString() == "01/01/0001")
                 {
                     <input class="form-control" type="date" id="FechaIngreso" value="" name="FechaIngreso" min="1930-01-01">
                 }
@@ -330,7 +369,7 @@
         <div class="form-group col-md-8 mx-auto">
             <label class="control-label font-weight-normal">Fecha de término</label>
 
-            @if (Model.FechaTermino == null || Model.FechaTermino.Value.ToShortDateString() == "01-01-0001")
+            @if (Model.FechaTermino == null || Model.FechaTermino.Value.ToShortDateString() == "01/01/0001")
             {
                 <input class="form-control" type="date" id="FechaTermino" name="FechaTermino" min="2019-01-01">
             }

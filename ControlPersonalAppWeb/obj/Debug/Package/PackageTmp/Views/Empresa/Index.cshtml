@@ -6,14 +6,11 @@
     ViewBag.Title = "Index";
     var cuenta = ControlPersonalAppWeb.Utils.SessionManager.CuentaAutenticada().Permisos;
 }
-<h1 class="display-4 text-center">Índice Empresas</h1>
+<h1 class="display-4 text-center">Índice Proveedores</h1>
 <hr />
-@if (cuenta.Contains("EmpresasC"))
-{
-    <a href='@Url.Action("Create", "Empresa")'>
-        <button type="button" class="btn btn-primary float-right mb-3">Crear Nuevo</button>
-    </a>
-}
+<a href='@Url.Action("Create", "Empresa")'>
+    <button type="button" class="btn btn-primary float-right mb-3">Crear Nuevo</button>
+</a>
 
 <div class="table-responsive">
     <table class="table table-hover">
@@ -39,27 +36,22 @@
                     @Html.DisplayFor(modelItem => item.Rut)
                 </td>
                 <td>
-                    @if (cuenta.Contains("EmpresasE"))
-                    {
-                        <a href='@Url.Action("Edit", "Empresas", new { id = item.Id })'>
-                            <button type="button" class="btn btn-warning">Editar</button>
-                        </a>
-                    }
-                    <a href='@Url.Action("Details", "Empresas", new { id = item.Id })'>
+                    <a href='@Url.Action("Edit", "Empresa", new { id = item.Id })'>
+                        <button type="button" class="btn btn-warning">Editar</button>
+                    </a>
+                    <a href='@Url.Action("Details", "Empresa", new { id = item.Id })'>
                         <button type="button" class="btn btn-info">Detalle</button>
                     </a>
-                    @if (cuenta.Contains("EmpresasD"))
-                    {
-                        <a href='@Url.Action("Delete", "Empresas", new { id = item.Id })'>
-                            <button type="button" class="btn btn-danger" )>Borrar</button>
-                        </a>
-                    }
+                    <a href='@Url.Action("Delete", "Empresa", new { id = item.Id })' onclick="return confirm('¿Está seguro que desea eliminar el Proveedor?');" })>
+                        <button type="button" class="btn btn-danger" )>Borrar</button>
+                    </a>
+                    <!--
                     <a href='@Url.Action("Index", "Cargos", new { id = item.Id })'>
                         <button type="button" class="btn btn-dark" )>Cargos</button>
                     </a>
                     <a href='@Url.Action("Index", "CentroDeCostos", new { id = item.Id })'>
                         <button type="button" class="btn btn-success" )>Centros de costos </button>
-                    </a>
+                    </a>-->
                 </td>
             </tr>
         }

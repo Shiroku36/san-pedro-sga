@@ -244,7 +244,7 @@ namespace ControlPersonalAppWeb.Controllers
                         {
                             int hour = totalTrabajado.Hour + (totalTrabajado.Day-2)*24;
                             int min = totalTrabajado.Minute;
-                            totales.AddCell((new Paragraph(hour + ":" + min, fntCell) { Alignment = Element.ALIGN_CENTER }));
+                            totales.AddCell((new Paragraph(hour.ToString("00") + ":" + min.ToString("00"), fntCell) { Alignment = Element.ALIGN_CENTER }));
                         }
                         else
                         {
@@ -256,7 +256,7 @@ namespace ControlPersonalAppWeb.Controllers
                         {
                             int hour = totalHoras.Hour + (totalHoras.Day - 2) * 24;
                             int min = totalHoras.Minute;
-                            totales.AddCell((new Paragraph(hour + ":" + min, fntCell) { Alignment = Element.ALIGN_CENTER }));
+                            totales.AddCell((new Paragraph(hour.ToString("00") + ":" + min.ToString("00"), fntCell) { Alignment = Element.ALIGN_CENTER }));
                         }
                         else
                         {
@@ -268,7 +268,7 @@ namespace ControlPersonalAppWeb.Controllers
                         {
                             int hour = totalMuerto.Hour + (totalMuerto.Day - 2) * 24;
                             int min = totalMuerto.Minute;
-                            totales.AddCell((new Paragraph(hour + ":" + min, fntCell) { Alignment = Element.ALIGN_CENTER }));
+                            totales.AddCell((new Paragraph(hour.ToString("00") + ":" + min.ToString("00"), fntCell) { Alignment = Element.ALIGN_CENTER }));
                         }
                         else
                         {
@@ -321,7 +321,7 @@ namespace ControlPersonalAppWeb.Controllers
                     int hour = horas.Horas.Hour + (horas.Horas.Day - 2) * 24;
                     int min = horas.Horas.Minute;
                     tablaHorasExtras.AddCell((new Paragraph(horas.Nombre, fntCell) { Alignment = Element.ALIGN_CENTER }));
-                    tablaHorasExtras.AddCell((new Paragraph(hour + ":" + min, fntCell) { Alignment = Element.ALIGN_CENTER }));
+                    tablaHorasExtras.AddCell((new Paragraph(hour.ToString("00") + ":" + min.ToString("00"), fntCell) { Alignment = Element.ALIGN_CENTER }));
                 }
                 else
                 {
@@ -344,7 +344,7 @@ namespace ControlPersonalAppWeb.Controllers
                     int hour = horas.Horas.Hour + (horas.Horas.Day - 2) * 24;
                     int min = horas.Horas.Minute;
                     tablaHorasTotales.AddCell((new Paragraph(horas.Nombre, fntCell) { Alignment = Element.ALIGN_CENTER }));
-                    tablaHorasTotales.AddCell((new Paragraph(hour + ":" + min, fntCell) { Alignment = Element.ALIGN_CENTER }));
+                    tablaHorasTotales.AddCell((new Paragraph(hour.ToString("00") + ":" + min.ToString("00"), fntCell) { Alignment = Element.ALIGN_CENTER }));
                 }
                 else
                 {
@@ -368,7 +368,7 @@ namespace ControlPersonalAppWeb.Controllers
                     int hour = horas.Horas.Hour + (horas.Horas.Day - 2) * 24;
                     int min = horas.Horas.Minute;
                     tablaHorasMuertas.AddCell((new Paragraph(horas.Nombre, fntCell) { Alignment = Element.ALIGN_CENTER }));
-                    tablaHorasMuertas.AddCell((new Paragraph(hour + ":" + min, fntCell) { Alignment = Element.ALIGN_CENTER }));
+                    tablaHorasMuertas.AddCell((new Paragraph(hour.ToString("00") + ":" + min.ToString("00"), fntCell) { Alignment = Element.ALIGN_CENTER }));
                 }
                 else
                 {

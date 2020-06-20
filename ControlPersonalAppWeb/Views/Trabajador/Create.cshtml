@@ -284,8 +284,7 @@
             {
                 <div class="form-group col-md-8 mx-auto">
                     @Html.LabelFor(model => model.Jornada, htmlAttributes: new { @class = "control-label font-weight-normal" })
-
-                    @Html.DropDownListFor(model => model.Jornada, new SelectList(new string[] { "A 8:00 a 12:00 HRS y 12:45 a 17:45 HRS Lunes a Viernes", "label 8:00 a 15:30 HRS Lunes a Sábado", "C 7:00 a 11:00 y 11:30 a 15:00 HRS Lunes a Sábado", "D 8:00 a 12:00 HRS y 13:00 a 18:00 HRS Lunes a Viernes" }), htmlAttributes: new { @class = "form-control" })
+                    @Html.DropDownListFor(model => model.Jornada, new SelectList(new string[] { "A 8:00 a 12:00 HRS y 12:45 a 17:45 HRS Lunes a Viernes", "B 8:00 a 15:30 HRS Lunes a Sábado", "C 7:00 a 11:00 y 11:30 a 15:00 HRS Lunes a Sábado", "D 8:00 a 12:00 HRS y 13:00 a 18:00 HRS Lunes a Viernes" }), htmlAttributes: new { @class = "form-control" })
                     @Html.ValidationMessageFor(model => model.Jornada, "", new { @class = "text-danger" })
                 </div>
             }

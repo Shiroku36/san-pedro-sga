@@ -168,7 +168,7 @@ namespace ControlPersonalAppWeb.Controllers
                 articuloDestino = new Stock()
                 {
                     Tipo = "Producto",
-                    Ubicacion = ingreso.Origen,
+                    Ubicacion = ingreso.Destino,
                     Empresa = producto.Tipo,
                     EmpresaId = cuenta.EmpresaId,
                     Activo = true,

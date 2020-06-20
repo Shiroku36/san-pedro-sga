@@ -21,6 +21,7 @@ using System.Net.Mail;
 using System.Drawing;
 using System.Globalization;
 using System.Data.Entity;
+using Rectangle = iTextSharp.text.Rectangle;
 
 namespace ControlPersonalAppWeb.Controllers
 {
@@ -29,6 +30,8 @@ namespace ControlPersonalAppWeb.Controllers
 
         DBManejoPersonalEntities db = new DBManejoPersonalEntities();
         private Cuentas cuenta = Utils.SessionManager.CuentaAutenticada();
+        Dictionary<TrabajadorIndex, Ranking> rankings = new Dictionary<TrabajadorIndex, Ranking>();
+        Dictionary<TrabajadorIndex, List<DateTime>> diasTrabajados = new Dictionary<TrabajadorIndex, List<DateTime>>();
         public ActionResult Borrar()
         {
             return RedirectToAction("Index");
@@ -391,6 +394,89 @@ namespace ControlPersonalAppWeb.Controllers
                     } 
                     //Add line break
                     document.Add(new Chunk("\n", fntHead));
+                    
+                    List<string> titulosHorasTrabajadas = new List<string> {"Nombre","H. trabajadas" };
+                    PdfPTable tablaHorasTrabajadas = new PdfPTable(titulosHorasTrabajadas.Count) {WidthPercentage = 100f};
+                    tablaHorasTrabajadas.SetWidths(new int[] { 3, 1 });
+                    List<string> titulosHorasExtras = new List<string> {"Nombre","H. extras" };
+                    PdfPTable tablaHorasExtras = new PdfPTable(titulosHorasExtras.Count) {WidthPercentage = 100f};
+                    tablaHorasExtras.SetWidths(new int[] { 3, 1 });
+                    List<string> titulosAtrasos = new List<string> {"Nombre","H. atrasos" };
+                    PdfPTable tablaAtrasos = new PdfPTable(titulosAtrasos.Count) {WidthPercentage = 100f};
+                    tablaAtrasos.SetWidths(new int[] { 3, 1 });
+                    List<string> titulosDiasTrabajados = new List<string> {"Nombre","Días asis." };
+                    PdfPTable tablaDiasTrabajados = new PdfPTable(titulosDiasTrabajados.Count) {WidthPercentage = 100f};
+                    tablaDiasTrabajados.SetWidths(new int[] { 3 , 1 });
+                    //table.SetWidths(new int[] { 60, 150, 80, 50, 50, 50, 50, 50, 50, 50, 50, 100 });
+                    //Table header
+                    BaseFont btnColumnHeader = BaseFont.CreateFont(BaseFont.TIMES_ROMAN, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
+                    Font fntColumnHeader = new Font(btnColumnHeader, 8, 1, BaseColor.WHITE);
+                    Font fntCell = new Font(btnColumnHeader, 8, 1, BaseColor.BLACK);
+                    int i;
+                    for (i = 0; i < titulosHorasTrabajadas.Count; i++)
+                    { 
+                        PdfPCell cell = new PdfPCell() {BackgroundColor = BaseColor.GRAY} ;
+                        cell.AddElement(new Chunk(titulosHorasTrabajadas[i], fntColumnHeader));
+                        tablaHorasTrabajadas.AddCell(cell);
+                    }
+                    for (i = 0; i < titulosHorasExtras.Count; i++)
+                    { 
+                        PdfPCell cell = new PdfPCell() {BackgroundColor = BaseColor.GRAY} ;
+                        cell.AddElement(new Chunk(titulosHorasExtras[i], fntColumnHeader));
+                        tablaHorasExtras.AddCell(cell);
+                    }
+                    for (i = 0; i < titulosHorasTrabajadas.Count; i++)
+                    { 
+                        PdfPCell cell = new PdfPCell() {BackgroundColor = BaseColor.GRAY} ;
+                        cell.AddElement(new Chunk(titulosAtrasos[i], fntColumnHeader));
+                        tablaAtrasos.AddCell(cell);
+                    }
+                    for (i = 0; i < titulosDiasTrabajados.Count; i++)
+                    { 
+                        PdfPCell cell = new PdfPCell() {BackgroundColor = BaseColor.GRAY} ;
+                        cell.AddElement(new Chunk(titulosDiasTrabajados[i], fntColumnHeader));
+                        tablaDiasTrabajados.AddCell(cell);
+                    }
+                    //table Data
+                    foreach (var ranking in rankings.OrderByDescending(key => key.Value.Atraso))
+                    {
+                        tablaAtrasos.AddCell(new Phrase(ranking.Key.Nombre + " " + ranking.Key.ApellidoPaterno + " " + ranking.Key.ApellidoMaterno, fntCell));
+                        int hour = ranking.Value.Atraso.Hour + (ranking.Value.Atraso.Day - 1) * 24;
+                        int min = ranking.Value.Atraso.Minute;
+                        tablaAtrasos.AddCell(new Phrase(hour.ToString("00") + ":" + min.ToString("00"), fntCell));
+                    }
+                    
+                    foreach (var ranking in rankings.OrderByDescending(key => key.Value.HorasExtras))
+                    {
+                        tablaHorasExtras.AddCell(new Phrase(ranking.Key.Nombre + " " + ranking.Key.ApellidoPaterno + " " + ranking.Key.ApellidoMaterno, fntCell));
+                        int hour = ranking.Value.HorasExtras.Hour + (ranking.Value.HorasExtras.Day - 1) * 24;
+                        int min = ranking.Value.HorasExtras.Minute;
+                        tablaHorasExtras.AddCell(new Phrase(hour.ToString("00") + ":" + min.ToString("00"), fntCell));
+                    }
+
+                    foreach (var ranking in rankings.OrderByDescending(key => key.Value.HorasTrabajadas))
+                    {
+                        tablaHorasTrabajadas.AddCell(new Phrase(ranking.Key.Nombre + " " + ranking.Key.ApellidoPaterno + " " + ranking.Key.ApellidoMaterno, fntCell));
+                        int hour = ranking.Value.HorasTrabajadas.Hour + (ranking.Value.HorasTrabajadas.Day - 1) * 24;
+                        int min = ranking.Value.HorasTrabajadas.Minute;
+                        tablaHorasTrabajadas.AddCell(new Phrase(hour.ToString("00") + ":" + min.ToString("00"), fntCell));
+                    }
+
+                    foreach (var dias in diasTrabajados.OrderByDescending(key => key.Value.Count))
+                    {
+                        tablaDiasTrabajados.AddCell(new Phrase(dias.Key.Nombre + " " + dias.Key.ApellidoPaterno + " " + dias.Key.ApellidoMaterno, fntCell));
+                        tablaDiasTrabajados.AddCell(new Phrase(dias.Value.Count.ToString("00"), fntCell));
+                    }
+
+                    PdfPTable tablaRanking = new PdfPTable(4) { WidthPercentage = 100f };
+                    tablaRanking.SplitLate = false;
+                    tablaRanking.AddCell(new PdfPCell( tablaHorasTrabajadas) { Border = Rectangle.NO_BORDER });
+                    tablaRanking.AddCell(new PdfPCell(tablaHorasExtras) { Border = Rectangle.NO_BORDER }) ;
+                    tablaRanking.AddCell(new PdfPCell(tablaAtrasos) { Border = Rectangle.NO_BORDER });
+                    tablaRanking.AddCell(new PdfPCell(tablaDiasTrabajados) { Border = Rectangle.NO_BORDER });
+                    document.Add(tablaRanking);
+
+                    document.NewPage();
 
                     //Write the table
                     List<string> titulos = new List<string>();
@@ -411,10 +497,6 @@ namespace ControlPersonalAppWeb.Controllers
                     table.SetWidths(new int[] { 60, 150, 80, 50, 50, 50, 50, 50, 50, 50, 50, 100 });
                     table.WidthPercentage = 100f;
                     //Table header
-                    BaseFont btnColumnHeader = BaseFont.CreateFont(BaseFont.TIMES_ROMAN, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
-                    Font fntColumnHeader = new Font(btnColumnHeader, 8, 1, BaseColor.WHITE);
-                    Font fntCell = new Font(btnColumnHeader, 8, 1, BaseColor.BLACK);
-                    int i;
                     for ( i = 0; i < num; i++)
                     {
                         PdfPCell cell = new PdfPCell();
@@ -948,7 +1030,7 @@ namespace ControlPersonalAppWeb.Controllers
                         DateTime salidaAlmuerzo = new DateTime();
                         DateTime almuerzo = new DateTime();
                         //Comprueba si tiene asignada una entrada
-                        if (!String.IsNullOrEmpty(trabajador.Entrada) )
+                        if (!String.IsNullOrEmpty(trabajador.Entrada))
                         {
                             DateTime.TryParse(primero.Fecha.ToShortDateString() + " " + trabajador.Entrada, out atraso);
                         }
@@ -967,7 +1049,7 @@ namespace ControlPersonalAppWeb.Controllers
                         {
                             //Si tiene salida
                             if (!String.IsNullOrEmpty(trabajador.SalidaA))
-                            { 
+                            {
                                 DateTime.TryParse(segundo.Fecha.ToShortDateString() + " " + trabajador.SalidaA, out extra);
                             }
                             else
@@ -977,7 +1059,7 @@ namespace ControlPersonalAppWeb.Controllers
                             //Ver si salió después de la hora, el segundo debe ser más grande
                             if (extra < segundo.Fecha)
                             {
-                                if(!String.IsNullOrEmpty(trabajador.SalidaA) && !String.IsNullOrEmpty(Utils.SessionManager.salida))
+                                if (!String.IsNullOrEmpty(trabajador.SalidaA) && !String.IsNullOrEmpty(Utils.SessionManager.salida))
                                     horasExtras = horasExtras + (segundo.Fecha - extra);
                             }
                             if (!String.IsNullOrEmpty(trabajador.Entrada))
@@ -999,11 +1081,11 @@ namespace ControlPersonalAppWeb.Controllers
                             }
                         }
                         else
-                        { 
+                        {
                             //Horario nocturno, revisar
                             horas = horas + (segundo.Fecha - primero.Fecha);
                         }
-                        if(!String.IsNullOrEmpty(trabajador.Salida) && !String.IsNullOrEmpty(trabajador.EntradaA))
+                        if (!String.IsNullOrEmpty(trabajador.Salida) && !String.IsNullOrEmpty(trabajador.EntradaA))
                         {
                             DateTime.TryParse("01/01/0001 " + trabajador.Salida, out entradaAlmuerzo);
                             DateTime.TryParse("01/01/0001 " + trabajador.EntradaA, out salidaAlmuerzo);
@@ -1028,9 +1110,9 @@ namespace ControlPersonalAppWeb.Controllers
                         {
                             horasT = horasQL;
                             raro = "*";
-                        }   
+                        }
                         DateTime horasTrabajadas = new DateTime();
-                        if(horasT>horasExtras)
+                        if (horasT > horasExtras)
                         {
                             horasTrabajadas = horasTrabajadas + (horasT - horasExtras);
                         }
@@ -1051,12 +1133,50 @@ namespace ControlPersonalAppWeb.Controllers
                             Atraso = atrasoP.ToShortTimeString(),
                             Campo = primero.Campo,
                             //Horas totales
-                            Horas = horasT.ToShortTimeString()+raro,
+                            Horas = horasT.ToShortTimeString() + raro,
                             HorasTrabajadas = horasTrabajadas.ToShortTimeString(),
                             Contratado = trabajador.Contratado
 
                         };
                         registrosLista.Add(registro);
+                        if (rankings.ContainsKey(trabajador))
+                        {
+                            rankings[trabajador].Atraso = rankings[trabajador].Atraso.AddHours(atrasoP.Hour);
+                            rankings[trabajador].Atraso = rankings[trabajador].Atraso.AddMinutes(atrasoP.Minute);
+                            rankings[trabajador].Atraso = rankings[trabajador].Atraso.AddSeconds(atrasoP.Second);
+                            rankings[trabajador].HorasExtras = rankings[trabajador].HorasExtras.AddHours(horasExtras.Hour);
+                            rankings[trabajador].HorasExtras = rankings[trabajador].HorasExtras.AddMinutes(horasExtras.Minute);
+                            rankings[trabajador].HorasExtras = rankings[trabajador].HorasExtras.AddSeconds(horasExtras.Second);
+                            rankings[trabajador].HorasTrabajadas = rankings[trabajador].HorasTrabajadas.AddHours(horasTrabajadas.Hour);
+                            rankings[trabajador].HorasTrabajadas = rankings[trabajador].HorasTrabajadas.AddMinutes(horasTrabajadas.Minute);
+                            rankings[trabajador].HorasTrabajadas = rankings[trabajador].HorasTrabajadas.AddSeconds(horasTrabajadas.Second);
+                        }
+                        else
+                        {
+                            DateTime Atraso = new DateTime();
+                            DateTime HorasExtras = new DateTime();
+                            DateTime HorasTrabajadas = new DateTime();
+                            Atraso = Atraso.AddHours(atrasoP.Hour);
+                            Atraso = Atraso.AddMinutes(atrasoP.Minute);
+                            Atraso = Atraso.AddSeconds(atrasoP.Second);
+                            HorasExtras = HorasExtras.AddHours(horasExtras.Hour);
+                            HorasExtras = HorasExtras.AddMinutes(horasExtras.Minute);
+                            HorasExtras = HorasExtras.AddSeconds(horasExtras.Second);
+                            HorasTrabajadas = HorasTrabajadas.AddHours(horasTrabajadas.Hour);
+                            HorasTrabajadas = HorasTrabajadas.AddMinutes(horasTrabajadas.Minute);
+                            HorasTrabajadas = HorasTrabajadas.AddSeconds(horasTrabajadas.Second);
+                            Ranking ranking = new Ranking { Atraso = Atraso, HorasExtras = HorasExtras, HorasTrabajadas = HorasTrabajadas };
+                            rankings.Add(trabajador, ranking);
+                        }
+
+                        if (diasTrabajados.ContainsKey(trabajador))
+                        {
+                            diasTrabajados[trabajador].Add(primero.Fecha);
+                        }
+                        else
+                        {
+                            diasTrabajados.Add(trabajador, new List<DateTime> { primero.Fecha });
+                        }
                     }
                 }
             }
@@ -1770,11 +1890,10 @@ namespace ControlPersonalAppWeb.Controllers
                     datosCreate();
                     return View(trabajadorNew);
                 }
-                Trabajador trabajador = null;
                 try
                 {
-                    trabajador = database.Trabajador.First(x => x.Rut == trabajadorNew.Rut);
-                    if(trabajador.Nombre!=trabajadorNew.Nombre && trabajador.ApellidoPaterno != trabajadorNew.ApellidoPaterno && trabajador.ApellidoMaterno != trabajadorNew.ApellidoMaterno)
+                    Trabajador trabajador = database.Trabajador.First(x => x.Rut == trabajadorNew.Rut);
+                    if(trabajador.Id != trabajadorNew.Id)
                     {
                         ViewBag.texto = "Ya existe el rut";
                         datosCreate();

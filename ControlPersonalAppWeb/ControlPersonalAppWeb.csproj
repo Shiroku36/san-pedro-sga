@@ -20,9 +20,10 @@
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
     <Use64BitIISExpress />
-    <IISExpressSSLPort />
-    <IISExpressAnonymousAuthentication />
-    <IISExpressWindowsAuthentication />
+    <IISExpressSSLPort>
+    </IISExpressSSLPort>
+    <IISExpressAnonymousAuthentication>enabled</IISExpressAnonymousAuthentication>
+    <IISExpressWindowsAuthentication>disabled</IISExpressWindowsAuthentication>
     <IISExpressUseClassicPipelineMode />
     <UseGlobalApplicationHostFile />
     <NuGetPackageImportStamp>
@@ -275,6 +276,7 @@
     <Compile Include="Models\DiasHoras.cs" />
     <Compile Include="Models\Equipo.cs" />
     <Compile Include="Models\Persona.cs" />
+    <Compile Include="Models\Ranking.cs" />
     <Compile Include="Models\RegistroPDF.cs" />
     <Compile Include="Models\TrabajadorIndex.cs" />
     <Compile Include="Models\Registro.cs" />
@@ -756,6 +758,7 @@
     <Content Include="Views\Notificaciones\Index.cshtml" />
     <Content Include="Views\Shared\Busqueda.cshtml" />
     <Content Include="Views\Shared\Productos.cshtml" />
+    <Content Include="SGA.pfx" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Images\" />
@@ -807,6 +810,9 @@
   <PropertyGroup>
     <SignAssembly>false</SignAssembly>
   </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>SGA.pfx</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets')" />
   <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
@@ -818,18 +824,7 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>True</UseIIS>
-          <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>53979</DevelopmentServerPort>
-          <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:3636/</IISUrl>
-          <OverrideIISAppRootUrl>True</OverrideIISAppRootUrl>
-          <IISAppRootUrl>http://localhost:3636/</IISAppRootUrl>
-          <NTLMAuthentication>False</NTLMAuthentication>
-          <UseCustomServer>False</UseCustomServer>
-          <CustomServerUrl>
-          </CustomServerUrl>
-          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+          <SaveServerSettingsInUserFile>True</SaveServerSettingsInUserFile>
         </WebProjectProperties>
       </FlavorProperties>
     </VisualStudio>

@@ -212,9 +212,10 @@
         agregarEliminar();
     }
 
-    window.onload = cargarHuertos(0);
-    if (ingreso)
-    {
+    if (ingreso) {
         window.onload = cargarHuertosIngreso(0);
+    }
+    else {
+        window.onload = cargarHuertos(0);
     }
 </script>

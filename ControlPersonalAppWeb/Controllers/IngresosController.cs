@@ -76,15 +76,8 @@ namespace ControlPersonalAppWeb.Controllers
                 db.SaveChanges();
                 for (int i = 0; i < productos.Length; i++)
                 {
-                    Stock stock = new Stock();
                     string nombre = productos[i];
                     Producto producto = db.Producto.First(x => x.Nombre == nombre);
-                    stock.Producto = producto.Nombre;
-                    stock.ProductoId = producto.Id;
-                    stock.Cantidad = Convert.ToInt32(cantidades[i]);
-                    stock.IngresoId = ingreso.Id;
-                    stock.Ubicacion = ingreso.Ubicacion;
-                    db.Stock.Add(stock);
                     if (i == productos.Length - 1)
                     {
                         ingreso.Productos = ingreso.Productos + producto.Nombre;
@@ -93,7 +86,7 @@ namespace ControlPersonalAppWeb.Controllers
                     {
                         ingreso.Productos = ingreso.Productos + producto.Nombre + ", ";
                     }
-                    agregarStock(producto,(int)stock.Cantidad, ingreso);
+                    agregarStock(producto, Convert.ToInt32(cantidades[i]), ingreso);
                 }
                 db.SaveChanges();
                 Utils.SessionManager.log("Crear ingreso: " + ingreso.Id);
