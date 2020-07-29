@@ -1,4 +1,5 @@
 ﻿using ControlPersonalAppWeb.Models;
+using DocumentFormat.OpenXml.Office2010.Excel;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity.Validation;
@@ -77,7 +78,32 @@ namespace ControlPersonalAppWeb.Controllers
             }
             return nombres;
         }
-        // GET: Cuenta/Create
+        /*public ActionResult Password(int id)
+        {
+            ViewBag.id = id;
+            Cuentas cuentas = db.Cuentas.First(x => x.Id == id);
+            return View(cuentas);
+        }
+
+        [HttpPost]
+        public ActionResult Password(FormCollection collection)
+        {
+            try
+            {
+                int id = Convert.ToInt32(collection["Id"]);
+                Cuentas cuentas = db.Cuentas.First(x => x.Id == id);
+                cuentas.Password = collection["Password"];
+                db.SaveChanges();
+                Utils.SessionManager.log("Contraseña cambiada : " + cuentas.Usuario);
+                return RedirectToAction("Details", new { id});
+            }
+            catch
+            {
+                return View();
+            }
+
+        }*/
+                // GET: Cuenta/Create
         public ActionResult Create()
         {
             //List<string> campos = new List<string>();
@@ -111,13 +137,21 @@ namespace ControlPersonalAppWeb.Controllers
                 cuentas.Usuario = collection["Usuario"];
                 cuentas.Password = collection["Password"];
                 cuentas.Empresa = collection["Empresa"];
+                cuentas.Nombre = collection["Nombre"];
+                cuentas.Apellido = collection["Apellido"];
                 string empresa = cuenta.Empresa;
                 cuenta.EmpresaId = db.Empresas.First(x => x.Nombre == empresa).Id;
                 cuentas.Permisos = collection["Permisos"];
-                cuentas.TrabajadorId = Convert.ToInt32(collection["TrabajadorId"]);
-                int idd = (int)cuentas.TrabajadorId;
-                Trabajador trabajador = db.Trabajador.First(x => x.Id == idd);
-                cuentas.Trabajador = trabajador.Nombre + " " + trabajador.ApellidoPaterno + " " + trabajador.ApellidoMaterno;
+                cuentas.Email = collection["Email"];
+                if(!string.IsNullOrEmpty(collection["Notificacion"]))
+                {
+                    cuentas.Notificacion = true;
+                }
+                else
+                {
+                    cuentas.Notificacion = false;
+                }
+
                 database.Cuentas.Add(cuentas);
                 database.SaveChanges();
                 Utils.SessionManager.log("Cuenta creada : " + cuentas.Usuario);
@@ -163,13 +197,20 @@ namespace ControlPersonalAppWeb.Controllers
                 cuentas.Usuario = collection["Usuario"];
                 cuentas.Password = collection["Password"];
                 cuentas.Empresa = collection["Empresa"];
+                cuentas.Nombre = collection["Nombre"];
+                cuentas.Apellido = collection["Apellido"];
                 string empresa = cuenta.Empresa;
+                cuentas.Email = collection["Email"];
                 cuenta.EmpresaId = db.Empresas.First(x => x.Nombre == empresa).Id;
                 cuentas.Permisos = collection["Permisos"];
-                cuentas.TrabajadorId = Convert.ToInt32(collection["TrabajadorId"]);
-                int idd =(int) cuentas.TrabajadorId;
-                Trabajador trabajador = db.Trabajador.First(x => x.Id == idd);
-                cuentas.Trabajador = trabajador.Nombre + " " + trabajador.ApellidoPaterno + " " + trabajador.ApellidoMaterno;
+                if (!string.IsNullOrEmpty(collection["Notificacion"]))
+                {
+                    cuentas.Notificacion = true;
+                }
+                else
+                {
+                    cuentas.Notificacion = false;
+                }
                 database.SaveChanges();
                 return RedirectToAction("Index");
             }
@@ -217,6 +258,10 @@ namespace ControlPersonalAppWeb.Controllers
         public ActionResult Login()
         {
             ViewBag.Cuenta = "lala";
+            if(cuenta!=null)
+            {
+                return RedirectToAction("Index","Home");
+            }
             return View();
         }
 

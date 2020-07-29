@@ -19,7 +19,7 @@ namespace ControlPersonalAppWeb.Controllers
         public ActionResult Index()
         {
             Utils.SessionManager.log("Index comentarios");
-            return View(db.Comentario.Where(x => x.EmpresaId == cuenta.EmpresaId).ToList());
+            return View(db.Comentario.Where(x => x.EmpresaId == cuenta.EmpresaId).OrderByDescending(x => x.Fecha).ToList());
         }
 
         // GET: Comentarios/Details/5
@@ -53,8 +53,8 @@ namespace ControlPersonalAppWeb.Controllers
         {
             if (ModelState.IsValid)
             {
-                comentario.Trabajador = cuenta.Trabajador;
-                comentario.TrabajadorId = cuenta.TrabajadorId;
+                comentario.Trabajador = cuenta.Nombre + " " +cuenta.Apellido;
+                comentario.TrabajadorId = cuenta.Id;
                 comentario.Fecha = DateTime.Now;
                 comentario.Empresa = cuenta.Empresa;
                 comentario.EmpresaId = cuenta.EmpresaId;
@@ -66,7 +66,7 @@ namespace ControlPersonalAppWeb.Controllers
 
             return View(comentario);
         }
-
+        /*
         // GET: Comentarios/Edit/5
         public ActionResult Edit(int? id)
         {
@@ -123,7 +123,7 @@ namespace ControlPersonalAppWeb.Controllers
             db.SaveChanges();
             return RedirectToAction("Index");
         }
-
+        */
         protected override void Dispose(bool disposing)
         {
             if (disposing)

@@ -89,6 +89,13 @@ namespace ControlPersonalAppWeb.Controllers
                     Asistente = collection["Asistente"],
                     TelefonoAsistente = collection["TelefonoAsistente"]
                 };
+                List<Cuentas> cuentas = db.Cuentas.Where(x => x.EmpresaId == cuenta.EmpresaId).ToList();
+                foreach (var acount in cuentas)
+                {
+                    List<string> permisos = acount.Permisos.Split(',').ToList();
+                    permisos.Add(campo.Nombre);
+                    acount.Permisos = String.Join(",", permisos);
+                }
                 database.Campos.Add(campo);
                 database.SaveChanges();
                 Utils.SessionManager.log("Huerto creado: "+ campo.Nombre);

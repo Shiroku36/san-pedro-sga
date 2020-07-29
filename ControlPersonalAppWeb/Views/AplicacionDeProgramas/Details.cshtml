@@ -54,7 +54,7 @@
                         @foreach (var comentario in ViewBag.comentarios)
                         {
                             <div class="row mb-1 w-100">
-                                <a class="col-3" href="/Trabajador/Details/@comentario.TrabajadorId"> @comentario.Trabajador </a>
+                                <a class="col-3" href="/Cuenta/Details/@comentario.TrabajadorId"> @comentario.Trabajador </a>
                                 <span class="col-3">@comentario.Fecha.ToString()</span>
                                 <span class="col-6">@comentario.Comentario1</span>
                             </div>

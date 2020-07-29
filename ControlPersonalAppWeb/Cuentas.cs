@@ -11,7 +11,8 @@ namespace ControlPersonalAppWeb
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel;
+
     public partial class Cuentas
     {
         public int Id { get; set; }
@@ -20,8 +21,14 @@ namespace ControlPersonalAppWeb
         public string Empresa { get; set; }
         public int Nivel { get; set; }
         public string Permisos { get; set; }
-        public Nullable<int> TrabajadorId { get; set; }
         public string Trabajador { get; set; }
+        public Nullable<int> TrabajadorId { get; set; }
         public Nullable<int> EmpresaId { get; set; }
+        public Nullable<bool> Notificacion { get; set; }
+        public string Email { get; set; }
+        [DisplayName("Nombres")]
+        public string Nombre { get; set; }
+        [DisplayName("Apellidos")]
+        public string Apellido { get; set; }
     }
 }

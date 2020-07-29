@@ -22,7 +22,7 @@ namespace ControlPersonalAppWeb.Controllers
         public ActionResult Index()
         {
             Utils.SessionManager.log("Index productos");
-            return View(db.Producto.ToList());
+            return View(db.Producto.Where(x => x.EmpresaId == cuenta.EmpresaId).OrderBy(x => x.Tipo).ToList());
         }
 
         // GET: Productos/Details/5
@@ -162,7 +162,10 @@ namespace ControlPersonalAppWeb.Controllers
             {
                 return HttpNotFound();
             }
-            return View(producto);
+            Utils.SessionManager.log("Eliminar producto: " + producto.Nombre);
+            db.Producto.Remove(producto);
+            db.SaveChanges();
+            return RedirectToAction("Index");
         }
 
         // POST: Productos/Delete/5

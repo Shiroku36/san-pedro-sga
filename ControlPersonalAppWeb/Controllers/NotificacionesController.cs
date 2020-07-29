@@ -39,11 +39,13 @@ namespace ControlPersonalAppWeb.Controllers
             {
                 solicitud.Estado = "Aceptada";
                 notificacion.Estado = "Aceptada";
+                Utils.SessionManager.log("Notificación aceptada: "+ id);
             }
             else
             {
                 solicitud.Estado = "Rechazada";
                 notificacion.Estado = "Rechazada";
+                Utils.SessionManager.log("Notificación rechazada: " + id);
             }
             db.SaveChanges();
             Utils.SessionManager.notificaciones.Remove(Utils.SessionManager.notificaciones.First(x => x.Id == id));

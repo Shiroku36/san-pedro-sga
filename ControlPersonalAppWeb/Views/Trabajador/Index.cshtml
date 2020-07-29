@@ -94,8 +94,8 @@
                     </a>
                     @if (cuenta.Permisos.Contains("TrabajadoresD"))
                     {
-                        <a href='@Url.Action("Delete", "Trabajador", new { id = item.Id })' onclick="return confirma('¿Está seguro que desea eliminar el Trabajador?')"})>
-                            <label title="Eliminar" type="submit" class="btn btn-danger">Borrar1</label>
+                        <a href='@Url.Action("Delete", "Trabajador", new { id = item.Id })' onclick="return confirm('¿Está seguro que desea eliminar el Trabajador?')"})>
+                            <label title="Eliminar" type="submit" class="btn btn-danger">Borrar</label>
                         </a>
                    }
 

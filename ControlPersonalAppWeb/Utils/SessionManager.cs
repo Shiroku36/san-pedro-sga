@@ -5,6 +5,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using ControlPersonalAppWeb.Models;
+using DocumentFormat.OpenXml.Office2010.Excel;
 
 namespace ControlPersonalAppWeb.Utils
 
@@ -35,9 +36,9 @@ namespace ControlPersonalAppWeb.Utils
 
         public static List<Notificacion>  getNotificaciones() {
             int id;
-            if (CuentaAutenticada()!=null)
+            if (CuentaAutenticada()!=null && CuentaAutenticada().Notificacion!=null && (bool)CuentaAutenticada().Notificacion)
             {
-                id = CuentaAutenticada().Id;
+                id = (int)CuentaAutenticada().EmpresaId;
                 notificaciones = db.Notificacion.Where(x => x.CuentaId == id && x.Estado == "Solicitado").ToList().OrderByDescending(x => x.Fecha).ToList();
             }
             return notificaciones;
@@ -46,17 +47,32 @@ namespace ControlPersonalAppWeb.Utils
 
         public static void log(string Accion)
         {
-            Log log = new Log()
+            try
             {
-                Accion = Accion,
-                Empresa = CuentaAutenticada().Empresa,
-                EmpresaId = CuentaAutenticada().EmpresaId,
-                Usuario = CuentaAutenticada().Usuario,
-                UsuarioId = CuentaAutenticada().Id,
-                Fecha = DateTime.Now
-            };
-            db.Log.Add(log);
-            db.SaveChanges();
+                Log log = new Log()
+                {
+                    Accion = Accion,
+                    Empresa = CuentaAutenticada().Empresa,
+                    EmpresaId = CuentaAutenticada().EmpresaId,
+                    Usuario = CuentaAutenticada().Usuario,
+                    UsuarioId = CuentaAutenticada().Id,
+                    Fecha = DateTime.Now
+                };
+                db.Log.Add(log);
+                db.SaveChanges();
+            }
+            catch
+            {
+                Log log = new Log()
+                {
+                    Accion = "Error ID",
+                    Fecha = DateTime.Now
+                };
+                db.Log.Add(log);
+                db.SaveChanges();
+                Salir();
+
+            }
         }
         public void agregarLog(Log log)
         {
@@ -67,9 +83,17 @@ namespace ControlPersonalAppWeb.Utils
             if (HttpContext.Current.Request.Cookies["Cuenta"] != null
                 && HttpContext.Current.Request.Cookies["Cuenta"].Value != string.Empty)
             {
-                c.Id = Convert.ToInt32(HttpContext.Current.Request.Cookies["Cuenta"].Value);
+                c.Id = Convert.ToInt32(HttpContext.Current.Request.Cookies["Cuenta"].Value)/(464 * 653);
                 DBManejoPersonalEntities database = new DBManejoPersonalEntities();
-                c = database.Cuentas.First(x => x.Id == c.Id);
+                try
+                {
+                    c = database.Cuentas.First(x => x.Id == c.Id);
+                }
+                catch 
+                { 
+                    Salir();
+                    return null;
+                }
             }
             else
             {
@@ -89,7 +113,8 @@ namespace ControlPersonalAppWeb.Utils
         public static void Ingresar(Cuentas c)
         {
             var cookieSesion = new HttpCookie("Cuenta");
-            cookieSesion.Value = c.Id.ToString();
+            long id = 464 * 653 * c.Id;
+            cookieSesion.Value = id.ToString();
             HttpContext.Current.Response.Cookies.Add(cookieSesion);
         }
 

@@ -64,14 +64,13 @@
             <td>
                 @Html.ActionLink("Editar", "Edit", new { id = item.Id }, new { @class = "btn btn-warning" })
                 @Html.ActionLink("Detalles", "Details", new { id = item.Id }, new { @class = "btn btn-info" })
-                @Html.ActionLink("Eliminar", "Delete", new { id = item.Id }, new { @class = "btn btn-danger" })
-                
+                <a  href='@Url.Action("Delete", "Productos", new { id = item.Id })' onclick="return confirm('¿Está seguro que desea eliminar el producto?')" })>
+                    <label  title="Eliminar" type="submit" class="btn btn-danger my-auto">Borrar</label>
+                </a>
+
             </td>
         </tr>
     }
 
 </table>
-@{
-    @Html.Partial("Del")
-}
 <script src="~/Scripts/Busqueda.js"></script>

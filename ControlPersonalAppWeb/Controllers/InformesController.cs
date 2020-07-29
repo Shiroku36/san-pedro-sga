@@ -527,7 +527,7 @@ namespace ControlPersonalAppWeb.Controllers
             //Una persona y una campo
             if (!rut && inicio && fin && !campo) 
             {
-                string rutIn = collection["Rut"];
+                string rutIn = formatearRut(collection["Rut"]);
                 TrabajadorIndex trabajadorNew = database.Trabajador.Select(x => new TrabajadorIndex { Id = x.Id, Nombre = x.Nombre, ApellidoMaterno = x.ApellidoMaterno, ApellidoPaterno = x.ApellidoPaterno , Rut = x.Rut, Uid = x.Uid, Gerente = x.Gerente, Empresa = x.Empresa,
                     Entrada = x.Entrada,
                     EntradaA = x.EntradaA,
@@ -634,7 +634,7 @@ namespace ControlPersonalAppWeb.Controllers
             if (!inicio && !fin && !rut && !campo)
             {
 
-                string rutIn = collection["Rut"];
+                string rutIn = formatearRut(collection["Rut"]);
                 TrabajadorIndex trabajadorNew = database.Trabajador.Select(x => new TrabajadorIndex { Id = x.Id, Nombre = x.Nombre,
                     ApellidoMaterno = x.ApellidoMaterno,
                     ApellidoPaterno = x.ApellidoPaterno,
@@ -655,7 +655,8 @@ namespace ControlPersonalAppWeb.Controllers
             if (!inicio && !fin && !rut && campo)
             {
 
-                string rutIn = collection["Rut"];
+                string rutIn = formatearRut(collection["Rut"]);
+                Trabajador trabajadorNew2 = database.Trabajador.First(x => x.Rut == rutIn);
                 TrabajadorIndex trabajadorNew = database.Trabajador.Select(x => new TrabajadorIndex { Id = x.Id, Nombre = x.Nombre,
                     ApellidoMaterno = x.ApellidoMaterno,
                     ApellidoPaterno = x.ApellidoPaterno,
@@ -676,7 +677,7 @@ namespace ControlPersonalAppWeb.Controllers
             if (!inicio && fin && !rut && campo)
             {
 
-                string rutIn = collection["Rut"];
+                string rutIn = formatearRut(collection["Rut"]);
                 TrabajadorIndex trabajadorNew = database.Trabajador.Select(x => new TrabajadorIndex { Id = x.Id, Nombre = x.Nombre,
                     ApellidoMaterno = x.ApellidoMaterno,
                     ApellidoPaterno = x.ApellidoPaterno,
@@ -697,7 +698,7 @@ namespace ControlPersonalAppWeb.Controllers
             if (!inicio && fin && !rut && !campo)
             {
 
-                string rutIn = collection["Rut"];
+                string rutIn = formatearRut(collection["Rut"]);
                 TrabajadorIndex trabajadorNew = database.Trabajador.Select(x => new TrabajadorIndex { Id = x.Id, Nombre = x.Nombre,
                     ApellidoMaterno = x.ApellidoMaterno,
                     ApellidoPaterno = x.ApellidoPaterno,

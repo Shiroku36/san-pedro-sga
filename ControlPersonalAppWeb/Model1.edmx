@@ -101,6 +101,10 @@
           <Property Name="Trabajador" Type="varchar" MaxLength="300" />
           <Property Name="TrabajadorId" Type="int" />
           <Property Name="EmpresaId" Type="int" />
+          <Property Name="Notificacion" Type="bit" />
+          <Property Name="Email" Type="varchar" MaxLength="128" />
+          <Property Name="Nombre" Type="varchar" MaxLength="50" />
+          <Property Name="Apellido" Type="varchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="Datos">
           <Key>
@@ -528,7 +532,6 @@
       <Schema Namespace="DBManejoPersonalModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityContainer Name="DBManejoPersonalEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Campos" EntityType="DBManejoPersonalModel.Campos" />
-          <EntitySet Name="Cuentas" EntityType="DBManejoPersonalModel.Cuentas" />
           <EntitySet Name="RegistroTrabajador" EntityType="DBManejoPersonalModel.RegistroTrabajador" />
           <EntitySet Name="HorasExtras" EntityType="DBManejoPersonalModel.HorasExtras" />
           <EntitySet Name="Licencia" EntityType="DBManejoPersonalModel.Licencia" />
@@ -552,6 +555,7 @@
           <EntitySet Name="Empresas" EntityType="DBManejoPersonalModel.Empresas" />
           <EntitySet Name="Datos" EntityType="DBManejoPersonalModel.Datos" />
           <EntitySet Name="Producto" EntityType="DBManejoPersonalModel.Producto" />
+          <EntitySet Name="Cuentas" EntityType="DBManejoPersonalModel.Cuentas" />
           </EntityContainer>
         <EntityType Name="Campos">
           <Key>
@@ -567,20 +571,6 @@
           <Property Name="Telefono" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="Asistente" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="TelefonoAsistente" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-        </EntityType>
-        <EntityType Name="Cuentas">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Usuario" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="Password" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="Empresa" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="Nivel" Type="Int32" Nullable="false" />
-          <Property Name="Permisos" Type="String" MaxLength="512" FixedLength="false" Unicode="false" />
-          <Property Name="TrabajadorId" Type="Int32" />
-          <Property Name="Trabajador" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
-          <Property Name="EmpresaId" Type="Int32" />
         </EntityType>
         <EntityType Name="RegistroTrabajador">
           <Key>
@@ -1043,6 +1033,24 @@
           <Property Name="Empresa" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="EmpresaId" Type="Int32" />
         </EntityType>
+        <EntityType Name="Cuentas">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Usuario" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Password" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Empresa" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Nivel" Type="Int32" Nullable="false" />
+          <Property Name="Permisos" Type="String" MaxLength="512" FixedLength="false" Unicode="false" />
+          <Property Name="Trabajador" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+          <Property Name="TrabajadorId" Type="Int32" />
+          <Property Name="EmpresaId" Type="Int32" />
+          <Property Name="Notificacion" Type="Boolean" />
+          <Property Name="Email" Type="String" MaxLength="128" FixedLength="false" Unicode="false" />
+          <Property Name="Nombre" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Apellido" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1061,21 +1069,6 @@
                 <ScalarProperty Name="Empresa" ColumnName="Empresa" />
                 <ScalarProperty Name="Lugar" ColumnName="Lugar" />
                 <ScalarProperty Name="Nombre" ColumnName="Nombre" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Cuentas">
-            <EntityTypeMapping TypeName="DBManejoPersonalModel.Cuentas">
-              <MappingFragment StoreEntitySet="Cuentas">
-                <ScalarProperty Name="EmpresaId" ColumnName="EmpresaId" />
-                <ScalarProperty Name="Trabajador" ColumnName="Trabajador" />
-                <ScalarProperty Name="TrabajadorId" ColumnName="TrabajadorId" />
-                <ScalarProperty Name="Permisos" ColumnName="Permisos" />
-                <ScalarProperty Name="Nivel" ColumnName="Nivel" />
-                <ScalarProperty Name="Empresa" ColumnName="Empresa" />
-                <ScalarProperty Name="Password" ColumnName="Password" />
-                <ScalarProperty Name="Usuario" ColumnName="Usuario" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -1560,6 +1553,25 @@
                 <ScalarProperty Name="Tipo" ColumnName="Tipo" />
                 <ScalarProperty Name="Unidad" ColumnName="Unidad" />
                 <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Cuentas">
+            <EntityTypeMapping TypeName="DBManejoPersonalModel.Cuentas">
+              <MappingFragment StoreEntitySet="Cuentas">
+                <ScalarProperty Name="Apellido" ColumnName="Apellido" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="Notificacion" ColumnName="Notificacion" />
+                <ScalarProperty Name="EmpresaId" ColumnName="EmpresaId" />
+                <ScalarProperty Name="TrabajadorId" ColumnName="TrabajadorId" />
+                <ScalarProperty Name="Trabajador" ColumnName="Trabajador" />
+                <ScalarProperty Name="Permisos" ColumnName="Permisos" />
+                <ScalarProperty Name="Nivel" ColumnName="Nivel" />
+                <ScalarProperty Name="Empresa" ColumnName="Empresa" />
+                <ScalarProperty Name="Password" ColumnName="Password" />
+                <ScalarProperty Name="Usuario" ColumnName="Usuario" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

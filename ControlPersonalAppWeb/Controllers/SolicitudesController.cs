@@ -4,6 +4,7 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
+using System.Net.Mail;
 using System.Web;
 using System.Web.Mvc;
 using ControlPersonalAppWeb;
@@ -19,7 +20,8 @@ namespace ControlPersonalAppWeb.Controllers
         public ActionResult Index()
         {
             Utils.SessionManager.log("Index solicitudes");
-            return View(db.Solicitud.Where(x => x.EmpresaId == cuenta.EmpresaId).ToList());
+            ViewBag.alerta = 0;
+            return View(db.Solicitud.Where(x => x.EmpresaId == cuenta.EmpresaId).OrderByDescending(x => x.Fecha).ToList());
         }
 
         // GET: Solicitudes/Details/5
@@ -58,8 +60,8 @@ namespace ControlPersonalAppWeb.Controllers
         {
             if (ModelState.IsValid)
             {
-                solicitud.Trabajador = cuenta.Trabajador;
-                solicitud.TrabajadorId = cuenta.TrabajadorId;
+                solicitud.Trabajador = cuenta.Nombre + " " + cuenta.Apellido;
+                solicitud.TrabajadorId = cuenta.Id;
                 solicitud.Estado = "Solicitado";
                 solicitud.Fecha = DateTime.Now ;
                 solicitud.Empresa = cuenta.Empresa;
@@ -93,26 +95,62 @@ namespace ControlPersonalAppWeb.Controllers
                         texto += stock.Cantidad +" "+ producto.Nombre + ", ";
                     }
                 }
+                List<String> correos = db.Cuentas.Where(x => x.Empresa == cuenta.Empresa && x.Notificacion == true).Select(x => x.Email).ToList();
                 Notificacion notificacion = new Notificacion()
                 {
                     Fecha = DateTime.Now,
-                    Correo = db.Trabajador.First(x => x.Id == cuenta.TrabajadorId).Email,
+                    Correo = string.Join(", ", correos),
                     SolicitudId = solicitud.Id,
                     Estado = "Solicitado",
-                    CuentaId = cuenta.Id,
-                    Texto = "El trabajador " + cuenta.Trabajador + " ha solicitado los siguientes productos: " +
+                    CuentaId = cuenta.EmpresaId,
+                    Texto = "El trabajador " + cuenta.Nombre + " " + cuenta.Apellido + " ha solicitado los siguientes productos: " +
                     texto + ", desde: " + solicitud.Origen + " a " + solicitud.Destino + ", el día " + solicitud.Fecha.Value.ToLongDateString() +
                     " a las " + solicitud.Fecha.Value.ToShortTimeString()
                 };
+                //enviar correo
                 Utils.SessionManager.log("Crear notificacion: " + notificacion.Id);
                 db.Notificacion.Add(notificacion);
                 db.SaveChanges();
+                ViewBag.alerta = enviarCorreo(correos, notificacion);
                 int id = cuenta.Id; 
                 Utils.SessionManager.notificaciones = db.Notificacion.Where(x => x.CuentaId == id && x.Estado == "Solicitado").ToList().OrderByDescending(x => x.Fecha).ToList();
                 return RedirectToAction("Index");
             }
 
             return View(solicitud);
+        }
+        private int enviarCorreo(List<String> correos, Notificacion notificacion)
+        {
+            try
+            {
+                MailMessage mail = new MailMessage();
+                SmtpClient SmtpServer = new SmtpClient();
+                mail.From = new MailAddress("notificacionjcp@ingenieriajcp.cl",
+                "SGA JCP", System.Text.Encoding.UTF8);
+                foreach(var correo in correos)
+                {
+                    mail.To.Add(correo);
+                }
+                mail.Subject = "Nueva solicitud de productos " + notificacion.Fecha.Value.ToLongDateString();
+                mail.Body = notificacion.Texto+ "\n\nPuedes revisarla en:\nhttp://sgajcp.ingenieriajcp.cl/Cuenta/Login";
+                SmtpServer.DeliveryMethod = SmtpDeliveryMethod.Network;
+                SmtpServer.UseDefaultCredentials = false;
+                SmtpServer.Port = 25;
+                SmtpServer.Host = "mail.ingenieriajcp.cl";
+                SmtpServer.Credentials = new System.Net.NetworkCredential("notificacionjcp@ingenieriajcp.cl", "notificacion");
+                SmtpServer.EnableSsl = true;
+                SmtpServer.Send(mail);
+                mail.Dispose();
+                SmtpServer.Dispose();
+                Utils.SessionManager.mensaje = "Correo enviado correctamente";
+                return 1;
+            }
+            catch (Exception ex)
+            {
+                ex.ToString();
+                Utils.SessionManager.mensaje = "Falló el envío del correo";
+                return 2;
+            }
         }
         /*
         // GET: Solicitudes/Edit/5

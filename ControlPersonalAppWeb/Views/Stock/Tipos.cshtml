@@ -11,7 +11,7 @@
 {
     @Html.AntiForgeryToken()
     <span class="d-block">Agregar tipo</span>
-    <input class="form-control my-2 col-8 float-left" id="tipo" name="Value" />
+    <input class="form-control my-2 col-8 float-left" id="tipo" name="Value" required />
     <input type="hidden" value="Tipos" name="Tipo" />
     if (ViewBag.id != null)
     {

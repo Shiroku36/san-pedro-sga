@@ -176,7 +176,7 @@ namespace ControlPersonalAppWeb.Controllers
             }
             return View(stock);
         }
-        */
+        
         // GET: Stock/Create
         public ActionResult Create()
         {
@@ -290,7 +290,7 @@ namespace ControlPersonalAppWeb.Controllers
             Datos tipos = new Datos();
             try
             {
-                tipos = db.Datos.First(x => x.EmpresaId == cuenta.Id && x.Valor == buscado);
+                tipos = db.Datos.First(x => x.EmpresaId == cuenta.EmpresaId && x.Valor == buscado);
                 ViewBag.id = tipos.Id;
             }
             catch { }

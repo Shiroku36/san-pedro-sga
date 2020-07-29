@@ -96,6 +96,10 @@
     <Property Name="Trabajador" Type="varchar" MaxLength="300" />
     <Property Name="TrabajadorId" Type="int" />
     <Property Name="EmpresaId" Type="int" />
+    <Property Name="Notificacion" Type="bit" />
+    <Property Name="Email" Type="varchar" MaxLength="128" />
+    <Property Name="Nombre" Type="varchar" MaxLength="50" />
+    <Property Name="Apellido" Type="varchar" MaxLength="50" />
   </EntityType>
   <EntityType Name="Datos">
     <Key>

@@ -17,21 +17,6 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="Cuentas">
-      <EntityTypeMapping TypeName="DBManejoPersonalModel.Cuentas">
-        <MappingFragment StoreEntitySet="Cuentas">
-          <ScalarProperty Name="EmpresaId" ColumnName="EmpresaId" />
-          <ScalarProperty Name="Trabajador" ColumnName="Trabajador" />
-          <ScalarProperty Name="TrabajadorId" ColumnName="TrabajadorId" />
-          <ScalarProperty Name="Permisos" ColumnName="Permisos" />
-          <ScalarProperty Name="Nivel" ColumnName="Nivel" />
-          <ScalarProperty Name="Empresa" ColumnName="Empresa" />
-          <ScalarProperty Name="Password" ColumnName="Password" />
-          <ScalarProperty Name="Usuario" ColumnName="Usuario" />
-          <ScalarProperty Name="Id" ColumnName="Id" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="RegistroTrabajador">
       <EntityTypeMapping TypeName="DBManejoPersonalModel.RegistroTrabajador">
         <MappingFragment StoreEntitySet="RegistroTrabajador">
@@ -512,6 +497,25 @@
           <ScalarProperty Name="Tipo" ColumnName="Tipo" />
           <ScalarProperty Name="Unidad" ColumnName="Unidad" />
           <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Cuentas">
+      <EntityTypeMapping TypeName="DBManejoPersonalModel.Cuentas">
+        <MappingFragment StoreEntitySet="Cuentas">
+          <ScalarProperty Name="Apellido" ColumnName="Apellido" />
+          <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+          <ScalarProperty Name="Email" ColumnName="Email" />
+          <ScalarProperty Name="Notificacion" ColumnName="Notificacion" />
+          <ScalarProperty Name="EmpresaId" ColumnName="EmpresaId" />
+          <ScalarProperty Name="TrabajadorId" ColumnName="TrabajadorId" />
+          <ScalarProperty Name="Trabajador" ColumnName="Trabajador" />
+          <ScalarProperty Name="Permisos" ColumnName="Permisos" />
+          <ScalarProperty Name="Nivel" ColumnName="Nivel" />
+          <ScalarProperty Name="Empresa" ColumnName="Empresa" />
+          <ScalarProperty Name="Password" ColumnName="Password" />
+          <ScalarProperty Name="Usuario" ColumnName="Usuario" />
           <ScalarProperty Name="Id" ColumnName="Id" />
         </MappingFragment>
       </EntityTypeMapping>

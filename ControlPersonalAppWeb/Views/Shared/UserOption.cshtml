@@ -7,42 +7,46 @@
 
 @if (cuenta != null)
 {
-
-    <div class="notification-display" id="notificationD">
-        <h4 class="text-center mt-2 font-weight-normal text-white">Notificaciones</h4>
-        @foreach (Notificacion e in notificaciones)
-        {
-            <div class="card m-2 mr-4">
-                <div class="card-header">
-                    @e.Fecha
+    if(cuenta.Notificacion!=null && (bool)cuenta.Notificacion)
+    {
+        <div class="notification-display" id="notificationD">
+            <h4 class="text-center mt-2 font-weight-normal text-white">Notificaciones</h4>
+            @foreach (Notificacion e in notificaciones)
+            {
+                <div class="card m-2 mr-4">
+                    <div class="card-header">
+                        @e.Fecha
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">@e.Texto</p>
+                        @using (Html.BeginForm("Index", "Notificaciones", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" value="@e.Id" name="Id" class="Id" />
+                            <input type="submit" class="btn btn-danger delete" value="Rechazar" onclick="return confirm('Estas seguro de eliminar esto?');" />
+                            <input type="submit" class="btn btn-success" value="Aceptar" name="Accion" onclick="return confirm('Estas seguro de aceptar esto?')" })>
+                        }
+                    </div>
                 </div>
-                <div class="card-body">
-                    <p class="card-text">@e.Texto</p>
-                    @using (Html.BeginForm("Index", "Notificaciones", FormMethod.Post, new { enctype = "multipart/form-data" }))
-                    {
-                        @Html.AntiForgeryToken()
-                        <input type="hidden" value="@e.Id" name="Id" class="Id" />
-                        <input type="submit" class="btn btn-danger delete" value="Rechazar" onclick="return confirm('Estas seguro de eliminar esto?');"/>
-                        <input type="submit" class="btn btn-success" value="Aceptar" name="Accion" onclick="return confirm('Estas seguro de aceptar esto?')"})>
-                    }
-                </div>
-            </div>
-        }
-    </div>
+            }
+        </div>
+    }
+    
 
-    <li class="mt-2"><a href="@Url.Action("Index","Trabajadores")">@cuenta.Usuario - @cuenta.Empresa</a></li>
+    <li class="mt-2"><a href="@Url.Action("Details","Cuenta", new { cuenta.Id })">@cuenta.Usuario - @cuenta.Empresa</a></li>
 
+    if (cuenta.Notificacion != null && (bool)cuenta.Notificacion)
+    {
+        <button type="button" id="sidebarCollapse" class="btn btn-primary text-dark includer mx-1 ">
+            <img height="23" width="23" src="~/images/notificacion.svg">
 
-    <button type="button" id="sidebarCollapse" class="btn btn-primary text-dark includer mx-1 ">
-        <img height="23" width="23" src="~/images/notificacion.svg">
+            @if (notificaciones != null && notificaciones.Count > 0)
+            {
+                <span class="badge badge-success">@notificaciones.Count</span>
+            }
 
-        @if (notificaciones != null && notificaciones.Count > 0)
-        {
-            <span class="badge badge-success">@notificaciones.Count</span>
-        }
-
-    </button>
-
+        </button>
+    }
 
     <li class="mt-2"><a href="@Url.Action("Salir","Cuenta")">Salir</a></li>
     <script>

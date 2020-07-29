@@ -22,60 +22,74 @@
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         @Html.HiddenFor(model => model.Id)
 
-        <div class="row">
-            <div class="col-sm-6">
-                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                <div class="form-group col-md-10 mx-auto">
-                    @Html.LabelFor(model => model.Usuario, htmlAttributes: new { @class = "control-label font-weight-normal" })
-                    @Html.EditorFor(model => model.Usuario, new { htmlAttributes = new { @class = "form-control" , required = "required"} })
-                    @Html.ValidationMessageFor(model => model.Usuario, "", new { @class = "text-danger" })
-                </div>
-
-                <div class="form-group col-md-10 mx-auto">
-                    @Html.LabelFor(model => model.Password, htmlAttributes: new { @class = "control-label font-weight-normal" })
-                    @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control", @type = "password", required = "required" } })
-                    @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
-                </div>
-
-                <div class="form-group col-md-10 mx-auto">
-                    <label>Confirmar password</label>
-                    <input class="form-control" value="@Model.Password" type="password" id="Confirmar" oninput="password()" required />
-                </div>
-                
-                <div class="form-group col-md-10 mx-auto">
-                    @Html.LabelFor(model => model.Empresa, htmlAttributes: new { @class = "control-label font-weight-normal" })
-                    @Html.DropDownListFor(model => model.Empresa, new SelectList(ViewBag.Empresas), htmlAttributes: new { @class = "form-control" })
-                    @Html.ValidationMessageFor(model => model.Empresa, "", new { @class = "text-danger" })
-                </div>
+    <div class="row">
+        <div class="col-sm-6">
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div class="form-group col-md-10 mx-auto">
+                @Html.LabelFor(model => model.Usuario, htmlAttributes: new { @class = "control-label font-weight-normal" })
+                @Html.EditorFor(model => model.Usuario, new { htmlAttributes = new { @class = "form-control", required = "required" } })
+                @Html.ValidationMessageFor(model => model.Usuario, "", new { @class = "text-danger" })
             </div>
-            <div class="dropdown  col-sm-6 mx-auto">
-                <div id="myDropdown" class="dropdown-content">
-                    <div class=" ">
-                        @Html.LabelFor(model => model.Trabajador, htmlAttributes: new { @class = "control-label font-weight-normal" })
-                        <div style="max-height:20vh" class="list-group position-absolute overflow-auto">
-                            <select name="TrabajadorId" id="TrabajadorId" class="form-control py-2">
-                                @foreach (var persona in ViewBag.personas)
-                                {
-                                    if (Model.TrabajadorId!=null && persona.Id == Model.TrabajadorId)
-                                    {
-                                        <option selected value="@persona.Id">@persona.Nombre @persona.ApellidoPaterno @persona.ApellidoMaterno - @persona.Rut</option>
-                                    }
-                                    else
-                                    {
-                                        <option value="@persona.Id">@persona.Nombre @persona.ApellidoPaterno @persona.ApellidoMaterno - @persona.Rut</option>
-                                    }
-                                }
-                            </select>
-                        </div>
-                    </div>
-                </div>
+
+            <div class="form-group col-md-10 mx-auto">
+                @Html.LabelFor(model => model.Password, htmlAttributes: new { @class = "control-label font-weight-normal" })
+                @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control", @type = "password", required = "required" } })
+                @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="form-group col-md-10 mx-auto">
+                <label>Confirmar password</label>
+                <input class="form-control" value="@Model.Password" type="password" id="Confirmar" oninput="password()" required />
+            </div>
+
+            <div class="form-group col-md-10 mx-auto">
+                @Html.LabelFor(model => model.Nombre, htmlAttributes: new { @class = "control-label font-weight-normal" })
+                @Html.EditorFor(model => model.Nombre, new { htmlAttributes = new { @class = "form-control", required = "required" } })
+                @Html.ValidationMessageFor(model => model.Nombre, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="form-group col-md-10 mx-auto">
+                @Html.LabelFor(model => model.Apellido, htmlAttributes: new { @class = "control-label font-weight-normal" })
+                @Html.EditorFor(model => model.Apellido, new { htmlAttributes = new { @class = "form-control", required = "required" } })
+                @Html.ValidationMessageFor(model => model.Apellido, "", new { @class = "text-danger" })
+            </div>
+
+            <div class="form-group col-md-10 mx-auto">
+                @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label font-weight-normal" })
+                @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", @type = "Email", required = "required" } })
+                @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+            </div>
+
+
+            <div class="form-group col-md-10 mx-auto">
+                @Html.LabelFor(model => model.Empresa, htmlAttributes: new { @class = "control-label font-weight-normal" })
+                @Html.DropDownListFor(model => model.Empresa, new SelectList(ViewBag.Empresas), htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Empresa, "", new { @class = "text-danger" })
             </div>
         </div>
-
-        <div class="form-group col-md-8 mx-auto">
+        <div class="form-group col-md-6 mx-auto">
 
             @Html.LabelFor(model => model.Permisos, htmlAttributes: new { @class = "control-label font-weight-normal" })
             <br />
+
+            <label>Sistema gestión bodega</label><br />
+            @if (cuenta.Contains("SGA"))
+            {
+                <label><input type="checkbox" id="Permisos" checked="checked" name="Permisos" value="SGA" class="custom-checkbox chkCheckBoxId" />Ver</label>
+            }
+            else
+            {
+                <label><input type="checkbox" id="Permisos" name="Permisos" value="SGA" class="custom-checkbox chkCheckBoxId" />Ver</label>
+            }
+
+            @if (Model.Notificacion!=null && (bool)Model.Notificacion)
+            {
+                <label><input type="checkbox" id="Notificiacion" checked="checked" name="Notificacion" value="Notificiacion" class="custom-checkbox chkCheckBoxId " />Notificiación</label><br />
+            }
+            else
+            {
+                <label><input type="checkbox" id="Notificiacion" name="Notificacion" value="Notificiacion" class="custom-checkbox chkCheckBoxId " />Notificiación</label><br />
+            }
             <label>Huertos</label><br />
             @if (cuenta.Contains("HuertosV"))
             {
@@ -212,87 +226,6 @@
             {
                 <label><input type="checkbox" id="Permisos" name="Permisos" value="RegistrosD" class="custom-checkbox chkCheckBoxId" />Eliminar </label><br />
             }
-            @if (autenticada.Empresa == "JCP")
-            {
-                <label>Empresas</label><br />
-                if (cuenta.Contains("EmpresasV"))
-                {
-                    <label><input type="checkbox" id="Permisos" checked="checked" name="Permisos" value="EmpresasV" class="custom-checkbox chkCheckBoxId" /> Ver </label>
-                }
-                else
-                {
-                    <label><input type="checkbox" id="Permisos" name="Permisos" value="EmpresasV" class="custom-checkbox chkCheckBoxId" /> Ver </label>
-                }
-
-                if (cuenta.Contains("EmpresasC"))
-                {
-                    <label><input type="checkbox" id="Permisos" checked="checked" name="Permisos" value="EmpresasC" class="custom-checkbox chkCheckBoxId" /> Crear </label>
-                }
-                else
-                {
-                    <label><input type="checkbox" id="Permisos" name="Permisos" value="EmpresasC" class="custom-checkbox chkCheckBoxId" /> Crear </label>
-                }
-
-                if (cuenta.Contains("EmpresasE"))
-                {
-                    <label><input type="checkbox" id="Permisos" checked="checked" name="Permisos" value="EmpresasE" class="custom-checkbox chkCheckBoxId" /> Editar </label>
-                }
-                else
-                {
-                    <label><input type="checkbox" id="Permisos" name="Permisos" value="EmpresasE" class="custom-checkbox chkCheckBoxId" /> Editar </label>
-                }
-
-                if (cuenta.Contains("EmpresasD"))
-                {
-                    <label><input type="checkbox" id="Permisos" checked="checked" name="Permisos" value="EmpresasD" class="custom-checkbox chkCheckBoxId" /> Borrar </label><br />
-                }
-                else
-                {
-                    <label><input type="checkbox" id="Permisos" name="Permisos" value="EmpresasD" class="custom-checkbox chkCheckBoxId" /> Borrar </label><br />
-                }
-
-                if (cuenta.Contains("ERP"))
-                {
-                    <label><input type="checkbox" id="Permisos" name="Permisos" checked="checked" value="ERP" class="custom-checkbox chkCheckBoxId" />Ver ERP</label><br />
-                }
-                else
-                {
-                    <label><input type="checkbox" id="Permisos" name="Permisos" value="ERP" class="custom-checkbox chkCheckBoxId" />Ver ERP</label><br />
-                }
-
-                if (cuenta.Contains("Cosecha"))
-                {
-                    <label><input type="checkbox" id="Permisos" name="Permisos" checked="checked" value="Cosecha" class="custom-checkbox chkCheckBoxId" />Ver Cosecha</label><br />
-                }
-                else
-                {
-                    <label><input type="checkbox" id="Permisos" name="Permisos" value="Cosecha" class="custom-checkbox chkCheckBoxId" />Ver Cosecha</label><br />
-                }
-                if (cuenta.Contains("Log"))
-                {
-                    <label><input type="checkbox" id="Permisos" name="Permisos" checked="checked" value="Log" class="custom-checkbox chkCheckBoxId" />Ver Log</label><br />
-                }
-                else
-                {
-                    <label><input type="checkbox" id="Permisos" name="Permisos" value="Log" class="custom-checkbox chkCheckBoxId" />Ver Log</label><br />
-                }
-                if (cuenta.Contains("Sueldo"))
-                {
-                    <label><input type="checkbox" id="Permisos" name="Permisos" checked="checked" value="Sueldo" class="custom-checkbox chkCheckBoxId" />Ver Sueldo</label><br />
-                }
-                else
-                {
-                    <label><input type="checkbox" id="Permisos" name="Permisos" value="Sueldo" class="custom-checkbox chkCheckBoxId" />Ver Sueldo</label><br />
-                }
-                if (cuenta.Contains("Remuneracion"))
-                {
-                    <label><input type="checkbox" id="Permisos" name="Permisos" checked="checked" value="Remuneracion" class="custom-checkbox chkCheckBoxId" />Remuneraciones</label><br />
-                }
-                else
-                {
-                    <label><input type="checkbox" id="Permisos" name="Permisos" value="Remuneracion" class="custom-checkbox chkCheckBoxId" />Remuneraciones</label><br />
-                }
-            }
             <label>Cuentas</label><br />
             @if (cuenta.Contains("CuentasV"))
             {
@@ -349,8 +282,91 @@
                 <label><input type="checkbox" id="Permisos" name="Permisos" value="InformesA" class="custom-checkbox chkCheckBoxId" />Atrasos</label><br />
             }
 
-            @Html.ValidationMessageFor(model => model.Nivel, "", new { @class = "text-danger" })
+            @if (cuenta.Contains("Log"))
+            {
+                <label><input type="checkbox" id="Permisos" name="Permisos" checked="checked" value="Log" class="custom-checkbox chkCheckBoxId" />Ver Log</label><br />
+            }
+            else
+            {
+                <label><input type="checkbox" id="Permisos" name="Permisos" value="Log" class="custom-checkbox chkCheckBoxId" />Ver Log</label><br />
+            }
+            @if (autenticada.Empresa == "JCP")
+            {
+                <label>Empresas</label><br />
+                if (cuenta.Contains("EmpresasV"))
+                {
+                    <label><input type="checkbox" id="Permisos" checked="checked" name="Permisos" value="EmpresasV" class="custom-checkbox chkCheckBoxId" /> Ver </label>
+                }
+                else
+                {
+                    <label><input type="checkbox" id="Permisos" name="Permisos" value="EmpresasV" class="custom-checkbox chkCheckBoxId" /> Ver </label>
+                }
+
+                if (cuenta.Contains("EmpresasC"))
+                {
+                    <label><input type="checkbox" id="Permisos" checked="checked" name="Permisos" value="EmpresasC" class="custom-checkbox chkCheckBoxId" /> Crear </label>
+                }
+                else
+                {
+                    <label><input type="checkbox" id="Permisos" name="Permisos" value="EmpresasC" class="custom-checkbox chkCheckBoxId" /> Crear </label>
+                }
+
+                if (cuenta.Contains("EmpresasE"))
+                {
+                    <label><input type="checkbox" id="Permisos" checked="checked" name="Permisos" value="EmpresasE" class="custom-checkbox chkCheckBoxId" /> Editar </label>
+                }
+                else
+                {
+                    <label><input type="checkbox" id="Permisos" name="Permisos" value="EmpresasE" class="custom-checkbox chkCheckBoxId" /> Editar </label>
+                }
+
+                if (cuenta.Contains("EmpresasD"))
+                {
+                    <label><input type="checkbox" id="Permisos" checked="checked" name="Permisos" value="EmpresasD" class="custom-checkbox chkCheckBoxId" /> Borrar </label><br />
+                }
+                else
+                {
+                    <label><input type="checkbox" id="Permisos" name="Permisos" value="EmpresasD" class="custom-checkbox chkCheckBoxId" /> Borrar </label><br />
+                }
+
+                if (cuenta.Contains("ERP"))
+                {
+                    <label><input type="checkbox" id="Permisos" name="Permisos" checked="checked" value="ERP" class="custom-checkbox chkCheckBoxId" />Ver ERP</label><br />
+                }
+                else
+                {
+                    <label><input type="checkbox" id="Permisos" name="Permisos" value="ERP" class="custom-checkbox chkCheckBoxId" />Ver ERP</label><br />
+                }
+
+                if (cuenta.Contains("Cosecha"))
+                {
+                    <label><input type="checkbox" id="Permisos" name="Permisos" checked="checked" value="Cosecha" class="custom-checkbox chkCheckBoxId" />Ver Cosecha</label><br />
+                }
+                else
+                {
+                    <label><input type="checkbox" id="Permisos" name="Permisos" value="Cosecha" class="custom-checkbox chkCheckBoxId" />Ver Cosecha</label><br />
+                }
+                if (cuenta.Contains("Sueldo"))
+                {
+                    <label><input type="checkbox" id="Permisos" name="Permisos" checked="checked" value="Sueldo" class="custom-checkbox chkCheckBoxId" />Ver Sueldo</label><br />
+                }
+                else
+                {
+                    <label><input type="checkbox" id="Permisos" name="Permisos" value="Sueldo" class="custom-checkbox chkCheckBoxId" />Ver Sueldo</label><br />
+                }
+                if (cuenta.Contains("Remuneracion"))
+                {
+                    <label><input type="checkbox" id="Permisos" name="Permisos" checked="checked" value="Remuneracion" class="custom-checkbox chkCheckBoxId" />Remuneraciones</label><br />
+                }
+                else
+                {
+                    <label><input type="checkbox" id="Permisos" name="Permisos" value="Remuneracion" class="custom-checkbox chkCheckBoxId" />Remuneraciones</label><br />
+                }
+            }
+            @Html.ValidationMessageFor(model => model.Permisos, "", new { @class = "text-danger" })
         </div>
+    </div>
+
         <div class="form-group col-md-9 mx-auto my-5">
             <input type="submit" value="Guardar" class="btn btn-primary btn-block" />
             @Html.ActionLink("Volver a la lista", "Index", null, new { @class = "btn btn-block btn-danger mt-3" })

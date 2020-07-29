@@ -57,8 +57,8 @@ namespace ControlPersonalAppWeb.Controllers
         {
             if (ModelState.IsValid)
             {
-                controlInventario.Trabajador = cuenta.Trabajador;
-                controlInventario.TrabajadorId = cuenta.TrabajadorId;
+                controlInventario.Trabajador = cuenta.Nombre + " " + cuenta.Apellido;
+                controlInventario.TrabajadorId = cuenta.Id;
                 controlInventario.Fecha = DateTime.Now;
                 controlInventario.Empresa = cuenta.Empresa;
                 controlInventario.EmpresaId = cuenta.EmpresaId;

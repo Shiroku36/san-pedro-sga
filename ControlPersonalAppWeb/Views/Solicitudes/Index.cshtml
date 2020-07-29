@@ -9,7 +9,20 @@
 
 
     @Html.ActionLink("Crear solicitud", "Create",null,new { @class="btn btn-primary mt-2 float-right" } )
-
+    <div class="col-sm-10">
+        @if (ViewBag.alerta == 1)
+        {
+            <div class="my-3 alert alert-success" role="alert">
+                ¡Notificiación enviada al correo correctamente!
+            </div>
+        }
+        @if (ViewBag.alerta == 2)
+        {
+    <div class="my-3 alert alert-warning" role="alert">
+        Solicitud creada, pero hemos tenido un problema enviando la notificación al correo
+    </div>
+        }
+    </div>
     <div style="margin-top:24px">
         @Html.Partial("Busqueda")
     </div>
@@ -50,7 +63,7 @@
             {
                 <tr>
                     <td>
-                        <a href="/Trabajador/Details/@item.TrabajadorId">
+                        <a href="/Cuenta/Details/@item.TrabajadorId">
                             @Html.DisplayFor(modelItem => item.Trabajador)
                         </a>
                     </td>

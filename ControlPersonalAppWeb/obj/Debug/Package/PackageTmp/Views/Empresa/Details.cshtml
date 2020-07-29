@@ -4,12 +4,11 @@
     ViewBag.Title = "Detalle";
 }
 
-<h2>Detalle</h2>
-
 <div>
-    <h4>Proveedor</h4>
+    <h2 class="display-4 text-center">Proveedor</h2>
+    <h3 class="text-muted font-weight-light">Detalle</h3>
     <hr />
-    <dl class="dl-horizontal">
+    <dl class="dl-horizontal w-75 mx-auto">
         <dt>
             @Html.DisplayNameFor(model => model.Nombre)
         </dt>
@@ -27,6 +26,6 @@
 
     </dl>
 </div>
-<p>
-    @Html.ActionLink("Volver a la lista", "Index")
-</p>
+<div class="form-group col-md-9 mx-auto my-5">
+    @Html.ActionLink("Volver a la lista", "Index", null, new { @class = "btn btn-block btn-primary mt-3" })
+</div>

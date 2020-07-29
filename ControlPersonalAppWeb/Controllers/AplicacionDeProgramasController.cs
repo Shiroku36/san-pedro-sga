@@ -23,7 +23,7 @@ namespace ControlPersonalAppWeb.Controllers
             {
                 return View(db.AplicacionDePrograma.Where(x => x.SolicitudId == id));
             }
-            return View(db.AplicacionDePrograma.Where(x => x.EmpresaId == cuenta.EmpresaId).ToList());
+            return View(db.AplicacionDePrograma.Where(x => x.EmpresaId == cuenta.EmpresaId).ToList().OrderByDescending(x => x.FechaInicio).ToList());
         }
 
         // GET: AplicacionDeProgramas/Details/5

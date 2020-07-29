@@ -19,7 +19,7 @@ namespace ControlPersonalAppWeb.Controllers
         public ActionResult Index()
         {
             Utils.SessionManager.log("Index ingresos");
-            return View(db.Ingreso.Where(x => x.EmpresaId == cuenta.EmpresaId).ToList());
+            return View(db.Ingreso.Where(x => x.EmpresaId == cuenta.EmpresaId).OrderByDescending(x => x.Fecha).ToList());
         }
 
         // GET: Ingresos/Details/5
@@ -60,8 +60,8 @@ namespace ControlPersonalAppWeb.Controllers
         {
             if (ModelState.IsValid)
             {
-                ingreso.Trabajador = cuenta.Trabajador;
-                ingreso.TrabajadorId = cuenta.TrabajadorId;
+                ingreso.Trabajador = cuenta.Nombre + " " + cuenta.Apellido;
+                ingreso.TrabajadorId = cuenta.Id;
                 ingreso.Fecha = DateTime.Now;
                 string nombreEmpresa = ingreso.Proveedor;
                 Empresas empresa = db.Empresas.First(x => x.Nombre == nombreEmpresa);

@@ -56,7 +56,7 @@
                     }
                     @if (cuenta.Contains("EmpresasV"))
                     {
-                        <li>@Html.ActionLink("Empresas", "Index", "Empresas")</li>
+                        <li>@Html.ActionLink("Empresas", "Index", "Empresa")</li>
                     }
                     @if (cuenta.Contains("CuentasV"))
                     {
@@ -88,23 +88,27 @@
                         <li>@Html.ActionLink("Modulo cosecha", "NuevoModulo", "Home")</li>
                     }
                 </ul>
-                @if (ControlPersonalAppWeb.Utils.SessionManager.CuentaAutenticada() != null)
+                @if (cuenta.Contains("SGA"))
                 {
                     <div id="dpbtn" class="dropdown">
 
-                        <button id="buttDrop" data-toggle="dropdown" class="btn btn-primary dropdown-toggle">Sistema gestion bodega</button>
+                        <button id="buttDrop" data-toggle="dropdown" class="btn btn-primary dropdown-toggle">Sistema gestión bodega</button>
 
                         <div class="dropdown-menu fade-in" id="navbarDropdownMenuLink" aria-haspopup="true" aria-expanded="false">
-                            @Html.ActionLink("Sistema gestion bodega", "Index", "Stock", null, new { @class = "dropdown-item" })
-                            @Html.ActionLink("Solicitudes", "Index", "Solicitudes", null, new { @class = "dropdown-item" })
-                            @Html.ActionLink("Control de inventario", "Index", "ControlInventarios", null, new { @class = "dropdown-item" })
-                            @Html.ActionLink("Ingresos", "Index", "Ingresos", null, new { @class = "dropdown-item" })
+                            @Html.ActionLink("Sistema gestión bodega", "Index", "Stock", null, new { @class = "dropdown-item" })
                             @Html.ActionLink("Aplicaciones de programa", "index", "AplicacionDeProgramas", null, new { @class = "dropdown-item" })
+                            @Html.ActionLink("Control de inventario", "Index", "ControlInventarios", null, new { @class = "dropdown-item" })
+                            @Html.ActionLink("Comentarios", "Index", "Comentarios", null, new { @class = "dropdown-item" })
+                            @Html.ActionLink("Ingresos", "Index", "Ingresos", null, new { @class = "dropdown-item" })
+                            @if ((bool)ControlPersonalAppWeb.Utils.SessionManager.CuentaAutenticada().Notificacion)
+                            {
+                                @Html.ActionLink("Notificaciones", "Index", "Notificaciones", null, new { @class = "dropdown-item" })
+                            }
                             @Html.ActionLink("Productos", "Index", "Productos", null, new { @class = "dropdown-item" })
                             @Html.ActionLink("Proveedores", "Index", "Empresa", null, new { @class = "dropdown-item" })
+                            @Html.ActionLink("Solicitudes", "Index", "Solicitudes", null, new { @class = "dropdown-item" })
                             @Html.ActionLink("Tipos de productos", "Tipos", "Stock", null, new { @class = "dropdown-item" })
                             @Html.ActionLink("Unidades", "Unidades", "Stock", null, new { @class = "dropdown-item" })
-                            @Html.ActionLink("Notificaciones", "Index", "Notificaciones", null, new { @class = "dropdown-item" })
                         </div>
 
                     </div>
@@ -191,7 +195,6 @@
 @Scripts.Render("~/bundles/jquery")
 @Scripts.Render("~/bundles/bootstrap")
 @RenderSection("scripts", required: false)
-@Html.Partial("Del")
 <script>
 
     window.onload = function () {
