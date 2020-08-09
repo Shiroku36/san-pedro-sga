@@ -4,6 +4,7 @@
 .fade-in{-webkit-animation:fade-in .4s cubic-bezier(.39,.575,.565,1.000) both;animation:fade-in .4s cubic-bezier(.39,.575,.565,1.000) both}
 .scale-in-hor-right{-webkit-animation:scale-in-hor-right .5s cubic-bezier(.645,.045,.355,1.000) both;animation:scale-in-hor-right .5s cubic-bezier(.645,.045,.355,1.000) both}
 .scale-out-hor-right{-webkit-animation:scale-out-hor-right .5s cubic-bezier(.55,.085,.68,.53) both;animation:scale-out-hor-right .5s cubic-bezier(.55,.085,.68,.53) both}
+.shadow-drop-2-center{-webkit-animation:shadow-drop-2-center .4s cubic-bezier(.25,.46,.45,.94) both;animation:shadow-drop-2-center .4s cubic-bezier(.25,.46,.45,.94) both}
 .dropdown-menu{
     margin:0;
 }
@@ -495,6 +496,7 @@ a.article, a.article:hover {
 @-webkit-keyframes fade-in{0%{opacity:0}100%{opacity:1}}@keyframes fade-in{0%{opacity:0}100%{opacity:1}}
 @-webkit-keyframes scale-in-hor-right{0%{-webkit-transform:scaleX(0);transform:scaleX(0);-webkit-transform-origin:100% 100%;transform-origin:100% 100%;opacity:1}100%{-webkit-transform:scaleX(1);transform:scaleX(1);-webkit-transform-origin:100% 100%;transform-origin:100% 100%;opacity:1}}@keyframes scale-in-hor-right{0%{-webkit-transform:scaleX(0);transform:scaleX(0);-webkit-transform-origin:100% 100%;transform-origin:100% 100%;opacity:1}100%{-webkit-transform:scaleX(1);transform:scaleX(1);-webkit-transform-origin:100% 100%;transform-origin:100% 100%;opacity:1}}
 @-webkit-keyframes scale-out-hor-right{0%{-webkit-transform:scaleX(1);transform:scaleX(1);-webkit-transform-origin:100% 100%;transform-origin:100% 100%;opacity:1}100%{-webkit-transform:scaleX(0);transform:scaleX(0);-webkit-transform-origin:100% 100%;transform-origin:100% 100%;opacity:1}}@keyframes scale-out-hor-right{0%{-webkit-transform:scaleX(1);transform:scaleX(1);-webkit-transform-origin:100% 100%;transform-origin:100% 100%;opacity:1}100%{-webkit-transform:scaleX(0);transform:scaleX(0);-webkit-transform-origin:100% 100%;transform-origin:100% 100%;opacity:1}}
+@-webkit-keyframes shadow-drop-2-center{0%{-webkit-transform:translateZ(0);transform:translateZ(0);-webkit-box-shadow:0 0 0 0 transparent;box-shadow:0 0 0 0 transparent}100%{-webkit-transform:translateZ(50px);transform:translateZ(50px);-webkit-box-shadow:0 0 20px 0 rgba(0,0,0,.35);box-shadow:0 0 20px 0 rgba(0,0,0,.35)}}@keyframes shadow-drop-2-center{0%{-webkit-transform:translateZ(0);transform:translateZ(0);-webkit-box-shadow:0 0 0 0 transparent;box-shadow:0 0 0 0 transparent}100%{-webkit-transform:translateZ(50px);transform:translateZ(50px);-webkit-box-shadow:0 0 20px 0 rgba(0,0,0,.35);box-shadow:0 0 20px 0 rgba(0,0,0,.35)}}
 
 ::-webkit-scrollbar-track {
     background-color: black;
@@ -513,4 +515,15 @@ a.article, a.article:hover {
 }
 ::-webkit-scrollbar-thumb:hover {
     background: #ff8d1e;
+}
+.menuStock div div{
+    margin: 1rem;
+    cursor: pointer;
+}
+.menuStock div h5{
+    height: 50px;
+    font-weight: normal;
+}
+.menuStock div div img {
+    margin: 10px auto;
 }

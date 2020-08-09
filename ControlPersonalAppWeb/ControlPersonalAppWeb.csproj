@@ -760,6 +760,7 @@
     <Content Include="Views\Shared\Productos.cshtml" />
     <Content Include="SGA.pfx" />
     <Content Include="Views\Cuenta\Password.cshtml" />
+    <Content Include="Views\Stock\Menu.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Images\" />

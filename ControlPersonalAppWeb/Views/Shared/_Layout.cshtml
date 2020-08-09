@@ -92,7 +92,7 @@
                 {
                     <div id="dpbtn" class="dropdown">
 
-                        <button id="buttDrop" data-toggle="dropdown" class="btn btn-primary dropdown-toggle">Sistema gestión bodega</button>
+                        <button id="buttDrop" data-toggle="dropdown" class="btn btn-primary dropdown-toggle toMenu"> Sistema gestión bodega</button>
 
                         <div class="dropdown-menu fade-in" id="navbarDropdownMenuLink" aria-haspopup="true" aria-expanded="false">
                             @Html.ActionLink("Sistema gestión bodega", "Index", "Stock", null, new { @class = "dropdown-item" })
@@ -220,6 +220,9 @@
         $('a[aria-expanded=true]').attr('aria-expanded', 'false');
     });
 
+    $('.toMenu').on('click', function () {
+        location.href = location.origin + "/stock/menu";
+    })
 
 
 </script>

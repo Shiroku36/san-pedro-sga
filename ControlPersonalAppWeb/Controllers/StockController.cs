@@ -22,6 +22,10 @@ namespace ControlPersonalAppWeb.Controllers
             Utils.SessionManager.log("Index tipos");
             return View(cargarDatos("Tipos"));
         }
+        public ActionResult Menu()
+        {
+            return View();
+        }
         [HttpPost]
         public ActionResult Tipos(FormCollection collection)
         {
@@ -315,4 +319,5 @@ namespace ControlPersonalAppWeb.Controllers
             return (datosTipos);
         }
     }
+
 }
