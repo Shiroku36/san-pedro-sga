@@ -21,7 +21,7 @@
                 </td>
 
             </tr>
-            
+
             <tr>
                 <td>
                     @Html.DisplayNameFor(model => model.Fecha)
@@ -31,7 +31,7 @@
                     @Html.DisplayFor(model => model.Fecha)
                 </td>
             </tr>
-            
+
             <tr>
                 <td>
                     @Html.DisplayNameFor(model => model.Campo)
@@ -50,8 +50,17 @@
                     <img src="@String.Format("data:image/jpg;base64,{0}",System.Convert.ToBase64String(Model.Foto))" width="400" />
                 </td>
             </tr>
-           
-            </table>
+
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.NombreTrabajador)
+                </td>
+
+                <td>
+                    @Html.DisplayFor(model => model.NombreTrabajador)
+                </td>
+            </tr>
+        </table>
     </div>
     <div class="form-group col-md-9 mx-auto my-5">
         @Html.ActionLink("Volver a la lista", "Index", new { id = ViewBag.idTrabajador }, new { @class = "btn btn-block btn-danger mt-3" } )

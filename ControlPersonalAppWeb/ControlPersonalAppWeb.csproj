@@ -223,6 +223,7 @@
     <Compile Include="Controllers\RegistroController.cs" />
     <Compile Include="Controllers\RemuneracionController.cs" />
     <Compile Include="Controllers\RemuneracionesController.cs" />
+    <Compile Include="Controllers\SolicitudDeComprasController.cs" />
     <Compile Include="Controllers\SolicitudesController.cs" />
     <Compile Include="Controllers\StockController.cs" />
     <Compile Include="Controllers\TrabajadorController.cs" />
@@ -294,6 +295,9 @@
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Solicitud.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SolicitudDeCompra.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="Stock.cs">
@@ -716,7 +720,7 @@
     <Content Include="Views\Trabajadores\Edit.cshtml" />
     <Content Include="Views\Informes\Asistencias.cshtml" />
     <Content Include="Views\Trabajador\Asistencias.cshtml" />
-    <Content Include="Views\Registro\Busqueda.cshtml" />
+    <Content Include="Views\Registro\BusquedaRegistro.cshtml" />
     <Content Include="Views\Registro\Lista.cshtml" />
     <Content Include="Views\Informes\Horas.cshtml" />
     <Content Include="Views\Trabajador\Cargar.cshtml" />
@@ -760,6 +764,11 @@
     <Content Include="Views\Shared\Productos.cshtml" />
     <Content Include="SGA.pfx" />
     <Content Include="Views\Cuenta\Password.cshtml" />
+    <Content Include="Views\SolicitudDeCompras\Create.cshtml" />
+    <Content Include="Views\SolicitudDeCompras\Details.cshtml" />
+    <Content Include="Views\SolicitudDeCompras\Index.cshtml" />
+    <Content Include="Views\Shared\AgregarComentarios.cshtml" />
+    <Content Include="Views\Shared\Comentarios.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Images\" />

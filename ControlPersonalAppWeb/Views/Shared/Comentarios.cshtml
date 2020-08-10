@@ -1,0 +1,31 @@
+﻿
+<div class="form-group col-md-9 mx-auto my-5">
+    <div style="text-align:center">
+        <h3>Comentarios</h3>
+    </div>
+
+    @foreach (var comentario in ViewBag.comentarios)
+    {
+        <div class="row mb-1 w-100">
+            <div>
+                <a class="col-3" href="/Cuenta/Details/@comentario.TrabajadorId"> @comentario.Trabajador </a> <br />
+                <span class="col-3">@comentario.Fecha.ToString()</span>
+            </div>
+            <span class="col-6">@comentario.Comentario1</span>
+        </div>
+
+        <hr />
+    }
+</div>
+    @using (Html.BeginForm("Create", "Comentarios", new { enctype = "multipart/form-data" }))
+    {
+        @Html.AntiForgeryToken()
+        <div class="form-group col-md-9 mx-auto my-5">
+            <label>Agregar Comentario</label>
+            <input type="hidden" name="tipoId" value="@Model.Id" />
+            <input type="hidden" name="tipo" value="@ViewBag.tipo"/>
+            <input name="Comentario1" class="form-control mb-4" />
+            <input type="submit" value="Agregar comentario" class="btn btn-primary mb-4" />
+        </div>
+
+    }

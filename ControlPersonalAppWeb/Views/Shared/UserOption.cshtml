@@ -14,16 +14,23 @@
             @foreach (Notificacion e in notificaciones)
             {
                 <div class="card m-2 mr-4">
-                    <div class="card-header">
+                    <div class="card-header ">
+                        @if(e.Info=="Compra")
+                        {
+                            <span>Solicitud de compra</span>
+                        }
+                        else
+                        { 
+                            <span>Solicitud de producto</span>
+                        }
                         @e.Fecha
                     </div>
                     <div class="card-body">
                         <p class="card-text">@e.Texto</p>
                         @using (Html.BeginForm("Index", "Notificaciones", FormMethod.Post, new { enctype = "multipart/form-data" }))
                         {
-                            @Html.AntiForgeryToken()
                             <input type="hidden" value="@e.Id" name="Id" class="Id" />
-                            <input type="submit" class="btn btn-danger delete" value="Rechazar" onclick="return confirm('Estas seguro de eliminar esto?');" />
+                            <input type="submit" class="btn btn-danger delete" value="Rechazar" onclick="return confirm('Estas seguro de rechazar esto?');" />
                             <input type="submit" class="btn btn-success" value="Aceptar" name="Accion" onclick="return confirm('Estas seguro de aceptar esto?')" })>
                         }
                     </div>

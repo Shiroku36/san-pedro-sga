@@ -1,18 +1,15 @@
-﻿@model ControlPersonalAppWeb.Ingreso
+﻿@model ControlPersonalAppWeb.SolicitudDeCompra
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = "Detalle solicitud de compra";
 }
-
-<h2 class="display-4 text-center">Ingreso</h2>
-
+<h2 class="display-4 text-center">Solicitud de compra</h2>
 
 <div>
     <h3 class="text-muted font-weight-light">Detalle</h3>
     <hr />
     <div class="col-sm-8 table-responsive">
         <table class="mx-auto table-borderless table-hover tabla-detalle">
-
             <tr>
                 <td>
                     @Html.DisplayNameFor(model => model.Trabajador)
@@ -38,6 +35,35 @@
 
             <tr>
                 <td>
+                    @Html.DisplayNameFor(model => model.Observación)
+                </td>
+
+                <td>
+                    @Html.DisplayFor(model => model.Observación)
+                </td>
+
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.Destino)
+                </td>
+
+                <td>
+                    @Html.DisplayFor(model => model.Destino)
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.Estado)
+                </td>
+
+                <td>
+                    @Html.DisplayFor(model => model.Estado)
+                </td>
+            </tr>
+
+            <tr>
+                <td>
                     @Html.DisplayNameFor(model => model.Fecha)
                 </td>
 
@@ -46,43 +72,13 @@
                 </td>
             </tr>
 
-            <tr>
-                <td>
-                    @Html.DisplayNameFor(model => model.Ubicacion)
-                </td>
 
-                <td>
-                    @Html.DisplayFor(model => model.Ubicacion)
-                </td>
-            </tr>
 
-            <tr>
-                <td>
-                    @Html.DisplayNameFor(model => model.Proveedor)
-                </td>
-
-                <td>
-                    @Html.DisplayFor(model => model.Proveedor)
-                </td>
-            </tr>
-
-            <tr>
-                <td>
-                    @Html.DisplayNameFor(model => model.ProveedorRut)
-                </td>
-
-                <td>
-                    @Html.DisplayFor(model => model.ProveedorRut)
-                </td>
-
-            </tr>
         </table>
-
-
     </div>
     @Html.Partial("Comentarios")
 
     <div class="form-group col-md-9 mx-auto my-5">
         @Html.ActionLink("Volver a la lista", "Index", null, new { @class = "btn btn-block btn-danger mt-3" })
     </div>
-</div>
+</div></p>

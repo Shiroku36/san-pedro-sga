@@ -73,6 +73,10 @@
           <Property Name="Comentario" Type="varchar(max)" />
           <Property Name="Empresa" Type="varchar" MaxLength="50" />
           <Property Name="EmpresaId" Type="int" />
+          <Property Name="ControlInventarioId" Type="int" />
+          <Property Name="IngresoId" Type="int" />
+          <Property Name="SolicitudId" Type="int" />
+          <Property Name="SolicitudDeCompraId" Type="int" />
         </EntityType>
         <EntityType Name="ControlInventario">
           <Key>
@@ -234,6 +238,7 @@
           <Property Name="Fecha" Type="datetime" />
           <Property Name="Correo" Type="varchar(max)" />
           <Property Name="SolicitudId" Type="int" />
+          <Property Name="SolicitudDeCompraId" Type="int" />
           <Property Name="Estado" Type="varchar" MaxLength="50" />
           <Property Name="Texto" Type="varchar(max)" />
           <Property Name="CuentaId" Type="int" />
@@ -298,6 +303,21 @@
           <Property Name="Empresa" Type="varchar" MaxLength="50" />
           <Property Name="EmpresaId" Type="int" />
         </EntityType>
+        <EntityType Name="SolicitudDeCompra">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Trabajador" Type="varchar" MaxLength="300" />
+          <Property Name="TrabajadorId" Type="int" />
+          <Property Name="Productos" Type="varchar(max)" />
+          <Property Name="Observación" Type="varchar(max)" />
+          <Property Name="Destino" Type="varchar" MaxLength="50" />
+          <Property Name="Estado" Type="varchar" MaxLength="50" />
+          <Property Name="Fecha" Type="datetime" />
+          <Property Name="Empresa" Type="varchar" MaxLength="50" />
+          <Property Name="EmpresaId" Type="int" />
+        </EntityType>
         <EntityType Name="Stock">
           <Key>
             <PropertyRef Name="Id" />
@@ -308,6 +328,7 @@
           <Property Name="Cantidad" Type="int" />
           <Property Name="Ubicacion" Type="varchar" MaxLength="50" />
           <Property Name="SolicitudId" Type="int" />
+          <Property Name="SolicitudDeCompraId" Type="int" />
           <Property Name="IngresoId" Type="int" />
           <Property Name="Empresa" Type="varchar" MaxLength="50" />
           <Property Name="EmpresaId" Type="int" />
@@ -521,6 +542,7 @@
           <EntitySet Name="Producto" EntityType="Self.Producto" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="RegistroTrabajador" EntityType="Self.RegistroTrabajador" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Solicitud" EntityType="Self.Solicitud" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="SolicitudDeCompra" EntityType="Self.SolicitudDeCompra" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Stock" EntityType="Self.Stock" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TipoContrato" EntityType="Self.TipoContrato" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Trabajador" EntityType="Self.Trabajador" Schema="dbo" store:Type="Tables" />
@@ -544,10 +566,7 @@
           <EntitySet Name="AFP" EntityType="DBManejoPersonalModel.AFP" />
           <EntitySet Name="Trabajador" EntityType="DBManejoPersonalModel.Trabajador" />
           <EntitySet Name="AplicacionDePrograma" EntityType="DBManejoPersonalModel.AplicacionDePrograma" />
-          <EntitySet Name="Comentario" EntityType="DBManejoPersonalModel.Comentario" />
           <EntitySet Name="Ingreso" EntityType="DBManejoPersonalModel.Ingreso" />
-          <EntitySet Name="Stock" EntityType="DBManejoPersonalModel.Stock" />
-          <EntitySet Name="Notificacion" EntityType="DBManejoPersonalModel.Notificacion" />
           <EntitySet Name="ControlInventario" EntityType="DBManejoPersonalModel.ControlInventario" />
           <EntitySet Name="Solicitud" EntityType="DBManejoPersonalModel.Solicitud" />
           <EntitySet Name="TipoContrato" EntityType="DBManejoPersonalModel.TipoContrato" />
@@ -556,6 +575,10 @@
           <EntitySet Name="Datos" EntityType="DBManejoPersonalModel.Datos" />
           <EntitySet Name="Producto" EntityType="DBManejoPersonalModel.Producto" />
           <EntitySet Name="Cuentas" EntityType="DBManejoPersonalModel.Cuentas" />
+          <EntitySet Name="Comentario" EntityType="DBManejoPersonalModel.Comentario" />
+          <EntitySet Name="SolicitudDeCompra" EntityType="DBManejoPersonalModel.SolicitudDeCompra" />
+          <EntitySet Name="Stock" EntityType="DBManejoPersonalModel.Stock" />
+          <EntitySet Name="Notificacion" EntityType="DBManejoPersonalModel.Notificacion" />
           </EntityContainer>
         <EntityType Name="Campos">
           <Key>
@@ -872,19 +895,6 @@
           <Property Name="EmpresaId" Type="Int32" />
           <Property Name="Ubicacion" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
-        <EntityType Name="Comentario">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Trabajador" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
-          <Property Name="TrabajadorId" Type="Int32" />
-          <Property Name="AplicacionDeProgramaId" Type="Int32" />
-          <Property Name="Fecha" Type="DateTime" Precision="3" />
-          <Property Name="Comentario1" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="Empresa" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="EmpresaId" Type="Int32" />
-        </EntityType>
         <EntityType Name="Ingreso">
           <Key>
             <PropertyRef Name="Id" />
@@ -900,39 +910,6 @@
           <Property Name="TrabajadorId" Type="Int32" />
           <Property Name="Empresa" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="EmpresaId" Type="Int32" />
-        </EntityType>
-        <EntityType Name="Stock">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Producto" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="ProductoId" Type="Int32" />
-          <Property Name="Cantidad" Type="Int32" />
-          <Property Name="Ubicacion" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="SolicitudId" Type="Int32" />
-          <Property Name="IngresoId" Type="Int32" />
-          <Property Name="Empresa" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="EmpresaId" Type="Int32" />
-          <Property Name="UbicacionId" Type="Int32" />
-          <Property Name="Tipo" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="ControlId" Type="Int32" />
-          <Property Name="RetirarBajo0" Type="Boolean" />
-          <Property Name="Activo" Type="Boolean" />
-        </EntityType>
-        <EntityType Name="Notificacion">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Fecha" Type="DateTime" Precision="3" />
-          <Property Name="Correo" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="SolicitudId" Type="Int32" />
-          <Property Name="Estado" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="Texto" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="CuentaId" Type="Int32" />
-          <Property Name="Dato" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <Property Name="Info" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="ControlInventario">
           <Key>
@@ -1050,6 +1027,73 @@
           <Property Name="Email" Type="String" MaxLength="128" FixedLength="false" Unicode="false" />
           <Property Name="Nombre" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="Apellido" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="Comentario">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Trabajador" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+          <Property Name="TrabajadorId" Type="Int32" />
+          <Property Name="AplicacionDeProgramaId" Type="Int32" />
+          <Property Name="Fecha" Type="DateTime" Precision="3" />
+          <Property Name="Comentario1" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Empresa" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="EmpresaId" Type="Int32" />
+          <Property Name="ControlInventarioId" Type="Int32" />
+          <Property Name="IngresoId" Type="Int32" />
+          <Property Name="SolicitudId" Type="Int32" />
+          <Property Name="SolicitudDeCompraId" Type="Int32" />
+        </EntityType>
+        <EntityType Name="SolicitudDeCompra">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Trabajador" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
+          <Property Name="TrabajadorId" Type="Int32" />
+          <Property Name="Productos" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Observación" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Destino" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Estado" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Fecha" Type="DateTime" Precision="3" />
+          <Property Name="Empresa" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="EmpresaId" Type="Int32" />
+        </EntityType>
+        <EntityType Name="Stock">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Producto" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ProductoId" Type="Int32" />
+          <Property Name="Cantidad" Type="Int32" />
+          <Property Name="Ubicacion" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="SolicitudId" Type="Int32" />
+          <Property Name="SolicitudDeCompraId" Type="Int32" />
+          <Property Name="IngresoId" Type="Int32" />
+          <Property Name="Empresa" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="EmpresaId" Type="Int32" />
+          <Property Name="UbicacionId" Type="Int32" />
+          <Property Name="Tipo" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ControlId" Type="Int32" />
+          <Property Name="RetirarBajo0" Type="Boolean" />
+          <Property Name="Activo" Type="Boolean" />
+        </EntityType>
+        <EntityType Name="Notificacion">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Fecha" Type="DateTime" Precision="3" />
+          <Property Name="Correo" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="SolicitudId" Type="Int32" />
+          <Property Name="SolicitudDeCompraId" Type="Int32" />
+          <Property Name="Estado" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Texto" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="CuentaId" Type="Int32" />
+          <Property Name="Dato" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Info" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
         </EntityType>
         </Schema>
     </edmx:ConceptualModels>
@@ -1385,20 +1429,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Comentario">
-            <EntityTypeMapping TypeName="DBManejoPersonalModel.Comentario">
-              <MappingFragment StoreEntitySet="Comentario">
-                <ScalarProperty Name="EmpresaId" ColumnName="EmpresaId" />
-                <ScalarProperty Name="Empresa" ColumnName="Empresa" />
-                <ScalarProperty Name="Comentario1" ColumnName="Comentario" />
-                <ScalarProperty Name="Fecha" ColumnName="Fecha" />
-                <ScalarProperty Name="AplicacionDeProgramaId" ColumnName="AplicacionDeProgramaId" />
-                <ScalarProperty Name="TrabajadorId" ColumnName="TrabajadorId" />
-                <ScalarProperty Name="Trabajador" ColumnName="Trabajador" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="Ingreso">
             <EntityTypeMapping TypeName="DBManejoPersonalModel.Ingreso">
               <MappingFragment StoreEntitySet="Ingreso">
@@ -1412,41 +1442,6 @@
                 <ScalarProperty Name="Ubicacion" ColumnName="Ubicacion" />
                 <ScalarProperty Name="Fecha" ColumnName="Fecha" />
                 <ScalarProperty Name="Productos" ColumnName="Productos" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Stock">
-            <EntityTypeMapping TypeName="DBManejoPersonalModel.Stock">
-              <MappingFragment StoreEntitySet="Stock">
-                <ScalarProperty Name="Activo" ColumnName="Activo" />
-                <ScalarProperty Name="RetirarBajo0" ColumnName="RetirarBajo0" />
-                <ScalarProperty Name="ControlId" ColumnName="ControlId" />
-                <ScalarProperty Name="Tipo" ColumnName="Tipo" />
-                <ScalarProperty Name="UbicacionId" ColumnName="UbicacionId" />
-                <ScalarProperty Name="EmpresaId" ColumnName="EmpresaId" />
-                <ScalarProperty Name="Empresa" ColumnName="Empresa" />
-                <ScalarProperty Name="IngresoId" ColumnName="IngresoId" />
-                <ScalarProperty Name="SolicitudId" ColumnName="SolicitudId" />
-                <ScalarProperty Name="Ubicacion" ColumnName="Ubicacion" />
-                <ScalarProperty Name="Cantidad" ColumnName="Cantidad" />
-                <ScalarProperty Name="ProductoId" ColumnName="ProductoId" />
-                <ScalarProperty Name="Producto" ColumnName="Producto" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Notificacion">
-            <EntityTypeMapping TypeName="DBManejoPersonalModel.Notificacion">
-              <MappingFragment StoreEntitySet="Notificacion">
-                <ScalarProperty Name="Info" ColumnName="Info" />
-                <ScalarProperty Name="Dato" ColumnName="Dato" />
-                <ScalarProperty Name="CuentaId" ColumnName="CuentaId" />
-                <ScalarProperty Name="Texto" ColumnName="Texto" />
-                <ScalarProperty Name="Estado" ColumnName="Estado" />
-                <ScalarProperty Name="SolicitudId" ColumnName="SolicitudId" />
-                <ScalarProperty Name="Correo" ColumnName="Correo" />
-                <ScalarProperty Name="Fecha" ColumnName="Fecha" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -1572,6 +1567,77 @@
                 <ScalarProperty Name="Empresa" ColumnName="Empresa" />
                 <ScalarProperty Name="Password" ColumnName="Password" />
                 <ScalarProperty Name="Usuario" ColumnName="Usuario" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Comentario">
+            <EntityTypeMapping TypeName="DBManejoPersonalModel.Comentario">
+              <MappingFragment StoreEntitySet="Comentario">
+                <ScalarProperty Name="SolicitudDeCompraId" ColumnName="SolicitudDeCompraId" />
+                <ScalarProperty Name="SolicitudId" ColumnName="SolicitudId" />
+                <ScalarProperty Name="IngresoId" ColumnName="IngresoId" />
+                <ScalarProperty Name="ControlInventarioId" ColumnName="ControlInventarioId" />
+                <ScalarProperty Name="EmpresaId" ColumnName="EmpresaId" />
+                <ScalarProperty Name="Empresa" ColumnName="Empresa" />
+                <ScalarProperty Name="Comentario1" ColumnName="Comentario" />
+                <ScalarProperty Name="Fecha" ColumnName="Fecha" />
+                <ScalarProperty Name="AplicacionDeProgramaId" ColumnName="AplicacionDeProgramaId" />
+                <ScalarProperty Name="TrabajadorId" ColumnName="TrabajadorId" />
+                <ScalarProperty Name="Trabajador" ColumnName="Trabajador" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SolicitudDeCompra">
+            <EntityTypeMapping TypeName="DBManejoPersonalModel.SolicitudDeCompra">
+              <MappingFragment StoreEntitySet="SolicitudDeCompra">
+                <ScalarProperty Name="EmpresaId" ColumnName="EmpresaId" />
+                <ScalarProperty Name="Empresa" ColumnName="Empresa" />
+                <ScalarProperty Name="Fecha" ColumnName="Fecha" />
+                <ScalarProperty Name="Estado" ColumnName="Estado" />
+                <ScalarProperty Name="Destino" ColumnName="Destino" />
+                <ScalarProperty Name="Observación" ColumnName="Observación" />
+                <ScalarProperty Name="Productos" ColumnName="Productos" />
+                <ScalarProperty Name="TrabajadorId" ColumnName="TrabajadorId" />
+                <ScalarProperty Name="Trabajador" ColumnName="Trabajador" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Stock">
+            <EntityTypeMapping TypeName="DBManejoPersonalModel.Stock">
+              <MappingFragment StoreEntitySet="Stock">
+                <ScalarProperty Name="Activo" ColumnName="Activo" />
+                <ScalarProperty Name="RetirarBajo0" ColumnName="RetirarBajo0" />
+                <ScalarProperty Name="ControlId" ColumnName="ControlId" />
+                <ScalarProperty Name="Tipo" ColumnName="Tipo" />
+                <ScalarProperty Name="UbicacionId" ColumnName="UbicacionId" />
+                <ScalarProperty Name="EmpresaId" ColumnName="EmpresaId" />
+                <ScalarProperty Name="Empresa" ColumnName="Empresa" />
+                <ScalarProperty Name="IngresoId" ColumnName="IngresoId" />
+                <ScalarProperty Name="SolicitudDeCompraId" ColumnName="SolicitudDeCompraId" />
+                <ScalarProperty Name="SolicitudId" ColumnName="SolicitudId" />
+                <ScalarProperty Name="Ubicacion" ColumnName="Ubicacion" />
+                <ScalarProperty Name="Cantidad" ColumnName="Cantidad" />
+                <ScalarProperty Name="ProductoId" ColumnName="ProductoId" />
+                <ScalarProperty Name="Producto" ColumnName="Producto" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Notificacion">
+            <EntityTypeMapping TypeName="DBManejoPersonalModel.Notificacion">
+              <MappingFragment StoreEntitySet="Notificacion">
+                <ScalarProperty Name="Info" ColumnName="Info" />
+                <ScalarProperty Name="Dato" ColumnName="Dato" />
+                <ScalarProperty Name="CuentaId" ColumnName="CuentaId" />
+                <ScalarProperty Name="Texto" ColumnName="Texto" />
+                <ScalarProperty Name="Estado" ColumnName="Estado" />
+                <ScalarProperty Name="SolicitudDeCompraId" ColumnName="SolicitudDeCompraId" />
+                <ScalarProperty Name="SolicitudId" ColumnName="SolicitudId" />
+                <ScalarProperty Name="Correo" ColumnName="Correo" />
+                <ScalarProperty Name="Fecha" ColumnName="Fecha" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

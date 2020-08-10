@@ -18,6 +18,7 @@ namespace ControlPersonalAppWeb
         public Nullable<System.DateTime> Fecha { get; set; }
         public string Correo { get; set; }
         public Nullable<int> SolicitudId { get; set; }
+        public Nullable<int> SolicitudDeCompraId { get; set; }
         public string Estado { get; set; }
         public string Texto { get; set; }
         public Nullable<int> CuentaId { get; set; }

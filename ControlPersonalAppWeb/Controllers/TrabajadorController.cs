@@ -295,8 +295,10 @@ namespace ControlPersonalAppWeb.Controllers
                 Entrada = x.Entrada,
                 EntradaA = x.EntradaA,
                 Salida = x.Salida,
-                SalidaA = x.SalidaA
+                SalidaA = x.SalidaA,
+                Contratado = x.Campo
             }).ToList();
+            ViewBag.campos = GetNombreCampos(cuenta.Empresa);
             return View();
         }
 
@@ -304,6 +306,8 @@ namespace ControlPersonalAppWeb.Controllers
         [HttpPost]
         public ActionResult Asistencias(FormCollection collection)
         {
+            if(collection["Accion"]=="Generar")
+            {
                 DBManejoPersonalEntities db = new DBManejoPersonalEntities();
                 string nombre = collection["id"];
                 Empresas empresa = db.Empresas.First(x => x.Nombre == nombre);
@@ -324,7 +328,49 @@ namespace ControlPersonalAppWeb.Controllers
                 AsistenciasPDF(dateTime, ids, empresa);
                 Utils.SessionManager.log("Asistencias mensuales");
                 Utils.SessionManager.entrada = "8:00";
-                return RedirectToAction("Asistencias");
+            }
+            else
+            {
+                string empresa = Utils.SessionManager.CuentaAutenticada().Empresa;
+                string campo = collection["Huerto"];
+                ViewBag.campo = campo;
+                if (campo == "Todos")
+                {
+                    ViewBag.Trabajador = db.Trabajador.Where(x => x.Empresa == empresa).Select(x => new TrabajadorIndex
+                    {
+                        Id = x.Id,
+                        Nombre = x.Nombre,
+                        Rut = x.Rut,
+                        ApellidoPaterno = x.ApellidoPaterno,
+                        ApellidoMaterno = x.ApellidoMaterno,
+                        Entrada = x.Entrada,
+                        EntradaA = x.EntradaA,
+                        Salida = x.Salida,
+                        SalidaA = x.SalidaA,
+                        Contratado = x.Campo
+                    }).ToList();
+                }
+                else
+                {
+                    ViewBag.Trabajador = db.Trabajador.Where(x => x.Empresa == empresa && x.Campo == campo).Select(x => new TrabajadorIndex
+                    {
+                        Id = x.Id,
+                        Nombre = x.Nombre,
+                        Rut = x.Rut,
+                        ApellidoPaterno = x.ApellidoPaterno,
+                        ApellidoMaterno = x.ApellidoMaterno,
+                        Entrada = x.Entrada,
+                        EntradaA = x.EntradaA,
+                        Salida = x.Salida,
+                        SalidaA = x.SalidaA,
+                        Contratado = x.Campo
+                    }).ToList();
+                }
+                ViewBag.campos = GetNombreCampos(cuenta.Empresa);
+                return View();
+            }
+            ViewBag.campos = GetNombreCampos(cuenta.Empresa);
+            return RedirectToAction("Asistencias");
         }
         public System.Drawing.Image GetImage(byte[] imageBytes)
         {
@@ -344,6 +390,114 @@ namespace ControlPersonalAppWeb.Controllers
                 }
             }
             return null;
+        }
+        public ActionResult Hoy()
+        {
+            List<RegistroTrabajador> registros = new List<RegistroTrabajador>();
+            DBManejoPersonalEntities database = new DBManejoPersonalEntities();
+            string empresa = Utils.SessionManager.CuentaAutenticada().Empresa;
+            List<TrabajadorIndex> trabajadores = database.Trabajador
+                                            .Where(x => x.Empresa == empresa)
+                                            .Select(x => new TrabajadorIndex { Id = x.Id, Nombre = x.Nombre, ApellidoMaterno = x.ApellidoMaterno, ApellidoPaterno = x.ApellidoPaterno, Uid = x.Uid, Contratado = x.Campo }).ToList();
+            string date = DateTime.Now.ToShortDateString();
+            DateTime dateTime = Convert.ToDateTime(date);
+            int i = 0;
+            while (i < trabajadores.Count)
+            {
+                var trabajador = trabajadores[i];
+                var registry = database.RegistroTrabajador.Where(x => x.Fecha >= dateTime && x.Uid == trabajador.Uid).ToList();
+                if (registry.Count > 0)
+                {
+                    foreach (RegistroTrabajador registro in registry)
+                    {
+                        registro.IdTrabajador = trabajador.Id;
+                        registro.NombreTrabajador = trabajador.Nombre + " " + trabajador.ApellidoPaterno + " " + trabajador.ApellidoMaterno;
+                    }
+                    registros.AddRange(registry);
+                    i++;
+                }
+                else
+                {
+                    trabajadores.Remove(trabajador);
+                }
+            }
+            using (StringWriter sw = new StringWriter())
+            {
+                using (HtmlTextWriter hw = new HtmlTextWriter(sw))
+                {
+                    string strHeader = "Registros del día " + DateTime.Now.ToLongDateString().Replace(",","");
+                    //System.IO.FileStream fs = new FileStream(strPdfPath, FileMode.Create, FileAccess.Write, FileShare.None);
+                    Document document = new Document();
+                    PdfWriter writer = PdfWriter.GetInstance(document, Response.OutputStream);
+                    document.Open();
+
+                    Image image = Image.GetInstance(Server.MapPath("~/App_Data/" + Utils.SessionManager.CuentaAutenticada().Empresa + ".png"));
+                    image.Alignment = Element.ALIGN_LEFT;
+                    image.ScaleToFit(60, 60);
+                    document.Add(image);
+
+                    //Report Header
+                    BaseFont bfntHead = BaseFont.CreateFont(BaseFont.TIMES_ROMAN, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
+                    Font fntHead = new Font(bfntHead, 16, 1, BaseColor.DARK_GRAY);
+                    Paragraph prgHeading = new Paragraph();
+                    prgHeading.Alignment = Element.ALIGN_CENTER;
+                    prgHeading.Add(new Chunk(strHeader.ToUpper(), fntHead));
+                    document.Add(prgHeading);
+
+                    //Author
+                    Paragraph prgAuthor = new Paragraph();
+                    BaseFont btnAuthor = BaseFont.CreateFont(BaseFont.TIMES_ROMAN, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
+                    Font fntAuthor = new Font(btnAuthor, 8, 2, BaseColor.DARK_GRAY);
+                    prgAuthor.Alignment = Element.ALIGN_RIGHT;
+                    prgAuthor.Add(new Chunk("Autor : " + Utils.SessionManager.CuentaAutenticada().Usuario, fntAuthor));
+                    prgAuthor.Add(new Chunk("\nFecha : " + DateTime.Now.ToShortDateString(), fntAuthor));
+                    document.Add(prgAuthor);
+                    Paragraph p = new Paragraph(new Chunk(new iTextSharp.text.pdf.draw.LineSeparator(0.0F, 100.0F, BaseColor.BLACK, Element.ALIGN_LEFT, 1)));
+                    document.Add(p);
+                    //Add line break
+                    document.Add(new Chunk("\n", fntHead));
+
+                    List<string> titulosRegistrosxdia = new List<string> { "Fecha", "Nombre", "Tipo", "Hora", "Campo" };
+                    PdfPTable tablaRegistrosxdia = new PdfPTable(titulosRegistrosxdia.Count) { WidthPercentage = 100f };
+                    tablaRegistrosxdia.SetWidths(new int[] { 1, 3,1,1,1 });
+                    //Table header
+                    BaseFont btnColumnHeader = BaseFont.CreateFont(BaseFont.TIMES_ROMAN, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
+                    Font fntColumnHeader = new Font(btnColumnHeader, 8, 1, BaseColor.WHITE);
+                    Font fntCell = new Font(btnColumnHeader, 8, 1, BaseColor.BLACK);
+                    for (i = 0; i < titulosRegistrosxdia.Count; i++)
+                    {
+                        PdfPCell cell = new PdfPCell() { BackgroundColor = BaseColor.GRAY };
+                        cell.AddElement(new Chunk(titulosRegistrosxdia[i], fntColumnHeader));
+                        tablaRegistrosxdia.AddCell(cell);
+                    }
+                    //table Data
+                    foreach (var celda in registros.OrderByDescending(x => x.Fecha))
+                    {
+                        tablaRegistrosxdia.AddCell(new Phrase(celda.Fecha.ToShortDateString(), fntCell));
+                        tablaRegistrosxdia.AddCell(new Phrase(celda.NombreTrabajador, fntCell));
+                        if (celda.Fecha.Hour < 12)
+                        {
+                            tablaRegistrosxdia.AddCell(new Phrase("Entrada", fntCell));
+                        }
+                        else
+                        {
+                            tablaRegistrosxdia.AddCell(new Phrase("Salida", fntCell));
+                        }
+                        tablaRegistrosxdia.AddCell(new Phrase(celda.Fecha.ToShortTimeString(), fntCell));
+                        tablaRegistrosxdia.AddCell(new Phrase(celda.Campo, fntCell));
+                    }
+
+                    document.Add(tablaRegistrosxdia);
+                    document.Close();
+                    writer.Close();
+                    Response.ContentType = "application/pdf";
+                    Response.Cache.SetCacheability(HttpCacheability.NoCache);
+                    Response.AddHeader("content-disposition", "attachment;filename=" + strHeader + ".pdf");
+                    Response.Write(document);
+                    Response.End();
+                }
+            }
+            return RedirectToAction("Index", "Informes");
         }
         public void GenerarPDFRegistros(List<TrabajadorIndex> trabajadores ,List<RegistroTrabajador> registros, string strHeader, List<Registro> registrosLista)
         {
@@ -491,12 +645,12 @@ namespace ControlPersonalAppWeb.Controllers
                     titulos.Add("H. Totales");
                     titulos.Add("Atraso");
                     titulos.Add("Predio");
-                    int num = 12;
-                    PdfPTable table = new PdfPTable(num);
-                    table.SetWidths(new int[] { 60, 150, 80, 50, 50, 50, 50, 50, 50, 50, 50, 100 });
+                    titulos.Add("Causa");
+                    PdfPTable table = new PdfPTable(titulos.Count);
+                    table.SetWidths(new int[] { 60, 150, 80, 50, 50, 50, 50, 50, 50, 50, 50, 100, 50 });
                     table.WidthPercentage = 100f;
                     //Table header
-                    for ( i = 0; i < num; i++)
+                    for ( i = 0; i < titulos.Count; i++)
                     {
                         PdfPCell cell = new PdfPCell();
                         cell.BackgroundColor = BaseColor.GRAY;
@@ -506,6 +660,14 @@ namespace ControlPersonalAppWeb.Controllers
                     //table Data
                     foreach (var celda in registrosLista)
                     {
+                        if(celda.EntradaModificada!=null)
+                        {
+                            celda.Entrada = celda.Entrada + " *";
+                        }
+                        if (celda.SalidaModificada != null)
+                        {
+                            celda.Salida = celda.Salida + " *";
+                        }
                         table.AddCell(new Phrase(celda.Fecha.ToShortDateString(), fntCell));
                         table.AddCell(new Phrase(celda.Nombre+" "+celda.ApellidoPaterno+" "+celda.ApellidoMaterno, fntCell));
                         table.AddCell(new Phrase(celda.Rut, fntCell));
@@ -518,6 +680,20 @@ namespace ControlPersonalAppWeb.Controllers
                         table.AddCell(new Phrase(celda.Horas, fntCell));
                         table.AddCell(new Phrase(celda.Atraso, fntCell));
                         table.AddCell(new Phrase(celda.Campo, fntCell));
+                        string causa = "";
+                        if(!String.IsNullOrEmpty(celda.CausaEntrada))
+                        {
+                            causa = celda.CausaEntrada;
+                            if(!String.IsNullOrEmpty(celda.CausaSalida))
+                            {
+                                causa = causa + "/" + celda.CausaSalida;
+                            }
+                        }
+                        if (!String.IsNullOrEmpty(celda.CausaSalida) && String.IsNullOrEmpty(celda.CausaEntrada))
+                        {
+                            causa = celda.CausaSalida;
+                        }
+                        table.AddCell(new Phrase(causa, fntCell));
                     }
 
                     document.Add(table);
@@ -950,14 +1126,14 @@ namespace ControlPersonalAppWeb.Controllers
                     int año = periodo.Value.Year;
                     registrosTrabajador = database.RegistroTrabajador
                                         .Where(x => x.Fecha.Month == mes && x.Fecha.Year == año && x.Uid == trabajador.Uid)
-                                        .Select(x => new RegistroPDF { Campo = x.Campo, Empresa = x.Empresa, Fecha = x.Fecha, Uid = x.Uid}).ToList();
+                                        .Select(x => new RegistroPDF { Campo = x.Campo, Empresa = x.Empresa, Fecha = x.Fecha, Uid = x.Uid, Causa = x.NombreTrabajador, Modificado = x.IdTrabajador}).ToList();
                 }
                 //Un campo y un inicio
                 else if (inicio == null && fin == null && string.IsNullOrEmpty(campo))
                 {
                     registrosTrabajador = database.RegistroTrabajador
                                           .Where(x => x.Uid == trabajador.Uid )
-                                          .Select(x=> new RegistroPDF {Campo = x.Campo, Empresa = x.Empresa, Fecha = x.Fecha, Uid = x.Uid }).ToList();
+                                          .Select(x=> new RegistroPDF {Campo = x.Campo, Empresa = x.Empresa, Fecha = x.Fecha, Uid = x.Uid, Causa = x.NombreTrabajador, Modificado = x.IdTrabajador }).ToList();
                 }
                 else if (inicio!=null && fin == null && string.IsNullOrEmpty(campo))
                 {
@@ -965,13 +1141,13 @@ namespace ControlPersonalAppWeb.Controllers
                     registrosTrabajador = database.RegistroTrabajador.Where(x => x.Uid == trabajador.Uid
                                                                             && x.Fecha.Year == end.Year
                                                                             && x.Fecha.Month == end.Month
-                                                                            && x.Fecha.Day == end.Day).Select(x => new RegistroPDF { Campo = x.Campo, Empresa = x.Empresa, Fecha = x.Fecha, Uid = x.Uid }).ToList();
+                                                                            && x.Fecha.Day == end.Day).Select(x => new RegistroPDF { Campo = x.Campo, Empresa = x.Empresa, Fecha = x.Fecha, Uid = x.Uid, Causa = x.NombreTrabajador, Modificado = x.IdTrabajador }).ToList();
                 }
                 else if(inicio!=null && fin!= null && string.IsNullOrEmpty(campo))
                 {
                     DateTime end = Convert.ToDateTime(fin);
                     end = end.AddDays(1);
-                    registrosTrabajador = database.RegistroTrabajador.Where(x => x.Uid == trabajador.Uid && x.Fecha > inicio && x.Fecha < end).Select(x => new RegistroPDF { Campo = x.Campo, Empresa = x.Empresa, Fecha = x.Fecha, Uid = x.Uid }).ToList();
+                    registrosTrabajador = database.RegistroTrabajador.Where(x => x.Uid == trabajador.Uid && x.Fecha > inicio && x.Fecha < end).Select(x => new RegistroPDF { Campo = x.Campo, Empresa = x.Empresa, Fecha = x.Fecha, Uid = x.Uid, Causa = x.NombreTrabajador, Modificado = x.IdTrabajador }).ToList();
                 }
                 else if(!string.IsNullOrEmpty(campo) && inicio != null && fin == null)
                 {
@@ -979,17 +1155,17 @@ namespace ControlPersonalAppWeb.Controllers
                     registrosTrabajador = database.RegistroTrabajador.Where(x => x.Uid == trabajador.Uid
                                                                             && x.Fecha.Year == end.Year
                                                                             && x.Fecha.Month == end.Month
-                                                                            && x.Fecha.Day == end.Day && x.Campo == campo).Select(x => new RegistroPDF { Campo = x.Campo, Empresa = x.Empresa, Fecha = x.Fecha, Uid = x.Uid }).ToList();
+                                                                            && x.Fecha.Day == end.Day && x.Campo == campo).Select(x => new RegistroPDF { Campo = x.Campo, Empresa = x.Empresa, Fecha = x.Fecha, Uid = x.Uid, Causa = x.NombreTrabajador, Modificado = x.IdTrabajador }).ToList();
                 }
                 else if(!string.IsNullOrEmpty(campo) && inicio == null && fin == null)
                 {
-                    registrosTrabajador = database.RegistroTrabajador.Where(x => x.Uid == trabajador.Uid && x.Campo == campo).Select(x => new RegistroPDF { Campo = x.Campo, Empresa = x.Empresa, Fecha = x.Fecha, Uid = x.Uid }).ToList();
+                    registrosTrabajador = database.RegistroTrabajador.Where(x => x.Uid == trabajador.Uid && x.Campo == campo).Select(x => new RegistroPDF { Campo = x.Campo, Empresa = x.Empresa, Fecha = x.Fecha, Uid = x.Uid, Causa = x.NombreTrabajador, Modificado = x.IdTrabajador }).ToList();
                 }
                 else if(inicio != null && fin != null && !string.IsNullOrEmpty(campo))
                 {
                     DateTime end = Convert.ToDateTime(fin);
                     end = end.AddDays(1);
-                    registrosTrabajador = database.RegistroTrabajador.Where(x => x.Uid == trabajador.Uid && x.Fecha >= inicio && x.Fecha <= end && x.Campo == campo).Select(x => new RegistroPDF { Campo = x.Campo, Empresa = x.Empresa, Fecha = x.Fecha, Uid = x.Uid }).ToList();
+                    registrosTrabajador = database.RegistroTrabajador.Where(x => x.Uid == trabajador.Uid && x.Fecha >= inicio && x.Fecha <= end && x.Campo == campo).Select(x => new RegistroPDF { Campo = x.Campo, Empresa = x.Empresa, Fecha = x.Fecha, Uid = x.Uid, Causa = x.NombreTrabajador, Modificado = x.IdTrabajador }).ToList();
                 }
 
                 //registrosTrabajador = database.RegistroTrabajador.Where(x => x.Uid == trabajador.Uid).ToList();
@@ -1097,7 +1273,10 @@ namespace ControlPersonalAppWeb.Controllers
                         DateTime horasT = new DateTime();
                         DateTime horasQL = new DateTime();
                         string raro = "";
-                        if (almuerzo < horas)
+                        DateTime salida = new DateTime();
+                        DateTime.TryParse("01/01/0001 " + segundo.Fecha.Hour+":"+ segundo.Fecha.Minute, out salida);
+                        if (almuerzo < horas &&  salidaAlmuerzo > salida)
+
                             horasQL = horasQL + (horas - almuerzo);
                         else
                             horasQL = horas;
@@ -1124,9 +1303,13 @@ namespace ControlPersonalAppWeb.Controllers
                             ApellidoPaterno = trabajador.ApellidoPaterno,
                             ApellidoMaterno = trabajador.ApellidoMaterno,
                             Fecha = segundo.Fecha,
-                            Salida = segundo.Fecha.ToShortTimeString(),
                             Entrada = primero.Fecha.ToShortTimeString(),
+                            EntradaModificada = primero.Modificado,
+                            CausaEntrada = primero.Causa,
                             EntradaOficial = atraso.ToShortTimeString(),
+                            Salida = segundo.Fecha.ToShortTimeString(),
+                            SalidaModificada = segundo.Modificado,
+                            CausaSalida = segundo.Causa,
                             SalidaOficial = extra.ToShortTimeString(),
                             HorasExtras = horasExtras.ToShortTimeString(),
                             Atraso = atrasoP.ToShortTimeString(),
@@ -1356,8 +1539,9 @@ namespace ControlPersonalAppWeb.Controllers
             {
                 campos = db.Campos.Where(x => x.Empresa == empresa).Select(x => new { x.Nombre }).ToList();
             }
-            nombres = new string[campos.Count];
-            int count = 0;
+            nombres = new string[campos.Count+1];
+            int count = 1;
+            nombres[0] = "Todos";
             foreach (var campo in campos)
             {
                 nombres[count] = campo.Nombre;
@@ -1441,6 +1625,11 @@ namespace ControlPersonalAppWeb.Controllers
         {
             DBManejoPersonalEntities database = new DBManejoPersonalEntities();
             Trabajador trabajador = database.Trabajador.First(x => x.Id == id);
+            if (Utils.SessionManager.alerta != 0)
+            {
+                ViewBag.alerta = Utils.SessionManager.alerta;
+                Utils.SessionManager.alerta = 0;
+            }
             Utils.SessionManager.log("Detalle trabajador: " + trabajador.Nombre + " " + trabajador.ApellidoPaterno + " " + trabajador.ApellidoMaterno);
             return View(trabajador);
         }
@@ -1589,7 +1778,7 @@ namespace ControlPersonalAppWeb.Controllers
                 HttpPostedFileBase postedFile = Request.Files["Foto"];
                 if (postedFile != null && postedFile.ContentLength > 0)
                 {
-                    trabajadorNew.FotoCarnet = getImageFromPostfile(postedFile);
+                    trabajadorNew.FotoCarnet = getImageFromPostfile(postedFile, 850);
                     ViewBag.foto = Request.Files["Foto"];
                 }
                 if (String.IsNullOrEmpty(collection["aviso"]))
@@ -1837,7 +2026,7 @@ namespace ControlPersonalAppWeb.Controllers
                 HttpPostedFileBase postedFile = Request.Files["Foto"];
                 if (postedFile != null && postedFile.ContentLength > 0)
                 {
-                    trabajadorNew.FotoCarnet = getImageFromPostfile(postedFile);
+                    trabajadorNew.FotoCarnet = getImageFromPostfile(postedFile, 850);
                 }
                 trabajadorNew.Empresa = empresa;
                 if (trabajadorNew.FotoCarnet == null && Utils.SessionManager.FotoCarnet != null)
@@ -1925,11 +2114,22 @@ namespace ControlPersonalAppWeb.Controllers
                 return View();
             }
         }
-        public byte[] getImageFromPostfile(HttpPostedFileBase postedFile)
+        public byte[] getImageFromPostfile(HttpPostedFileBase postedFile, int tamaño)
         {
             MemoryStream target = new MemoryStream();
             System.Drawing.Image image = System.Drawing.Image.FromStream(postedFile.InputStream, true, true);
-            image = resizeImage(image, new Size(1120, 630));
+            SizeF dimensiones = image.PhysicalDimension;
+            for (int i = 100; i > 0; i--)
+            {
+                float dimension = (dimensiones.Width * i) / 100;
+                if (dimension <= tamaño)
+                {
+                    int ancho = (int)dimensiones.Width * i / 100;
+                    int alto = (int)dimensiones.Height * i / 100;
+                    image = resizeImage(image, new Size(ancho, alto));
+                    i = 0;
+                }
+            }
             image.Save(target, ImageFormat.Jpeg);
             //postedFile.InputStream.CopyTo(target);
             return target.ToArray();

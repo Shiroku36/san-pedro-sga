@@ -25,27 +25,43 @@ namespace ControlPersonalAppWeb.Controllers
         {
             int id = Convert.ToInt32(collection["Id"]);
             Notificacion notificacion = db.Notificacion.First(x => x.Id == id);
-            Solicitud solicitud = db.Solicitud.First(x => x.Id == notificacion.SolicitudId);
-            List<Stock> stocks = db.Stock.Where(x => x.SolicitudId == notificacion.SolicitudId).ToList();
-            foreach (var stock in stocks)
+            if (notificacion.Info=="Producto")
             {
-                if(collection["Accion"]=="Aceptar")
+                Solicitud solicitud = db.Solicitud.First(x => x.Id == notificacion.SolicitudId);
+                List<Stock> stocks = db.Stock.Where(x => x.SolicitudId == notificacion.SolicitudId).ToList();
+                if (collection["Accion"] == "Aceptar")
                 {
-                    Producto producto = db.Producto.First(x => x.Id == stock.ProductoId);
-                    agregarStock(producto, (int)stock.Cantidad, solicitud);
+                    foreach (var stock in stocks)
+                    {
+                        Producto producto = db.Producto.First(x => x.Id == stock.ProductoId);
+                        agregarStock(producto, (int)stock.Cantidad, solicitud);
+                    }
+                    solicitud.Estado = "Aceptada";
+                    notificacion.Estado = "Aceptada";
+                    Utils.SessionManager.log("Notificación aceptada: " + id);
                 }
-            }
-            if (collection["Accion"] == "Aceptar")
-            {
-                solicitud.Estado = "Aceptada";
-                notificacion.Estado = "Aceptada";
-                Utils.SessionManager.log("Notificación aceptada: "+ id);
+                else
+                {
+                    solicitud.Estado = "Rechazada";
+                    notificacion.Estado = "Rechazada";
+                    Utils.SessionManager.log("Notificación rechazada: " + id);
+                }
             }
             else
             {
-                solicitud.Estado = "Rechazada";
-                notificacion.Estado = "Rechazada";
-                Utils.SessionManager.log("Notificación rechazada: " + id);
+                SolicitudDeCompra solicitudDeCompra = db.SolicitudDeCompras.First(x => x.Id == notificacion.SolicitudDeCompraId);
+                if (collection["Accion"] == "Aceptar")
+                {
+                    solicitudDeCompra.Estado = "Aceptada";
+                    notificacion.Estado = "Aceptada";
+                    Utils.SessionManager.log("Notificación aceptada: " + id);
+                }
+                else
+                {
+                    solicitudDeCompra.Estado = "Rechazada";
+                    notificacion.Estado = "Rechazada";
+                    Utils.SessionManager.log("Notificación rechazada: " + id);
+                }
             }
             db.SaveChanges();
             Utils.SessionManager.notificaciones.Remove(Utils.SessionManager.notificaciones.First(x => x.Id == id));

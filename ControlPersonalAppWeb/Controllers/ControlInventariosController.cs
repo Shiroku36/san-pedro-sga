@@ -36,6 +36,9 @@ namespace ControlPersonalAppWeb.Controllers
             }
             ViewBag.productos = db.Stock.Where(x => x.ControlId == id).ToList();
             Utils.SessionManager.log("Detalle control inventario: " + controlInventario.Id);
+            int idd = controlInventario.Id;
+            ViewBag.tipo = "control";
+            ViewBag.comentarios = db.Comentario.Where(x => x.ControlInventarioId == idd).ToList();
             return View(controlInventario);
         }
 

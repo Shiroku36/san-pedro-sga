@@ -1,17 +1,20 @@
 ﻿@model IEnumerable<ControlPersonalAppWeb.Notificacion>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Notificaciones";
 }
 
 <h1 class="display-4 text-center">Notificaciones</h1>
 <hr />
 <table class="table">
     <tr class="bg-primary">
+        <th style="width:25%">
+            Tipo
+        </th>
         <th style="width:15%">
             @Html.DisplayNameFor(model => model.Fecha)
         </th>
-        <th>
+        <th style="width:10%">
             @Html.DisplayNameFor(model => model.Correo)
         </th>
         <th>
@@ -20,7 +23,7 @@
         <th>
             @Html.DisplayNameFor(model => model.Estado)
         </th>
-        <th>
+        <th style="width:60%">
             @Html.DisplayNameFor(model => model.Texto)
         </th>
         <th style="width:18%">
@@ -32,6 +35,16 @@
     {
         <tr>
             <td>
+                @if (item.Info == "Compra")
+                {
+                    <span>Compra</span>
+                }
+                else
+                {
+                    <span>Producto</span>
+                }
+            </td>
+            <td>
                 @Html.DisplayFor(modelItem => item.Fecha)
             </td>
             <td>
@@ -39,7 +52,14 @@
             </td>
             <td>
                 <a href="/Solicitudes/Details/@item.SolicitudId">
-                    @Html.DisplayFor(modelItem => item.SolicitudId)
+                    @if (item.Info == "Producto")
+                    {
+                        @Html.DisplayFor(modelItem => item.SolicitudId)
+                    }
+                    else
+                    {
+                        @Html.DisplayFor(modelItem => item.SolicitudDeCompraId)
+                    }
                 </a>
             </td>
             <td class="estado">@Html.DisplayFor(modelItem => item.Estado)</td>

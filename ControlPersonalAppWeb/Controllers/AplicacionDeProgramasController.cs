@@ -40,6 +40,7 @@ namespace ControlPersonalAppWeb.Controllers
             }
             Utils.SessionManager.log("Detalle aplicacion de programa: " + aplicacionDePrograma.Id);
             int idd = aplicacionDePrograma.Id;
+            ViewBag.tipo = "aplicacion";
             ViewBag.comentarios = db.Comentario.Where(x => x.AplicacionDeProgramaId == idd).ToList();
             return View(aplicacionDePrograma);
         }

@@ -1,7 +1,7 @@
-﻿@model ControlPersonalAppWeb.Solicitud
+﻿@model ControlPersonalAppWeb.SolicitudDeCompra
 
 @{
-    ViewBag.Title = "Crear Solicitud de productos";
+    ViewBag.Title = "Crear solicitud de compra";
 }
 
 @using (Html.BeginForm())
@@ -9,7 +9,7 @@
     @Html.AntiForgeryToken()
 
     <div class="form-horizontal">
-        <h4 class="text-center display-4">Solicitud</h4>
+        <h4 class="text-center display-4">Solicitud de compra</h4>
         <h3 class="text-muted font-weight-light">Crear</h3>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
@@ -17,22 +17,14 @@
 
         <div class="col-md-8 mx-auto mb-3">
             <div class="card bg-warning">
-                <label class="card-header text-center control-label">Ubicaciones</label>
                 <div class="row card-body">
-                    <div class="form-group col-md-6 ">
-                        @Html.LabelFor(model => model.Origen, htmlAttributes: new { @class = "control-label" })
-                        @Html.DropDownListFor(model => model.Origen, new SelectList(ViewBag.campos), htmlAttributes: new { @class = "form-control", @onchange = "cargarHuertos(0)" })
-                        @Html.ValidationMessageFor(model => model.Origen, "", new { @class = "text-danger" })
-                    </div>
-                    <div class="form-group col-md-6">
+                    <div class="form-group col-md-12">
                         @Html.LabelFor(model => model.Destino, htmlAttributes: new { @class = "control-label" })
                         @Html.DropDownListFor(model => model.Destino, new SelectList(ViewBag.campos), htmlAttributes: new { @class = "form-control" })
                         @Html.ValidationMessageFor(model => model.Destino, "", new { @class = "text-danger" })
                     </div>
                 </div>
             </div>
-
-
         </div>
 
 
@@ -53,20 +45,5 @@
 
     </div>
 }
+
 @Scripts.Render("~/bundles/jquery")
-<script>
-    var btn = $('#btnsubmit')
-    var form = $('form')
-
-    btn.on('click', function () {
-        let origen = $('#Origen')
-        let destino = $('#Destino')
-        if (origen[0].options[origen[0].selectedIndex].value == destino[0].options[destino[0].selectedIndex].value) {
-            destino[0].setCustomValidity('No puede ser igual al origen')
-            return;
-        } else {
-            destino[0].setCustomValidity('')
-        }
-    })
-
-</script>

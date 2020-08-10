@@ -10,6 +10,8 @@ namespace ControlPersonalAppWeb.Models
         public string Uid;
         public string Nombre;
         public string Rut;
+        public int? Modificado;
+        public string Causa;
         public DateTime Fecha;
         public string Campo;
         public string Empresa;

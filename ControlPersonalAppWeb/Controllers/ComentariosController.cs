@@ -49,19 +49,51 @@ namespace ControlPersonalAppWeb.Controllers
         // más información vea https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,AplicacionDeProgramaId,Comentario1")] Comentario comentario)
+        public ActionResult Create(FormCollection collection,[Bind(Include = "Id,Comentario1")] Comentario comentario)
         {
             if (ModelState.IsValid)
             {
+                Utils.SessionManager.log("Agregar comentario: " + comentario.Id);
                 comentario.Trabajador = cuenta.Nombre + " " +cuenta.Apellido;
                 comentario.TrabajadorId = cuenta.Id;
                 comentario.Fecha = DateTime.Now;
                 comentario.Empresa = cuenta.Empresa;
                 comentario.EmpresaId = cuenta.EmpresaId;
-                db.Comentario.Add(comentario);
-                db.SaveChanges();
-                Utils.SessionManager.log("Agregar comentario: " + comentario.Id);
-                return RedirectToAction("Details","AplicacionDeProgramas",new { id = comentario.AplicacionDeProgramaId });
+                if(collection["tipo"]=="ingreso")
+                {
+                    comentario.IngresoId = Convert.ToInt32(collection["tipoId"]);
+                    db.Comentario.Add(comentario);
+                    db.SaveChanges();
+                    return RedirectToAction("Details", "Ingresos", new { id = comentario.IngresoId });
+                }
+                if (collection["tipo"] == "control")
+                {
+                    comentario.ControlInventarioId = Convert.ToInt32(collection["tipoId"]);
+                    db.Comentario.Add(comentario);
+                    db.SaveChanges();
+                    return RedirectToAction("Details", "ControlInventarios", new { id = comentario.ControlInventarioId });
+                }
+                if (collection["tipo"] == "aplicacion")
+                {
+                    comentario.AplicacionDeProgramaId = Convert.ToInt32(collection["tipoId"]);
+                    db.Comentario.Add(comentario);
+                    db.SaveChanges();
+                    return RedirectToAction("Details", "AplicacionDeProgramas", new { id = comentario.AplicacionDeProgramaId });
+                }
+                if (collection["tipo"] == "compra")
+                {
+                    comentario.SolicitudDeCompraId = Convert.ToInt32(collection["tipoId"]);
+                    db.Comentario.Add(comentario);
+                    db.SaveChanges();
+                    return RedirectToAction("Details", "SolicitudDeCompras", new { id = comentario.SolicitudDeCompraId });
+                }
+                if (collection["tipo"] == "producto")
+                {
+                    comentario.SolicitudId = Convert.ToInt32(collection["tipoId"]);
+                    db.Comentario.Add(comentario);
+                    db.SaveChanges();
+                    return RedirectToAction("Details", "Solicitudes", new { id = comentario.SolicitudId });
+                }
             }
 
             return View(comentario);

@@ -21,7 +21,6 @@
                         <p class="card-text">@e.Texto</p>
                         @using (Html.BeginForm("Index", "Notificaciones", FormMethod.Post, new { enctype = "multipart/form-data" }))
                         {
-                            @Html.AntiForgeryToken()
                             <input type="hidden" value="@e.Id" name="Id" class="Id" />
                             <input type="submit" class="btn btn-danger delete" value="Rechazar" onclick="return confirm('Estas seguro de eliminar esto?');" />
                             <input type="submit" class="btn btn-success" value="Aceptar" name="Accion" onclick="return confirm('Estas seguro de aceptar esto?')" })>

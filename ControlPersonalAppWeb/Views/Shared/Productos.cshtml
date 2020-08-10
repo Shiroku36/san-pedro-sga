@@ -90,7 +90,7 @@
         var productos = document.getElementsByClassName('producto');
         var i, j;
         //El origen es de donde hay que poner los productos
-        var origen = document.getElementById("Origen") || document.getElementById("Ubicacion");
+        var origen = document.getElementById("Origen") || document.getElementById("Ubicacion") || document.getElementById("Destino");
 
         if (stocks.length == 0) {
             return;

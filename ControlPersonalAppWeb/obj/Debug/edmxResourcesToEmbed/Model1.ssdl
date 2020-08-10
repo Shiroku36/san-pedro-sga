@@ -68,6 +68,10 @@
     <Property Name="Comentario" Type="varchar(max)" />
     <Property Name="Empresa" Type="varchar" MaxLength="50" />
     <Property Name="EmpresaId" Type="int" />
+    <Property Name="ControlInventarioId" Type="int" />
+    <Property Name="IngresoId" Type="int" />
+    <Property Name="SolicitudId" Type="int" />
+    <Property Name="SolicitudDeCompraId" Type="int" />
   </EntityType>
   <EntityType Name="ControlInventario">
     <Key>
@@ -229,6 +233,7 @@
     <Property Name="Fecha" Type="datetime" />
     <Property Name="Correo" Type="varchar(max)" />
     <Property Name="SolicitudId" Type="int" />
+    <Property Name="SolicitudDeCompraId" Type="int" />
     <Property Name="Estado" Type="varchar" MaxLength="50" />
     <Property Name="Texto" Type="varchar(max)" />
     <Property Name="CuentaId" Type="int" />
@@ -293,6 +298,21 @@
     <Property Name="Empresa" Type="varchar" MaxLength="50" />
     <Property Name="EmpresaId" Type="int" />
   </EntityType>
+  <EntityType Name="SolicitudDeCompra">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Trabajador" Type="varchar" MaxLength="300" />
+    <Property Name="TrabajadorId" Type="int" />
+    <Property Name="Productos" Type="varchar(max)" />
+    <Property Name="Observación" Type="varchar(max)" />
+    <Property Name="Destino" Type="varchar" MaxLength="50" />
+    <Property Name="Estado" Type="varchar" MaxLength="50" />
+    <Property Name="Fecha" Type="datetime" />
+    <Property Name="Empresa" Type="varchar" MaxLength="50" />
+    <Property Name="EmpresaId" Type="int" />
+  </EntityType>
   <EntityType Name="Stock">
     <Key>
       <PropertyRef Name="Id" />
@@ -303,6 +323,7 @@
     <Property Name="Cantidad" Type="int" />
     <Property Name="Ubicacion" Type="varchar" MaxLength="50" />
     <Property Name="SolicitudId" Type="int" />
+    <Property Name="SolicitudDeCompraId" Type="int" />
     <Property Name="IngresoId" Type="int" />
     <Property Name="Empresa" Type="varchar" MaxLength="50" />
     <Property Name="EmpresaId" Type="int" />
@@ -516,6 +537,7 @@
     <EntitySet Name="Producto" EntityType="Self.Producto" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="RegistroTrabajador" EntityType="Self.RegistroTrabajador" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Solicitud" EntityType="Self.Solicitud" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="SolicitudDeCompra" EntityType="Self.SolicitudDeCompra" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Stock" EntityType="Self.Stock" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="TipoContrato" EntityType="Self.TipoContrato" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Trabajador" EntityType="Self.Trabajador" Schema="dbo" store:Type="Tables" />

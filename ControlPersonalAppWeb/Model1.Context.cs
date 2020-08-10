@@ -50,5 +50,7 @@ namespace ControlPersonalAppWeb
         public virtual DbSet<Empresas> Empresas { get; set; }
         public virtual DbSet<Datos> Datos { get; set; }
         public virtual DbSet<Producto> Producto { get; set; }
+
+        public System.Data.Entity.DbSet<ControlPersonalAppWeb.SolicitudDeCompra> SolicitudDeCompras { get; set; }
     }
 }

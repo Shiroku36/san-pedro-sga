@@ -6,101 +6,94 @@
     var cuenta = ControlPersonalAppWeb.Utils.SessionManager.CuentaAutenticada();
 }
 
+<h1 class="display-4 text-center">Registros - @ViewBag.Trabajador.Nombre @ViewBag.Trabajador.ApellidoPaterno @ViewBag.Trabajador.ApellidoMaterno</h1>
 
-
-    <h1 class="display-4 text-center">Registros - @ViewBag.Trabajador.Nombre</h1>
-
-    @if (cuenta.Permisos.Contains("RegistrosC"))
-    {
-        <a href='@Url.Action("Create", "Registro",new { id = ViewBag.trabajador.Id })'>
-            <label type="button" class="btn btn-primary float-right ml-2  mb-3">Crear Nuevo</label>
-        </a>
-    }
+@if (cuenta.Permisos.Contains("RegistrosC"))
+{
+    <a href='@Url.Action("Create", "Registro",new { id = ViewBag.trabajador.Id })'>
+        <label type="button" class="btn btn-primary float-right ml-2  mb-3">Crear Nuevo</label>
+    </a>
+}
 
 <div class="clearfix"></div>
 
 @using (Html.BeginForm())
 {
-    <!--<button type="submit" value="Delete" class="btn btn-sm btn-danger rounded-0"><i class="fa fa-trash-o"></i> Acción</button>-->
     <br />
     <br />
     @Html.AntiForgeryToken()
-<div class="table-responsive">
-    <table class="table table-hover" id="tabla">
-        <tr class="bg-primary">
-            <!--
-            <th>
-                Selección
-            </th>-->
-            <th>
-                Tipo
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Fecha)
-            </th>
-            <th>
-                Hora
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Campo)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Foto)
-            </th>
-            <th></th>
-        </tr>
-
-        @foreach (var item in Model)
-        {
-            <tr>
-                <!--
-                <td>
-                    <input type="checkbox" id="ID" name="ID" value="@item.Id" class="custom-checkbox chkCheckBoxId" />
-                </td>
-                    -->
-                <td>
-                    @if (item.Fecha.Hour < 12)
-                    {
-                        tipo = "Entrada";
-                    }
-                    else
-                    {
-                        tipo = "Salida";
-                    }
-                    @tipo
-                </td>
-                <td>
-                    @item.Fecha.ToShortDateString()
-                </td>
-                <td>
-                    @item.Fecha.ToShortTimeString()
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Campo)
-                </td>
-                <td>
-                    <img src="@String.Format("data:image/jgp;base64,{0}", System.Convert.ToBase64String(item.Foto))" width="110" />
-                </td>
-                <td>
-                    @if (cuenta.Permisos.Contains("RegistrosE"))
-                    {
-                        <a href='@Url.Action("Edit", "Registro", new { id = item.Id , idTrabajador = ViewBag.trabajador.Id})'>
-                            <label title="Editar" type="submit" class="btn btn-warning">Editar</label>
-                        </a>
-                    }
-                    <a href='@Url.Action("Details", "Registro", new { id = item.Id, idTrabajador = ViewBag.trabajador.Id })'>
-                        <label title="Detalle" type="submit" class="btn btn-info">Detalle </label>
-                    </a>
-                    @if (cuenta.Permisos.Contains("RegistrosD"))
-                    {
-                        <a href='@Url.Action("Delete", "Registro", new { id = item.Id })'>
-                            <label type="button" class="btn btn-danger" onclick="return confirm('¿Está seguro que desea eliminar el registro?');" })>Borrar</label>
-                        </a>
-                    }
-                </td>
+    <div class="table-responsive">
+        <table class="table table-hover" id="tabla">
+            <tr class="bg-primary">
+                <th>
+                    Tipo
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Fecha)
+                </th>
+                <th>
+                    Hora
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Campo)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Foto)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.NombreTrabajador)
+                </th>
+                <th></th>
             </tr>
-        }
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @if (item.Fecha.Hour < 12)
+                        {
+                            tipo = "Entrada";
+                        }
+                        else
+                        {
+                            tipo = "Salida";
+                        }
+                        @tipo
+                    </td>
+                    <td>
+                        @item.Fecha.ToShortDateString()
+                    </td>
+                    <td>
+                        @item.Fecha.ToShortTimeString()
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Campo)
+                    </td>
+                    <td>
+                        <img src="@String.Format("data:image/jgp;base64,{0}", System.Convert.ToBase64String(item.Foto))" width="110" />
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NombreTrabajador)
+                    </td>
+                    <td>
+                        @if (cuenta.Permisos.Contains("RegistrosE"))
+                        {
+                            <a href='@Url.Action("Edit", "Registro", new { id = item.Id , idTrabajador = ViewBag.trabajador.Id})'>
+                                <label title="Editar" type="submit" class="btn btn-warning">Editar</label>
+                            </a>
+                        }
+                        <a href='@Url.Action("Details", "Registro", new { id = item.Id, idTrabajador = ViewBag.trabajador.Id })'>
+                            <label title="Detalle" type="submit" class="btn btn-info">Detalle </label>
+                        </a>
+                        @if (cuenta.Permisos.Contains("RegistrosD"))
+                        {
+                            <a href='@Url.Action("Delete", "Registro", new { id = item.Id })'>
+                                <label type="button" class="btn btn-danger" onclick="return confirm('¿Está seguro que desea eliminar el registro?');" })>Borrar</label>
+                            </a>
+                        }
+                    </td>
+                </tr>
+            }
 
-    </table>
-</div>
-    }
+        </table>
+    </div>
+}

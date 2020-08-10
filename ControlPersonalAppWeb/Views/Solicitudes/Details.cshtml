@@ -1,10 +1,10 @@
 ﻿@model ControlPersonalAppWeb.Solicitud
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = "Detalle solicitud de productos";
 }
 
-    <h2 class="display-4 text-center">Solicitud</h2>
+    <h2 class="display-4 text-center">Solicitud de producto</h2>
 
     <div>
         <h3 class="text-muted font-weight-light">Detalle</h3>
@@ -20,7 +20,7 @@
                         <a href="~/Cuenta/Details/@Model.TrabajadorId">@Model.Trabajador</a>
                     </td>
                 </tr>
-                
+
                 <tr>
                     <td>
                         @Html.DisplayNameFor(model => model.Productos)
@@ -33,7 +33,7 @@
                         }
                     </td>
                 </tr>
-                
+
                 <tr>
                     <td>
                         @Html.DisplayNameFor(model => model.Observación)
@@ -53,7 +53,7 @@
                         @Html.DisplayFor(model => model.Origen)
                     </td>
                 </tr>
-                
+
                 <tr>
                     <td>
                         @Html.DisplayNameFor(model => model.Destino)
@@ -63,7 +63,7 @@
                         @Html.DisplayFor(model => model.Destino)
                     </td>
                 </tr>
-                
+
                 <tr>
                     <td>
                         @Html.DisplayNameFor(model => model.Estado)
@@ -73,7 +73,7 @@
                         @Html.DisplayFor(model => model.Estado)
                     </td>
                 </tr>
-                
+
                 <tr>
                     <td>
                         @Html.DisplayNameFor(model => model.Fecha)
@@ -83,11 +83,13 @@
                         @Html.DisplayFor(model => model.Fecha)
                     </td>
                 </tr>
-                
 
-                
+
+
             </table>
         </div>
+        @Html.Partial("Comentarios")
+
         <div class="form-group col-md-9 mx-auto my-5">
             @Html.ActionLink("Volver a la lista", "Index", null, new { @class = "btn btn-block btn-danger mt-3" })
         </div>

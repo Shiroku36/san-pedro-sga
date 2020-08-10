@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Mail;
 using System.Web;
 using System.Web.Mvc;
 using ControlPersonalAppWeb.Models;
@@ -33,6 +34,7 @@ namespace ControlPersonalAppWeb.Utils
         public static int email = 1;
         public static string mensaje = "";
         public static string activa = "";
+        public static int alerta = 0;
 
         public static List<Notificacion>  getNotificaciones() {
             int id;
@@ -151,6 +153,45 @@ namespace ControlPersonalAppWeb.Utils
             HttpContext.Current.Response.Cookies.Add(cookieSesion);
             HttpContext.Current.Response.Cookies.Add(cookiePerfil);
         }
-        
+        public static int enviarCorreo(List<String> correos, Notificacion notificacion)
+        {
+            try
+            {
+                MailMessage mail = new MailMessage();
+                SmtpClient SmtpServer = new SmtpClient();
+                mail.From = new MailAddress("notificacionjcp@ingenieriajcp.cl",
+                "SGA JCP", System.Text.Encoding.UTF8);
+                foreach (var correo in correos)
+                {
+                    mail.To.Add(correo);
+                }
+                if(notificacion.Info == "Producto")
+                {
+                    mail.Subject = "Nueva solicitud de productos " + notificacion.Fecha.Value.ToLongDateString();
+                }
+                else
+                {
+                    mail.Subject = "Nueva solicitud de compra " + notificacion.Fecha.Value.ToLongDateString();
+                }
+                mail.Body = notificacion.Texto + "\n\nPuedes revisarla en:\nhttp://sgajcp.ingenieriajcp.cl/Cuenta/Login";
+                SmtpServer.DeliveryMethod = SmtpDeliveryMethod.Network;
+                SmtpServer.UseDefaultCredentials = false;
+                SmtpServer.Port = 25;
+                SmtpServer.Host = "mail.ingenieriajcp.cl";
+                SmtpServer.Credentials = new System.Net.NetworkCredential("notificacionjcp@ingenieriajcp.cl", "notificacion");
+                SmtpServer.EnableSsl = true;
+                SmtpServer.Send(mail);
+                mail.Dispose();
+                SmtpServer.Dispose();
+                Utils.SessionManager.mensaje = "Correo enviado correctamente";
+                return 1;
+            }
+            catch (Exception ex)
+            {
+                ex.ToString();
+                Utils.SessionManager.mensaje = "Falló el envío del correo";
+                return 2;
+            }
+        }
     }
 }

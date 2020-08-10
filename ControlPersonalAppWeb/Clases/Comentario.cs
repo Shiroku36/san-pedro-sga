@@ -25,5 +25,9 @@ namespace ControlPersonalAppWeb
         public string Comentario1 { get; set; }
         public string Empresa { get; set; }
         public Nullable<int> EmpresaId { get; set; }
+        public Nullable<int> ControlInventarioId { get; set; }
+        public Nullable<int> IngresoId { get; set; }
+        public Nullable<int> SolicitudId { get; set; }
+        public Nullable<int> SolicitudDeCompraId { get; set; }
     }
 }

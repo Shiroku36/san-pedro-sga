@@ -11,7 +11,8 @@ namespace ControlPersonalAppWeb
 {
     using System;
     using System.Collections.Generic;
-    
+    using System.ComponentModel;
+
     public partial class RegistroTrabajador
     {
         public int Id { get; set; }
@@ -21,6 +22,7 @@ namespace ControlPersonalAppWeb
         public string Campo { get; set; }
         public string Empresa { get; set; }
         public Nullable<int> IdTrabajador { get; set; }
+        [DisplayName("Causa")]
         public string NombreTrabajador { get; set; }
     }
 }

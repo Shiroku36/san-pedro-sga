@@ -103,6 +103,42 @@ namespace ControlPersonalAppWeb.Controllers
             }
 
         }*/
+        public ActionResult createTrabajador(int id)
+        {
+            try
+            {
+                Cuentas cuenta = db.Cuentas.First(x => x.TrabajadorId == id);
+                Utils.SessionManager.alerta = 2;
+                return RedirectToAction("Details", "Trabajador", new { id = id });
+            }
+            catch
+            {
+                Trabajador trabajador = db.Trabajador.First(x => x.Id == id);
+                if(string.IsNullOrEmpty(trabajador.Email))
+                {
+                    Utils.SessionManager.alerta = 3;
+                    return RedirectToAction("Details", "Trabajador", new { id = id });
+                }
+                Empresas empresa = db.Empresas.First(x => x.Nombre == trabajador.Nombre);
+                Cuentas cuenta = new Cuentas()
+                {
+                    Nivel = 6,
+                    TrabajadorId = id,
+                    Usuario = trabajador.Rut.Replace(".", "").Replace("-", ""),
+                    Password = trabajador.FechaNacimiento.Value.ToShortDateString().Replace("/", ""),
+                    Nombre = trabajador.Nombre,
+                    Apellido = trabajador.ApellidoPaterno + " " + trabajador.ApellidoMaterno,
+                    Email = trabajador.Email,
+                    Empresa = trabajador.Empresa,
+                    EmpresaId = empresa.Id,
+                    Permisos = ""
+                };
+                db.Cuentas.Add(cuenta);
+                db.SaveChanges();
+            }
+            Utils.SessionManager.alerta = 1;
+            return RedirectToAction("Details", "Trabajador", new { id = id });
+        }
                 // GET: Cuenta/Create
         public ActionResult Create()
         {
@@ -280,6 +316,10 @@ namespace ControlPersonalAppWeb.Controllers
                 {
                     Utils.SessionManager.Ingresar(cuenta);
                     Utils.SessionManager.log("Ingreso");
+                    if(cuenta.Nivel==6)
+                    {
+                        return RedirectToAction("Index", "Registro", new { id = cuenta.TrabajadorId });
+                    }
                     return RedirectToAction("Index", "Home");
                 }
                 ViewBag.Cuenta = "lala";

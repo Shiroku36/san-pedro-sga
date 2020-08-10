@@ -11,18 +11,18 @@ namespace ControlPersonalAppWeb
 {
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel;
-
-    public partial class RegistroTrabajador
+    
+    public partial class SolicitudDeCompra
     {
         public int Id { get; set; }
-        public string Uid { get; set; }
-        public System.DateTime Fecha { get; set; }
-        public byte[] Foto { get; set; }
-        public string Campo { get; set; }
+        public string Trabajador { get; set; }
+        public Nullable<int> TrabajadorId { get; set; }
+        public string Productos { get; set; }
+        public string Observación { get; set; }
+        public string Destino { get; set; }
+        public string Estado { get; set; }
+        public Nullable<System.DateTime> Fecha { get; set; }
         public string Empresa { get; set; }
-        public Nullable<int> IdTrabajador { get; set; }
-        [DisplayName("Causa")]
-        public string NombreTrabajador { get; set; }
+        public Nullable<int> EmpresaId { get; set; }
     }
 }

@@ -13,10 +13,14 @@ namespace ControlPersonalAppWeb.Models
         public string ApellidoPaterno;
         public string ApellidoMaterno;
         public string Rut;
+        public string CausaEntrada;
+        public string CausaSalida;
         public DateTime Fecha;
         public string Entrada;
+        public int? EntradaModificada;
         public string EntradaOficial;
         public string Salida;
+        public int? SalidaModificada;
         public string SalidaOficial;
         public string HorasExtras;
         public string HorasTrabajadas;

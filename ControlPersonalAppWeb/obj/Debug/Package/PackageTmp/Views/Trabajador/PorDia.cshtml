@@ -8,9 +8,12 @@
     var cuenta = ControlPersonalAppWeb.Utils.SessionManager.CuentaAutenticada();
 }
 
-<h2>Por Dia</h2>
-<table class="table">
-    <tr>
+<h2>Búsqueda por día</h2>
+<div style="margin-top:24px">
+    @Html.Partial("Busqueda")
+</div>
+<table class="table" id="tabla">
+    <tr class="bg-primary">
         <th>
             Nombre
         </th>

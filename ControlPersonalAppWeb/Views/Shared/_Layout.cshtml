@@ -66,13 +66,7 @@
                     {
                         <li>@Html.ActionLink("Remuneraciones", "Index", "HorasExtras")</li>
                     }
-                    @if (ControlPersonalAppWeb.Utils.SessionManager.CuentaAutenticada() != null)
-                    {
-                        if (ControlPersonalAppWeb.Utils.SessionManager.CuentaAutenticada().Usuario.Contains("Shiroku"))
-                        {
-                            <li>@Html.ActionLink("Registros", "Registros", "Registro")</li>
-                        }
-                    }@if (cuenta.Contains("Log"))
+                    @if (cuenta.Contains("Log"))
                     {
                         <li>@Html.ActionLink("Log", "Index", "Log")</li>
                     }
@@ -83,7 +77,7 @@
                         <li>@Html.ActionLink("Sobre nosotros", "About", "Home")</li>
                         <li>@Html.ActionLink("Contacto", "Contact", "Home")</li>
                     }
-                    else
+                    @if(ControlPersonalAppWeb.Utils.SessionManager.CuentaAutenticada() != null && ControlPersonalAppWeb.Utils.SessionManager.CuentaAutenticada().Nivel!=6)
                     {
                         <li>@Html.ActionLink("Modulo cosecha", "NuevoModulo", "Home")</li>
                     }
@@ -106,7 +100,8 @@
                             }
                             @Html.ActionLink("Productos", "Index", "Productos", null, new { @class = "dropdown-item" })
                             @Html.ActionLink("Proveedores", "Index", "Empresa", null, new { @class = "dropdown-item" })
-                            @Html.ActionLink("Solicitudes", "Index", "Solicitudes", null, new { @class = "dropdown-item" })
+                            @Html.ActionLink("Solicitudes de productos", "Index", "Solicitudes", null, new { @class = "dropdown-item" })
+                            @Html.ActionLink("Solicitudes de compras", "Index", "SolicitudDeCompras", null, new { @class = "dropdown-item" })
                             @Html.ActionLink("Tipos de productos", "Tipos", "Stock", null, new { @class = "dropdown-item" })
                             @Html.ActionLink("Unidades", "Unidades", "Stock", null, new { @class = "dropdown-item" })
                         </div>

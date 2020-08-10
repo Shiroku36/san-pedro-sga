@@ -36,6 +36,9 @@ namespace ControlPersonalAppWeb.Controllers
             }
             Utils.SessionManager.log("Detalle ingreso: " + ingreso.Id);
             ViewBag.productos = db.Stock.Where(x => x.IngresoId == id).ToList();
+            int idd = ingreso.Id;
+            ViewBag.tipo = "ingreso";
+            ViewBag.comentarios = db.Comentario.Where(x => x.IngresoId == idd).ToList();
             return View(ingreso);
         }
 

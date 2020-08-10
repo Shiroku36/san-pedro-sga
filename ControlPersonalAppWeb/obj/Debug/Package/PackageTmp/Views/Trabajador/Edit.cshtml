@@ -413,6 +413,7 @@
         <label class="control-label font-weight-normal">Foto Carnet</label>
 
         <div class=" my-1">
+            <img src="@String.Format("data:image/jpg;base64,{0}",System.Convert.ToBase64String(Model.FotoCarnet))" width="400" />
             <input id="Foto" type="file" name="Foto" accept="image/*" class="form-control">
         </div>
         

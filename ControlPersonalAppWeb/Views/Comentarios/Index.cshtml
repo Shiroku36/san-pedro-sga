@@ -16,7 +16,7 @@
                 @Html.DisplayNameFor(model => model.Trabajador)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.AplicacionDeProgramaId)
+                Ubicación
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Fecha)
@@ -36,9 +36,36 @@
                     </a>
                 </td>
                 <td>
-                    <a href="/AplicacionDeProgramas/Details/@item.AplicacionDeProgramaId">
-                        @Html.DisplayFor(modelItem => item.AplicacionDeProgramaId)
-                    </a>
+                    @if (item.AplicacionDeProgramaId != null)
+                    {
+                        <a href="/AplicacionDeProgramas/Details/@item.AplicacionDeProgramaId">
+                            @Html.DisplayFor(modelItem => item.AplicacionDeProgramaId)
+                        </a>
+                    }
+                    @if (item.SolicitudDeCompraId != null)
+                    {
+                        <a href="/SolicitudDeCompras/Details/@item.SolicitudDeCompraId">
+                            @Html.DisplayFor(modelItem => item.SolicitudDeCompraId)
+                        </a>
+                    }
+                    @if (item.SolicitudId != null)
+                    {
+                        <a href="/Solicitudes/Details/@item.SolicitudId">
+                            @Html.DisplayFor(modelItem => item.SolicitudId)
+                        </a>
+                    }
+                    @if (item.IngresoId != null)
+                    {
+                        <a href="/Ingresos/Details/@item.IngresoId">
+                            @Html.DisplayFor(modelItem => item.IngresoId)
+                        </a>
+                    }
+                    @if (item.ControlInventarioId != null)
+                    {
+                        <a href="/ControlInventarios/Details/@item.ControlInventarioId">
+                            @Html.DisplayFor(modelItem => item.ControlInventarioId)
+                        </a>
+                    }
 
                 </td>
                 <td>
