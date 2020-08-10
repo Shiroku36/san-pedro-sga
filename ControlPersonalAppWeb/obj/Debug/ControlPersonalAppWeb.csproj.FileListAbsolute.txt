@@ -542,3 +542,8 @@ C:\Users\Sebas\source\repos\SGA3\SGA\ControlPersonalAppWeb\obj\Debug\ControlPers
 C:\Users\Sebas\source\repos\SGA3\SGA\ControlPersonalAppWeb\obj\Debug\ControlPersonalAppWeb.csproj.CopyComplete
 C:\Users\Sebas\source\repos\SGA3\SGA\ControlPersonalAppWeb\obj\Debug\ControlPersonalAppWeb.dll
 C:\Users\Sebas\source\repos\SGA3\SGA\ControlPersonalAppWeb\obj\Debug\ControlPersonalAppWeb.pdb
+C:\repos\SGA\ControlPersonalAppWeb\bin\roslyn\System.IO.Pipes.AccessControl.dll
+C:\repos\SGA\ControlPersonalAppWeb\bin\roslyn\System.IO.Pipes.dll
+C:\repos\SGA\ControlPersonalAppWeb\bin\roslyn\System.Security.AccessControl.dll
+C:\repos\SGA\ControlPersonalAppWeb\bin\roslyn\System.Security.Claims.dll
+C:\repos\SGA\ControlPersonalAppWeb\bin\roslyn\System.Security.Principal.Windows.dll
