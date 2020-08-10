@@ -8,7 +8,7 @@
 <hr />
 <table class="table">
     <tr class="bg-primary">
-        <th style="width:25%">
+        <th>
             Tipo
         </th>
         <th style="width:15%">
@@ -73,7 +73,7 @@
                     {
                         @Html.AntiForgeryToken()
                         <input type="hidden" value="@item.Id" name="Id" />
-                            <input type="submit" class="btn btn-success" value="Aceptar" name="Accion" />
+                            <input type="submit" class="btn btn-success mb-1" value="Aceptar" name="Accion" />
                             <input type="submit" class="btn btn-danger" value="Rechazar" name="Accion" />
                         
                     }

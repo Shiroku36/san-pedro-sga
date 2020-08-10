@@ -769,6 +769,7 @@
     <Content Include="Views\SolicitudDeCompras\Index.cshtml" />
     <Content Include="Views\Shared\AgregarComentarios.cshtml" />
     <Content Include="Views\Shared\Comentarios.cshtml" />
+    <Content Include="Views\Stock\Menu.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Images\" />

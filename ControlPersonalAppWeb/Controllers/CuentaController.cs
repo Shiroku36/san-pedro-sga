@@ -78,7 +78,7 @@ namespace ControlPersonalAppWeb.Controllers
             }
             return nombres;
         }
-        /*public ActionResult Password(int id)
+        public ActionResult Password(int id)
         {
             ViewBag.id = id;
             Cuentas cuentas = db.Cuentas.First(x => x.Id == id);
@@ -90,19 +90,29 @@ namespace ControlPersonalAppWeb.Controllers
         {
             try
             {
+
                 int id = Convert.ToInt32(collection["Id"]);
                 Cuentas cuentas = db.Cuentas.First(x => x.Id == id);
-                cuentas.Password = collection["Password"];
-                db.SaveChanges();
-                Utils.SessionManager.log("Contraseña cambiada : " + cuentas.Usuario);
-                return RedirectToAction("Details", new { id});
+                if (cuentas.Password == collection["Contraseña"])
+                {
+                    cuentas.Password = collection["Password"];
+                    db.SaveChanges();
+                    Utils.SessionManager.log("Contraseña cambiada : " + cuentas.Usuario);
+                    return RedirectToAction("Details", new { id });
+                }
+                else
+                {
+                    ViewBag.alerta = 2;
+                    return View(cuentas);
+                }
+                
             }
             catch
             {
                 return View();
             }
 
-        }*/
+        }
         public ActionResult createTrabajador(int id)
         {
             try
