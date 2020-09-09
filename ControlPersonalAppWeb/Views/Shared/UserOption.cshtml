@@ -89,7 +89,12 @@
             }
         } else {
             if (btn != null) {
-                btn.className = "d-none";
+                //btn.className = "d-none";
+                btn.onclick = function () {
+                    location.href = location.origin + "/Notificaciones";
+
+                }
+                
             }
 
         }
