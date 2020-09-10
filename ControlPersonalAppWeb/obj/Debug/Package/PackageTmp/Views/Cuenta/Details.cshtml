@@ -70,17 +70,16 @@
             </tr>
         </table>
     </div>
+    @if (cuenta.Id == Model.Id)
+    {
+    <div class="form-group col-md-9 mx-auto mt-5">
+        @Html.ActionLink("Cambiar contraseña", "Password", new { id= cuenta.Id }, new { @class = "btn btn-block btn-info" })
+    </div>
+    }
     @if (cuenta.Permisos != null && cuenta.Permisos.Contains("CuentasV"))
     {
-        <div class="form-group col-md-9 mx-auto my-5">
-            @Html.ActionLink("Volver a la lista", "Index", null, new { @class = "btn btn-block btn-danger mt-3" })
+        <div class="form-group col-md-9 mx-auto mt-3">
+            @Html.ActionLink("Volver a la lista", "Index", null, new { @class = "btn btn-block btn-danger" })
         </div>
     }
-    <!--
-    else
-    {
-        <div class="form-group col-md-9 mx-auto my-5">
-            @Html.ActionLink("Cambiar contraseña", "Password", new { cuenta.Id}, new { @class = "btn btn-block btn-warning mt-3" })
-        </div>
-    }-->
 </div>

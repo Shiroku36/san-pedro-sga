@@ -354,7 +354,7 @@
             <div class="form-group col-md-8 mx-auto">
                 <label class="control-label font-weight-normal">Fecha de ingreso</label>
 
-                @if (Model.FechaIngreso == null || Model.FechaIngreso.Value.ToShortDateString() == "01/01/0001")
+                @if (Model.FechaIngreso == null || Model.FechaIngreso.Value.ToShortDateString() == "1/1/0001")
                 {
                     <input class="form-control" type="date" id="FechaIngreso" value="" name="FechaIngreso" min="1930-01-01">
                 }
@@ -369,7 +369,7 @@
         <div class="form-group col-md-8 mx-auto">
             <label class="control-label font-weight-normal">Fecha de término</label>
 
-            @if (Model.FechaTermino == null || Model.FechaTermino.Value.ToShortDateString() == "01/01/0001")
+            @if (Model.FechaTermino == null || Model.FechaTermino.Value.ToShortDateString() == "1/1/0001")
             {
                 <input class="form-control" type="date" id="FechaTermino" name="FechaTermino" min="2019-01-01">
             }
@@ -405,16 +405,19 @@
 
     <div class="form-group col-md-8 mx-auto">
         <label class="control-label font-weight-normal">Sueldo bruto</label>
-
-        @Html.EditorFor(model => model.SueldoBruto, new { htmlAttributes = new { @class = "form-control currency" } })
-        @Html.ValidationMessageFor(model => model.SueldoBruto, "", new { @class = "text-danger" })
+         @Html.EditorFor(model => model.SueldoBruto, new { htmlAttributes = new { @class = "form-control currency" } })
+         @Html.ValidationMessageFor(model => model.SueldoBruto, "", new { @class = "text-danger" })
     </div>
     <div class="form-group col-md-8 mx-auto">
         <label class="control-label font-weight-normal">Foto Carnet</label>
 
         <div class=" my-1">
-            <img src="@String.Format("data:image/jpg;base64,{0}",System.Convert.ToBase64String(Model.FotoCarnet))" width="400" />
-            <input id="Foto" type="file" name="Foto" accept="image/*" class="form-control">
+        @if (Model.FotoCarnet!=null)
+        {
+            <img src="@String.Format("data:image/jpg;base64,{0}", System.Convert.ToBase64String(Model.FotoCarnet))" width="400" />
+        }
+
+        <input id="Foto" type="file" name="Foto" accept="image/*" class="form-control">
         </div>
         
         @Html.ValidationMessageFor(model => model.FotoCarnet, "", new { @class = "text-danger" })

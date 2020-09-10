@@ -24,7 +24,7 @@ namespace ControlPersonalAppWeb
         public Nullable<System.DateTime> FechaFin { get; set; }
         public string Empresa { get; set; }
         public Nullable<int> EmpresaId { get; set; }
-        [DisplayName("Ubicación")]
+        [DisplayName("Nombre")]
         public string Ubicacion { get; set; }
     }
 }

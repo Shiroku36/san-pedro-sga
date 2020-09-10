@@ -4,10 +4,11 @@
     ViewBag.Title = "Control Inventario";
 }
 
-<h1 class="display-4 text-center">Control Inventario</h1>
+<h1 class="display-4 text-center">Gestión insumos por huertos</h1>
 <hr />
 
-    @Html.ActionLink("Crear un control de inventario", "Create",null,new {@class = "btn btn-primary my-2 float-right" })
+@Html.ActionLink("Crear nuevo", "Create", null, new { @class = "btn btn-primary my-2 ml-1 float-right" })
+@Html.ActionLink("Descargar", "Informe", null, new { @class = "btn btn-primary my-2 float-right" })
 
 <div style="margin-top:24px">
     @Html.Partial("Busqueda")
@@ -21,6 +22,9 @@
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Razon)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Ubicacion)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Fecha)
@@ -43,6 +47,9 @@
                     @Html.DisplayFor(modelItem => item.Razon)
                 </td>
                 <td>
+                    @Html.DisplayFor(modelItem => item.Ubicacion)
+                </td>
+                <td>
                     @if (item.Fecha != null)
                     {
                         <span>@item.Fecha.Value.ToShortDateString()</span>
@@ -54,7 +61,7 @@
                     </a>
                 </td>
                 <td>
-                    @Html.ActionLink("Detalles", "Details", new { id = item.Id }, new {@class="btn btn-info" })
+                    @Html.ActionLink("Detalles", "Details", new { id = item.Id }, new { @class = "btn btn-info" })
                 </td>
             </tr>
         }

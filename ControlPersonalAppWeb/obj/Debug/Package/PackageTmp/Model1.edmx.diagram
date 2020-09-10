@@ -4,7 +4,7 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="1bcf679c5c974e52b056ce2af4980908" Name="Diagram1" ZoomLevel="66">
+      <Diagram DiagramId="1bcf679c5c974e52b056ce2af4980908" Name="Diagram1" ZoomLevel="64">
         <EntityTypeShape EntityType="DBManejoPersonalModel.Campos" Width="1.5" PointX="10.125" PointY="0.75" />
         <EntityTypeShape EntityType="DBManejoPersonalModel.RegistroTrabajador" Width="1.5" PointX="6.625" PointY="0.75" />
         <EntityTypeShape EntityType="DBManejoPersonalModel.HorasExtras" Width="1.5" PointX="2.5" PointY="0.75" />
@@ -12,24 +12,25 @@
         <EntityTypeShape EntityType="DBManejoPersonalModel.Prestamo" Width="1.5" PointX="0.875" PointY="3.5" />
         <EntityTypeShape EntityType="DBManejoPersonalModel.HyD" Width="1.5" PointX="0.875" PointY="0.75" />
         <EntityTypeShape EntityType="DBManejoPersonalModel.Vacaciones" Width="1.5" PointX="4.125" PointY="0.75" />
-        <EntityTypeShape EntityType="DBManejoPersonalModel.Cargo" Width="1.5" PointX="8.5" PointY="4.875" />
+        <EntityTypeShape EntityType="DBManejoPersonalModel.Cargo" Width="1.5" PointX="8.5" PointY="4.625" />
         <EntityTypeShape EntityType="DBManejoPersonalModel.CentroDeCostos" Width="1.5" PointX="0.875" PointY="6.375" />
         <EntityTypeShape EntityType="DBManejoPersonalModel.Finiquito" Width="1.5" PointX="4.125" PointY="5.5" />
         <EntityTypeShape EntityType="DBManejoPersonalModel.AFP" Width="1.5" PointX="2.5" PointY="2.875" />
         <EntityTypeShape EntityType="DBManejoPersonalModel.Trabajador" Width="1.5" PointX="16.625" PointY="0.75" />
         <EntityTypeShape EntityType="DBManejoPersonalModel.AplicacionDePrograma" Width="1.5" PointX="10.125" PointY="3.875" />
-        <EntityTypeShape EntityType="DBManejoPersonalModel.Comentario" Width="1.5" PointX="11.75" PointY="0.75" />
         <EntityTypeShape EntityType="DBManejoPersonalModel.Ingreso" Width="1.5" PointX="15" PointY="0.75" />
-        <EntityTypeShape EntityType="DBManejoPersonalModel.Stock" Width="1.5" PointX="15" PointY="4" />
-        <EntityTypeShape EntityType="DBManejoPersonalModel.Notificacion" Width="1.5" PointX="8.5" PointY="6.625" />
         <EntityTypeShape EntityType="DBManejoPersonalModel.ControlInventario" Width="1.5" PointX="13.375" PointY="4.125" />
         <EntityTypeShape EntityType="DBManejoPersonalModel.Solicitud" Width="1.5" PointX="13.375" PointY="0.75" />
         <EntityTypeShape EntityType="DBManejoPersonalModel.TipoContrato" Width="1.5" PointX="4.125" PointY="4" />
         <EntityTypeShape EntityType="DBManejoPersonalModel.Log" Width="1.5" PointX="10.125" PointY="6.375" />
         <EntityTypeShape EntityType="DBManejoPersonalModel.Empresas" Width="1.5" PointX="6.625" PointY="3.5" />
-        <EntityTypeShape EntityType="DBManejoPersonalModel.Datos" Width="1.5" PointX="11.75" PointY="6.625" />
-        <EntityTypeShape EntityType="DBManejoPersonalModel.Producto" Width="1.5" PointX="11.75" PointY="3.5" />
+        <EntityTypeShape EntityType="DBManejoPersonalModel.Datos" Width="1.5" PointX="11.75" PointY="7.875" />
+        <EntityTypeShape EntityType="DBManejoPersonalModel.Producto" Width="1.5" PointX="11.75" PointY="4.625" />
         <EntityTypeShape EntityType="DBManejoPersonalModel.Cuentas" Width="1.5" PointX="8.5" PointY="0.75" />
+        <EntityTypeShape EntityType="DBManejoPersonalModel.Comentario" Width="1.5" PointX="11.75" PointY="0.75" />
+        <EntityTypeShape EntityType="DBManejoPersonalModel.SolicitudDeCompra" Width="1.5" PointX="13.375" PointY="7.25" />
+        <EntityTypeShape EntityType="DBManejoPersonalModel.Stock" Width="1.5" PointX="15" PointY="4.25" />
+        <EntityTypeShape EntityType="DBManejoPersonalModel.Notificacion" Width="1.5" PointX="8.5" PointY="6.375" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
