@@ -62,12 +62,12 @@
                 }
             </td>
             <td>
-                @Html.ActionLink("Editar", "Edit", new { id = item.Id }, new { @class = "btn btn-warning" })
-                @Html.ActionLink("Detalles", "Details", new { id = item.Id }, new { @class = "btn btn-info" })
-                <a  href='@Url.Action("Delete", "Productos", new { id = item.Id })' onclick="return confirm('¿Está seguro que desea eliminar el producto?')" })>
-                    <label  title="Eliminar" type="submit" class="btn btn-danger my-auto">Borrar</label>
+                @Html.ActionLink("Editar", "Edit", new { id = item.Id }, new { @class = "btn btn-warning mb-1" })
+                @Html.ActionLink("Detalles", "Details", new { id = item.Id }, new { @class = "btn btn-info mb-1" })
+                <a href='@Url.Action("Delete", "Productos", new { id = item.Id })' onclick="return confirm('¿Está seguro que desea eliminar el producto?')" })>
+                    <label title="Eliminar" type="submit" class="btn btn-danger mb-1">Borrar</label>
                 </a>
-
+                @Html.ActionLink("Ficha técnica", "Ficha", new { id = item.Id }, new { @class = "btn btn-success mb-1" })
             </td>
         </tr>
     }

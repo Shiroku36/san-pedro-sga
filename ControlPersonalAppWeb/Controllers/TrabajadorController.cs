@@ -231,18 +231,20 @@ namespace ControlPersonalAppWeb.Controllers
 
                 //Write the table
                 int num = 5;
-                PdfPTable table = new PdfPTable(num);
-                table.WidthPercentage = 100f;
                 //Table header
                 Font fntColumnHeader = new Font(btnColumnHeader, 12, 1, BaseColor.WHITE);
                 List<string> titulos = new List<string>();
                 titulos.Add("Fecha");
                 titulos.Add("Entrada");
                 titulos.Add("Salida");
-                titulos.Add("H. Trab.");
+                titulos.Add("H. Periodo");
+                titulos.Add("H. Extras");
+                titulos.Add("H. Total");
                 titulos.Add("Predio");
                 int i;
-                for (i = 0; i < num; i++)
+                PdfPTable table = new PdfPTable(titulos.Count);
+                table.WidthPercentage = 100f;
+                for (i = 0; i < titulos.Count; i++)
                 {
                     PdfPCell cell = new PdfPCell();
                     cell.BackgroundColor = BaseColor.GRAY;
@@ -252,10 +254,34 @@ namespace ControlPersonalAppWeb.Controllers
                 //table Data
                 foreach (var celda in registrosLista)
                 {
+                    DateTime horas;
+                    DateTime extra;
+                    DateTime.TryParse("01/01/0001 " + celda.Horas, out horas);
+                    DateTime.TryParse("01/01/0001 " + celda.HorasExtras, out extra);
+
                     table.AddCell(new Phrase(celda.Fecha.ToShortDateString(), fntCell));
                     table.AddCell(new Phrase(celda.Entrada, fntCell));
                     table.AddCell(new Phrase(celda.Salida, fntCell));
-                    table.AddCell(new Phrase(celda.HorasTrabajadas, fntCell));
+                    table.AddCell(new Phrase(celda.Horas, fntCell));
+                    if(horas.Hour>=8 && extra.Hour>=2 && extra.Minute>0)
+                    {
+                        table.AddCell(new Phrase("02:00", fntCell));
+                        horas = horas.AddHours(2);
+                    }
+                    else if (horas.Hour >7 && horas.Hour < 8 && extra.Hour >= 1 && extra.Minute > 40)
+                    {
+                        table.AddCell(new Phrase("01:40", fntCell));
+                        horas = horas.AddHours(2);
+                        horas = horas.AddMinutes(40);
+                    }
+                    else
+                    {
+                        table.AddCell(new Phrase(celda.HorasExtras, fntCell));
+                        horas = horas.AddHours(extra.Hour);
+                        horas = horas.AddMinutes(extra.Minute);
+                        horas = horas.AddSeconds(extra.Second);
+                    }
+                    table.AddCell(new Phrase(horas.ToShortTimeString(), fntCell));
                     table.AddCell(new Phrase(celda.Campo, fntCell));
                 }
 
@@ -1234,7 +1260,7 @@ namespace ControlPersonalAppWeb.Controllers
                             //Ver si salió después de la hora, el segundo debe ser más grande
                             if (extra < segundo.Fecha)
                             {
-                                if (!String.IsNullOrEmpty(trabajador.SalidaA) && !String.IsNullOrEmpty(Utils.SessionManager.salida))
+                                if (!String.IsNullOrEmpty(trabajador.SalidaA) || !String.IsNullOrEmpty(Utils.SessionManager.salida))
                                     horasExtras = horasExtras + (segundo.Fecha - extra);
                             }
                             if (!String.IsNullOrEmpty(trabajador.Entrada))
@@ -1248,11 +1274,11 @@ namespace ControlPersonalAppWeb.Controllers
                             //Ve si llegó antes de la hora para no sumar demás
                             if (0 > DateTime.Compare(primero.Fecha, t2) && 0 > DateTime.Compare(t2, segundo.Fecha))
                             {
-                                horas = horas + (segundo.Fecha - t2);
+                                horas = horas + (extra - t2);
                             }
                             else
                             {
-                                horas = horas + (segundo.Fecha - primero.Fecha);
+                                horas = horas + (extra - primero.Fecha);
                             }
                         }
                         else
@@ -1275,12 +1301,13 @@ namespace ControlPersonalAppWeb.Controllers
                         string raro = "";
                         DateTime salida = new DateTime();
                         DateTime.TryParse("01/01/0001 " + segundo.Fecha.Hour+":"+ segundo.Fecha.Minute, out salida);
-                        if (almuerzo < horas &&  salidaAlmuerzo > salida)
+                        if (almuerzo < horas &&  salidaAlmuerzo < salida)
 
                             horasQL = horasQL + (horas - almuerzo);
                         else
                             horasQL = horas;
-                        if (atrasoP < horasQL)
+                        horasT = horasQL;
+                        /*if (atrasoP < horasQL)
                         {
                             horasT = horasT + (horasQL - atrasoP);
                         }
@@ -1288,11 +1315,13 @@ namespace ControlPersonalAppWeb.Controllers
                         {
                             horasT = horasQL;
                             raro = "*";
-                        }
+                        }*/
                         DateTime horasTrabajadas = new DateTime();
                         if (horasT > horasExtras)
                         {
-                            horasTrabajadas = horasTrabajadas + (horasT - horasExtras);
+                            horasTrabajadas = horasT.AddHours(horasExtras.Hour);
+                            horasTrabajadas = horasT.AddMinutes(horasExtras.Minute);
+                            horasTrabajadas = horasT.AddSeconds(horasExtras.Second);
                         }
 
                         Registro registro = new Registro

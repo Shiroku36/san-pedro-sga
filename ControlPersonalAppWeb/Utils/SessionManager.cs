@@ -164,6 +164,7 @@ namespace ControlPersonalAppWeb.Utils
                 foreach (var correo in correos)
                 {
                     mail.To.Add(correo);
+                    log("Correo de notificacion enviado a:" + correo);
                 }
                 if(notificacion.Info == "Producto")
                 {

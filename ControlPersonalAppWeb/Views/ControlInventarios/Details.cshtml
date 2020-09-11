@@ -1,10 +1,10 @@
 ﻿@model ControlPersonalAppWeb.ControlInventario
 
 @{
-    ViewBag.Title = "Detalle control inventario";
+    ViewBag.Title = "Detalle Gestión insumos por huertos";
 }
 
-    <h2 class="display-4 text-center">Control inventario</h2>
+<h2 class="display-4 text-center">Gestión insumos por huertos</h2>
     <div>
         <h3 class="text-muted font-weight-light">Detalles</h3>
         <hr />
@@ -52,6 +52,15 @@
 
                     <td>
                         @Html.DisplayFor(model => model.Fecha)
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        @Html.DisplayNameFor(model => model.Ubicacion)
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(model => model.Ubicacion)
                     </td>
                 </tr>
 

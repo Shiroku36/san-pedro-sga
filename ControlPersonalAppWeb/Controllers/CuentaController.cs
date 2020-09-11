@@ -129,7 +129,7 @@ namespace ControlPersonalAppWeb.Controllers
                     Utils.SessionManager.alerta = 3;
                     return RedirectToAction("Details", "Trabajador", new { id = id });
                 }
-                Empresas empresa = db.Empresas.First(x => x.Nombre == trabajador.Nombre);
+                Empresas empresa = db.Empresas.First(x => x.Nombre == trabajador.Empresa);
                 Cuentas cuenta = new Cuentas()
                 {
                     Nivel = 6,

@@ -7,14 +7,22 @@
 
 @if (cuenta != null)
 {
-    if(cuenta.Notificacion!=null && (bool)cuenta.Notificacion)
+    if (cuenta.Notificacion != null && (bool)cuenta.Notificacion)
     {
         <div class="notification-display" id="notificationD">
             <h4 class="text-center mt-2 font-weight-normal text-white">Notificaciones</h4>
             @foreach (Notificacion e in notificaciones)
             {
                 <div class="card m-2 mr-4">
-                    <div class="card-header">
+                    <div class="card-header ">
+                        @if (e.Info == "Compra")
+                        {
+                            <span>Solicitud de compra</span>
+                        }
+                        else
+                        {
+                            <span>Solicitud de producto</span>
+                        }
                         @e.Fecha
                     </div>
                     <div class="card-body">
@@ -22,7 +30,7 @@
                         @using (Html.BeginForm("Index", "Notificaciones", FormMethod.Post, new { enctype = "multipart/form-data" }))
                         {
                             <input type="hidden" value="@e.Id" name="Id" class="Id" />
-                            <input type="submit" class="btn btn-danger delete" value="Rechazar" onclick="return confirm('Estas seguro de eliminar esto?');" />
+                            <input type="submit" class="btn btn-danger delete" value="Rechazar" onclick="return confirm('Estas seguro de rechazar esto?');" />
                             <input type="submit" class="btn btn-success" value="Aceptar" name="Accion" onclick="return confirm('Estas seguro de aceptar esto?')" })>
                         }
                     </div>
@@ -30,9 +38,13 @@
             }
         </div>
     }
-    
 
-    <li class="mt-2"><a href="@Url.Action("Details","Cuenta", new { cuenta.Id })">@cuenta.Usuario - @cuenta.Empresa</a></li>
+
+    if (cuenta != null && cuenta.Nivel == 6)
+    {
+        <li class="mt-2"><a id="link-registro" onclick="to('/Registro/Index/'+@cuenta.TrabajadorId)">Registros</a></li>
+    }
+    <li class="mt-2"><a  href="@Url.Action("Details","Cuenta", new { cuenta.Id })">@cuenta.Usuario - @cuenta.Empresa</a></li>
 
     if (cuenta.Notificacion != null && (bool)cuenta.Notificacion)
     {
@@ -48,48 +60,51 @@
     }
 
     <li class="mt-2"><a href="@Url.Action("Salir","Cuenta")">Salir</a></li>
-    <script>
-        var x = window.matchMedia("(max-width: 576px)")
-        var not = document.getElementById('notificationD');
-        var btn = document.getElementById('sidebarCollapse');
-        var clkbtn = 0;
-        if (!x.matches) {
-            btn.onclick = function () {
-                if (not.style.display == "block") {
-                    salida();
-                    return;
-                }
-                entrada();
-                clkbtn = 1
-
-            }
-            window.addEventListener('click', function (e) {
-                if ((!(not.contains(e.target)) && clkbtn != 1)) {
-                    salida();
-                }
-                clkbtn = 0
-            });
-            function entrada() {
-                not.style.display = "block";
-                not.classList.remove('scale-out-hor-right')
-                not.classList.add('scale-in-hor-right')
-            }
-            function salida() {
-                not.classList.remove('scale-in-hor-right')
-                not.classList.add('scale-out-hor-right')
-                setTimeout(function () { not.style.display = "none"; }, 500);
-            }
-        } else {
-            if (btn != null) {
-                btn.className = "d-none";
-            }
-
-        }
-
-    </script>
 }
 else
 {
     <li><a href="@Url.Action("Login","Cuenta")">Ingresar</a></li>
 }
+<script>
+    var x = window.matchMedia("(max-width: 576px)")
+    var not = document.getElementById('notificationD');
+    var btn = document.getElementById('sidebarCollapse');
+    var clkbtn = 0;
+    if (!x.matches && btn != null) {
+        btn.onclick = function () {
+            if (not.style.display == "block") {
+                salida();
+                return;
+            }
+            entrada();
+            clkbtn = 1
+
+        }
+        window.addEventListener('click', function (e) {
+            if ((!(not.contains(e.target)) && clkbtn != 1)) {
+                salida();
+            }
+            clkbtn = 0
+        });
+        function entrada() {
+            not.style.display = "block";
+            not.classList.remove('scale-out-hor-right')
+            not.classList.add('scale-in-hor-right')
+        }
+        function salida() {
+            not.classList.remove('scale-in-hor-right')
+            not.classList.add('scale-out-hor-right')
+            setTimeout(function () { not.style.display = "none"; }, 500);
+        }
+    } else {
+        if (btn != null) {
+            btn.className = "d-none";
+        }
+
+    }
+    function to(str) {
+        location.href = location.origin + str;
+
+    }
+</script>
 

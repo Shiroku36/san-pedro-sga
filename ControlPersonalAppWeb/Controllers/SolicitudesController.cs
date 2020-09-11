@@ -72,9 +72,9 @@ namespace ControlPersonalAppWeb.Controllers
                 solicitud.Productos = "";
                 string[] productos = collection["Producto"].Split(new char[] { ',' });
                 string[] cantidades = collection["Cantidad"].Split(new char[] { ',' });
-                Utils.SessionManager.log("Crear solicitud: " + solicitud.Id);
                 db.Solicitud.Add(solicitud);
                 db.SaveChanges();
+                Utils.SessionManager.log("Crear solicitud: " + solicitud.Id);
                 string texto = "";
                 for (int i = 0; i <productos.Length; i++)
                 {
@@ -109,12 +109,13 @@ namespace ControlPersonalAppWeb.Controllers
                     Info = "Producto",
                     Texto = "El trabajador " + cuenta.Nombre + " " + cuenta.Apellido + " ha solicitado los siguientes productos: " +
                     texto + ", desde: " + solicitud.Origen + " a " + solicitud.Destino + ", el día " + solicitud.Fecha.Value.ToLongDateString() +
-                    " a las " + solicitud.Fecha.Value.ToShortTimeString()
+                    " a las " + solicitud.Fecha.Value.ToShortTimeString() + 
+                    "\nObservación: "+ solicitud.Observación
                 };
                 //enviar correo
-                Utils.SessionManager.log("Crear notificacion: " + notificacion.Id);
                 db.Notificacion.Add(notificacion);
                 db.SaveChanges();
+                Utils.SessionManager.log("Crear notificacion: " + notificacion.Id);
                 ViewBag.alerta = Utils.SessionManager.enviarCorreo(correos, notificacion);
                 int id = cuenta.Id; 
                 Utils.SessionManager.notificaciones = db.Notificacion.Where(x => x.CuentaId == id && x.Estado == "Solicitado").ToList().OrderByDescending(x => x.Fecha).ToList();

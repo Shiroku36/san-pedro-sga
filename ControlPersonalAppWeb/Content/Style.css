@@ -527,3 +527,10 @@ a.article, a.article:hover {
 .menuStock div div img {
     margin: 10px auto;
 }
+#link-registro {
+    color: black;
+    cursor: pointer;
+}
+#link-registro:hover {
+    color:white;
+}

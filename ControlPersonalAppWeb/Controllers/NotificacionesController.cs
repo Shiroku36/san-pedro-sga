@@ -18,7 +18,7 @@ namespace ControlPersonalAppWeb.Controllers
         // GET: Notificaciones
         public ActionResult Index()
         {
-            return View(db.Notificacion.Where(x => x.CuentaId == cuenta.Id).ToList().OrderByDescending(x => x.Fecha).ToList());
+            return View(db.Notificacion.Where(x => x.CuentaId == cuenta.EmpresaId).ToList().OrderByDescending(x => x.Fecha).ToList());
         }
         [HttpPost]
         public ActionResult Index(FormCollection collection)

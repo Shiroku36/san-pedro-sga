@@ -18,7 +18,7 @@ namespace ControlPersonalAppWeb.Controllers
         // GET: SolicitudDeCompras
         public ActionResult Index()
         {
-            return View(db.SolicitudDeCompras.ToList());
+            return View(db.SolicitudDeCompras.Where(x => x.EmpresaId == cuenta.EmpresaId).OrderByDescending(x => x.Fecha).ToList());
         }
 
         // GET: SolicitudDeCompras/Details/5
@@ -47,7 +47,7 @@ namespace ControlPersonalAppWeb.Controllers
             ViewBag.campos = GetNombreCampos(cuenta.Empresa);
             int empresaId = (int)cuenta.EmpresaId;
             ViewBag.ingreso = true;
-            ViewBag.products = db.Producto.Where(x => x.EmpresaId == cuenta.EmpresaId).ToList();
+            ViewBag.products = db.Producto.Where(x => x.EmpresaId == cuenta.EmpresaId).Select(x => new { x.Nombre }).ToList();
             ViewBag.productos = db.Stock.Where(x => x.EmpresaId == cuenta.EmpresaId && x.Tipo == "Producto" && x.Cantidad > 0).ToList();
             //ViewBag.productos = db.Producto.Where(x => x.EmpresaId == empresaId).ToList();
             return View();
@@ -71,9 +71,9 @@ namespace ControlPersonalAppWeb.Controllers
                 solicitudDeCompra.Productos = "";
                 string[] productos = collection["Producto"].Split(new char[] { ',' });
                 string[] cantidades = collection["Cantidad"].Split(new char[] { ',' });
-                Utils.SessionManager.log("Crear solicitudDeCompra: " + solicitudDeCompra.Id);
                 db.SolicitudDeCompras.Add(solicitudDeCompra);
                 db.SaveChanges();
+                Utils.SessionManager.log("Crear solicitudDeCompra: " + solicitudDeCompra.Id);
                 string texto = "";
                 for (int i = 0; i < productos.Length; i++)
                 {
@@ -108,12 +108,13 @@ namespace ControlPersonalAppWeb.Controllers
                     Info = "Compra",
                     Texto = "El trabajador " + cuenta.Nombre + " " + cuenta.Apellido + " ha solicitado los siguientes productos para comprar: " +
                     texto + ", para: " + solicitudDeCompra.Destino + ", el día " + solicitudDeCompra.Fecha.Value.ToLongDateString() +
-                    " a las " + solicitudDeCompra.Fecha.Value.ToShortTimeString()
+                    " a las " + solicitudDeCompra.Fecha.Value.ToShortTimeString() +
+                    "\nObservación: " + solicitudDeCompra.Observación
                 };
                 //enviar correo
-                Utils.SessionManager.log("Crear notificacion: " + notificacion.Id);
                 db.Notificacion.Add(notificacion);
                 db.SaveChanges();
+                Utils.SessionManager.log("Crear notificacion: " + notificacion.Id);
                 ViewBag.alerta = Utils.SessionManager.enviarCorreo(correos, notificacion);
                 int id = cuenta.Id;
                 Utils.SessionManager.notificaciones = db.Notificacion.Where(x => x.CuentaId == id && x.Estado == "Solicitado").ToList().OrderByDescending(x => x.Fecha).ToList();

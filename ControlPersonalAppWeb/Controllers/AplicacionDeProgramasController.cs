@@ -57,7 +57,7 @@ namespace ControlPersonalAppWeb.Controllers
         // más información vea https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,SolicitudId,FechaInicio,FechaFin")] AplicacionDePrograma aplicacionDePrograma)
+        public ActionResult Create([Bind(Include = "Id,SolicitudId,FechaInicio,FechaFin,Ubicacion")] AplicacionDePrograma aplicacionDePrograma)
         {
             if (ModelState.IsValid)
             {
@@ -92,7 +92,7 @@ namespace ControlPersonalAppWeb.Controllers
         // más información vea https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,SolicitudId,FechaInicio,FechaFin,Empresa,EmpresaId")] AplicacionDePrograma aplicacionDePrograma)
+        public ActionResult Edit([Bind(Include = "Id,SolicitudId,FechaInicio,FechaFin,Empresa,EmpresaId,Ubicacion")] AplicacionDePrograma aplicacionDePrograma)
         {
             if (ModelState.IsValid)
             {

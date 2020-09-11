@@ -18,6 +18,7 @@ namespace ControlPersonalAppWeb.Controllers
     {
         private DBManejoPersonalEntities db = new DBManejoPersonalEntities();
         private Cuentas cuenta = Utils.SessionManager.CuentaAutenticada();
+        string path = "C:\\Data\\Fichas\\";
         // GET: Productos
         public ActionResult Index()
         {
@@ -47,7 +48,30 @@ namespace ControlPersonalAppWeb.Controllers
             cargarDatos();
             return View();
         }
+        public ActionResult Ficha(int Id)
+        {
+            if(System.IO.File.Exists(path+Id+".pdf"))
+            {
+                Producto producto = db.Producto.First(x => x.Id == Id);
+                FileStream sourceFile = new FileStream(path+Id+".pdf", FileMode.Open);
+                float FileSize;
+                FileSize = sourceFile.Length;
+                byte[] getContent = new byte[(int)FileSize];
+                sourceFile.Read(getContent, 0, (int)sourceFile.Length);
+                sourceFile.Close();
+                Response.ClearContent();
+                Response.ClearHeaders();
+                Response.Buffer = true;
+                Response.ContentType = "application/pdf";
+                Response.AddHeader("Content-Length", getContent.Length.ToString());
+                Response.AddHeader("content-disposition", "attachment;filename=" + "Ficha técnica "+producto.Nombre+".pdf");
+                Response.BinaryWrite(getContent);
+                Response.Flush();
+                Response.End();
 
+            }
+            return RedirectToAction("Index");
+        }
         // POST: Productos/Create
         // Para protegerse de ataques de publicación excesiva, habilite las propiedades específicas a las que desea enlazarse. Para obtener 
         // más información vea https://go.microsoft.com/fwlink/?LinkId=317598.
@@ -58,6 +82,7 @@ namespace ControlPersonalAppWeb.Controllers
             if (ModelState.IsValid)
             {
                 HttpPostedFileBase postedFile = Request.Files["Foto"];
+                HttpPostedFileBase pdf = Request.Files["Ficha"];
                 if (postedFile != null && postedFile.ContentLength > 0)
                 {
                     producto.Foto = getImageFromPostfile(postedFile, 850);
@@ -67,6 +92,14 @@ namespace ControlPersonalAppWeb.Controllers
                 producto.EmpresaId = cuenta.EmpresaId;
                 db.Producto.Add(producto);
                 db.SaveChanges();
+                if (pdf != null && pdf.ContentLength > 0)
+                {
+                    if (!Directory.Exists(path))
+                    {
+                        Directory.CreateDirectory(path);
+                    }
+                    pdf.SaveAs(path + Convert.ToString(producto.Id) + ".PDF");
+                }
                 Utils.SessionManager.log("Agregar producto: " + producto.Nombre);
                 return RedirectToAction("Index");
             }
@@ -128,6 +161,7 @@ namespace ControlPersonalAppWeb.Controllers
             if (ModelState.IsValid)
             {
                 HttpPostedFileBase postedFile = Request.Files["Foto"];
+                HttpPostedFileBase pdf = Request.Files["Ficha"];
                 if (postedFile != null && postedFile.ContentLength > 0)
                 {
                     producto.Foto = getImageFromPostfile(postedFile, 850);
@@ -139,6 +173,14 @@ namespace ControlPersonalAppWeb.Controllers
                     producto.Miniatura = Utils.SessionManager.MiniaturaPruducto;
                     Utils.SessionManager.FotoPruducto = null;
                     Utils.SessionManager.MiniaturaPruducto = null;
+                }
+                if (pdf != null && pdf.ContentLength > 0)
+                {
+                    if (!Directory.Exists(path))
+                    {
+                        Directory.CreateDirectory(path);
+                    }
+                    pdf.SaveAs(path + Convert.ToString(producto.Id) + ".PDF");
                 }
                 producto.Empresa = cuenta.Empresa;
                 producto.EmpresaId = cuenta.EmpresaId;

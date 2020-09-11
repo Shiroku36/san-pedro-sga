@@ -37,7 +37,6 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 @Html.ActionLink("SGA", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
                 <ul class="navbar-nav mx-auto ulnav">
-                    <!--<li>@Html.ActionLink("Acerca de", "About", "Home")</li>-->
                     @if (cuenta.Contains("HuertosV"))
                     {
                         <li>@Html.ActionLink("Huertos", "Index", "Campo")</li>
@@ -70,48 +69,24 @@
                     {
                         <li>@Html.ActionLink("Log", "Index", "Log")</li>
                     }
-                    <!--<li>@Html.ActionLink("Inventario", "Index", "Stock")</li>-->
                     @if (ControlPersonalAppWeb.Utils.SessionManager.CuentaAutenticada() == null)
                     {
                         <li>@Html.ActionLink("Inicio", "Index", "Home")</li>
                         <li>@Html.ActionLink("Sobre nosotros", "About", "Home")</li>
                         <li>@Html.ActionLink("Contacto", "Contact", "Home")</li>
                     }
-                    @if(ControlPersonalAppWeb.Utils.SessionManager.CuentaAutenticada() != null && ControlPersonalAppWeb.Utils.SessionManager.CuentaAutenticada().Nivel!=6)
+                    @if (ControlPersonalAppWeb.Utils.SessionManager.CuentaAutenticada() != null && ControlPersonalAppWeb.Utils.SessionManager.CuentaAutenticada().Nivel != 6)
                     {
                         <li>@Html.ActionLink("Modulo cosecha", "NuevoModulo", "Home")</li>
                     }
-                </ul>
-                @if (cuenta.Contains("SGA"))
-                {
-                    <div id="dpbtn" class="dropdown">
-
-                        <button id="buttDrop" data-toggle="dropdown" class="btn btn-primary dropdown-toggle toMenu"> Sistema gestión bodega</button>
-
-                        <div class="dropdown-menu fade-in" id="navbarDropdownMenuLink" aria-haspopup="true" aria-expanded="false">
-                            @Html.ActionLink("Sistema gestión bodega", "Index", "Stock", null, new { @class = "dropdown-item" })
-                            @Html.ActionLink("Aplicaciones de programa", "index", "AplicacionDeProgramas", null, new { @class = "dropdown-item" })
-                            @Html.ActionLink("Control de inventario", "Index", "ControlInventarios", null, new { @class = "dropdown-item" })
-                            @Html.ActionLink("Comentarios", "Index", "Comentarios", null, new { @class = "dropdown-item" })
-                            @Html.ActionLink("Ingresos", "Index", "Ingresos", null, new { @class = "dropdown-item" })
-                            @if ((bool)ControlPersonalAppWeb.Utils.SessionManager.CuentaAutenticada().Notificacion)
-                            {
-                                @Html.ActionLink("Notificaciones", "Index", "Notificaciones", null, new { @class = "dropdown-item" })
-                            }
-                            @Html.ActionLink("Productos", "Index", "Productos", null, new { @class = "dropdown-item" })
-                            @Html.ActionLink("Proveedores", "Index", "Empresa", null, new { @class = "dropdown-item" })
-                            @Html.ActionLink("Solicitudes de productos", "Index", "Solicitudes", null, new { @class = "dropdown-item" })
-                            @Html.ActionLink("Solicitudes de compras", "Index", "SolicitudDeCompras", null, new { @class = "dropdown-item" })
-                            @Html.ActionLink("Tipos de productos", "Tipos", "Stock", null, new { @class = "dropdown-item" })
-                            @Html.ActionLink("Unidades", "Unidades", "Stock", null, new { @class = "dropdown-item" })
-                        </div>
-
-                    </div>
-                }
+                    @if (cuenta.Contains("SGA"))
+                    {
+                        <li> @Html.ActionLink("Sistema Gestión Bodega", "Menu", "Stock")</li>
+                    }
+                    </ul>
                 <ul class="nav navbar-nav navbar-right">
                     @Html.Partial("UserOption")
                 </ul>
-                <!-- BUSCAR!!! AQUIII -->
             </div>
         </div>
 

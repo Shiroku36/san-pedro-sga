@@ -2,11 +2,15 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.UI;
 using ControlPersonalAppWeb;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
 
 namespace ControlPersonalAppWeb.Controllers
 {
@@ -97,6 +101,86 @@ namespace ControlPersonalAppWeb.Controllers
             }
 
             return View(controlInventario);
+        }
+        public ActionResult Informe()
+        {
+            using (StringWriter sw = new StringWriter())
+            {
+                using (HtmlTextWriter hw = new HtmlTextWriter(sw))
+                {
+                    List<ControlInventario> controlInventarios = db.ControlInventario.Where(x => x.EmpresaId == cuenta.EmpresaId).ToList();
+                    string strHeader = "Registros de uso de productos";
+                    //System.IO.FileStream fs = new FileStream(strPdfPath, FileMode.Create, FileAccess.Write, FileShare.None);
+                    Document document = new Document();
+                    PdfWriter writer = PdfWriter.GetInstance(document, Response.OutputStream);
+                    document.Open();
+
+                    Image image = Image.GetInstance(Server.MapPath("~/App_Data/" + Utils.SessionManager.CuentaAutenticada().Empresa + ".png"));
+                    image.Alignment = Element.ALIGN_LEFT;
+                    image.ScaleToFit(60, 60);
+                    document.Add(image);
+
+                    //Report Header
+                    BaseFont bfntHead = BaseFont.CreateFont(BaseFont.TIMES_ROMAN, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
+                    Font fntHead = new Font(bfntHead, 16, 1, BaseColor.DARK_GRAY);
+                    Paragraph prgHeading = new Paragraph();
+                    prgHeading.Alignment = Element.ALIGN_CENTER;
+                    prgHeading.Add(new Chunk(strHeader.ToUpper(), fntHead));
+                    document.Add(prgHeading);
+
+                    //Author
+                    Paragraph prgAuthor = new Paragraph();
+                    BaseFont btnAuthor = BaseFont.CreateFont(BaseFont.TIMES_ROMAN, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
+                    Font fntAuthor = new Font(btnAuthor, 8, 2, BaseColor.DARK_GRAY);
+                    prgAuthor.Alignment = Element.ALIGN_RIGHT;
+                    prgAuthor.Add(new Chunk("Autor : " + Utils.SessionManager.CuentaAutenticada().Usuario, fntAuthor));
+                    prgAuthor.Add(new Chunk("\nFecha : " + DateTime.Now.ToShortDateString(), fntAuthor));
+                    document.Add(prgAuthor);
+                    Paragraph p = new Paragraph(new Chunk(new iTextSharp.text.pdf.draw.LineSeparator(0.0F, 100.0F, BaseColor.BLACK, Element.ALIGN_LEFT, 1)));
+                    document.Add(p);
+                    //Add line break
+                    document.Add(new Chunk("\n", fntHead));
+
+                    List<string> titulos = new List<string> { "Trabajador", "Fecha", "Razón", "Productos"};
+                    PdfPTable tabla = new PdfPTable(titulos.Count) { WidthPercentage = 100f };
+                    //tablaHorasTrabajadas.SetWidths(new int[] { 3, 1 });
+                    //Table header
+                    BaseFont btnColumnHeader = BaseFont.CreateFont(BaseFont.TIMES_ROMAN, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
+                    Font fntColumnHeader = new Font(btnColumnHeader, 8, 1, BaseColor.WHITE);
+                    Font fntCell = new Font(btnColumnHeader, 8, 1, BaseColor.BLACK);
+                    for (int i = 0; i < titulos.Count; i++)
+                    {
+                        PdfPCell cell = new PdfPCell() { BackgroundColor = BaseColor.GRAY };
+                        cell.AddElement(new Chunk(titulos[i], fntColumnHeader));
+                        tabla.AddCell(cell);
+                    }
+                    //table Data
+                    foreach (var celda in controlInventarios.OrderByDescending(x => x.Fecha))
+                    {
+                        tabla.AddCell(new Phrase(celda.Trabajador, fntCell));
+                        tabla.AddCell(new Phrase(celda.Fecha.Value.ToString(), fntCell));
+                        tabla.AddCell(new Phrase(celda.Razon, fntCell));
+                        List<Stock> productos = db.Stock.Where(x => x.ControlId == celda.Id).ToList();
+                        PdfPTable tablaProductos = new PdfPTable(1) { WidthPercentage = 100f };
+                        foreach (var producto in productos)
+                        {
+                            tablaProductos.AddCell(new PdfPCell(new Phrase(producto.Producto + ": " + producto.Cantidad, fntCell)) { HorizontalAlignment = PdfPCell.ALIGN_CENTER, Border = Rectangle.NO_BORDER });
+                        }
+                        tabla.AddCell(new PdfPCell(tablaProductos));
+                        
+                    }
+
+                    document.Add(tabla);
+                    document.Close();
+                    writer.Close();
+                    Response.ContentType = "application/pdf";
+                    Response.Cache.SetCacheability(HttpCacheability.NoCache);
+                    Response.AddHeader("content-disposition", "attachment;filename=" + strHeader + ".pdf");
+                    Response.Write(document);
+                    Response.End();
+                }
+                return RedirectToAction("Index");
+            }
         }
         /*
         // GET: ControlInventarios/Edit/5

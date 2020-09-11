@@ -50,7 +50,8 @@ namespace ControlPersonalAppWeb.Controllers
             ViewBag.campos = GetNombreCampos(cuenta.Empresa);
             int empresaId = (int)cuenta.EmpresaId;
             ViewBag.productos = db.Stock.Where(x => x.EmpresaId == cuenta.EmpresaId && x.Tipo == "Producto").ToList();
-            ViewBag.products = db.Producto.Where(x => x.EmpresaId == cuenta.EmpresaId).ToList();
+            ViewBag.products = db.Producto.Where(x => x.EmpresaId == cuenta.EmpresaId).
+                Select(x => new { x.Nombre }).ToList();
             return View();
         }
 
