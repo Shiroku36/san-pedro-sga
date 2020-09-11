@@ -53,7 +53,7 @@
 
             @if (notificaciones != null && notificaciones.Count > 0)
             {
-                <span class="badge badge-success">@notificaciones.Count</span>
+                <span id="badgee" class="badge badge-success">@notificaciones.Count</span>
             }
 
         </button>
@@ -69,6 +69,7 @@ else
     var x = window.matchMedia("(max-width: 576px)")
     var not = document.getElementById('notificationD');
     var btn = document.getElementById('sidebarCollapse');
+    var badge = document.getElementById('badgee');
     var clkbtn = 0;
     if (!x.matches && btn != null) {
         btn.onclick = function () {
@@ -98,7 +99,12 @@ else
         }
     } else {
         if (btn != null) {
-            btn.className = "d-none";
+            //btn.className = "d-none";
+            badge.className += " position-relative";
+            btn.onclick = function () {
+                location.href = location.origin + "/Notificaciones";
+                
+            }
         }
 
     }
