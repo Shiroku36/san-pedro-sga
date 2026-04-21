@@ -1,5 +1,6 @@
 ﻿using ControlPersonalAppWeb.Models;
 using DocumentFormat.OpenXml.Office2010.Excel;
+using DocumentFormat.OpenXml.Wordprocessing;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity.Validation;
@@ -10,40 +11,23 @@ namespace ControlPersonalAppWeb.Controllers
 {
     public class CuentaController : Controller
     {
-
-        DBManejoPersonalEntities db = new DBManejoPersonalEntities();
+        
+        SgajcpEntities db = new SgajcpEntities();
         private Cuentas cuenta = Utils.SessionManager.CuentaAutenticada();
         // GET: Cuenta
         public ActionResult Index()
         {
-            Utils.SessionManager.log("Index cuentas");
-            DBManejoPersonalEntities database = new DBManejoPersonalEntities();
-            string empresa = Utils.SessionManager.CuentaAutenticada().Empresa;
-            List<Cuentas> cuentitas = db.Cuentas.ToList();
-            foreach ( var cuentita in cuentitas)
-            {
-                string empre = cuentita.Empresa;
-                int id = db.Empresas.First(x => x.Nombre == empre).Id;
-                cuentita.EmpresaId = id;
-            }
-            db.SaveChanges();
-            if (empresa == "JCP")
-            {
-                return View(database.Cuentas.ToList());
-            }
-            else
-            {
-                List<Cuentas> cuentas = database.Cuentas.Where(x => x.Empresa == empresa).ToList();
-                return View(cuentas);
-            }
+            SgajcpEntities database = new SgajcpEntities();
+            Utils.SessionManager.log("Cuenta índice");
+            return View(database.Cuentas.ToList());
         }
 
         // GET: Cuenta/Details/5
         public ActionResult Details(int id)
         {
-            DBManejoPersonalEntities database = new DBManejoPersonalEntities();
+            SgajcpEntities database = new SgajcpEntities();
             Cuentas cuentas = database.Cuentas.First(x => x.Id == id);
-            Utils.SessionManager.log("Cuenta visitada : " + cuentas.Usuario);
+            Utils.SessionManager.log("Cuenta detalle: " + cuentas.Usuario);
             return View(cuentas);
         }
         public string[] GetNombreEmpresas()
@@ -97,7 +81,6 @@ namespace ControlPersonalAppWeb.Controllers
                 {
                     cuentas.Password = collection["Password"];
                     db.SaveChanges();
-                    Utils.SessionManager.log("Contraseña cambiada : " + cuentas.Usuario);
                     return RedirectToAction("Details", new { id });
                 }
                 else
@@ -135,7 +118,7 @@ namespace ControlPersonalAppWeb.Controllers
                     Nivel = 6,
                     TrabajadorId = id,
                     Usuario = trabajador.Rut.Replace(".", "").Replace("-", ""),
-                    Password = trabajador.FechaNacimiento.Value.ToShortDateString().Replace("/", ""),
+                    Password = "",
                     Nombre = trabajador.Nombre,
                     Apellido = trabajador.ApellidoPaterno + " " + trabajador.ApellidoMaterno,
                     Email = trabajador.Email,
@@ -155,20 +138,8 @@ namespace ControlPersonalAppWeb.Controllers
             //List<string> campos = new List<string>();
             string empresa = Utils.SessionManager.CuentaAutenticada().Empresa;
             ViewBag.personas = db.Trabajador.Where(x => x.Empresa == empresa).Select(x => new TrabajadorIndex { Rut = x.Rut, Id = x.Id, Nombre = x.Nombre, ApellidoPaterno = x.ApellidoPaterno, ApellidoMaterno = x.ApellidoMaterno }).ToList();
-
-            string[] nombres;
-            if (empresa == "JCP")
-            {
-                ViewBag.Empresas = GetNombreEmpresas();
-                ViewBag.Campos = GetNombreCampos("");
-            }
-            else
-            {
-                nombres = new string[1];
-                nombres[0] = empresa;
-                ViewBag.Empresas = nombres;
-                ViewBag.Campos = GetNombreCampos(empresa);
-            }
+            ViewBag.empresas = db.Empresas.Select(x => x.Nombre).OrderBy(x => x).ToList();
+            ViewBag.campos = db.Campos.Select(x => x.Nombre ).OrderBy(x => x).ToList();
             return View();
         }
 
@@ -178,29 +149,19 @@ namespace ControlPersonalAppWeb.Controllers
         {
             try
             {
-                DBManejoPersonalEntities database = new DBManejoPersonalEntities();
+                SgajcpEntities database = new SgajcpEntities();
                 Cuentas cuentas = new Cuentas();
                 cuentas.Usuario = collection["Usuario"];
                 cuentas.Password = collection["Password"];
                 cuentas.Empresa = collection["Empresa"];
                 cuentas.Nombre = collection["Nombre"];
                 cuentas.Apellido = collection["Apellido"];
-                string empresa = cuenta.Empresa;
-                cuenta.EmpresaId = db.Empresas.First(x => x.Nombre == empresa).Id;
+                cuentas.Empresa = collection["Empresa"];
                 cuentas.Permisos = collection["Permisos"];
                 cuentas.Email = collection["Email"];
-                if(!string.IsNullOrEmpty(collection["Notificacion"]))
-                {
-                    cuentas.Notificacion = true;
-                }
-                else
-                {
-                    cuentas.Notificacion = false;
-                }
-
                 database.Cuentas.Add(cuentas);
+                Utils.SessionManager.log("Cuenta crear: " + cuentas.Usuario);
                 database.SaveChanges();
-                Utils.SessionManager.log("Cuenta creada : " + cuentas.Usuario);
                 return RedirectToAction("Index");
             }
             catch
@@ -215,19 +176,8 @@ namespace ControlPersonalAppWeb.Controllers
             Cuentas cuentas = db.Cuentas.First(x => x.Id == id);
             string empresa = Utils.SessionManager.CuentaAutenticada().Empresa;
             ViewBag.personas = db.Trabajador.Where(x => x.Empresa == empresa).Select(x => new TrabajadorIndex { Rut = x.Rut, Id = x.Id, Nombre = x.Nombre, ApellidoPaterno = x.ApellidoPaterno, ApellidoMaterno = x.ApellidoMaterno }).ToList();
-            string[] nombres;
-            if (empresa == "JCP")
-            {
-                ViewBag.Empresas = GetNombreEmpresas();
-                ViewBag.Campos = GetNombreCampos("");
-            }
-            else
-            {
-                nombres = new string[1];
-                nombres[0] = empresa;
-                ViewBag.Empresas = nombres;
-                ViewBag.Campos = GetNombreCampos(empresa);
-            }
+            ViewBag.empresas = db.Empresas.Select(x => x.Nombre).OrderBy(x => x).ToList();
+            ViewBag.campos = db.Campos.Select(x => x.Nombre).OrderBy(x => x).ToList();
             return View(cuentas);
         }
 
@@ -237,26 +187,17 @@ namespace ControlPersonalAppWeb.Controllers
         {
             try
             {
-                DBManejoPersonalEntities database = new DBManejoPersonalEntities();
+                SgajcpEntities database = new SgajcpEntities();
                 Cuentas cuentas = database.Cuentas.First(x => x.Id == id);
-                Utils.SessionManager.log("Cuenta editada : " + cuentas.Usuario);
                 cuentas.Usuario = collection["Usuario"];
                 cuentas.Password = collection["Password"];
                 cuentas.Empresa = collection["Empresa"];
                 cuentas.Nombre = collection["Nombre"];
                 cuentas.Apellido = collection["Apellido"];
-                string empresa = cuenta.Empresa;
+                cuentas.Empresa = collection["Empresa"];
                 cuentas.Email = collection["Email"];
-                cuenta.EmpresaId = db.Empresas.First(x => x.Nombre == empresa).Id;
                 cuentas.Permisos = collection["Permisos"];
-                if (!string.IsNullOrEmpty(collection["Notificacion"]))
-                {
-                    cuentas.Notificacion = true;
-                }
-                else
-                {
-                    cuentas.Notificacion = false;
-                }
+                Utils.SessionManager.log("Cuenta editar: " + cuentas.Usuario);
                 database.SaveChanges();
                 return RedirectToAction("Index");
             }
@@ -279,11 +220,11 @@ namespace ControlPersonalAppWeb.Controllers
         // GET: Cuenta/Delete/5
         public ActionResult Delete(int id)
         {
-            DBManejoPersonalEntities database = new DBManejoPersonalEntities();
+            SgajcpEntities database = new SgajcpEntities();
             Cuentas cuentas = database.Cuentas.First(x => x.Id == id);
-            Utils.SessionManager.log("Cuenta eliminada : " + cuentas.Usuario);
             database.Cuentas.Remove(cuentas);
             database.SaveChanges();
+            Utils.SessionManager.log("Cuenta eliminar: " + cuentas.Usuario);
             return RedirectToAction("Index");
         }
 
@@ -317,7 +258,7 @@ namespace ControlPersonalAppWeb.Controllers
         {
             try
             {
-                DBManejoPersonalEntities database = new DBManejoPersonalEntities();
+                SgajcpEntities database = new SgajcpEntities();
                 Cuentas cuentas = new Cuentas();
                 cuentas.Usuario = collection["Usuario"];
                 cuentas.Password = collection["Password"];
@@ -325,25 +266,30 @@ namespace ControlPersonalAppWeb.Controllers
                 if (cuentas.Password == cuenta.Password)
                 {
                     Utils.SessionManager.Ingresar(cuenta);
-                    Utils.SessionManager.log("Ingreso");
                     if(cuenta.Nivel==6)
                     {
                         return RedirectToAction("Index", "Registro", new { id = cuenta.TrabajadorId });
                     }
+                    Utils.SessionManager.log("Cuenta ingreso: " + cuentas.Usuario);
                     return RedirectToAction("Index", "Home");
+                }
+                else
+                {
+                    ViewBag.error = "Cuenta no encontrada y/o contraseña incorrecta";
                 }
                 ViewBag.Cuenta = "lala";
                 return View();
             }
-            catch
+            catch (Exception ex)
             {
+                ViewBag.error = ex.Message;
+                //ViewBag.error = "Cuenta no encontrada y/o contraseña incorrecta";
                 ViewBag.Cuenta = "lala";
                 return View();
             }
         }
         public ActionResult Salir()
         {
-            Utils.SessionManager.log("Salida");
             Utils.SessionManager.Salir();
             return RedirectToAction("Login", "Cuenta");
         }

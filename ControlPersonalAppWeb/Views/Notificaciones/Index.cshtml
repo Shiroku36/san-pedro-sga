@@ -6,103 +6,105 @@
 
 <h1 class="display-4 text-center">Notificaciones</h1>
 <hr />
-<table class="table">
-    <tr class="bg-primary">
-        <th>
-            Tipo
-        </th>
-        <th style="width:15%">
-            @Html.DisplayNameFor(model => model.Fecha)
-        </th>
-        <th style="width:10%">
-            @Html.DisplayNameFor(model => model.Correo)
-        </th>
-        <th>
-            <span>Solicitud</span>
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Estado)
-        </th>
-        <th style="width:60%">
-            @Html.DisplayNameFor(model => model.Texto)
-        </th>
-        <th style="width:18%">
-            Accion
-        </th>
-    </tr>
+<div class="table-responsive">
+    <table class="table">
+        <tr class="bg-primary">
+            <th>
+                Tipo
+            </th>
+            <th style="width:15%">
+                @Html.DisplayNameFor(model => model.Fecha)
+            </th>
+            <th style="width:10%">
+                @Html.DisplayNameFor(model => model.Correo)
+            </th>
+            <th>
+                <span>Solicitud</span>
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Estado)
+            </th>
+            <th style="width:60%">
+                @Html.DisplayNameFor(model => model.Texto)
+            </th>
+            <th style="width:18%">
+                Accion
+            </th>
+        </tr>
 
-    @foreach (var item in Model)
-    {
-        <tr>
-            <td>
-                @if (item.Info == "Compra")
-                {
-                    <span>Compra</span>
-                }
-                else
-                {
-                    <span>Producto</span>
-                }
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Fecha)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Correo)
-            </td>
-            <td>
-                <a href="/Solicitudes/Details/@item.SolicitudId">
-                    @if (item.Info == "Producto")
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @if (item.Info == "Compra")
                     {
-                        @Html.DisplayFor(modelItem => item.SolicitudId)
+                        <span>Compra</span>
                     }
                     else
                     {
-                        @Html.DisplayFor(modelItem => item.SolicitudDeCompraId)
+                        <span>Producto</span>
                     }
-                </a>
-            </td>
-            <td class="estado">@Html.DisplayFor(modelItem => item.Estado)</td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Texto)
-            </td>
-            <td>
-                @if (item.Estado == "Solicitado")
-                {
-                    using (Html.BeginForm())    
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Fecha)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Correo)
+                </td>
+                <td>
+                    <a href="/Solicitudes/Details/@item.SolicitudId">
+                        @if (item.Info == "Producto")
+                        {
+                            @Html.DisplayFor(modelItem => item.SolicitudId)
+                        }
+                        else
+                        {
+                            @Html.DisplayFor(modelItem => item.SolicitudDeCompraId)
+                        }
+                    </a>
+                </td>
+                <td class="estado">@Html.DisplayFor(modelItem => item.Estado)</td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Texto)
+                </td>
+                <td>
+                    @if (item.Estado == "Solicitado")
                     {
-                        @Html.AntiForgeryToken()
-                        <input type="hidden" value="@item.Id" name="Id" />
+                        using (Html.BeginForm())
+                        {
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" value="@item.Id" name="Id" />
                             <input type="submit" class="btn btn-success mb-1" value="Aceptar" name="Accion" />
                             <input type="submit" class="btn btn-danger" value="Rechazar" name="Accion" />
-                        
-                    }
-                }
-                else if (item.Estado == "Aceptada")
-                {
-                    <a class="btn btn-success btn-block disabled">Aceptada</a>
-                }
-                else
-                {
-                    <a class="btn btn-danger btn-block disabled">Rechazada</a>
-                }
-            </td>
-        </tr>
-    }
-</table>
-@Scripts.Render("~/bundles/jquery")
-<script>
-    $('.estado').each(function () {
-        let estado = $(this)
-        let texto = $(this).text()
-        console.log(texto)
-        if (texto == 'Aceptada') {
-            estado.addClass('text-success');
-        } else if (texto == 'Rechazada') {
-            estado.addClass('text-danger');
-        } else {
-            estado.addClass('text-dark');
-        }
-    });
 
-</script>
+                        }
+                    }
+                    else if (item.Estado == "Aceptada")
+                    {
+                        <a class="btn btn-success btn-block disabled">Aceptada</a>
+                    }
+                    else
+                    {
+                        <a class="btn btn-danger btn-block disabled">Rechazada</a>
+                    }
+                </td>
+            </tr>
+        }
+    </table>
+    </div>
+    @Scripts.Render("~/bundles/jquery")
+    <script>
+        $('.estado').each(function () {
+            let estado = $(this)
+            let texto = $(this).text()
+            console.log(texto)
+            if (texto == 'Aceptada') {
+                estado.addClass('text-success');
+            } else if (texto == 'Rechazada') {
+                estado.addClass('text-danger');
+            } else {
+                estado.addClass('text-dark');
+            }
+        });
+
+    </script>

@@ -13,84 +13,60 @@ using iTextSharp.text.pdf;
 using Image = iTextSharp.text.Image;
 using Font = iTextSharp.text.Font;
 using System.Drawing.Imaging;
+using Microsoft.Win32;
+using System.Xml.Linq;
+using Microsoft.Ajax.Utilities;
 
 namespace ControlPersonalAppWeb.Controllers
 {
     public class RegistroController : Controller
     {
-        DBManejoPersonalEntities db = new DBManejoPersonalEntities();
-        public ActionResult Busqueda()
+        SgajcpEntities db = new SgajcpEntities();
+        private Cuentas cuenta = Utils.SessionManager.CuentaAutenticada();
+        public ActionResult BusquedaRegistro()
         {
             List<RegistroTrabajador> registros = new List<RegistroTrabajador>();
+            ViewBag.Campos = db.Campos.Select(x => x.Nombre).ToList();
             return View(registros);
         }
         [HttpPost]
-        public ActionResult Busqueda(FormCollection collection)
+        public ActionResult BusquedaRegistro(FormCollection collection)
         {
-            string Uid = collection["Uid"];
-            List<RegistroTrabajador> registros = db.RegistroTrabajador.Where(x => x.Uid == Uid).ToList();
-            if(!String.IsNullOrEmpty(collection["Nueva"]))
-            { 
-                if(collection["Nueva"]=="Borrar")
+            string Numero = collection["Uid"];
+            string Campo = collection["Campo"];
+            List<RegistroTrabajador> registros = new List<RegistroTrabajador>();
+            if (!String.IsNullOrEmpty(Numero))
+            {
+                string Uid = db.Pulseras.First(x => x.Numero == Numero).Uid;
+                registros = db.RegistroTrabajador.Where(x => x.Uid == Uid).ToList();
+                foreach (var registro in registros)
                 {
-                    foreach (var registro in registros)
-                    {
-                        db.RegistroTrabajador.Remove(registro);
-                    }
+                    registro.NombreTrabajador = Numero;
                 }
-                else
-                { 
-                    foreach( var registro in registros)
-                    {
-                        registro.Uid = collection["Nueva"];
-                    }
-                }
-                db.SaveChanges();
             }
-            return View(registros);
+            if (!String.IsNullOrEmpty(Campo))
+            {
+                registros = db.RegistroTrabajador.Where(x => x.Campo == Campo).ToList();
+                foreach (var registro in registros)
+                {
+                    registro.NombreTrabajador = Campo;
+                }
+            }
+            ViewBag.Campos = db.Campos.Select(x => x.Nombre).ToList();
+            return View(registros.OrderByDescending(x => x.Fecha));
         }
 
         public ActionResult Registros()
         {
-            DBManejoPersonalEntities database = new DBManejoPersonalEntities();
+            SgajcpEntities database = new SgajcpEntities();
             //string uid = "p2";
             string empresa = "Invina";
             List<Trabajador> trabajadores = database.Trabajador.Where(x => x.Empresa == empresa).ToList();
-            foreach(var trabajador in trabajadores)
+            ViewBag.numero = "";
+            foreach (var trabajador in trabajadores)
             {
-                if(!String.IsNullOrEmpty(trabajador.Jornada))
-                {
-                    if(trabajador.Jornada[0]=='A')
-                    {
-                        trabajador.Entrada = "08:00";
-                        trabajador.Salida = "12:00";
-                        trabajador.EntradaA = "12:45";
-                        trabajador.SalidaA = "17:45";
-                    }
-                    if(trabajador.Jornada[0]=='B')
-                    {
-                        trabajador.Entrada = "08:00";
-                        trabajador.Salida = "12:00";
-                        trabajador.EntradaA = "12:00";
-                        trabajador.SalidaA = "15:30";
-                    }
-                    if(trabajador.Jornada[0]=='C')
-                    {
-                        trabajador.Entrada = "07:00";
-                        trabajador.Salida = "11:00";
-                        trabajador.EntradaA = "11:30";
-                        trabajador.SalidaA = "15:30";
-                    }
-                    if(trabajador.Jornada[0]=='D')
-                    {
-                        trabajador.Entrada = "08:00";
-                        trabajador.Salida = "12:00";
-                        trabajador.EntradaA = "13:00";
-                        trabajador.SalidaA = "18:00";
-                    }
-                }
             }
-           // foreach (var registro in registros)
+            // foreach (var registro in registros)
             //{
 
             //}
@@ -99,66 +75,74 @@ namespace ControlPersonalAppWeb.Controllers
             //{
             //}
             //trabajador.
-            database.SaveChanges();
-            return View();
+            //database.SaveChanges();
+            return View(new List<RegistroTrabajador>());
         }
         [HttpPost]
         public ActionResult Registros(FormCollection collection)
         {
+
+            string numero = collection["numero"];
+            Pulseras pulsera = db.Pulseras.First(p => p.Numero == numero);
+            List<RegistroTrabajador> registros = db.RegistroTrabajador.Where(rt => rt.Uid == pulsera.Uid).ToList();
+            ViewBag.numero = numero;
+            /*
             string[] ids = collection["ID"].Split(new char[] { ',' });
-            DBManejoPersonalEntities databases = new DBManejoPersonalEntities();
+            SgajcpEntities databases = new SgajcpEntities();
             foreach (string id in ids)
             {
                 var employee = databases.RegistroTrabajador.Find(int.Parse(id));
                 employee.Foto = getImage();
                 databases.SaveChanges();
-            }
-            return RedirectToAction("Registros");
+            }*/
+
+            return View(registros);
         }
 
         public ActionResult Index(int id)
         {
-            DBManejoPersonalEntities database = new DBManejoPersonalEntities();
+            SgajcpEntities database = new SgajcpEntities();
             Trabajador trabajador = database.Trabajador.First(x => x.Id == id);
             ViewBag.idTrabajador = id;
             Utils.SessionManager.trabajadorID = id;
             ViewBag.id = id;
             ViewBag.trabajador = trabajador;
-            Utils.SessionManager.log("Registros visitados: " + trabajador.Nombre);
+            Utils.SessionManager.log("Registros índice trabajador: " + trabajador.Nombre + " " + trabajador.ApellidoPaterno + " " + trabajador.ApellidoMaterno);
             return View(database.RegistroTrabajador.Where(x => x.Uid == trabajador.Uid).ToList().OrderByDescending(x => x.Fecha));
         }
         [HttpPost]
         public ActionResult Index(FormCollection collection)
         {
-            /*string[] ids = collection["ID"].Split(new char[] { ',' });
-            DBManejoPersonalEntities databases = new DBManejoPersonalEntities();
+            string[] ids = collection["ID"].Split(new char[] { ',' });
+            SgajcpEntities databases = new SgajcpEntities();
             foreach (string id in ids)
             {
                 var employee = databases.RegistroTrabajador.Find(int.Parse(id));
                 employee.Uid = "p2";
                 databases.SaveChanges();
-            }*/
+            }
             return RedirectToAction("Index");
         }
         // GET: Registro/Details/ 
         public ActionResult Details(int id, int idTrabajador)
         {
-            DBManejoPersonalEntities database = new DBManejoPersonalEntities();
+            SgajcpEntities database = new SgajcpEntities();
             RegistroTrabajador registroTrabajador = database.RegistroTrabajador.First(x => x.Id == id);
             ViewBag.idTrabajador = idTrabajador;
-            Trabajador trabajador = db.Trabajador.First(x => x.Id== idTrabajador);
-            Utils.SessionManager.log("Detalle registro: " + trabajador.Nombre + " "+ trabajador.ApellidoMaterno + " " + trabajador.ApellidoMaterno);
+            Trabajador trabajador = db.Trabajador.First(x => x.Id == idTrabajador);
+            Utils.SessionManager.log("Registros detalle trabajador: " + trabajador.Nombre + " " + trabajador.ApellidoPaterno + " " + trabajador.ApellidoMaterno);
             return View(registroTrabajador);
         }
 
         // GET: Registro/Create
         public ActionResult Create(int id)
         {
-            DBManejoPersonalEntities database = new DBManejoPersonalEntities();
+            SgajcpEntities database = new SgajcpEntities();
             Trabajador trabajador = database.Trabajador.First(x => x.Id == id);
-            ViewBag.Campos = getCampos(trabajador.Empresa);
+            ViewBag.Campos = getCampos("VSP");
             ViewBag.Uid = trabajador.Uid;
             ViewBag.Id = id;
+            ViewBag.Id = trabajador.Nombre;
             return View();
         }
         public string[] getCampos(string empresa)
@@ -186,7 +170,7 @@ namespace ControlPersonalAppWeb.Controllers
         {
             try
             {
-                DBManejoPersonalEntities database = new DBManejoPersonalEntities();
+                SgajcpEntities database = new SgajcpEntities();
                 RegistroTrabajador registro = new RegistroTrabajador
                 {
                     Fecha = Convert.ToDateTime(collection["Fecha"]),
@@ -206,10 +190,10 @@ namespace ControlPersonalAppWeb.Controllers
                     registro.Foto = getImage();
                 }
                 database.RegistroTrabajador.Add(registro);
+                Utils.SessionManager.log("Registros detalle trabajador: " + registro.NombreTrabajador);
                 database.SaveChanges();
                 Trabajador trabajador = db.Trabajador.First(x => x.Id == id);
-                Utils.SessionManager.log("Detalle registro: " + trabajador.Nombre + " " + trabajador.ApellidoMaterno + " " + trabajador.ApellidoMaterno);
-                return RedirectToAction("Index", new { id = id});
+                return RedirectToAction("Index", new { id = id });
             }
             catch (DbEntityValidationException e)
             {
@@ -253,7 +237,7 @@ namespace ControlPersonalAppWeb.Controllers
         // GET: Registro/Edit/5
         public ActionResult Edit(int id, int idTrabajador)
         {
-            DBManejoPersonalEntities database = new DBManejoPersonalEntities();
+            SgajcpEntities database = new SgajcpEntities();
             RegistroTrabajador registroTrabajador = database.RegistroTrabajador.First(x => x.Id == id);
             ViewBag.idTrabajador = idTrabajador;
             Trabajador trabajador = database.Trabajador.First(x => x.Id == idTrabajador);
@@ -267,7 +251,7 @@ namespace ControlPersonalAppWeb.Controllers
         {
             try
             {
-                DBManejoPersonalEntities database = new DBManejoPersonalEntities();
+                SgajcpEntities database = new SgajcpEntities();
                 RegistroTrabajador registroTrabajador = database.RegistroTrabajador.First(x => x.Id == id);
                 registroTrabajador.Uid = collection["Uid"];
                 registroTrabajador.Fecha = Convert.ToDateTime(collection["Fecha"]);
@@ -283,7 +267,7 @@ namespace ControlPersonalAppWeb.Controllers
                 database.SaveChanges();
                 int idT = Convert.ToInt32(collection["idTrabajador"]);
                 Trabajador trabajador = db.Trabajador.First(x => x.Id == idT);
-                Utils.SessionManager.log("Editar registro: " + trabajador.Nombre + " " + trabajador.ApellidoMaterno + " " + trabajador.ApellidoMaterno);
+                Utils.SessionManager.log("Registros detalle trabajador: " + trabajador.Nombre + " " + trabajador.ApellidoPaterno + " " + trabajador.ApellidoMaterno);
                 return RedirectToAction("Index", new { id = collection["idTrabajador"] });
             }
             catch
@@ -295,12 +279,11 @@ namespace ControlPersonalAppWeb.Controllers
         // GET: Registro/Delete/5
         public ActionResult Delete(int id)
         {
-            DBManejoPersonalEntities database = new DBManejoPersonalEntities();
+            SgajcpEntities database = new SgajcpEntities();
             RegistroTrabajador registroTrabajador = database.RegistroTrabajador.First(x => x.Id == id);
-            Utils.SessionManager.log("Eliminar registro : " + registroTrabajador.Fecha +" "+registroTrabajador.Uid);
             database.RegistroTrabajador.Remove(registroTrabajador);
             database.SaveChanges();
-            return RedirectToAction("Index", new { id = Utils.SessionManager.trabajadorID});
+            return RedirectToAction("Index", new { id = Utils.SessionManager.trabajadorID });
         }
 
         // POST: Registro/Delete/5
@@ -316,60 +299,126 @@ namespace ControlPersonalAppWeb.Controllers
                 return View();
             }
         }
-        public ActionResult Hoy()
+        public List<RegistroTrabajador> GetRegistrosHoy(DateTime fechaActual)
         {
-            List<RegistroTrabajador> registros = new List<RegistroTrabajador>();
-            DBManejoPersonalEntities database = new DBManejoPersonalEntities();
+            // Obtener la empresa autenticada
             string empresa = Utils.SessionManager.CuentaAutenticada().Empresa;
-            List<TrabajadorIndex> trabajadores = new List<TrabajadorIndex>();
-            DateTime dia = DateTime.Now;
-            if (empresa == "JCP")
-            {
-                trabajadores = database.Trabajador
-                                           .Select(x => new TrabajadorIndex { Id = x.Id, Nombre = x.Nombre, ApellidoMaterno = x.ApellidoMaterno, ApellidoPaterno = x.ApellidoPaterno, Uid = x.Uid, Contratado = x.Campo }).ToList();
-            }
-            else
-            {
-                trabajadores = database.Trabajador
-                                        .Where(x => x.Empresa == empresa)
-                                        .Select(x => new TrabajadorIndex { Id = x.Id, Nombre = x.Nombre, ApellidoMaterno = x.ApellidoMaterno, ApellidoPaterno = x.ApellidoPaterno, Uid = x.Uid, Contratado = x.Campo }).ToList();
-            }
-            string date = DateTime.Now.ToShortDateString();
-            DateTime dateTime = Convert.ToDateTime(date);
-            int i = 0;
-            while (i<trabajadores.Count)
-            {
-                var trabajador = trabajadores[i];
-                var registry = database.RegistroTrabajador.Where(x => x.Fecha >= dateTime && x.Uid == trabajador.Uid).ToList();
-                if (registry.Count > 0)
+
+            // Obtener los campos permitidos para la cuenta
+            var camposPermitidos = db.Campos
+                .Where(x => cuenta.Permisos.Contains(x.Nombre))
+                .Select(x => x.Nombre)
+                .ToList();
+
+            if (!camposPermitidos.Any())
+                return new List<RegistroTrabajador>();
+
+            // Obtener todos los trabajadores de la empresa
+            var trabajadores = db.Trabajador
+                .Where(x => x.Uid != null)
+                .Select(x => new TrabajadorIndex
                 {
-                    foreach (RegistroTrabajador registro in registry)
+                    Id = x.Id,
+                    Nombre = x.Nombre,
+                    ApellidoMaterno = x.ApellidoMaterno,
+                    ApellidoPaterno = x.ApellidoPaterno,
+                    Uid = x.Uid,
+                    Empresa = x.Empresa
+                })
+                .ToList();
+
+            // Verificar que la lista no esté vacía
+            if (!trabajadores.Any())
+            {
+                throw new InvalidOperationException("La lista de trabajadores está vacía.");
+            }
+
+
+            // Obtener todos los registros de los trabajadores para la fecha actual y campos permitidos
+            var registros = db.RegistroTrabajador
+                .Where(x => x.Fecha.Year == fechaActual.Year &&
+                            x.Fecha.Month == fechaActual.Month &&
+                            x.Fecha.Day == fechaActual.Day &&
+                            camposPermitidos.Contains(x.Campo))
+                .ToList();
+
+            // Asignar información adicional a los registros
+            List<RegistroTrabajador> registrosCompletos = new List<RegistroTrabajador>();
+
+            foreach (var registro in registros)
+            {
+                Trabajador trabajador = new Trabajador();
+                foreach(var worker in trabajadores)
+                {
+                    if ( registro.Uid.ToLower() == worker.Uid.ToLower())
                     {
-                        registro.IdTrabajador = trabajador.Id;
-                        registro.NombreTrabajador = trabajador.Nombre + " " + trabajador.ApellidoPaterno + " " + trabajador.ApellidoMaterno;
+                        trabajador = new Trabajador
+                        {
+                            ApellidoMaterno = worker.ApellidoMaterno,
+                            ApellidoPaterno = worker.ApellidoPaterno,
+                            Empresa = worker.Empresa,
+                            Id = worker.Id,
+                            Nombre = worker.Nombre
+                        };
+                        break;
                     }
-                    registros.AddRange(registry);
-                    i++;
+                }    
+                if(trabajador.Empresa == null || trabajador.Nombre == null)
+                {
+                    registrosCompletos.Add(new RegistroTrabajador
+                    {
+                        Id = registro.Id,
+                        Fecha = registro.Fecha,
+                        Uid = registro.Uid,
+                        Campo = registro.Campo,
+                        IdTrabajador = 0, // Valor por defecto
+                        NombreTrabajador = "Desconocido",
+                        Empresa = "Desconocida",
+                        Foto = registro.Foto
+                        
+                    });
                 }
                 else
                 {
-                    trabajadores.Remove(trabajadores[i]);
+                    // Si se encuentra el trabajador, crear un nuevo RegistroTrabajador con la información combinada
+                    registrosCompletos.Add(new RegistroTrabajador
+                    {
+                        Id = registro.Id,
+                        Fecha = registro.Fecha,
+                        Uid = registro.Uid,
+                        Campo = registro.Campo,
+                        IdTrabajador = trabajador.Id,
+                        NombreTrabajador = $"{trabajador.Nombre} {trabajador.ApellidoPaterno} {trabajador.ApellidoMaterno}",
+                        Empresa = trabajador.Empresa,
+                        Foto = registro.Foto
+                    });
                 }
             }
-            ViewBag.trabajadores = trabajadores;
-            ViewBag.campos = GetCampos();
+
+            return registrosCompletos;
+        }
+        public ActionResult Hoy()
+        {
+            DateTime dateTime = Convert.ToDateTime(DateTime.Now.ToShortDateString());
+            ViewBag.Fecha = dateTime.ToString("dd-MM-yyyy");
             Utils.SessionManager.log("Registros hoy");
-            return View(registros.OrderByDescending(x => x.Fecha));
+            return View(GetRegistrosHoy(dateTime).OrderByDescending(x => x.Fecha));
         }
         [HttpPost]
         public ActionResult Hoy(FormCollection collection)
         {
+            DateTime dateTime = Convert.ToDateTime(collection["Fecha"]);
+            ViewBag.Fecha = dateTime.ToString("dd-MM-yyyy");
+            return View(GetRegistrosHoy(dateTime).OrderByDescending(x => x.Fecha));
+
+
+            /*
             List<RegistroTrabajador> registros = new List<RegistroTrabajador>();
-            DBManejoPersonalEntities database = new DBManejoPersonalEntities();
+            SgajcpEntities database = new SgajcpEntities();
             string empresa = Utils.SessionManager.CuentaAutenticada().Empresa;
             List<TrabajadorIndex> trabajadores = database.Trabajador
                                             .Where(x => x.Empresa == empresa)
-                                            .Select(x => new TrabajadorIndex { Id = x.Id, Nombre = x.Nombre, ApellidoMaterno = x.ApellidoMaterno, ApellidoPaterno = x.ApellidoPaterno, Uid = x.Uid, Contratado = x.Campo }).ToList();
+                                            .Select(x => new TrabajadorIndex { Id = x.Id, Nombre = x.Nombre, ApellidoMaterno = x.ApellidoMaterno, ApellidoPaterno = x.ApellidoPaterno, Uid = x.Uid }).ToList();
             string date = DateTime.Now.ToShortDateString();
             DateTime dateTime = Convert.ToDateTime(date);
             int i = 0;
@@ -468,12 +517,11 @@ namespace ControlPersonalAppWeb.Controllers
                     Response.Write(document);
                     Response.End();
                 }
-            }
-            return RedirectToAction("Index", "Informes");
+            }*/
         }
         public string[] GetCampos()
         {
-            DBManejoPersonalEntities database = new DBManejoPersonalEntities();
+            SgajcpEntities database = new SgajcpEntities();
             string empresa = Utils.SessionManager.CuentaAutenticada().Empresa;
             var campos = database.Campos.Select(x => new { x.Nombre, x.Empresa }).Where(x => x.Empresa == empresa).ToList();
             int count = 1;

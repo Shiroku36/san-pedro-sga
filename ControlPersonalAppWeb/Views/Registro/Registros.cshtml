@@ -4,7 +4,7 @@
     ViewBag.Title = "Registros";
 }
 
-<h2>Registros</h2>
+<h2>Registros @ViewBag.numero</h2>
 
 <p>
     @Html.ActionLink("Crear nuevo", "Create")
@@ -12,18 +12,12 @@
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-
+    <input name="numero" class="form-control" />
+    <button type="submit" class="form-control btn btn-primary mb-4 mt-4" >Buscar</button>
     <!--<button type="submit" value="Delete" class="btn btn-sm btn-danger rounded-0" onclick="return confirm('¿Está seguro que desea elminiar varios registros?')"><i class="fa fa-trash-o"></i> Delete</button>
     <br /><br />-->
-    <table class="table">
-        <tr>
-            <!--
-        <th>
-            Selección
-        </th>-->
-            <th>
-                @Html.DisplayNameFor(model => model.Uid)
-            </th>
+    <table class="table table-hover" id="tabla">
+        <tr class="bg-primary">
             <th>
                 @Html.DisplayNameFor(model => model.Fecha)
             </th>
@@ -40,12 +34,9 @@
         {
             <tr>
                 <!--
-            <td>
-                <input type="checkbox" id="ID" checked="checked" name="ID" value="@item.Id" class="custom-checkbox chkCheckBoxId" />
-            </td>-->
                 <td>
-                    @Html.DisplayFor(modelItem => item.Uid)
-                </td>
+                    <input type="checkbox" id="ID" checked="checked" name="ID" value="@item.Id" class="custom-checkbox chkCheckBoxId" />
+                </td>-->
                 <td>
                     @Html.DisplayFor(modelItem => item.Fecha)
                 </td>
@@ -58,5 +49,5 @@
             </tr>
         }
 
-        </table>
-    }
+    </table>
+}

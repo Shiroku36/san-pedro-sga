@@ -11,76 +11,85 @@
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    <div class="row">
-        <div class="col-md-4">
-            <div class="col-2">
-                <label>Búsqueda</label>
-            </div>
-            <div class="col-12">
-                <input type="text" id="busqueda" onkeyup="buscar()" class="form-control">
-            </div>
+<div class="row">
+    <div class="col-md-4">
+        <div class="col-2">
+            <label>Búsqueda</label>
         </div>
-        <div class="col-md-4 mb-3">
-            <div class="col-2">
-                <label>Huerto</label>
-            </div>
-            <div class="col-12">
-                <select name="Huerto" class="form-control">
-                    @foreach (var campo in ViewBag.campos)
-                    {
-                        if (ViewBag.campo == campo)
-                        {
-                            <option selected>@campo</option>
-                        }
-                        else
-                        {
-                            <option>@campo</option>
-                        }
-                    }
-                </select>
-            </div>
-        </div>
-        <div class="col-md-4">
-            <div class="col-2">
-                <label>Tipo</label>
-            </div>
-            <div class="col-12">
-                <select name="Tipo" class="form-control">
-                    @foreach (var tipo in ViewBag.tipos)
-                    {
-                        if (ViewBag.tipo == tipo)
-                        {
-                            <option selected>@tipo</option>
-                        }
-                        else
-                        {
-                            <option>@tipo</option>
-                        }
-                    }
-                </select>
-            </div>
-        </div>
-        <div class="col-2 mt-2">
-            <input type="submit" class="btn btn-primary mx-auto " value="Filtrar" />
-        </div>
-        <div class="form-group col-sm-10 mt-2" style="text-align: left;">
-            <button type="button" class="btn btn-primary  btn-block " onClick="mostrar(this)">Instruciones</button>
-            <div class="my-4" id="oculto" style="display:none">
-                - Bienvenido al sistema de gestión bodega, te ayudará a administrar los distintos <a href="~/productos/">productos</a> que tengas y donde se encuentren.<br />
-                - El primer paso es agregar todas las <a href="~/Stock/unidades/">unidades</a>(Kg, gr, L, mm, cc, etc) y <a href="~/Stock/tipos">tipos de productos</a>(Común, Maquinaria, pesticidas, etc) que poseas.<br />
-                - Luego agrega los <a href="~/empresa/">proveedores</a> de los cuales adquieres los <a href="~/productos/">productos</a> (Al menos debes crear uno).<br />
-                - Ahora ya puedes crear todos los <a href="~/productos/">productos</a> que quieras.<br />
-                - Para contabilizar tus <a href="~/productos/">productos</a>, debes agregarlos en <a href="~/ingresos">ingresos</a>, así cada vez que tengas un nuevo cargamento, lo agregas en <a href="~/ingresos">ingresos</a>.<br />
-                - Si quieres quitar <a href="~/productos/">productos</a>, ya sea porque se utilizó, ya no son utilizables, o cualquiera sea el motivo, debes ir a <a href="~/ControlInventarios/">control de inventario</a>.<br />
-                - El sistema reconoce todos los huertos que tengas, por lo que puedes hacer una <a href="~/solicitudes/">solicitud</a> de <a href="~/productos/">productos</a> entre ellos, esto generará una notificación 
-                en cualquier cuenta que tenga esta función habilitada.<br />
-                - Para aceptar o rechazar la <a href="~/solicitudes/">solicitud</a>, la cuenta habilitada para recibir la notificiación, será la que pueda hacerlo.<br />
-                - Para cada solicitud realizada, se le puede agregar una <a href="~/AplicacionDeProgramas">aplicación de programa</a>, en esta debes agregar el rango de fechas en el cual se usará, en el detalle
-                puedes agregar cuantos <a href="~/Comentarios/">comentarios</a> quieras de como se usará esta.<br/>
-                - Para llevar un buen registro de las acciones, estas no se pueden borrar.
-            </div>
+        <div class="col-12">
+            <input type="text" id="busqueda" onkeyup="buscar()" class="form-control">
         </div>
     </div>
+    <div class="col-md-3 mb-3">
+        <div class="col-2">
+            <label>Huerto</label>
+        </div>
+        <div class="col-12">
+            <select name="Huerto" class="form-control">
+                @foreach (var campo in ViewBag.campos)
+                {
+                    if (ViewBag.campo == campo)
+                    {
+                        <option selected>@campo</option>
+                    }
+                    else
+                    {
+                        <option>@campo</option>
+                    }
+                }
+            </select>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="col-2">
+            <label>Tipo</label>
+        </div>
+        <div class="col-12">
+            <select name="Tipo" class="form-control">
+                @foreach (var tipo in ViewBag.tipos)
+                {
+                    if (ViewBag.tipo == tipo)
+                    {
+                        <option selected>@tipo</option>
+                    }
+                    else
+                    {
+                        <option>@tipo</option>
+                    }
+                }
+            </select>
+        </div>
+    </div>
+    <div class="col-md-2">
+        <div class="col-2">
+            <label></label>
+        </div>
+        <div class="col-12 mt-2">
+            <input type="submit" class="btn btn-primary mx-auto " value="Filtrar" />
+        </div>
+    </div>
+    <div class="form-group col-sm-8 mt-2" style="text-align: left;">
+        <button type="button" class="btn btn-primary  btn-block " onClick="mostrar(this)">Instruciones</button>
+        <div class="my-4" id="oculto" style="display:none">
+            - Bienvenido al sistema de gestión bodega, te ayudará a administrar los distintos <a href="~/productos/">productos</a> que tengas y donde se encuentren.<br />
+            - El primer paso es agregar todas las <a href="~/Stock/unidades/">unidades</a>(Kg, gr, L, mm, cc, etc) y <a href="~/Stock/tipos">tipos de productos</a>(Común, Maquinaria, pesticidas, etc) que poseas.<br />
+            - Luego agrega los <a href="~/empresa/">proveedores</a> de los cuales adquieres los <a href="~/productos/">productos</a> (Al menos debes crear uno).<br />
+            - Ahora ya puedes crear todos los <a href="~/productos/">productos</a> que quieras.<br />
+            - Para contabilizar tus <a href="~/productos/">productos</a>, debes agregarlos en <a href="~/ingresos">ingresos</a>, así cada vez que tengas un nuevo cargamento, lo agregas en <a href="~/ingresos">ingresos</a>.<br />
+            - Si quieres quitar <a href="~/productos/">productos</a>, ya sea porque se utilizó, ya no son utilizables, o cualquiera sea el motivo, debes ir a <a href="~/ControlInventarios/">control de inventario</a>.<br />
+            - El sistema reconoce todos los huertos que tengas, por lo que puedes hacer una <a href="~/solicitudes/">solicitud</a> de <a href="~/productos/">productos</a> entre ellos, esto generará una notificación
+            en cualquier cuenta que tenga esta función habilitada.<br />
+            - Para aceptar o rechazar la <a href="~/solicitudes/">solicitud</a>, la cuenta habilitada para recibir la notificiación, será la que pueda hacerlo.<br />
+            - Para cada solicitud realizada, se le puede agregar una <a href="~/AplicacionDeProgramas">aplicación de programa</a>, en esta debes agregar el rango de fechas en el cual se usará, en el detalle
+            puedes agregar cuantos <a href="~/Comentarios/">comentarios</a> quieras de como se usará esta.<br />
+            - Para llevar un buen registro de las acciones, estas no se pueden borrar.
+        </div>
+    </div>
+
+    <div class="col-4">
+        @Html.ActionLink("Informe", "GenerarExcelInventario", null, new { @class = "btn btn-warning mt-2" })
+    </div>
+</div>
 }
     <div class="table-responsive mt-3">
         <table class="table table-hover" id="tabla">
@@ -90,6 +99,9 @@
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.Cantidad)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Solicitados)
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.Tipo)
@@ -107,26 +119,34 @@
 
             @foreach (var item in Model)
             {
-                <tr>
-                    <td>
-                        <a href="~/Productos/Details/@item.ProductoId">@item.Producto</a>
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Cantidad)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Empresa)
-                    </td>
-                    <td>
-                        @if (ViewBag.campo != null)
-                        {
-                            if (ViewBag.campo != "Todos")
-                            {
-                                @Html.DisplayFor(modelItem => item.Ubicacion)
-                            }
-                        }
-                    </td>
-                </tr>
+        <tr>
+            <td>
+                <a href='@Url.Action("Producto", "Historial", new { id = item.ProductoId })'>
+                    @Html.DisplayFor(modelItem => item.Producto)
+                </a>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Cantidad) @Html.DisplayFor(modelItem => item.Unidad)
+            </td>
+            <td>
+                @if (item.Solicitados > 0)
+                {
+                    @item.Solicitados.Value.ToString()
+                }
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Empresa)
+            </td>
+            <td>
+                @if (ViewBag.campo != null)
+                {
+                    if (ViewBag.campo != "Todos")
+                    {
+                        @Html.DisplayFor(modelItem => item.Ubicacion)
+                    }
+                }
+            </td>
+        </tr>
             }
 
         </table>

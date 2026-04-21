@@ -12,12 +12,13 @@ using iTextSharp.text;
 using iTextSharp.text.pdf;
 using SpreadsheetLight;
 using System.Web.Helpers;
+using System.Data.Entity;
 
 namespace ControlPersonalAppWeb.Controllers
 {
     public class InformesController : Controller
     {
-        DBManejoPersonalEntities db = new DBManejoPersonalEntities();
+        SgajcpEntities db = new SgajcpEntities();
         private Cuentas cuenta = Utils.SessionManager.CuentaAutenticada();
         public ActionResult Horas()
         {
@@ -38,7 +39,7 @@ namespace ControlPersonalAppWeb.Controllers
                 horario = 1;
             }
             string strHeader = "Informe Horas extras\n";//Convert.ToDateTime(collection["Periodo"]).ToLongDateString();
-            DBManejoPersonalEntities db = new DBManejoPersonalEntities();
+            SgajcpEntities db = new SgajcpEntities();
             if (!String.IsNullOrEmpty(collection["titulo"]))
             {
                 strHeader = collection["titulo"];
@@ -443,7 +444,7 @@ namespace ControlPersonalAppWeb.Controllers
             var campos = db.Campos.Select(x => new { x.Nombre }).ToList();
             if (!String.IsNullOrEmpty(empresa))
             {
-                campos = db.Campos.Where(x => x.Empresa == empresa).Select(x => new { x.Nombre }).ToList();
+                campos = db.Campos.Where(x => x.Empresa == empresa).OrderBy(x => x.Nombre).Select(x => new { x.Nombre }).ToList();
             }
             nombres = new string[campos.Count];
             int count = 0;
@@ -452,6 +453,7 @@ namespace ControlPersonalAppWeb.Controllers
                 nombres[count] = campo.Nombre;
                 count++;
             }
+            Cuentas cuenta = Utils.SessionManager.CuentaAutenticada();
             return nombres;
         }
 
@@ -459,22 +461,11 @@ namespace ControlPersonalAppWeb.Controllers
         {
 
             //List<Campos> campos = new List<Campos>();
-
-            Utils.SessionManager.log("Index informes");
-            Cuentas cuenta = Utils.SessionManager.CuentaAutenticada();
             string empresa = cuenta.Empresa;
             string[] nombres;
             List<string> listaNombres = new List<string>();
-            List<Campos> campos = new List<Campos>();
-            if (empresa == "JCP")
-            {
-                nombres = GetNombreCampos("");
-            }
-            else
-            {
-                nombres = GetNombreCampos(empresa);
-            }
-            listaNombres.Add("Todos");
+            nombres = GetNombreCampos(empresa);
+            
             foreach (var campo in nombres)
             {
                 if (cuenta.Permisos.Contains(campo))
@@ -483,7 +474,13 @@ namespace ControlPersonalAppWeb.Controllers
                     listaNombres.Add(campo);
                 }
             }
+            List<string> campos = db.Campos.OrderBy(x => x.Nombre).Select(x => x.Nombre).ToList();
+            List<string> empresas = db.Empresas.OrderBy(x => x.Nombre).Select(x => x.Nombre).ToList();
+            if(cuenta.Permisos.Contains("Todos"))
+                listaNombres.Insert(0, "Todos");
+            empresas.Insert(0, "Todos");
             ViewBag.campos = listaNombres;
+            ViewBag.empresas = empresas;
             return View();
 
 
@@ -491,24 +488,17 @@ namespace ControlPersonalAppWeb.Controllers
         [HttpPost]
         public ActionResult Index(FormCollection collection,int? id= null)
         {
-            DBManejoPersonalEntities database = new DBManejoPersonalEntities();
+            SgajcpEntities database = new SgajcpEntities();
+
+
+
+
+
             var rut = string.IsNullOrWhiteSpace(collection["Rut"]);
             var inicio = string.IsNullOrWhiteSpace(collection["Inicio"]);
             var fin = string.IsNullOrWhiteSpace(collection["Fin"]);
             var campo = string.IsNullOrWhiteSpace(collection["Campo"]);
-
-            if (!string.IsNullOrWhiteSpace(collection["Entrada"]))
-            {
-                Utils.SessionManager.entrada = collection["Entrada"];
-            }
-            if (!string.IsNullOrWhiteSpace(collection["Salida"]))
-            {
-                Utils.SessionManager.salida = collection["Salida"];
-            }
-            if (!string.IsNullOrWhiteSpace(collection["Almuerzo"]))
-            {
-                Utils.SessionManager.almuerzo = collection["Almuerzo"];
-            }
+            var empresita = string.IsNullOrWhiteSpace(collection["Empresa"]);
             if(!campo)
             {
                 if(collection["Campo"]=="Todos")
@@ -516,8 +506,16 @@ namespace ControlPersonalAppWeb.Controllers
                     campo = true;
                 }
             }
+            if (!empresita)
+            {
+                if (collection["Empresa"] == "Todos")
+                {
+                    empresita = true;
+                }
+            }
+            return RedirectToAction("PDFRegistros", "Trabajador", new {campo = collection["Campo"], empresa = collection["Empresa"], inicio = collection["inicio"], fin = collection["Fin"], tipo = collection["subject"] });
             //Una persona
-            if (!rut && inicio && fin && campo) 
+            if (inicio && fin && campo) 
             {
                 string rutIn = formatearRut(collection["Rut"]);
                 Trabajador trabajadorNew = database.Trabajador.First(x => x.Rut == rutIn);
@@ -528,11 +526,7 @@ namespace ControlPersonalAppWeb.Controllers
             if (!rut && inicio && fin && !campo) 
             {
                 string rutIn = formatearRut(collection["Rut"]);
-                TrabajadorIndex trabajadorNew = database.Trabajador.Select(x => new TrabajadorIndex { Id = x.Id, Nombre = x.Nombre, ApellidoMaterno = x.ApellidoMaterno, ApellidoPaterno = x.ApellidoPaterno , Rut = x.Rut, Uid = x.Uid, Gerente = x.Gerente, Empresa = x.Empresa,
-                    Entrada = x.Entrada,
-                    EntradaA = x.EntradaA,
-                    Salida = x.Salida,
-                    SalidaA = x.SalidaA
+                TrabajadorIndex trabajadorNew = database.Trabajador.Select(x => new TrabajadorIndex { Id = x.Id, Nombre = x.Nombre, ApellidoMaterno = x.ApellidoMaterno, ApellidoPaterno = x.ApellidoPaterno , Rut = x.Rut, Uid = x.Uid, Numero = x.Numero, Empresa = x.Empresa,
                 }).First(x => x.Rut == rutIn);
                 Utils.SessionManager.trabajadores = new List<TrabajadorIndex> { trabajadorNew };
                 Utils.SessionManager.campo = collection["Campo"];
@@ -547,11 +541,7 @@ namespace ControlPersonalAppWeb.Controllers
                 List<TrabajadorIndex> trabajadores = database.Trabajador.Where(x => x.Empresa == empresa).Select(x => new TrabajadorIndex { Id = x.Id, Nombre = x.Nombre,
                     ApellidoMaterno = x.ApellidoMaterno,
                     ApellidoPaterno = x.ApellidoPaterno,
-                    Rut = x.Rut, Uid = x.Uid, Gerente = x.Gerente, Empresa = x.Empresa,
-                    Entrada = x.Entrada,
-                    EntradaA = x.EntradaA,
-                    Salida = x.Salida,
-                    SalidaA = x.SalidaA
+                    Rut = x.Rut, Uid = x.Uid, Numero = x.Numero, Empresa = x.Empresa,
                 }).ToList();
                 trabajadores.Insert(0, new TrabajadorIndex { Nombre = inicioIn.ToShortDateString() });
                 Utils.SessionManager.trabajadores = trabajadores;
@@ -567,11 +557,7 @@ namespace ControlPersonalAppWeb.Controllers
                 List<TrabajadorIndex> trabajadores = database.Trabajador.Where(x => x.Empresa == empresa).Select(x => new TrabajadorIndex { Id = x.Id, Nombre = x.Nombre,
                     ApellidoMaterno = x.ApellidoMaterno,
                     ApellidoPaterno = x.ApellidoPaterno,
-                    Rut = x.Rut, Uid = x.Uid, Gerente = x.Gerente, Empresa = x.Empresa,
-                    Entrada = x.Entrada,
-                    EntradaA = x.EntradaA,
-                    Salida = x.Salida,
-                    SalidaA = x.SalidaA
+                    Rut = x.Rut, Uid = x.Uid, Numero = x.Numero, Empresa = x.Empresa,
                 }).ToList();
                 trabajadores.Insert(0, new TrabajadorIndex { Nombre = inicioIn.ToShortDateString() });
                 Utils.SessionManager.trabajadores = trabajadores;
@@ -595,11 +581,7 @@ namespace ControlPersonalAppWeb.Controllers
                 List<TrabajadorIndex> trabajadores = database.Trabajador.Where(x => x.Empresa == empresa).Select(x => new TrabajadorIndex { Id = x.Id, Nombre = x.Nombre,
                     ApellidoMaterno = x.ApellidoMaterno,
                     ApellidoPaterno = x.ApellidoPaterno,
-                    Rut = x.Rut, Uid = x.Uid, Gerente = x.Gerente, Empresa = x.Empresa,
-                    Entrada = x.Entrada,
-                    EntradaA = x.EntradaA,
-                    Salida = x.Salida,
-                    SalidaA = x.SalidaA
+                    Rut = x.Rut, Uid = x.Uid, Numero = x.Numero, Empresa = x.Empresa,
                 }).ToList();
                 trabajadores.Insert(0, new TrabajadorIndex { Nombre = collection["Inicio"] +" a "+ collection["Fin"] });
                 Utils.SessionManager.trabajadores = trabajadores;
@@ -616,11 +598,7 @@ namespace ControlPersonalAppWeb.Controllers
                 List<TrabajadorIndex> trabajadores = database.Trabajador.Where(x => x.Empresa == empresa).Select(x => new TrabajadorIndex { Id = x.Id, Nombre = x.Nombre,
                     ApellidoMaterno = x.ApellidoMaterno,
                     ApellidoPaterno = x.ApellidoPaterno,
-                    Rut = x.Rut, Uid = x.Uid, Gerente = x.Gerente, Empresa = x.Empresa,
-                    Entrada = x.Entrada,
-                    EntradaA = x.EntradaA,
-                    Salida = x.Salida,
-                    SalidaA = x.SalidaA
+                    Rut = x.Rut, Uid = x.Uid, Numero = x.Numero, Empresa = x.Empresa,
                 }).ToList();
                 trabajadores.Insert(0, new TrabajadorIndex { Nombre = collection["Inicio"] + " a " + collection["Fin"] +" en "+ collection["Campo"] });
                 Utils.SessionManager.trabajadores = trabajadores;
@@ -638,11 +616,7 @@ namespace ControlPersonalAppWeb.Controllers
                 TrabajadorIndex trabajadorNew = database.Trabajador.Select(x => new TrabajadorIndex { Id = x.Id, Nombre = x.Nombre,
                     ApellidoMaterno = x.ApellidoMaterno,
                     ApellidoPaterno = x.ApellidoPaterno,
-                    Rut = x.Rut, Uid = x.Uid, Gerente = x.Gerente, Empresa = x.Empresa,
-                    Entrada = x.Entrada,
-                    EntradaA = x.EntradaA,
-                    Salida = x.Salida,
-                    SalidaA = x.SalidaA
+                    Rut = x.Rut, Uid = x.Uid, Numero = x.Numero, Empresa = x.Empresa,
                 }).First(x => x.Rut == rutIn);
                 Utils.SessionManager.trabajadores = new List<TrabajadorIndex> { trabajadorNew };
                 Utils.SessionManager.inicio = Convert.ToDateTime(collection["Inicio"]);
@@ -660,11 +634,7 @@ namespace ControlPersonalAppWeb.Controllers
                 TrabajadorIndex trabajadorNew = database.Trabajador.Select(x => new TrabajadorIndex { Id = x.Id, Nombre = x.Nombre,
                     ApellidoMaterno = x.ApellidoMaterno,
                     ApellidoPaterno = x.ApellidoPaterno,
-                    Rut = x.Rut, Uid = x.Uid, Gerente = x.Gerente, Empresa = x.Empresa,
-                    Entrada = x.Entrada,
-                    EntradaA = x.EntradaA,
-                    Salida = x.Salida,
-                    SalidaA = x.SalidaA
+                    Rut = x.Rut, Uid = x.Uid, Numero = x.Numero, Empresa = x.Empresa,
                 }).First(x => x.Rut == rutIn);
                 Utils.SessionManager.trabajadores = new List<TrabajadorIndex> { trabajadorNew };
                 Utils.SessionManager.inicio = Convert.ToDateTime(collection["Inicio"]);
@@ -681,11 +651,7 @@ namespace ControlPersonalAppWeb.Controllers
                 TrabajadorIndex trabajadorNew = database.Trabajador.Select(x => new TrabajadorIndex { Id = x.Id, Nombre = x.Nombre,
                     ApellidoMaterno = x.ApellidoMaterno,
                     ApellidoPaterno = x.ApellidoPaterno,
-                    Rut = x.Rut, Uid = x.Uid, Gerente = x.Gerente, Empresa = x.Empresa,
-                    Entrada = x.Entrada,
-                    EntradaA = x.EntradaA,
-                    Salida = x.Salida,
-                    SalidaA = x.SalidaA
+                    Rut = x.Rut, Uid = x.Uid, Numero = x.Numero, Empresa = x.Empresa,
                 }).First(x => x.Rut == rutIn);
                 Utils.SessionManager.trabajadores = new List<TrabajadorIndex> { trabajadorNew };
                 Utils.SessionManager.inicio = Convert.ToDateTime(collection["Inicio"]);
@@ -702,11 +668,7 @@ namespace ControlPersonalAppWeb.Controllers
                 TrabajadorIndex trabajadorNew = database.Trabajador.Select(x => new TrabajadorIndex { Id = x.Id, Nombre = x.Nombre,
                     ApellidoMaterno = x.ApellidoMaterno,
                     ApellidoPaterno = x.ApellidoPaterno,
-                    Rut = x.Rut, Uid = x.Uid, Gerente = x.Gerente, Empresa = x.Empresa,
-                    Entrada = x.Entrada,
-                    EntradaA = x.EntradaA,
-                    Salida = x.Salida,
-                    SalidaA = x.SalidaA
+                    Rut = x.Rut, Uid = x.Uid, Numero = x.Numero, Empresa = x.Empresa,
                 }).First(x => x.Rut == rutIn);
                 Utils.SessionManager.trabajadores = new List<TrabajadorIndex> { trabajadorNew };
                 Utils.SessionManager.inicio = Convert.ToDateTime(collection["Inicio"]);
@@ -732,13 +694,9 @@ namespace ControlPersonalAppWeb.Controllers
         // GET: Informes/Create
         public ActionResult Asistencias()
         {
-            DBManejoPersonalEntities db = new DBManejoPersonalEntities();
+            SgajcpEntities db = new SgajcpEntities();
             string empresa = Utils.SessionManager.CuentaAutenticada().Empresa; 
-            ViewBag.Trabajador = db.Trabajador.Where(x => x.Empresa == empresa).Select(x => new TrabajadorIndex { Id = x.Id, Nombre = x.Nombre, ApellidoMaterno = x.ApellidoMaterno, ApellidoPaterno = x.ApellidoPaterno , Rut = x.Rut, 
-                Entrada = x.Entrada,
-                EntradaA = x.EntradaA,
-                Salida = x.Salida,
-                SalidaA = x.SalidaA
+            ViewBag.Trabajador = db.Trabajador.Where(x => x.Empresa == empresa).Select(x => new TrabajadorIndex { Id = x.Id, Nombre = x.Nombre, ApellidoMaterno = x.ApellidoMaterno, ApellidoPaterno = x.ApellidoPaterno , Rut = x.Rut
             }).ToList();
             return View();
         }
@@ -749,7 +707,7 @@ namespace ControlPersonalAppWeb.Controllers
         {
             try
             {
-                DBManejoPersonalEntities db = new DBManejoPersonalEntities();
+                SgajcpEntities db = new SgajcpEntities();
                 string nombre = collection["id"];
                 Empresas empresa = db.Empresas.First(x => x.Nombre == nombre);
                 string periodo = collection["Periodo"];
@@ -765,7 +723,6 @@ namespace ControlPersonalAppWeb.Controllers
                 {
                     ids = collection["centros"].Split(new char[] { ',' });
                 }
-                Utils.SessionManager.log("Asistencias informe");
                 AsistenciasPDF(dateTime, ids, empresa);
                 return RedirectToAction("Asistencias");
             }
@@ -776,7 +733,7 @@ namespace ControlPersonalAppWeb.Controllers
         }
         private void AsistenciasPDF(DateTime dateTime, string[] ids, Empresas empresa)
         {
-            DBManejoPersonalEntities db = new DBManejoPersonalEntities();
+            SgajcpEntities db = new SgajcpEntities();
             string strHeader = "Asistencia mensual\n" + dateTime.ToString("MMMM yyyy");//Convert.ToDateTime(collection["Periodo"]).ToLongDateString();
             StringWriter sw = new StringWriter();
             HtmlTextWriter hw = new HtmlTextWriter(sw);
@@ -818,7 +775,7 @@ namespace ControlPersonalAppWeb.Controllers
         }
         private string GetDias(Trabajador trabajador, DateTime dateTime)
         {
-            DBManejoPersonalEntities db = new DBManejoPersonalEntities();
+            SgajcpEntities db = new SgajcpEntities();
             int mes = dateTime.Month;
             var registros = db.RegistroTrabajador.Where(x => x.Uid == trabajador.Uid && x.Fecha.Month == mes).Select(x => new { Fecha = x.Fecha }).ToList();
             registros = registros.OrderBy(o => o.Fecha).ToList();
@@ -837,29 +794,49 @@ namespace ControlPersonalAppWeb.Controllers
         }
         public string formatearRut(string rut)
         {
-            int cont = 0;
-            string format;
-            if (rut.Length == 0)
+            // Si el RUT está vacío, retornar cadena vacía
+            if (string.IsNullOrEmpty(rut))
             {
                 return "";
             }
-            else
+
+            // Eliminar puntos, guiones y espacios
+            rut = rut.Replace(".", "");
+            rut = rut.Replace("-", "");
+            rut = rut.Replace(" ", "");
+            rut = rut.Replace("\t", "");
+
+            // Verificar que haya caracteres después de la limpieza
+            if (rut.Length <= 1)
             {
-                rut = rut.Replace(".", "");
-                rut = rut.Replace("-", "");
-                format = "-" + rut.Substring(rut.Length - 1);
-                for (int i = rut.Length - 2; i >= 0; i--)
-                {
-                    format = rut.Substring(i, 1) + format;
-                    cont++;
-                    if (cont == 3 && i != 0)
-                    {
-                        format = "." + format;
-                        cont = 0;
-                    }
-                }
-                return format;
+                return rut;
             }
+
+            // Obtener el dígito verificador (último carácter)
+            string dv = rut.Substring(rut.Length - 1);
+
+            // Obtener el número del RUT (sin dígito verificador)
+            string numero = rut.Substring(0, rut.Length - 1);
+
+            // Formatear el número con puntos cada tres dígitos desde la derecha
+            string numeroFormateado = "";
+            int contador = 0;
+
+            for (int i = numero.Length - 1; i >= 0; i--)
+            {
+                contador++;
+                numeroFormateado = numero[i] + numeroFormateado;
+
+                // Agregar punto después de cada tercer dígito, excepto al final
+                if (contador == 3 && i > 0)
+                {
+                    numeroFormateado = "." + numeroFormateado;
+                    contador = 0;
+                }
+            }
+
+            // Retornar el RUT formateado
+            return numeroFormateado + "-" + dv;
         }
         // GET: Informes/Edit/5
         public ActionResult Edit(int id)

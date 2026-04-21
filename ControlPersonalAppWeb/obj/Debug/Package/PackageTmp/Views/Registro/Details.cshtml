@@ -11,16 +11,6 @@
     <hr />
     <div class="col-sm-8 table-responsive">
         <table class="mx-auto table-borderless table-hover tabla-detalle">
-            <tr>
-                <td>
-                    @Html.DisplayNameFor(model => model.Uid)
-                </td>
-
-                <td>
-                    @Html.DisplayFor(model => model.Uid)
-                </td>
-
-            </tr>
 
             <tr>
                 <td>
@@ -48,16 +38,6 @@
                 </td>
                 <td>
                     <img src="@String.Format("data:image/jpg;base64,{0}",System.Convert.ToBase64String(Model.Foto))" width="400" />
-                </td>
-            </tr>
-
-            <tr>
-                <td>
-                    @Html.DisplayNameFor(model => model.NombreTrabajador)
-                </td>
-
-                <td>
-                    @Html.DisplayFor(model => model.NombreTrabajador)
                 </td>
             </tr>
         </table>

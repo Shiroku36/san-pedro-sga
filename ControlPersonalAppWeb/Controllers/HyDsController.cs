@@ -9,10 +9,10 @@ using System.Web.Mvc;
 using ControlPersonalAppWeb.Models;
 
 namespace ControlPersonalAppWeb.Controllers
-{
+{/*
     public class HyDsController : Controller
     {
-        private DBManejoPersonalEntities db = new DBManejoPersonalEntities();
+        private SgajcpEntities db = new SgajcpEntities();
         private Cuentas cuenta = Utils.SessionManager.CuentaAutenticada();
 
         // GET: HyDs
@@ -143,5 +143,5 @@ namespace ControlPersonalAppWeb.Controllers
             }
             base.Dispose(disposing);
         }
-    }
+    }*/
 }

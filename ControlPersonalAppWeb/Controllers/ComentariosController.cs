@@ -10,9 +10,10 @@ using ControlPersonalAppWeb;
 
 namespace ControlPersonalAppWeb.Controllers
 {
+    /*
     public class ComentariosController : Controller
     {
-        private DBManejoPersonalEntities db = new DBManejoPersonalEntities();
+        private SgajcpEntities db = new SgajcpEntities();
         private Cuentas cuenta = Utils.SessionManager.CuentaAutenticada();
 
         // GET: Comentarios
@@ -155,7 +156,7 @@ namespace ControlPersonalAppWeb.Controllers
             db.SaveChanges();
             return RedirectToAction("Index");
         }
-        */
+        
         protected override void Dispose(bool disposing)
         {
             if (disposing)
@@ -164,5 +165,5 @@ namespace ControlPersonalAppWeb.Controllers
             }
             base.Dispose(disposing);
         }
-    }
+    }*/
 }

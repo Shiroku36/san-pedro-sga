@@ -51,23 +51,6 @@
                     @Html.DisplayFor(model => model.Email)
                 </td>
             </tr>
-
-            <tr>
-                <td>
-                    @Html.DisplayNameFor(model => model.Notificacion)
-                </td>
-
-                <td>
-                    @if (Model.Notificacion != null && (bool)Model.Notificacion)
-                    {
-                        <span>Activada</span>
-                    }
-                    else
-                    {
-                        <span>Desactivada</span>
-                    }
-                </td>
-            </tr>
         </table>
     </div>
     @if (cuenta.Id == Model.Id)

@@ -1,0 +1,63 @@
+﻿@model IEnumerable<ControlPersonalAppWeb.Trabajador>
+
+@{
+    ViewBag.Title = "Habilitados";
+}
+<h1 class="display-4 text-center">Habilitados</h1>
+<hr />
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <a href='@Url.Action("Habilitados", "Empresa")'>
+        <button type="submit" class="btn btn-primary float-right mb-3">Modificar</button>
+    </a>
+    <input type="hidden" value="@ViewBag.id" name="IdEmpresa" id="IdEmpresa" />
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <tr class="bg-primary">
+                <th>
+                    @Html.DisplayNameFor(model => model.Nombre)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Rut)
+                </th>
+                <th>
+                    <label><input type="checkbox" onClick="toggle(this)" /> Seleccionar todos</label><br />
+                </th>
+            </tr>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Nombre) @Html.DisplayFor(modelItem => item.ApellidoPaterno) @Html.DisplayFor(modelItem => item.ApellidoMaterno)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Rut)
+                    </td>
+                    <td>
+                        @if (item.Habilitado == true)
+                        {
+                            <input type="checkbox" value="@item.Id" name="esta" id="esta" class="custom-checkbox chkCheckBoxId form-control" checked />
+                        }
+                        else
+                        {
+                            <input type="checkbox" value="@item.Id" name="esta" id="esta" class="custom-checkbox chkCheckBoxId form-control" />
+                        }
+
+                    </td>
+                </tr>
+            }
+
+        </table>
+    </div>
+}
+<script>
+    function toggle(source) {
+        checkboxes = document.getElementsByName('esta');
+
+        for (var i = 0, n = checkboxes.length; i < n; i++) {
+            checkboxes[i].checked = source.checked;
+        }
+    }
+</script>

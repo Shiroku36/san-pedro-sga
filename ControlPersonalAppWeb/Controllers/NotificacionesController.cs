@@ -9,10 +9,10 @@ using System.Web.Mvc;
 using ControlPersonalAppWeb;
 
 namespace ControlPersonalAppWeb.Controllers
-{
+{/*
     public class NotificacionesController : Controller
     {
-        private DBManejoPersonalEntities db = new DBManejoPersonalEntities();
+        private SgajcpEntities db = new SgajcpEntities();
         private Cuentas cuenta = Utils.SessionManager.CuentaAutenticada();
 
         // GET: Notificaciones
@@ -49,7 +49,7 @@ namespace ControlPersonalAppWeb.Controllers
             }
             else
             {
-                SolicitudDeCompra solicitudDeCompra = db.SolicitudDeCompras.First(x => x.Id == notificacion.SolicitudDeCompraId);
+                SolicitudDeCompra solicitudDeCompra = db.SolicitudDeCompra.First(x => x.Id == notificacion.SolicitudDeCompraId);
                 if (collection["Accion"] == "Aceptar")
                 {
                     solicitudDeCompra.Estado = "Aceptada";
@@ -162,7 +162,7 @@ namespace ControlPersonalAppWeb.Controllers
             db.SaveChanges();
             return RedirectToAction("Index");
         }
-        */
+        */ /*
         protected override void Dispose(bool disposing)
         {
             if (disposing)
@@ -200,5 +200,5 @@ namespace ControlPersonalAppWeb.Controllers
                 db.Stock.Add(articuloDestino);
             }
         }
-    }
+    }*/
 }

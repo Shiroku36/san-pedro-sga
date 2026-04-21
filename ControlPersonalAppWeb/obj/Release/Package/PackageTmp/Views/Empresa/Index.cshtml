@@ -1,34 +1,74 @@
-﻿@model IEnumerable<ControlPersonalAppWeb.Empresas>
+﻿
+
+@model IEnumerable<ControlPersonalAppWeb.Empresas>
 
 @{
-    ViewBag.Title = "Índice";
+    ViewBag.Title = "Contratistas";
+    var cuenta = ControlPersonalAppWeb.Utils.SessionManager.CuentaAutenticada();
+}
+<h1 class="display-4 text-center">Índice Contratistas</h1>
+<hr />
+@if (cuenta.Permisos.Contains("EmpresasC"))
+{
+    <a href='@Url.Action("Create", "Empresa")'>
+        <button type="button" class="btn btn-primary float-right mb-3">Crear Nuevo</button>
+    </a>
 }
 
-<h2>Índice Empresas</h2>
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <tr class="bg-primary">
+                <th>
+                    @Html.DisplayNameFor(model => model.Nombre)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Rut)
+                </th>
+                <th>
+                    Accion
+                </th>
+            </tr>
 
-<p>
-    @Html.ActionLink("Crear nuevo", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Nombre)
-        </th>
-        <th></th>
-    </tr>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Nombre)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Rut)
+                    </td>
+                    <td>
+                        @if (cuenta.Permisos.Contains("EmpresasE"))
+                        {
+                            <a href='@Url.Action("Edit", "Empresa", new { id = item.Id })'>
+                                <button type="button" class="btn btn-warning">Editar</button>
+                            </a>
+                        }
+                        <a href='@Url.Action("Details", "Empresa", new { id = item.Id })'>
+                            <button type="button" class="btn btn-info">Detalle</button>
+                        </a>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Nombre)
-        </td>
-        <td>
-            @Html.ActionLink("Campos", "Campos", new { id = item.Id }) |
-            @Html.ActionLink("Editar", "Edit", new { id = item.Id }) |
-            @Html.ActionLink("Detalle", "Details", new { id = item.Id }) |
-            @Html.ActionLink("Borrar", "Delete", new { id = item.Id }, new { onclick = "return confirm('¿Está seguro que desea eliminar la Empresa?');" })
-        </td>
-    </tr>
-}
+                        @if (cuenta.Permisos.Contains("EmpresasD"))
+                        {
+                            <a href='@Url.Action("Delete", "Empresa", new { id = item.Id })'>
+                                <button type="button" class="btn btn-danger" onclick="return confirm('¿Está seguro que desea eliminar el contratista?');" })>Borrar</button>
+                            </a>
+                        }
+                        <a href='@Url.Action("Habilitados", "Empresa", new { id = item.Id })'>
+                            <button type="button" class="btn btn-success">Habilitados</button>
+                        </a>
+                        <!--
+    <a href='@Url.Action("Index", "Cargos", new { id = item.Id })'>
+        <button type="button" class="btn btn-dark" )>Cargos</button>
+    </a>
+    <a href='@Url.Action("Index", "CentroDeCostos", new { id = item.Id })'>
+        <button type="button" class="btn btn-success" )>Centros de costos </button>
+    </a>-->
+                    </td>
+                </tr>
+            }
 
-</table>
+        </table>
+    </div>
+

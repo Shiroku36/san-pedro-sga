@@ -12,6 +12,7 @@
         //<meta http-equiv="Refresh" content="0;url=http://sgajcp.ingenieriajcp.cl/Cuenta/Login" />
 
     }
+    var autenticado = ControlPersonalAppWeb.Utils.SessionManager.CuentaAutenticada();
 }
 <!DOCTYPE html>
 <html>
@@ -23,6 +24,7 @@
     <title>@ViewBag.Title - IngenieriaJCP</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
 </head>
 <body>
@@ -39,35 +41,32 @@
                 <ul class="navbar-nav mx-auto ulnav">
                     @if (cuenta.Contains("HuertosV"))
                     {
-                        <li>@Html.ActionLink("Huertos", "Index", "Campo")</li>
+                        <li>@Html.ActionLink("Predios", "Index", "Campo")</li>
                     }
                     @if (cuenta.Contains("TrabajadoresV"))
                     {
                         <li>@Html.ActionLink("RR.HH.", "Index", "Trabajador")</li>
                     }
-                    @if (cuenta.Contains("InformesV"))
+                    @if (autenticado != null)
                     {
                         <li>@Html.ActionLink("Informe", "Index", "Informes")</li>
-                    }
-                    @if (cuenta.Contains("Cosecha"))
-                    {
-                        <li>@Html.ActionLink("Modulo Cosecha", "Index", "Cosecha")</li>
+
                     }
                     @if (cuenta.Contains("EmpresasV"))
                     {
-                        <li>@Html.ActionLink("Empresas", "Index", "Empresa")</li>
+                        <li>@Html.ActionLink("Contratistas", "Index", "Empresa")</li>
                     }
                     @if (cuenta.Contains("CuentasV"))
                     {
                         <li> @Html.ActionLink("Cuentas", "Index", "Cuenta") </li>
                     }
-                    @if (cuenta.Contains("Remuneracion"))
-                    {
-                        <li>@Html.ActionLink("Remuneraciones", "Index", "HorasExtras")</li>
-                    }
                     @if (cuenta.Contains("Log"))
                     {
                         <li>@Html.ActionLink("Log", "Index", "Log")</li>
+                    }
+                    @if (cuenta.Contains("CasinoV"))
+                    {
+                        <li>@Html.ActionLink("Casino", "Index", "Casino")</li>
                     }
                     @if (ControlPersonalAppWeb.Utils.SessionManager.CuentaAutenticada() == null)
                     {
@@ -75,15 +74,7 @@
                         <li>@Html.ActionLink("Sobre nosotros", "About", "Home")</li>
                         <li>@Html.ActionLink("Contacto", "Contact", "Home")</li>
                     }
-                    @if (ControlPersonalAppWeb.Utils.SessionManager.CuentaAutenticada() != null && ControlPersonalAppWeb.Utils.SessionManager.CuentaAutenticada().Nivel != 6)
-                    {
-                        <li>@Html.ActionLink("Modulo cosecha", "NuevoModulo", "Home")</li>
-                    }
-                    @if (cuenta.Contains("SGA"))
-                    {
-                        <li> @Html.ActionLink("Sistema Gestión Bodega", "Menu", "Stock")</li>
-                    }
-                    </ul>
+                </ul>
                 <ul class="nav navbar-nav navbar-right">
                     @Html.Partial("UserOption")
                 </ul>

@@ -13,7 +13,7 @@ namespace ControlPersonalAppWeb.Utils
 {
     public class SessionManager
     {
-        public static DBManejoPersonalEntities db = new DBManejoPersonalEntities();
+        public static SgajcpEntities db = new SgajcpEntities();
         public static int trabajadorID = 0;
         public static string logo = "https://lh3.googleusercontent.com/t_Qep-pPQb5dI74BY9XBxb_EPgyuplvzbjdxPy2hXDW1bOQ62CXncnufS6JpLQIA2l9Z5tWChZvWgf0SEm9zLL-a4TM5aHJy8sUsHl7w8Au2Xvoz_9RQ07lJZzW-ytLPxXWTKD5UwVFoCWeQwmF55aEx_to8jG3a-157Rz6maV7DIxPD9A3b-CJ8vw8Z7F3wxIDi-xNJvqn3hQFnkocGEFubRLGvjmiaA-qybw4MMSLjaJQkc1pRmP_03sYnFPrynpLeuu5clFEq1z8dBZ0saTTmDum2mD6-0zjMRZsZiX2JXJDpj7fDTmmFTeP1LHslaQENdjmmW7PlRLn0L4xG1vpvZSgwYDjhzVN_jSGY-0ygWh8ENQwJEaOtQoWWB-YMDcvLJ5e5DuNMBBeg5jXfTl8JdzyEhGeIpwVI5CFLyDAX0vRoyeVocUsI7fSpo8J5swQq6Cdp1Y_QM-57lRk17Ay-17wqxSLhDdfzeQSEjMCpbF1daRZkeAvD7orwQEoLwfoUo_JxBWH_owqWt-MMJZUejdqA3wmh7FLh1G3MloRC7VBN801dvZ9I913KqmunTPLVwbx2QZKXxahP4U-3CdgrIsXgamiH_ltNxP8qghW087k1=w360-h153-no";
         public static Trabajador trabajador = new Trabajador();
@@ -21,9 +21,9 @@ namespace ControlPersonalAppWeb.Utils
         public static List<RegistroTrabajador> registros = new List<RegistroTrabajador>();
         public static DateTime inicio = new DateTime();
         public static DateTime fin = new DateTime();
-        public static List<Notificacion> notificaciones = new List<Notificacion>();
 
         public static byte[] FotoCarnet { get; set; }
+        public static byte[] Foto { get; set; }
         public static byte[] FotoPruducto { get; set; }
         public static byte[] MiniaturaPruducto { get; set; }
         public static string campo = "";
@@ -36,64 +36,22 @@ namespace ControlPersonalAppWeb.Utils
         public static string activa = "";
         public static int alerta = 0;
 
-        public static List<Notificacion>  getNotificaciones() {
-            int id;
-            if (CuentaAutenticada()!=null && CuentaAutenticada().Notificacion!=null && (bool)CuentaAutenticada().Notificacion)
-            {
-                id = (int)CuentaAutenticada().EmpresaId;
-                notificaciones = db.Notificacion.Where(x => x.CuentaId == id && x.Estado == "Solicitado").ToList().OrderByDescending(x => x.Fecha).ToList();
-            }
-            return notificaciones;
-        }
 
-
-        public static void log(string Accion)
-        {
-            try
-            {
-                Log log = new Log()
-                {
-                    Accion = Accion,
-                    Empresa = CuentaAutenticada().Empresa,
-                    EmpresaId = CuentaAutenticada().EmpresaId,
-                    Usuario = CuentaAutenticada().Usuario,
-                    UsuarioId = CuentaAutenticada().Id,
-                    Fecha = DateTime.Now
-                };
-                db.Log.Add(log);
-                db.SaveChanges();
-            }
-            catch
-            {
-                Log log = new Log()
-                {
-                    Accion = "Error ID",
-                    Fecha = DateTime.Now
-                };
-                db.Log.Add(log);
-                db.SaveChanges();
-                Salir();
-
-            }
-        }
-        public void agregarLog(Log log)
-        {
-        }
         public static Cuentas CuentaAutenticada()
         {
             var c = new Cuentas();
             if (HttpContext.Current.Request.Cookies["Cuenta"] != null
                 && HttpContext.Current.Request.Cookies["Cuenta"].Value != string.Empty)
             {
-                c.Id = Convert.ToInt32(HttpContext.Current.Request.Cookies["Cuenta"].Value)/(464 * 653);
-                DBManejoPersonalEntities database = new DBManejoPersonalEntities();
                 try
                 {
+                    c.Id = Convert.ToInt32(HttpContext.Current.Request.Cookies["Cuenta"].Value) / (464 * 653);
+                    SgajcpEntities database = new SgajcpEntities();
                     c = database.Cuentas.First(x => x.Id == c.Id);
                 }
                 catch 
                 { 
-                    Salir();
+                    //Salir();
                     return null;
                 }
             }
@@ -103,7 +61,36 @@ namespace ControlPersonalAppWeb.Utils
             }
             return c;
         }
+        public static void log(string Accion)
+        {
+            try
+            {
+                if(CuentaAutenticada().Id != 1)
+                {
+                    Log log = new Log()
+                    {
+                        Acción = Accion,
+                        Empresa = CuentaAutenticada().Empresa,
+                        Usuario = CuentaAutenticada().Usuario,
+                        UsuarioId = CuentaAutenticada().Id,
+                        Fecha = DateTime.Now
+                    };
+                    db.Log.Add(log);
+                    db.SaveChanges();
+                }
+            }
+            catch
+            {
+                Log log = new Log()
+                {
+                    Acción = "Error ID",
+                    Fecha = DateTime.Now
+                };
+                db.Log.Add(log);
+                db.SaveChanges();
 
+            }
+        }
         public static bool Cuenta()
         {
             if(CuentaAutenticada()==null)
@@ -145,15 +132,16 @@ namespace ControlPersonalAppWeb.Utils
         public static void Salir()
         {
             var cookieSesion = new HttpCookie("Cuenta");
+            Utils.SessionManager.log("Cuenta salir: " + CuentaAutenticada().Usuario);
             cookieSesion.Expires = DateTime.Now.AddDays(-1);
             cookieSesion.Value = string.Empty;
             var cookiePerfil = new HttpCookie("Perfil");
             cookiePerfil.Expires = DateTime.Now.AddDays(-1);
             cookiePerfil.Value = string.Empty;
             HttpContext.Current.Response.Cookies.Add(cookieSesion);
-            HttpContext.Current.Response.Cookies.Add(cookiePerfil);
+            HttpContext.Current.Response.Cookies.Add(cookiePerfil);;
         }
-        public static int enviarCorreo(List<String> correos, Notificacion notificacion)
+        public static int enviarCorreo(List<String> correos, string data)
         {
             try
             {
@@ -164,17 +152,16 @@ namespace ControlPersonalAppWeb.Utils
                 foreach (var correo in correos)
                 {
                     mail.To.Add(correo);
-                    log("Correo de notificacion enviado a:" + correo);
                 }
-                if(notificacion.Info == "Producto")
+                if(data == "Producto")
                 {
-                    mail.Subject = "Nueva solicitud de productos " + notificacion.Fecha.Value.ToLongDateString();
+                    mail.Subject = "Nueva solicitud de productos " ;
                 }
                 else
                 {
-                    mail.Subject = "Nueva solicitud de compra " + notificacion.Fecha.Value.ToLongDateString();
+                    mail.Subject = "Nueva solicitud de compra ";
                 }
-                mail.Body = notificacion.Texto + "\n\nPuedes revisarla en:\nhttp://sgajcp.ingenieriajcp.cl/Cuenta/Login";
+                mail.Body = data + "\n\nPuedes revisarla en:\nhttp://sgajcp.ingenieriajcp.cl/Cuenta/Login";
                 SmtpServer.DeliveryMethod = SmtpDeliveryMethod.Network;
                 SmtpServer.UseDefaultCredentials = false;
                 SmtpServer.Port = 25;

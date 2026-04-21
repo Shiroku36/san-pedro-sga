@@ -1,0 +1,79 @@
+﻿@model ControlPersonalAppWeb.Personas
+
+@{
+    ViewBag.Title = "Personas";
+}
+
+<body>
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4 class="text-center display-4">Personas</h4>
+        <h3 class="text-muted font-weight-light">Editar</h3>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.Id)
+
+        <div class="form-group col-md-8 mx-auto">
+            @Html.LabelFor(model => model.Rut, htmlAttributes: new { @class = "control-label font-weight-normal" })
+            @Html.EditorFor(model => model.Rut, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Rut, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group col-md-8 mx-auto">
+            @Html.LabelFor(model => model.Nombre, htmlAttributes: new { @class = "control-label font-weight-normal" })
+            @Html.EditorFor(model => model.Nombre, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Nombre, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group col-md-8 mx-auto">
+            @Html.LabelFor(model => model.CentroCosto1, htmlAttributes: new { @class = "control-label font-weight-normal" })
+            @Html.EditorFor(model => model.CentroCosto1, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.CentroCosto1, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group col-md-8 mx-auto">
+            @Html.LabelFor(model => model.CentroCosto2, htmlAttributes: new { @class = "control-label font-weight-normal" })
+            @Html.EditorFor(model => model.CentroCosto2, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.CentroCosto2, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group col-md-8 mx-auto">
+            @Html.LabelFor(model => model.GlosaCosto, htmlAttributes: new { @class = "control-label font-weight-normal" })
+            @Html.EditorFor(model => model.GlosaCosto, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.GlosaCosto, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group col-md-8 mx-auto">
+            @Html.LabelFor(model => model.Ubicacion, htmlAttributes: new { @class = "control-label font-weight-normal" })
+            @Html.EditorFor(model => model.Ubicacion, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Ubicacion, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group col-md-8 mx-auto">
+            @Html.LabelFor(model => model.Instalacion, htmlAttributes: new { @class = "control-label font-weight-normal" })
+            @Html.EditorFor(model => model.Instalacion, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Instalacion, "", new { @class = "text-danger" })
+        </div>
+
+        <div class="form-group col-md-8 mx-auto">
+            @Html.LabelFor(model => model.GlosaPuesto, htmlAttributes: new { @class = "control-label font-weight-normal" })
+            @Html.EditorFor(model => model.GlosaPuesto, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.GlosaPuesto, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+
+
+        <div class="form-group col-md-9 mx-auto my-5">
+            <input type="submit" value="Crear" class="btn btn-primary btn-block" />
+            @Html.ActionLink("Volver a la lista", "Index", null, new { @class = "btn btn-block btn-danger mt-3" })
+        </div>
+    }
+
+    <div>
+        @Html.ActionLink("Back to List", "Index")
+    </div>
+</body>

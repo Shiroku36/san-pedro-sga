@@ -15,5 +15,6 @@ namespace ControlPersonalAppWeb.Models
         public DateTime Fecha;
         public string Campo;
         public string Empresa;
+        public string Habilitado;
     }
 }

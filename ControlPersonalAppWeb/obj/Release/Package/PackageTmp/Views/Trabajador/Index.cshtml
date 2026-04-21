@@ -1,40 +1,67 @@
-﻿@model IEnumerable<ControlPersonalAppWeb.Trabajador>
+﻿@model IEnumerable<ControlPersonalAppWeb.Models.TrabajadorIndex>
 
 @{
-    ViewBag.Title = "Índice";
+    ViewBag.Title = "RR.HH.";
+    var cuenta = ControlPersonalAppWeb.Utils.SessionManager.CuentaAutenticada();
 }
+@if (!String.IsNullOrEmpty(ControlPersonalAppWeb.Utils.SessionManager.mensaje))
+{
+    <div class="alert-info">
+        <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+        @ControlPersonalAppWeb.Utils.SessionManager.mensaje
+    </div>
+    ControlPersonalAppWeb.Utils.SessionManager.mensaje = "";
+}
+<h1 class="display-4 text-center">Índice RR.HH.</h1>
+<hr />
 
-<h2>Índice RR.HH.</h2>
-<p>
-    @Html.ActionLink("Consolidado 30 días PDF","PDFConsolidado")
-</p>
-<p>
-    @Html.ActionLink("Registros del día", "Hoy", "Registro")
-</p>
-<p>
-    @Html.ActionLink("Crear nuevo", "Create")
-</p>
-<input type="text" id="busqueda" onkeyup="buscar()" placeholder="Buscar por rut" class="input-group">
+<div class="clearfix"></div>
+<div class="row">
+    <div class="col-sm-8 form-label-group">
+        <input type="text" id="busqueda" onkeyup="buscar()" class="mb-3 mt-1 form-control" placeholder="Búsqueda">
+    </div>
+    <div class="form-group col-sm-4 mt-1">
+        @if (cuenta.Permisos.Contains("TrabajadoresC"))
+        {
+            <a href='@Url.Action("Create", "Trabajador")'>
+                <label type="button" class="btn btn-primary float-right ml-2  mb-3">Crear Nuevo</label>
+            </a>
+        }
+        @if (cuenta.Permisos.Contains("TrabajadoresU"))
+        {
+            <a href='@Url.Action("Cargar", "Trabajador")'>
+                <label type="button" class="btn btn-primary float-right ml-2  mb-3">Cargar</label>
+            </a>
+        }
+        <a href='@Url.Action("Hoy", "Registro")'>
+            <label type="button" class="btn btn-primary float-right  ">Registros del día</label>
+        </a>
+        <!--
+    <a href='@Url.Action("Borrar", "Trabajador")'>
+        <button type="button" class="btn btn-default">borrar</button>
+    </a>-->
+    </div>
+</div>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>
+<div class="table-responsive">
+    <table class="table table-hover" id="tabla">
+        <tr class="bg-primary">
+            <th style="width:12%">
                 @Html.DisplayNameFor(model => model.Rut)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Nombre)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Uid)
+                Contratista
             </th>
             <th>
                 Numero pulsera
             </th>
-            <th></th>
+            <th style="width:40%">
+                Accion
+            </th>
         </tr>
-    </thead>
-    <tbody id="tabla">
         @foreach (var item in Model)
         {
             <tr>
@@ -42,72 +69,44 @@
                     @item.Rut
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Nombre)
+                    @Html.DisplayFor(modelItem => item.Nombre) @Html.DisplayFor(modelItem => item.ApellidoPaterno) @Html.DisplayFor(modelItem => item.ApellidoMaterno)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Uid)
+                    @Html.DisplayFor(modelItem => item.Empresa)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Gerente)
+                    @Html.DisplayFor(modelItem => item.Numero)
                 </td>
+
                 <td>
-                    @Html.ActionLink("Editar", "Edit", new { id = item.Id }) |
-                    @Html.ActionLink("Detalle", "Details", new { id = item.Id }) |
-                    @Html.ActionLink("Borrar", "Delete", new { id = item.Id }, new { onclick = "return confirm('¿Está seguro que desea eliminar el Trabajador?');" }) |
-                    @Html.ActionLink("Registro", "Index", "Registro", new { id = item.Id }, null)
+                    @if (cuenta.Permisos.Contains("RegistrosV"))
+                    {
+                        <a href='@Url.Action("Index", "Registro", new { id = item.Id })'>
+                            <label type="button" class="btn btn-dark">Registros</label>
+                        </a>
+                    }
+
+                    @if (cuenta.Permisos.Contains("TrabajadoresE"))
+                    {
+                        <a href='@Url.Action("Edit", "Trabajador", new { id = item.Id })'>
+                            <label title="Editar" type="submit" class="btn btn-warning">Editar</label>
+                        </a>
+                    }
+                    <a href='@Url.Action("Details", "Trabajador", new { id = item.Id })'>
+                        <label title="Detalle" type="submit" class="btn btn-info">Detalle </label>
+                    </a>
+                    @if (cuenta.Permisos.Contains("TrabajadoresD"))
+                    {
+                        <a href='@Url.Action("Delete", "Trabajador", new { id = item.Id })' onclick="return confirm('¿Está seguro que desea eliminar el Trabajador?')" })>
+                            <label title="Eliminar" type="submit" class="btn btn-danger">Borrar</label>
+                        </a>
+                    }
+
                 </td>
+
             </tr>
         }
-    </tbody>
-</table>
-<script>
-    $(document).ready(function () {
-        $("#tabla").jPaginate();
-    });
-</script>
-<script>
-    function buscar() {
-        var input, filter, table, tr, td, i, txtValue;
-        input = document.getElementById("busqueda");
-        filter = input.value.toUpperCase();
-        table = document.getElementById("tabla");
-        tr = table.getElementsByTagName("tr");
-        for (i = 0; i < tr.length; i++) {
-            td = tr[i].getElementsByTagName("td")[0];
-            if (td) {
-                txtValue = td.textContent || td.innerText;
-                if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                    tr[i].style.display = "";
-                } else {
-                    tr[i].style.display = "none";
-                }
-            }
-        }
-    }
-</script>
-<script>
-    $("#busqueda").keyup(function () {
-        //split the current value of searchInputxx
-        var data = this.value.split(" ");
-        //create a jquery object of the rows
-        var jo = $("#tabla").find("tr");
-        if (this.value == "") {
-            jo.show();
-            return;
-        }
-        //hide all the rows
-        jo.hide();
+    </table>
+</div>
 
-        //Recusively filter the jquery object to get results.
-        jo.filter(function (i, v) {
-            var $t = $(this);
-            for (var d = 0; d < data.length; ++d) {
-                if ($t.text().toUpperCase().indexOf(data[d]) > -1) {
-                    return true;
-                }
-            }
-            return false;
-        })
-            //show the rows that match.
-            .show();
-</script>
+<script src="~/Scripts/Busqueda.js"></script>

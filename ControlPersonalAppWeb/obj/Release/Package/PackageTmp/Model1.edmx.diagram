@@ -4,12 +4,14 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="cc4a9f7de7b14a06b0b09bc9204cb8de" Name="Diagram1">
-        <EntityTypeShape EntityType="DBManejoPersonalModel.Campos" Width="1.5" PointX="0.75" PointY="0.5" />
-        <EntityTypeShape EntityType="DBManejoPersonalModel.Cuentas" Width="1.5" PointX="2.75" PointY="0.75" />
-        <EntityTypeShape EntityType="DBManejoPersonalModel.Empresas" Width="1.5" PointX="0.75" PointY="3.75" />
-        <EntityTypeShape EntityType="DBManejoPersonalModel.Trabajador" Width="1.5" PointX="4.75" PointY="3.75" />
-        <EntityTypeShape EntityType="DBManejoPersonalModel.RegistroTrabajador" Width="1.5" PointX="4.625" PointY="0.625" />
+      <Diagram DiagramId="e2124c3999e943cb8b8898d8f428b4ce" Name="Diagram1" ZoomLevel="78" >
+        <EntityTypeShape EntityType="SgajcpModel.Campos" Width="1.5" PointX="6" PointY="0.625" />
+        <EntityTypeShape EntityType="SgajcpModel.Cuentas" Width="1.5" PointX="7.625" PointY="0.625" />
+        <EntityTypeShape EntityType="SgajcpModel.RegistroTrabajador" Width="1.5" PointX="9.25" PointY="0.625" />
+        <EntityTypeShape EntityType="SgajcpModel.Pulseras" Width="1.5" PointX="9.25" PointY="3.5" />
+        <EntityTypeShape EntityType="SgajcpModel.Empresas" Width="1.5" PointX="11" PointY="0.625" />
+        <EntityTypeShape EntityType="SgajcpModel.Trabajador" PointX="0.75" PointY="0.75" Width="1.5" />
+        <EntityTypeShape EntityType="SgajcpModel.Log" Width="1.5" PointX="11" PointY="2.5" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -21,29 +21,62 @@ using System.Drawing;
 using System.Globalization;
 using System.Data.Entity;
 using Rectangle = iTextSharp.text.Rectangle;
+using DocumentFormat.OpenXml.Vml.Spreadsheet;
+using static System.Net.WebRequestMethods;
+using Microsoft.Win32;
+using WebGrease.Css.Extensions;
 
 namespace ControlPersonalAppWeb.Controllers
 {
     public class TrabajadorController : Controller
     {
 
-        DBManejoPersonalEntities db = new DBManejoPersonalEntities();
+        SgajcpEntities db = new SgajcpEntities();
         private Cuentas cuenta = Utils.SessionManager.CuentaAutenticada();
         Dictionary<TrabajadorIndex, Ranking> rankings = new Dictionary<TrabajadorIndex, Ranking>();
+
+        private void DeshabilitarExpirados()
+        {
+            try
+            {
+                db.Database.ExecuteSqlCommand(
+                    "UPDATE dbo.Trabajador SET Habilitado = 0 WHERE Expiración IS NOT NULL AND Expiración < @p0 AND Habilitado = 1",
+                    DateTime.Today);
+            }
+            catch { }
+        }
         Dictionary<TrabajadorIndex, List<DateTime>> diasTrabajados = new Dictionary<TrabajadorIndex, List<DateTime>>();
+        string path = "C:\\Data\\Archivos\\";
         public ActionResult Borrar()
         {
             return RedirectToAction("Index");
         }
+        public ActionResult DescargarArchivo()
+        {
+            // Ruta del archivo CSV en el servidor
+            string rutaArchivo = Server.MapPath("~/App_Data/Carga_masiva.xlsx");
+
+            // Configuración de la respuesta HTTP
+            Response.Clear();
+            Response.ContentType = "text/csv";
+            Response.AppendHeader("Content-Disposition", "attachment; filename=Carga masiva trabajadores.xlsx");
+
+            // Transmitir el contenido del archivo al cliente
+            Response.TransmitFile(rutaArchivo);
+
+            // Finalizar la respuesta
+            Response.End();
+
+            return RedirectToAction("Cargar");
+        }
         public ActionResult Cargar()
         {
-            Utils.SessionManager.log("Cargar trabajadores, ¡Nadie debe estar aquí!");
-            DBManejoPersonalEntities db = new DBManejoPersonalEntities();
+            SgajcpEntities db = new SgajcpEntities();
             string empresa = ControlPersonalAppWeb.Utils.SessionManager.CuentaAutenticada().Empresa;
             var empresas = db.Empresas.Select(x => x.Nombre).ToList(); ;
-            if(empresa != "JCP")
+            if (empresa != "JCP")
             {
-                 empresas = db.Empresas.Where(x => x.Nombre == empresa).Select(x => x.Nombre).ToList();
+                empresas = db.Empresas.Where(x => x.Nombre == empresa).Select(x => x.Nombre).ToList();
             }
             ViewBag.Empresas = empresas;
             return View();
@@ -51,9 +84,27 @@ namespace ControlPersonalAppWeb.Controllers
         [HttpPost]
         public ActionResult Cargar(FormCollection collection)
         {
-            Utils.SessionManager.log("Cargar trabajadores, ¡Nadie debe estar aquí!");
-            DBManejoPersonalEntities db = new DBManejoPersonalEntities();
-            string empresa = collection["empresa"];
+            SgajcpEntities db = new SgajcpEntities();
+            /*
+            using (SLDocument sl = new SLDocument())
+            {
+                HttpPostedFileBase hpf = Request.Files["csv"];
+                FileStream fs = new FileStream(hpf.FileName, FileMode.Open);
+                SLDocument sheet = new SLDocument(fs, "sheet1");
+
+                SLWorksheetStatistics stats = sheet.GetWorksheetStatistics();
+                for (int j = 2; j < stats.EndRowIndex; j++)
+                {
+                    // Get the first column of the row (SLS is a 1-based index)
+                    string numero = sheet.GetCellValueAsString(j, 1);
+                    string uid = sheet.GetCellValueAsString(j, 2);
+                    Pulseras pulsera = new Pulseras() { Numero = numero, Uid = uid};
+                    db.Pulseras.Add(pulsera);
+                }
+                //db.SaveChanges();
+            }
+            */
+            string empresa = cuenta.Empresa;
             string mensaje = "";
             HttpPostedFileBase hpf = Request.Files["csv"];
             if (hpf != null && hpf.ContentLength > 0)
@@ -66,88 +117,67 @@ namespace ControlPersonalAppWeb.Controllers
                     try
                     {
                         var line = csvreader.ReadLine();
-                        var values = line.Split(';');
+                        string[] values = new string[line.Length];
+                        if (line.Contains(","))
+                        {
+                            values = line.Split(',');
+                        }
+                        if (line.Contains(";"))
+                        {
+                            values = line.Split(';');
+                        }
+                        if (line.Contains("\t"))
+                        {
+                            values = line.Split('\t');
+                        }
                         if (!String.IsNullOrEmpty(values[1]))
                         {
-                            rut = values[1];
                             Trabajador trabajador = new Trabajador();
-                            trabajador.CodPersonal = values[0];
-                            trabajador.Rut = formatearRut(values[1]);
-                            trabajador.ApellidoPaterno = values[2];
-                            trabajador.ApellidoMaterno = values[3];
-                            trabajador.Nombre = values[4];
-                            try
+                            trabajador.Rut = formatearRut(values[0]);
+                            trabajador.ApellidoPaterno = values[1]?.Trim();
+                            trabajador.ApellidoMaterno = values[2]?.Trim();
+                            trabajador.Nombre = values[3]?.Trim();
+                            trabajador.Numero = values[4]?.Trim();
+                            trabajador.Email = values[5]?.Trim();
+                            trabajador.Direccion = values[6];
+                            trabajador.Telefono = values[7]?.Trim();
+                            if (values[8] != null)
                             {
-                                trabajador.FechaNacimiento = DateTime.ParseExact(values[5], "dd-mm-yyyy", CultureInfo.InvariantCulture);
+                                trabajador.Habilitado = true;
                             }
-                            catch
-                            { }
-                            trabajador.Direccion = values[7];
-                            trabajador.Ciudad = values[8];
-                            trabajador.Telefono = values[9];
-                            try
+                            else
                             {
-                                trabajador.FechaIngreso = DateTime.ParseExact(values[10], "dd-mm-yyyy", CultureInfo.InvariantCulture);
+                                trabajador.Habilitado = false;
                             }
-                            catch
-                            { }
-                            trabajador.Campo = values[12];
-                            trabajador.Contrato = values[14];
-                            trabajador.Empresa = empresa;
-                            trabajador.Jornada = values[17] +" "+values[18];
-                            trabajador.Gerente = values[19];
-                            trabajador.Uid = values[20];
-                            if (values[6] == "SOLTERO/A")
-                            {
-                                trabajador.EstadoCivil = "Soltero/a";
-                            }
-                            else if (values[6] == "CASADO/A")
-                            {
-                                trabajador.EstadoCivil = "Casado/a";
-                            }
-                            else if (values[6] == "VIUDO/SEPARADO")
-                            {
-                                trabajador.EstadoCivil = "Viudo/Separado";
-
-                            }
-                            if (values[11] == "M")
-                            {
-                                trabajador.Sexo = "Masculino";
-                            }
-                            else if (values[11] == "F")
-                            {
-                                trabajador.Sexo = "Femenino";
-                            }
-                            try
-                            {
-                                if (Convert.ToInt32(values[13]) == 1)
-                                {
-                                    trabajador.Contratado = "Si";
-                                }
-                                else
-                                {
-                                    trabajador.Contratado = "No";
-                                }
-                            }
-                            catch
-                            { }
+                            trabajador.Empresa = values[9];
+                            if (!String.IsNullOrEmpty(trabajador.Numero))
+                                trabajador.Uid = db.Pulseras.First(x => x.Numero == trabajador.Numero).Uid;
                             db.Trabajador.Add(trabajador);
                         }
                     }
-                    catch (Exception e)
+                    catch (DbEntityValidationException e)
                     {
-                        mensaje = mensaje + " Rut: "+rut+" Error: " + e.Message;
+                        mensaje = mensaje + "\n Rut: " + rut + " Error: " + e.Message;
+                        foreach (var eve in e.EntityValidationErrors)
+                        {
+                            ViewBag.mensaje = ViewBag.mensaje + "Entity of type " + eve.Entry.Entity.GetType().Name + " in state " + eve.Entry.State + " has the following validation errors:";
+                            foreach (var ve in eve.ValidationErrors)
+                            {
+                                ViewBag.mensaje = ViewBag.mensaje + "- Property: " + ve.PropertyName + ", Error: " + ve.ErrorMessage;
+                            }
+                        }
 
                     }
                 }
-                if(String.IsNullOrEmpty(mensaje))
+                if (String.IsNullOrEmpty(mensaje))
                 {
-                    ViewBag.mensaje = "Cargado correctamente ";
+                    ViewBag.mensaje = true;
                 }
                 else
                 {
-                    ViewBag.mensaje = "Cargado con errores, no se pudo cargar: " + mensaje;
-                }try
+                    ViewBag.mensaje = false;
+                }
+                try
                 {
                     db.SaveChanges();
                 }
@@ -155,248 +185,18 @@ namespace ControlPersonalAppWeb.Controllers
                 {
                     foreach (var eve in e.EntityValidationErrors)
                     {
-                        ViewBag.mensaje =  ViewBag.mensaje + "Entity of type "+ eve.Entry.Entity.GetType().Name+" in state "+eve.Entry.State+" has the following validation errors:";
+                        ViewBag.mensaje = ViewBag.mensaje + "Entity of type " + eve.Entry.Entity.GetType().Name + " in state " + eve.Entry.State + " has the following validation errors:";
                         foreach (var ve in eve.ValidationErrors)
                         {
-                            ViewBag.mensaje = ViewBag.mensaje + "- Property: "+ ve.PropertyName + ", Error: "+ ve.ErrorMessage;
+                            ViewBag.mensaje = ViewBag.mensaje + "- Property: " + ve.PropertyName + ", Error: " + ve.ErrorMessage;
                         }
                     }
                 }
                 csvreader.Close();
             }
 
-            string empresita = ControlPersonalAppWeb.Utils.SessionManager.CuentaAutenticada().Empresa;
-            var empresas = db.Empresas.Select(x => x.Nombre).ToList(); ;
-            if (empresa != "JCP")
-            {
-                empresas = db.Empresas.Where(x => x.Nombre == empresita).Select(x => x.Nombre).ToList();
-            }
-            ViewBag.Empresas = empresas;
+            Utils.SessionManager.log("Carga trabajador");
             return View();
-        }
-        private void AsistenciasPDF(DateTime dateTime, string[] ids, Empresas empresa)
-        {
-            DBManejoPersonalEntities db = new DBManejoPersonalEntities();
-            string strHeader = "Asistencia mensual\n" + dateTime.ToString("MMMM yyyy");//Convert.ToDateTime(collection["Periodo"]).ToLongDateString();
-            StringWriter sw = new StringWriter();
-            HtmlTextWriter hw = new HtmlTextWriter(sw);
-            Document document = new Document();
-            document.SetPageSize(iTextSharp.text.PageSize.A4);
-            PdfWriter writer = PdfWriter.GetInstance(document, Response.OutputStream);
-            document.Open();
-            foreach (var idd in ids)
-            {
-                int id = Convert.ToInt32(idd);
-
-                List<TrabajadorIndex> trabajadores = db.Trabajador.Select(x => new TrabajadorIndex { Id = x.Id, Nombre = x.Nombre, Rut = x.Rut, Uid = x.Uid, Gerente = x.Gerente, Empresa = x.Empresa,
-                    Entrada = x.Entrada,
-                    EntradaA = x.EntradaA,
-                    Salida = x.Salida,
-                    SalidaA = x.SalidaA
-                }).Where(x => x.Id == id).ToList();
-                List<Registro> registrosLista = new List<Registro>();
-                registrosLista = GetRegistroTrabajadores(trabajadores, null, null, null, dateTime);
-                if( registrosLista.Count == 0)
-                {
-                    continue;
-                }
-                TrabajadorIndex trabajador = trabajadores[0];
-
-                BaseFont btnColumnHeader = BaseFont.CreateFont(BaseFont.TIMES_ROMAN, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
-                Font fntCell = new Font(btnColumnHeader, 12);
-
-
-                Image image = Image.GetInstance(Server.MapPath("~/App_Data/" + Utils.SessionManager.CuentaAutenticada().Empresa + ".png"));
-                image.Alignment = Element.ALIGN_LEFT;
-                image.ScaleToFit(60, 60);
-                document.Add(image);
-
-                //Report Header
-                BaseFont bfntHead = BaseFont.CreateFont(BaseFont.TIMES_ROMAN, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
-                Font fntHead = new Font(bfntHead, 16, 1, BaseColor.DARK_GRAY);
-
-                Paragraph p = new Paragraph(new Chunk("\n"));
-                if (!string.IsNullOrEmpty(trabajadores[0].Rut))
-                {
-                    //Add a line seperation
-
-                    fntHead.Size = 14;
-                    document.Add(new Paragraph("Nombre: " + trabajadores[0].Nombre + " " + trabajadores[0].ApellidoPaterno + " " + trabajadores[0].ApellidoMaterno, fntHead));
-                    document.Add(new Paragraph("Rut: " + trabajadores[0].Rut, fntHead));
-                    if (!String.IsNullOrEmpty(Utils.SessionManager.entrada))
-                        document.Add(new Paragraph("Inicio actividades: " + Utils.SessionManager.entrada, fntHead));
-                }
-                //Add line break
-                document.Add(p);
-
-                //Write the table
-                int num = 5;
-                //Table header
-                Font fntColumnHeader = new Font(btnColumnHeader, 12, 1, BaseColor.WHITE);
-                List<string> titulos = new List<string>();
-                titulos.Add("Fecha");
-                titulos.Add("Entrada");
-                titulos.Add("Salida");
-                titulos.Add("H. Periodo");
-                titulos.Add("H. Extras");
-                titulos.Add("H. Total");
-                titulos.Add("Predio");
-                int i;
-                PdfPTable table = new PdfPTable(titulos.Count);
-                table.WidthPercentage = 100f;
-                for (i = 0; i < titulos.Count; i++)
-                {
-                    PdfPCell cell = new PdfPCell();
-                    cell.BackgroundColor = BaseColor.GRAY;
-                    cell.AddElement(new Chunk(titulos[i], fntColumnHeader));
-                    table.AddCell(cell);
-                }
-                //table Data
-                foreach (var celda in registrosLista)
-                {
-                    DateTime horas;
-                    DateTime extra;
-                    DateTime.TryParse("01/01/0001 " + celda.Horas, out horas);
-                    DateTime.TryParse("01/01/0001 " + celda.HorasExtras, out extra);
-
-                    table.AddCell(new Phrase(celda.Fecha.ToShortDateString(), fntCell));
-                    table.AddCell(new Phrase(celda.Entrada, fntCell));
-                    table.AddCell(new Phrase(celda.Salida, fntCell));
-                    table.AddCell(new Phrase(celda.Horas, fntCell));
-                    if(horas.Hour>=8 && extra.Hour>=2 && extra.Minute>0)
-                    {
-                        table.AddCell(new Phrase("02:00", fntCell));
-                        horas = horas.AddHours(2);
-                    }
-                    else if (horas.Hour >7 && horas.Hour < 8 && extra.Hour >= 1 && extra.Minute > 40)
-                    {
-                        table.AddCell(new Phrase("01:40", fntCell));
-                        horas = horas.AddHours(2);
-                        horas = horas.AddMinutes(40);
-                    }
-                    else
-                    {
-                        table.AddCell(new Phrase(celda.HorasExtras, fntCell));
-                        horas = horas.AddHours(extra.Hour);
-                        horas = horas.AddMinutes(extra.Minute);
-                        horas = horas.AddSeconds(extra.Second);
-                    }
-                    table.AddCell(new Phrase(horas.ToShortTimeString(), fntCell));
-                    table.AddCell(new Phrase(celda.Campo, fntCell));
-                }
-
-                document.Add(table);
-                document.Add(p);
-                PdfPTable declaracion = new PdfPTable(1);
-                declaracion.WidthPercentage = 100f;
-                string texto = "Yo " + trabajador.Nombre + " " + trabajador.ApellidoPaterno + " " +
-                                trabajador.ApellidoMaterno + " Rut " +
-                                formatearRut(trabajador.Rut) + " declaro  y acepto que he trabajado todas" +
-                                " los dias mostrados anteriormente" +
-                                " en el perido de " + dateTime.ToString("MMMM yyyy") + ", en la empresa " + empresa.Nombre
-                                + " " + empresa.Rut +
-                    ", a mi entera satisfacción, " +
-                    " no tengo cargos ni cobros posteriores asimismo acepto y reconozco " +
-                    " la forma en como se determinó y las deducciones efectuadas.\n\n\n\n" +
-                    "                                                               ______________________\n\n" +
-                    "                                                                      Recibí conforme";
-                declaracion.AddCell(new Paragraph (texto, fntCell) { Alignment = Element.ALIGN_JUSTIFIED });
-                document.Add(declaracion);
-                document.Add(p);
-                document.NewPage();
-            }
-            document.Close();
-            writer.Close();
-            Response.ContentType = "application/pdf";
-            Response.AddHeader("content-disposition", "attachment;filename=" + "Asistencia mensual " + dateTime.ToString(" MMMM yyyy ") + empresa.Nombre + ".pdf");
-            Response.Cache.SetCacheability(HttpCacheability.NoCache);
-            Response.Write(document);
-            Response.End();
-        }
-        public ActionResult Asistencias()
-        {
-            DBManejoPersonalEntities db = new DBManejoPersonalEntities();
-            string empresa = Utils.SessionManager.CuentaAutenticada().Empresa;
-            ViewBag.Trabajador = db.Trabajador.Where(x => x.Empresa == empresa).Select(x => new TrabajadorIndex { Id = x.Id, Nombre = x.Nombre, Rut = x.Rut, ApellidoPaterno = x.ApellidoPaterno, ApellidoMaterno = x.ApellidoMaterno,
-                Entrada = x.Entrada,
-                EntradaA = x.EntradaA,
-                Salida = x.Salida,
-                SalidaA = x.SalidaA,
-                Contratado = x.Campo
-            }).ToList();
-            ViewBag.campos = GetNombreCampos(cuenta.Empresa);
-            return View();
-        }
-
-        // POST: Informes/Create
-        [HttpPost]
-        public ActionResult Asistencias(FormCollection collection)
-        {
-            if(collection["Accion"]=="Generar")
-            {
-                DBManejoPersonalEntities db = new DBManejoPersonalEntities();
-                string nombre = collection["id"];
-                Empresas empresa = db.Empresas.First(x => x.Nombre == nombre);
-                string periodo = collection["Periodo"];
-                Utils.SessionManager.entrada = collection["Entrada"];
-                DateTime dateTime = DateTime.Now;
-                dateTime = dateTime.AddMonths(-1);
-                if (!String.IsNullOrEmpty(periodo))
-                {
-                    dateTime = Convert.ToDateTime(periodo);
-                }
-
-                string[] ids = { "" };
-                if (!String.IsNullOrEmpty(collection["centros"]))
-                {
-                    ids = collection["centros"].Split(new char[] { ',' });
-                }
-                AsistenciasPDF(dateTime, ids, empresa);
-                Utils.SessionManager.log("Asistencias mensuales");
-                Utils.SessionManager.entrada = "8:00";
-            }
-            else
-            {
-                string empresa = Utils.SessionManager.CuentaAutenticada().Empresa;
-                string campo = collection["Huerto"];
-                ViewBag.campo = campo;
-                if (campo == "Todos")
-                {
-                    ViewBag.Trabajador = db.Trabajador.Where(x => x.Empresa == empresa).Select(x => new TrabajadorIndex
-                    {
-                        Id = x.Id,
-                        Nombre = x.Nombre,
-                        Rut = x.Rut,
-                        ApellidoPaterno = x.ApellidoPaterno,
-                        ApellidoMaterno = x.ApellidoMaterno,
-                        Entrada = x.Entrada,
-                        EntradaA = x.EntradaA,
-                        Salida = x.Salida,
-                        SalidaA = x.SalidaA,
-                        Contratado = x.Campo
-                    }).ToList();
-                }
-                else
-                {
-                    ViewBag.Trabajador = db.Trabajador.Where(x => x.Empresa == empresa && x.Campo == campo).Select(x => new TrabajadorIndex
-                    {
-                        Id = x.Id,
-                        Nombre = x.Nombre,
-                        Rut = x.Rut,
-                        ApellidoPaterno = x.ApellidoPaterno,
-                        ApellidoMaterno = x.ApellidoMaterno,
-                        Entrada = x.Entrada,
-                        EntradaA = x.EntradaA,
-                        Salida = x.Salida,
-                        SalidaA = x.SalidaA,
-                        Contratado = x.Campo
-                    }).ToList();
-                }
-                ViewBag.campos = GetNombreCampos(cuenta.Empresa);
-                return View();
-            }
-            ViewBag.campos = GetNombreCampos(cuenta.Empresa);
-            return RedirectToAction("Asistencias");
         }
         public System.Drawing.Image GetImage(byte[] imageBytes)
         {
@@ -410,7 +210,7 @@ namespace ControlPersonalAppWeb.Controllers
         {
             foreach (var trabajador in trabajadores)
             {
-                if(trabajador.Uid!=null && trabajador.Uid.Contains(uid))
+                if (trabajador.Uid != null && trabajador.Uid.Contains(uid))
                 {
                     return trabajador;
                 }
@@ -420,11 +220,11 @@ namespace ControlPersonalAppWeb.Controllers
         public ActionResult Hoy()
         {
             List<RegistroTrabajador> registros = new List<RegistroTrabajador>();
-            DBManejoPersonalEntities database = new DBManejoPersonalEntities();
+            SgajcpEntities database = new SgajcpEntities();
             string empresa = Utils.SessionManager.CuentaAutenticada().Empresa;
             List<TrabajadorIndex> trabajadores = database.Trabajador
                                             .Where(x => x.Empresa == empresa)
-                                            .Select(x => new TrabajadorIndex { Id = x.Id, Nombre = x.Nombre, ApellidoMaterno = x.ApellidoMaterno, ApellidoPaterno = x.ApellidoPaterno, Uid = x.Uid, Contratado = x.Campo }).ToList();
+                                            .Select(x => new TrabajadorIndex { Id = x.Id, Nombre = x.Nombre, ApellidoMaterno = x.ApellidoMaterno, ApellidoPaterno = x.ApellidoPaterno, Uid = x.Uid }).ToList();
             string date = DateTime.Now.ToShortDateString();
             DateTime dateTime = Convert.ToDateTime(date);
             int i = 0;
@@ -451,7 +251,7 @@ namespace ControlPersonalAppWeb.Controllers
             {
                 using (HtmlTextWriter hw = new HtmlTextWriter(sw))
                 {
-                    string strHeader = "Registros del día " + DateTime.Now.ToLongDateString().Replace(",","");
+                    string strHeader = "Registros del día " + DateTime.Now.ToLongDateString().Replace(",", "");
                     //System.IO.FileStream fs = new FileStream(strPdfPath, FileMode.Create, FileAccess.Write, FileShare.None);
                     Document document = new Document();
                     PdfWriter writer = PdfWriter.GetInstance(document, Response.OutputStream);
@@ -485,7 +285,7 @@ namespace ControlPersonalAppWeb.Controllers
 
                     List<string> titulosRegistrosxdia = new List<string> { "Fecha", "Nombre", "Tipo", "Hora", "Campo" };
                     PdfPTable tablaRegistrosxdia = new PdfPTable(titulosRegistrosxdia.Count) { WidthPercentage = 100f };
-                    tablaRegistrosxdia.SetWidths(new int[] { 1, 3,1,1,1 });
+                    tablaRegistrosxdia.SetWidths(new int[] { 1, 3, 1, 1, 1 });
                     //Table header
                     BaseFont btnColumnHeader = BaseFont.CreateFont(BaseFont.TIMES_ROMAN, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
                     Font fntColumnHeader = new Font(btnColumnHeader, 8, 1, BaseColor.WHITE);
@@ -525,13 +325,13 @@ namespace ControlPersonalAppWeb.Controllers
             }
             return RedirectToAction("Index", "Informes");
         }
-        public void GenerarPDFRegistros(List<TrabajadorIndex> trabajadores ,List<RegistroTrabajador> registros, string strHeader, List<Registro> registrosLista)
+        public void GenerarPDFRegistros(List<TrabajadorIndex> trabajadores, List<RegistroTrabajador> registros, string strHeader, List<Registro> registrosLista)
         {
             using (StringWriter sw = new StringWriter())
             {
                 using (HtmlTextWriter hw = new HtmlTextWriter(sw))
                 {
-                    strHeader = strHeader +" "+ trabajadores[0].Nombre.Replace(",","");
+                    strHeader = strHeader + " " + trabajadores[0].Nombre.Replace(",", "");
                     //System.IO.FileStream fs = new FileStream(strPdfPath, FileMode.Create, FileAccess.Write, FileShare.None);
                     Document document = new Document();
                     document.SetPageSize(iTextSharp.text.PageSize.A4.Rotate());
@@ -564,119 +364,34 @@ namespace ControlPersonalAppWeb.Controllers
                     if (!string.IsNullOrEmpty(trabajadores[0].Rut))
                     {
                         //Add a line seperation
-                        
+
                         fntHead.Size = 14;
-                        document.Add(new Paragraph("Nombre: " + trabajadores[0].Nombre+" "+ trabajadores[0].ApellidoPaterno+" "+ trabajadores[0].ApellidoMaterno , fntHead));
+                        document.Add(new Paragraph("Nombre: " + trabajadores[0].Nombre + " " + trabajadores[0].ApellidoPaterno + " " + trabajadores[0].ApellidoMaterno, fntHead));
                         document.Add(new Paragraph("Rut: " + trabajadores[0].Rut, fntHead));
                         p = new Paragraph(new Chunk(new iTextSharp.text.pdf.draw.LineSeparator(0.0F, 100.0F, BaseColor.BLACK, Element.ALIGN_LEFT, 1)));
                         document.Add(p);
-                    } 
+                    }
                     //Add line break
                     document.Add(new Chunk("\n", fntHead));
-                    
-                    List<string> titulosHorasTrabajadas = new List<string> {"Nombre","H. trabajadas" };
-                    PdfPTable tablaHorasTrabajadas = new PdfPTable(titulosHorasTrabajadas.Count) {WidthPercentage = 100f};
-                    tablaHorasTrabajadas.SetWidths(new int[] { 3, 1 });
-                    List<string> titulosHorasExtras = new List<string> {"Nombre","H. extras" };
-                    PdfPTable tablaHorasExtras = new PdfPTable(titulosHorasExtras.Count) {WidthPercentage = 100f};
-                    tablaHorasExtras.SetWidths(new int[] { 3, 1 });
-                    List<string> titulosAtrasos = new List<string> {"Nombre","H. atrasos" };
-                    PdfPTable tablaAtrasos = new PdfPTable(titulosAtrasos.Count) {WidthPercentage = 100f};
-                    tablaAtrasos.SetWidths(new int[] { 3, 1 });
-                    List<string> titulosDiasTrabajados = new List<string> {"Nombre","Días asis." };
-                    PdfPTable tablaDiasTrabajados = new PdfPTable(titulosDiasTrabajados.Count) {WidthPercentage = 100f};
-                    tablaDiasTrabajados.SetWidths(new int[] { 3 , 1 });
-                    //table.SetWidths(new int[] { 60, 150, 80, 50, 50, 50, 50, 50, 50, 50, 50, 100 });
-                    //Table header
                     BaseFont btnColumnHeader = BaseFont.CreateFont(BaseFont.TIMES_ROMAN, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
                     Font fntColumnHeader = new Font(btnColumnHeader, 8, 1, BaseColor.WHITE);
                     Font fntCell = new Font(btnColumnHeader, 8, 1, BaseColor.BLACK);
-                    int i;
-                    for (i = 0; i < titulosHorasTrabajadas.Count; i++)
-                    { 
-                        PdfPCell cell = new PdfPCell() {BackgroundColor = BaseColor.GRAY} ;
-                        cell.AddElement(new Chunk(titulosHorasTrabajadas[i], fntColumnHeader));
-                        tablaHorasTrabajadas.AddCell(cell);
-                    }
-                    for (i = 0; i < titulosHorasExtras.Count; i++)
-                    { 
-                        PdfPCell cell = new PdfPCell() {BackgroundColor = BaseColor.GRAY} ;
-                        cell.AddElement(new Chunk(titulosHorasExtras[i], fntColumnHeader));
-                        tablaHorasExtras.AddCell(cell);
-                    }
-                    for (i = 0; i < titulosHorasTrabajadas.Count; i++)
-                    { 
-                        PdfPCell cell = new PdfPCell() {BackgroundColor = BaseColor.GRAY} ;
-                        cell.AddElement(new Chunk(titulosAtrasos[i], fntColumnHeader));
-                        tablaAtrasos.AddCell(cell);
-                    }
-                    for (i = 0; i < titulosDiasTrabajados.Count; i++)
-                    { 
-                        PdfPCell cell = new PdfPCell() {BackgroundColor = BaseColor.GRAY} ;
-                        cell.AddElement(new Chunk(titulosDiasTrabajados[i], fntColumnHeader));
-                        tablaDiasTrabajados.AddCell(cell);
-                    }
-                    //table Data
-                    foreach (var ranking in rankings.OrderByDescending(key => key.Value.Atraso))
-                    {
-                        tablaAtrasos.AddCell(new Phrase(ranking.Key.Nombre + " " + ranking.Key.ApellidoPaterno + " " + ranking.Key.ApellidoMaterno, fntCell));
-                        int hour = ranking.Value.Atraso.Hour + (ranking.Value.Atraso.Day - 1) * 24;
-                        int min = ranking.Value.Atraso.Minute;
-                        tablaAtrasos.AddCell(new Phrase(hour.ToString("00") + ":" + min.ToString("00"), fntCell));
-                    }
-                    
-                    foreach (var ranking in rankings.OrderByDescending(key => key.Value.HorasExtras))
-                    {
-                        tablaHorasExtras.AddCell(new Phrase(ranking.Key.Nombre + " " + ranking.Key.ApellidoPaterno + " " + ranking.Key.ApellidoMaterno, fntCell));
-                        int hour = ranking.Value.HorasExtras.Hour + (ranking.Value.HorasExtras.Day - 1) * 24;
-                        int min = ranking.Value.HorasExtras.Minute;
-                        tablaHorasExtras.AddCell(new Phrase(hour.ToString("00") + ":" + min.ToString("00"), fntCell));
-                    }
-
-                    foreach (var ranking in rankings.OrderByDescending(key => key.Value.HorasTrabajadas))
-                    {
-                        tablaHorasTrabajadas.AddCell(new Phrase(ranking.Key.Nombre + " " + ranking.Key.ApellidoPaterno + " " + ranking.Key.ApellidoMaterno, fntCell));
-                        int hour = ranking.Value.HorasTrabajadas.Hour + (ranking.Value.HorasTrabajadas.Day - 1) * 24;
-                        int min = ranking.Value.HorasTrabajadas.Minute;
-                        tablaHorasTrabajadas.AddCell(new Phrase(hour.ToString("00") + ":" + min.ToString("00"), fntCell));
-                    }
-
-                    foreach (var dias in diasTrabajados.OrderByDescending(key => key.Value.Count))
-                    {
-                        tablaDiasTrabajados.AddCell(new Phrase(dias.Key.Nombre + " " + dias.Key.ApellidoPaterno + " " + dias.Key.ApellidoMaterno, fntCell));
-                        tablaDiasTrabajados.AddCell(new Phrase(dias.Value.Count.ToString("00"), fntCell));
-                    }
-
-                    PdfPTable tablaRanking = new PdfPTable(4) { WidthPercentage = 100f };
-                    tablaRanking.SplitLate = false;
-                    tablaRanking.AddCell(new PdfPCell( tablaHorasTrabajadas) { Border = Rectangle.NO_BORDER });
-                    tablaRanking.AddCell(new PdfPCell(tablaHorasExtras) { Border = Rectangle.NO_BORDER }) ;
-                    tablaRanking.AddCell(new PdfPCell(tablaAtrasos) { Border = Rectangle.NO_BORDER });
-                    tablaRanking.AddCell(new PdfPCell(tablaDiasTrabajados) { Border = Rectangle.NO_BORDER });
-                    document.Add(tablaRanking);
-
-                    document.NewPage();
 
                     //Write the table
                     List<string> titulos = new List<string>();
+                    titulos.Add("N°");
                     titulos.Add("Fecha");
                     titulos.Add("Nombre");
                     titulos.Add("Rut");
-                    titulos.Add("Inicio");
-                    titulos.Add("Termino");
-                    titulos.Add("Entrada");
-                    titulos.Add("Salida");
-                    titulos.Add("H. Jornada");
-                    titulos.Add("H. Extras");
-                    titulos.Add("H. Totales");
-                    titulos.Add("Atraso");
+                    titulos.Add("Hora");
+                    titulos.Add("Empresa");
                     titulos.Add("Predio");
-                    titulos.Add("Causa");
+                    titulos.Add("Habilitado");
                     PdfPTable table = new PdfPTable(titulos.Count);
-                    table.SetWidths(new int[] { 60, 150, 80, 50, 50, 50, 50, 50, 50, 50, 50, 100, 50 });
                     table.WidthPercentage = 100f;
-                    //Table header
-                    for ( i = 0; i < titulos.Count; i++)
+                    //Table heade
+                    int i = 0;
+                    for (i = 0; i < titulos.Count; i++)
                     {
                         PdfPCell cell = new PdfPCell();
                         cell.BackgroundColor = BaseColor.GRAY;
@@ -684,9 +399,12 @@ namespace ControlPersonalAppWeb.Controllers
                         table.AddCell(cell);
                     }
                     //table Data
+                    i = 1;
                     foreach (var celda in registrosLista)
                     {
-                        if(celda.EntradaModificada!=null)
+                        table.AddCell(new Phrase(i.ToString(), fntCell));
+                        i++;
+                        if (celda.EntradaModificada != null)
                         {
                             celda.Entrada = celda.Entrada + " *";
                         }
@@ -695,74 +413,253 @@ namespace ControlPersonalAppWeb.Controllers
                             celda.Salida = celda.Salida + " *";
                         }
                         table.AddCell(new Phrase(celda.Fecha.ToShortDateString(), fntCell));
-                        table.AddCell(new Phrase(celda.Nombre+" "+celda.ApellidoPaterno+" "+celda.ApellidoMaterno, fntCell));
+                        table.AddCell(new Phrase(celda.Nombre + " " + celda.ApellidoPaterno + " " + celda.ApellidoMaterno, fntCell));
                         table.AddCell(new Phrase(celda.Rut, fntCell));
-                        table.AddCell(new Phrase(celda.EntradaOficial, fntCell));
-                        table.AddCell(new Phrase(celda.SalidaOficial, fntCell));
                         table.AddCell(new Phrase(celda.Entrada, fntCell));
-                        table.AddCell(new Phrase(celda.Salida, fntCell));
-                        table.AddCell(new Phrase(celda.HorasTrabajadas, fntCell));
-                        table.AddCell(new Phrase(celda.HorasExtras, fntCell));
-                        table.AddCell(new Phrase(celda.Horas, fntCell));
-                        table.AddCell(new Phrase(celda.Atraso, fntCell));
-                        table.AddCell(new Phrase(celda.Campo, fntCell));
-                        string causa = "";
-                        if(!String.IsNullOrEmpty(celda.CausaEntrada))
-                        {
-                            causa = celda.CausaEntrada;
-                            if(!String.IsNullOrEmpty(celda.CausaSalida))
-                            {
-                                causa = causa + "/" + celda.CausaSalida;
-                            }
-                        }
-                        if (!String.IsNullOrEmpty(celda.CausaSalida) && String.IsNullOrEmpty(celda.CausaEntrada))
-                        {
-                            causa = celda.CausaSalida;
-                        }
-                        table.AddCell(new Phrase(causa, fntCell));
                     }
 
                     document.Add(table);
                     document.Close();
                     writer.Close();
                     Response.ContentType = "application/pdf";
-                    Response.AddHeader("content-disposition", "attachment;filename="+strHeader+" "+ DateTime.Now.ToShortDateString()+ ".pdf");
+                    Response.AddHeader("content-disposition", "attachment;filename=" + strHeader + " " + DateTime.Now.ToShortDateString() + ".pdf");
                     Response.Cache.SetCacheability(HttpCacheability.NoCache);
                     Response.Write(document);
                     Response.End();
                     Utils.SessionManager.entrada = "";
                     Utils.SessionManager.salida = "";
                     Utils.SessionManager.almuerzo = "";
+                    Utils.SessionManager.log("Generar pfd registros");
                 }
             }
 
         }
-        public void generarPDFDetalle(Trabajador trabajador, string strHeader, int type)
+        public void PDFRegistros(string campo, string empresa, string inicio, string fin, string tipo)
         {
+            DeshabilitarExpirados();
             using (StringWriter sw = new StringWriter())
             {
                 using (HtmlTextWriter hw = new HtmlTextWriter(sw))
                 {
-                    strHeader = "Solicitud de contratacion";
+                    DateTime inicioIn = Convert.ToDateTime(inicio);
+                    DateTime finIn = Convert.ToDateTime(fin);
+                    List<TrabajadorIndex> trabajadores = new List<TrabajadorIndex>();
+                    List<Trabajador> workers = new List<Trabajador>();
+                    List<RegistroTrabajador> registros = new List<RegistroTrabajador>();
+                    List<Registro> registrosLista = new List<Registro>();
+                    List<RegistroPDF> registrosTrabajador = new List<RegistroPDF>();
+                    string empresaAutor = cuenta.Empresa;
+                    string strHeader = "Registro trabajadores ";
+                    try
+                    {
+                        trabajadores = db.Trabajador.Select(x => new TrabajadorIndex
+                        {
+                            Nombre = x.Nombre,
+                            Uid = x.Uid,
+                            Rut = x.Rut,
+                            ApellidoMaterno = x.ApellidoMaterno,
+                            ApellidoPaterno = x.ApellidoPaterno,
+                            Habilitado = (bool) x.Habilitado,
+                            Empresa = x.Empresa
+                        }).ToList();
+                    }
+                    catch { }
+                    if (empresa == null)
+                    {
+                        strHeader = strHeader + " de " + empresaAutor;
+                        trabajadores = db.Trabajador.Select(x => new TrabajadorIndex
+                        {
+                            Nombre = x.Nombre,
+                            ApellidoPaterno = x.ApellidoPaterno,
+                            ApellidoMaterno = x.ApellidoMaterno,
+                            Rut = x.Rut,
+                            Empresa = x.Empresa,
+                            Habilitado = (bool)x.Habilitado,
+                            Uid = x.Uid,
+                        }).Where(x => x.Empresa == empresaAutor).ToList();
+                    }
+                    if (campo == "Todos" && empresa == "Todos")
+                    {
+
+                        strHeader = strHeader + " " + inicioIn.ToShortDateString() +" a " + finIn.ToShortDateString();
+                        registrosTrabajador = db.RegistroTrabajador.
+                                                   Select(x => new RegistroPDF
+                                                   {
+                                                       Campo = x.Campo,
+                                                       Empresa = x.Empresa,
+                                                       Fecha = x.Fecha,
+                                                       Uid = x.Uid,
+                                                       Modificado = x.IdTrabajador
+                                                   }).
+                                                   Where(x => x.Fecha >= inicioIn &&
+                                                              x.Fecha <= finIn ).ToList();
+                    }
+
+                    if (campo != "Todos" && empresa == "Todos")
+                    {
+
+                        strHeader = strHeader + " " + inicioIn.ToShortDateString() + " a " + finIn.ToShortDateString()+ " en "+campo;
+                        registrosTrabajador = db.RegistroTrabajador.
+                                                   Select(x => new RegistroPDF
+                                                   {
+                                                       Campo = x.Campo,
+                                                       Empresa = x.Empresa,
+                                                       Fecha = x.Fecha,
+                                                       Uid = x.Uid,
+                                                       Modificado = x.IdTrabajador
+                                                   }).
+                                                   Where(x => x.Fecha >= inicioIn &&
+                                                              x.Fecha <= finIn && 
+                                                              x.Campo == campo).ToList();
+                    }
+
+                    if (campo == "Todos" && empresa != "Todos")
+                    {
+
+                        strHeader = strHeader + " " + inicioIn.ToShortDateString() + " a " + finIn.ToShortDateString() + " de " + empresa;
+                        registrosTrabajador = db.RegistroTrabajador.
+                                                   Select(x => new RegistroPDF
+                                                   {
+                                                       Campo = x.Campo,
+                                                       Empresa = x.Empresa,
+                                                       Fecha = x.Fecha,
+                                                       Uid = x.Uid,
+                                                       Modificado = x.IdTrabajador
+                                                   }).
+                                                   Where(x => x.Fecha >= inicioIn &&
+                                                              x.Fecha <= finIn).ToList();
+                    }
+
+
+                    if (campo != "Todos" && empresa != "Todos")
+                    {
+                        strHeader = strHeader + " " + inicioIn.ToShortDateString() + " a " + finIn.ToShortDateString() + " en " + campo + " de " +empresa;
+                        registrosTrabajador = db.RegistroTrabajador.
+                                                   Select(x => new RegistroPDF
+                                                   {
+                                                       Campo = x.Campo,
+                                                       Empresa = x.Empresa,
+                                                       Fecha = x.Fecha,
+                                                       Uid = x.Uid,
+                                                       Modificado = x.IdTrabajador
+                                                   }).
+                                                   Where(x => x.Fecha >= inicioIn &&
+                                                              x.Fecha <= finIn &&
+                                                              x.Campo == campo).ToList();
+                    }
+                    foreach (var registro in registrosTrabajador)
+                    {
+                        TrabajadorIndex trabajador = null;
+
+                        // Intento 1: buscar por IdTrabajador (si existe, es la referencia mas estable)
+                        if (registro.Modificado != null && registro.Modificado != 1 && registro.Modificado > 0)
+                        {
+                            try
+                            {
+                                int idBuscar = (int)registro.Modificado;
+                                trabajador = db.Trabajador.Select(x => new TrabajadorIndex{
+                                    Nombre = x.Nombre,
+                                    Uid = x.Uid,
+                                    Rut = x.Rut,
+                                    ApellidoMaterno = x.ApellidoMaterno,
+                                    ApellidoPaterno = x.ApellidoPaterno,
+                                    Habilitado = (bool)x.Habilitado,
+                                    Empresa = x.Empresa,
+                                    Id = x.Id
+                                }).First(x => x.Id == idBuscar);
+                            }
+                            catch { }
+                        }
+
+                        // Intento 2: buscar por Uid directo
+                        if (trabajador == null)
+                        {
+                            try
+                            {
+                                trabajador = db.Trabajador.Select(x => new TrabajadorIndex{
+                                    Nombre = x.Nombre,
+                                    Uid = x.Uid,
+                                    Rut = x.Rut,
+                                    ApellidoMaterno = x.ApellidoMaterno,
+                                    ApellidoPaterno = x.ApellidoPaterno,
+                                    Habilitado = (bool)x.Habilitado,
+                                    Empresa = x.Empresa,
+                                    Id = x.Id
+                                }).First(x => x.Uid == registro.Uid);
+                            }
+                            catch { }
+                        }
+
+                        // Intento 3: Uid es numerico = fue mutado al Id del trabajador
+                        if (trabajador == null)
+                        {
+                            int idFromUid;
+                            if (int.TryParse(registro.Uid, out idFromUid) && idFromUid > 0)
+                            {
+                                try
+                                {
+                                    trabajador = db.Trabajador.Select(x => new TrabajadorIndex{
+                                        Nombre = x.Nombre,
+                                        Uid = x.Uid,
+                                        Rut = x.Rut,
+                                        ApellidoMaterno = x.ApellidoMaterno,
+                                        ApellidoPaterno = x.ApellidoPaterno,
+                                        Habilitado = (bool)x.Habilitado,
+                                        Empresa = x.Empresa,
+                                        Id = x.Id
+                                    }).First(x => x.Id == idFromUid);
+                                }
+                                catch { }
+                            }
+                        }
+
+                        if (trabajador == null) continue;
+
+                        if (empresa != "Todos" && trabajador.Empresa != empresa)
+                        {
+                            continue;
+                        }
+
+                        Registro registroPDF = new Registro()
+                        {
+                            Campo = registro.Campo,
+                            Uid = registro.Uid,
+                            Empresa = trabajador.Empresa,
+                            Fecha = registro.Fecha,
+                            Nombre = trabajador.Nombre + " " + trabajador.ApellidoPaterno + " " + trabajador.ApellidoMaterno,
+                            Rut = trabajador.Rut
+                        };
+                        if (trabajador.Habilitado == true)
+                        {
+                            registroPDF.Habilitado = "Si";
+                        }
+                        else
+                        {
+                            registroPDF.Habilitado = "No";
+                        }
+                        registrosLista.Add(registroPDF);
+                    }
+                    if (tipo == "EXCEL")
+                    {
+                        GenerarExcel(registrosLista, strHeader);
+                        return;
+                    }
+
                     //System.IO.FileStream fs = new FileStream(strPdfPath, FileMode.Create, FileAccess.Write, FileShare.None);
                     Document document = new Document();
-                    document.AddTitle(strHeader);
-                    document.SetPageSize(iTextSharp.text.PageSize.A4);
-                    PdfWriter wri;
-                    if (type==1)
-                        wri = PdfWriter.GetInstance(document, Response.OutputStream);
-                    else
-                        wri = PdfWriter.GetInstance(document, new FileStream("C:\\Data\\doc.pdf", FileMode.Create));
-                    wri.SetPdfVersion(PdfWriter.PDF_VERSION_1_5);
-                    wri.CompressionLevel = PdfStream.BEST_COMPRESSION;
+                    document.SetPageSize(iTextSharp.text.PageSize.A4.Rotate());
+                    PdfWriter writer = PdfWriter.GetInstance(document, Response.OutputStream);
                     document.Open();
+                    /*
                     Image image = Image.GetInstance(Server.MapPath("~/App_Data/" + Utils.SessionManager.CuentaAutenticada().Empresa + ".png"));
                     image.Alignment = Element.ALIGN_LEFT;
                     image.ScaleToFit(60, 60);
                     document.Add(image);
+                    */
+
                     //Report Header
-                    BaseFont bfntHead = BaseFont.CreateFont(BaseFont.COURIER, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
-                    Font fntHead = new Font(bfntHead, 14, 1, BaseColor.DARK_GRAY);
+                    BaseFont bfntHead = BaseFont.CreateFont(BaseFont.TIMES_ROMAN, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
+                    Font fntHead = new Font(bfntHead, 16, 1, BaseColor.DARK_GRAY);
                     Paragraph prgHeading = new Paragraph();
                     prgHeading.Alignment = Element.ALIGN_CENTER;
                     prgHeading.Add(new Chunk(strHeader.ToUpper(), fntHead));
@@ -776,145 +673,106 @@ namespace ControlPersonalAppWeb.Controllers
                     prgAuthor.Add(new Chunk("Autor : " + Utils.SessionManager.CuentaAutenticada().Usuario, fntAuthor));
                     prgAuthor.Add(new Chunk("\nFecha : " + DateTime.Now.ToShortDateString(), fntAuthor));
                     document.Add(prgAuthor);
-
-                    //Add a line seperation
                     Paragraph p = new Paragraph(new Chunk(new iTextSharp.text.pdf.draw.LineSeparator(0.0F, 100.0F, BaseColor.BLACK, Element.ALIGN_LEFT, 1)));
                     document.Add(p);
-                    fntHead.Size = 9;
-                    var font = new iTextSharp.text.Font(iTextSharp.text.Font.FontFamily.COURIER, 13, iTextSharp.text.Font.BOLD);
-                    font.Size = 10;
-                    p = new Paragraph("Antecedentes");
-                    p.Alignment = Element.ALIGN_CENTER;
-                    p.Font = fntHead;
-                    document.Add(p);
-                    document.Add(new Paragraph("Nombre:                 " + trabajador.Nombre + " " + trabajador.ApellidoPaterno + " " + trabajador.ApellidoMaterno, fntHead));
-                    document.Add(new Paragraph("Rut:                    " + trabajador.Rut, fntHead));
-                    document.Add(new Paragraph("Tipo de cuenta:         " + trabajador.TipoCuenta, fntHead));
-                    document.Add(new Paragraph("Banco:                  " + trabajador.Banco, fntHead));
-                    document.Add(new Paragraph("Número de cuenta:       " + trabajador.NumeroCuenta, fntHead));
-                    document.Add(new Paragraph("Contratado:             " + trabajador.Contratado, fntHead));
-                    document.Add(new Paragraph("Uid:                    " + trabajador.Uid, fntHead));
-                    document.Add(new Paragraph("Código:                 " + trabajador.CodPersonal, fntHead));
-                    document.Add(new Paragraph("Estado civil:           " + trabajador.EstadoCivil, fntHead));
-                    if (trabajador.FechaNacimiento != null)
-                    {
-                        document.Add(new Paragraph("Fecha de nacimiento:    " + trabajador.FechaNacimiento.Value.ToShortDateString(), fntHead));
-                    }
-                    else
-                    {
-                        document.Add(new Paragraph("Fecha de nacimiento:       ", fntHead));
-                    }
-                    document.Add(new Paragraph("Dirección:              " + trabajador.Direccion, fntHead));
-                    document.Add(new Paragraph("Sexo:                   " + trabajador.Sexo, fntHead));
-                    document.Add(new Paragraph("Ciudad:                 " + trabajador.Ciudad, fntHead));
-                    document.Add(new Paragraph("Cargas familiares:      " + trabajador.CargasFamiliares, fntHead));
-                    document.Add(new Paragraph("Cuantas:                " + trabajador.CargasSimples, fntHead));
-                    document.Add(new Paragraph("AFP:                    " + trabajador.AFP, fntHead));
-                    document.Add(new Paragraph("Salud:                  " + trabajador.Salud, fntHead));
-                    document.Add(new Paragraph("Telefono:               " + trabajador.Telefono, fntHead));
+                    //Add line break
+                    document.Add(new Chunk("\n", fntHead));
+                    BaseFont btnColumnHeader = BaseFont.CreateFont(BaseFont.TIMES_ROMAN, BaseFont.CP1252, BaseFont.NOT_EMBEDDED);
+                    Font fntColumnHeader = new Font(btnColumnHeader, 8, 1, BaseColor.WHITE);
+                    Font fntCell = new Font(btnColumnHeader, 8, 1, BaseColor.BLACK);
 
-                    p = new Paragraph(new Chunk(new iTextSharp.text.pdf.draw.LineSeparator(0.0F, 100.0F, BaseColor.BLACK, Element.ALIGN_LEFT, 1)));
-                    document.Add(p);
-                    p = new Paragraph("En Caso de emergencia");
-                    p.Alignment = Element.ALIGN_CENTER;
-                    p.Font = font;
-                    document.Add(p);
-                    document.Add(new Paragraph("Nombre:                 " + trabajador.NombreEmer, fntHead));
-                    document.Add(new Paragraph("Vínculo:                " + trabajador.VinculoEmer, fntHead));
-                    document.Add(new Paragraph("Dirección:              " + trabajador.DireccionEmer, fntHead));
-                    document.Add(new Paragraph("Telefono:               " + trabajador.TelefonoEmer, fntHead));
+                    //Write the table
+                    List<string> titulos = new List<string>();
+                    titulos.Add("N°");
+                    titulos.Add("Fecha");
+                    titulos.Add("Nombre");
+                    titulos.Add("Rut");
+                    titulos.Add("Hora");
+                    titulos.Add("Contratista");
+                    titulos.Add("Predio");
+                    titulos.Add("Habilitado");
+                    PdfPTable table = new PdfPTable(titulos.Count);
+                    table.WidthPercentage = 100f;
+                    table.SetWidths(new int[] { 30, 60, 150, 80, 50, 80, 80, 50 });
+                    int i;
+                    for (i = 0; i < titulos.Count; i++)
+                    {
+                        PdfPCell cell = new PdfPCell();
+                        cell.BackgroundColor = BaseColor.GRAY;
+                        cell.AddElement(new Chunk(titulos[i], fntColumnHeader));
+                        table.AddCell(cell);
+                    }
+                    //table Data
+                    i = 1;
+                    foreach (var celda in registrosLista)
+                    {
+                        table.AddCell(new Phrase(i.ToString(), fntCell));
+                        table.AddCell(new Phrase(celda.Fecha.ToString("dd/MM/yyy"), fntCell));
+                        table.AddCell(new Phrase(celda.Nombre + " " + celda.ApellidoPaterno + " " + celda.ApellidoMaterno, fntCell));
+                        table.AddCell(new Phrase(celda.Rut, fntCell));
+                        table.AddCell(new Phrase(celda.Fecha.ToString("HH:mm"), fntCell));
+                        table.AddCell(new Phrase(celda.Empresa, fntCell));
+                        table.AddCell(new Phrase(celda.Campo, fntCell));
+                        table.AddCell(new Phrase(celda.Habilitado, fntCell));
+                        i++;
+                    }
 
-                    p = new Paragraph(new Chunk(new iTextSharp.text.pdf.draw.LineSeparator(0.0F, 100.0F, BaseColor.BLACK, Element.ALIGN_LEFT, 1)));
-                    document.Add(p);
-                    p = new Paragraph("Antecedentes del cargo");  
-                    p.Alignment = Element.ALIGN_CENTER;
-                    p.Font = font;
-                    document.Add(p);
-                    document.Add(new Paragraph("Cargo:                  " + trabajador.Cargo, fntHead));
-                    document.Add(new Paragraph("Nombre Jefe:            " + trabajador.NombreJefe, fntHead));
-                    document.Add(new Paragraph("Campo:                  " + trabajador.Campo, fntHead));
-                    document.Add(new Paragraph("Empleador:              " + trabajador.Empleador, fntHead));
-
-                    p = new Paragraph(new Chunk(new iTextSharp.text.pdf.draw.LineSeparator(0.0F, 100.0F, BaseColor.BLACK, Element.ALIGN_LEFT, 1)));
-                    document.Add(p);
-                    p = new Paragraph("Condiciones pactadas");
-                    p.Alignment = Element.ALIGN_CENTER;
-                    p.Font = font;
-                    document.Add(p);
-                    document.Add(new Paragraph("Contratado por:         " + trabajador.Contrato, fntHead));
-                    document.Add(new Paragraph("Jornada:                " + trabajador.Jornada, fntHead));
-                    if (trabajador.FechaIngreso != null)
-                    {
-                        document.Add(new Paragraph("Fecha de ingreso:       " + trabajador.FechaIngreso.Value.ToShortDateString(), fntHead));
-                    }
-                    else
-                    {
-                        document.Add(new Paragraph("Fecha de ingreso:       ", fntHead));
-                    }
-                    if (trabajador.FechaTermino != null)
-                    {
-                        document.Add(new Paragraph("Fecha de termino:       " + trabajador.FechaTermino.Value.ToShortDateString(), fntHead));
-                    }
-                    else
-                    { 
-                        document.Add(new Paragraph("Fecha de termino:       " , fntHead));
-                    }
-                    p = new Paragraph(new Chunk(new iTextSharp.text.pdf.draw.LineSeparator(0.0F, 100.0F, BaseColor.BLACK, Element.ALIGN_LEFT, 1)));
-                    document.Add(p);
-                    p = new Paragraph("Renta a ofrecer");
-                    p.Alignment = Element.ALIGN_CENTER;
-                    p.Font = font;
-                    document.Add(p);
-                    int sueldoBase = 0;
-                    if(trabajador.SueldoBase != null)
-                        sueldoBase = (int) trabajador.SueldoBase;
-                    int gratificacion = 0;
-                    if (trabajador.Gratificacion != null)
-                        gratificacion = (int) trabajador.Gratificacion;
-                    int sueldoBruto = 0;
-                    if (trabajador.SueldoBruto != null)
-                        sueldoBruto = (int) trabajador.SueldoBruto;
-
-                    document.Add(new Paragraph("Sueldo base:            " + sueldoBase.ToString("C0"), fntHead));
-                    document.Add(new Paragraph("Gratificacion:          " + gratificacion.ToString("C0"), fntHead));
-                    document.Add(new Paragraph("Sueldo bruto:           " + sueldoBruto.ToString("C0"), fntHead));
-                    
-                    image = Image.GetInstance(Server.MapPath("~/App_Data/"+trabajador.Campo.Replace(" ","")+".png"));
-                    image.Alignment = Element.ALIGN_LEFT;
-                    image.ScaleToFit(400,60);
-                    document.Add(image);
-                    document.Add(new Paragraph("       Jefe "+Formato(trabajador.NombreJefe)+"Gerente Agricola                   Recursos Humanos", fntHead));
-                    //XMLWorkerHelper.GetInstance().ParseXHtml(writer, document, sr);
-                    if(trabajador.FotoCarnet!=null)
-                    {
-                        try
-                        { 
-                            var ms = new MemoryStream(trabajador.FotoCarnet);
-                            System.Drawing.Image img = System.Drawing.Image.FromStream(ms);
-                            img = resizeImage(img, new Size(1120, 630));
-                            image = Image.GetInstance(img, System.Drawing.Imaging.ImageFormat.Jpeg);
-                            image.Alignment = Element.ALIGN_CENTER;
-                            image.ScaleAbsolute(496,279);
-                            document.Add(image);
-                        }
-                        catch
-                        {
-                            document.Add(new Paragraph("Error en cargar la imagen", fntHead));
-                        }
-                    }
-                    
+                    document.Add(table);
                     document.Close();
-                    wri.Close();
-                    if (type==1)
-                    {
-                        Response.ContentType = "application/pdf";
-                        Response.AddHeader("content-disposition", "attachment;filename="+strHeader+" "+ trabajador.Nombre + " " + trabajador.ApellidoPaterno + " " + trabajador.ApellidoMaterno + " "+ DateTime.Now.ToShortDateString() + ".pdf");
-                        Response.Cache.SetCacheability(HttpCacheability.NoCache);
-                        Response.Write(document);
-                    }
+                    writer.Close();
+                    Response.ContentType = "application/pdf";
+                    Response.AddHeader("content-disposition", "attachment;filename=" + strHeader + " " + DateTime.Now.ToShortDateString() + ".pdf");
+                    Response.Cache.SetCacheability(HttpCacheability.NoCache);
+                    Response.Write(document);
                     Response.End();
+                    Utils.SessionManager.entrada = "";
+                    Utils.SessionManager.salida = "";
+                    Utils.SessionManager.almuerzo = "";
+                    Utils.SessionManager.log("Generar pfd registros");
                 }
             }
+
+        }
+        public List<RegistroTrabajador> BuscarRegistroTrabajadores(string nombreEmpresa, string nombreCampo, DateTime? fechaInicio, DateTime? fechaFin)
+        {
+            using (var context = db)
+            {
+                // Iniciar la consulta como IQueryable
+                var query = context.RegistroTrabajador.AsQueryable();
+
+                // Filtrar por nombre de empresa si no es "todos"
+                if (!string.IsNullOrEmpty(nombreEmpresa) && !nombreEmpresa.Equals("todos", StringComparison.OrdinalIgnoreCase))
+                {
+                    query = query.Where(rt => rt.Empresa == nombreEmpresa);
+                }
+
+                // Filtrar por nombre de campo si no es "todos"
+                if (!string.IsNullOrEmpty(nombreCampo) && !nombreCampo.Equals("todos", StringComparison.OrdinalIgnoreCase))
+                {
+                    query = query.Where(rt => rt.Campo == nombreCampo);
+                }
+
+                // Filtrar por fecha de inicio si se proporciona
+                if (fechaInicio.HasValue)
+                {
+                    query = query.Where(rt => rt.Fecha >= fechaInicio.Value);
+                }
+
+                // Filtrar por fecha de fin si se proporciona
+                if (fechaFin.HasValue)
+                {
+                    query = query.Where(rt => rt.Fecha <= fechaFin.Value);
+                }
+
+                // Ejecutar la consulta y devolver los resultados como lista
+                return query.ToList();
+            }
+        }
+
+
+        public void generarRegistros()
+        {
+
         }
         public static System.Drawing.Image resizeImage(System.Drawing.Image imgToResize, Size size)
         {
@@ -922,13 +780,13 @@ namespace ControlPersonalAppWeb.Controllers
         }
         public string Formato(string nombre)
         {
-            while(nombre.Length<28)
+            while (nombre.Length < 28)
             {
                 nombre = nombre + " ";
             }
             return nombre;
         }
-        public void GenerarExcel(List<TrabajadorIndex> trabajadores, string strHeader, List<Registro> registrosLista)
+        public void GenerarExcel(List<Registro> registrosLista, string strHeader)
         {
 
             try
@@ -945,42 +803,23 @@ namespace ControlPersonalAppWeb.Controllers
                 sl.SetCellValue(1, 1, "Fecha");
                 sl.SetCellValue(1, 2, "Nombre");
                 sl.SetCellValue(1, 3, "Rut");
-                sl.SetCellValue(1, 4, "Inicio");
-                sl.SetCellValue(1, 5, "Termino");
-                sl.SetCellValue(1, 6, "Entrada");
-                sl.SetCellValue(1, 7, "Salida");
-                sl.SetCellValue(1, 8, "H. Jornada");
-                sl.SetCellValue(1, 9, "H. Extras");
-                sl.SetCellValue(1, 10, "H. Totales");
-                sl.SetCellValue(1, 11, "Atraso");
-                sl.SetCellValue(1, 12, "Predio");
-                sl.SetCellValue(1, 13, "Contratado");
+                sl.SetCellValue(1, 4, "Hora");
+                sl.SetCellValue(1, 5, "Contratista");
+                sl.SetCellValue(1, 6, "Predio");
+                sl.SetCellValue(1, 7, "Habilitado");
 
                 for (int i = 2; i < registrosLista.Count + 2; ++i)
                 {
                     int j = i - 2;
                     sl.SetCellValue(i, 1, registrosLista[j].Fecha.ToShortDateString());
                     sl.SetCellStyle(i, 1, fecha);
-                    sl.SetCellValue(i, 2, registrosLista[j].Nombre +" "+ registrosLista[j].ApellidoPaterno+" "+ registrosLista[j].ApellidoMaterno);
+                    sl.SetCellValue(i, 2, registrosLista[j].Nombre + " " + registrosLista[j].ApellidoPaterno + " " + registrosLista[j].ApellidoMaterno);
                     sl.SetCellValue(i, 3, formatearRut(registrosLista[j].Rut));
-                    sl.SetCellValue(i, 4, registrosLista[j].EntradaOficial);
+                    sl.SetCellValue(i, 4, registrosLista[j].Fecha.ToString("HH:mm"));
                     sl.SetCellStyle(i, 4, hora);
-                    sl.SetCellValue(i, 5, registrosLista[j].SalidaOficial);
-                    sl.SetCellStyle(i, 5, hora);
-                    sl.SetCellValue(i, 6, registrosLista[j].Entrada);
-                    sl.SetCellStyle(i, 6, hora);
-                    sl.SetCellValue(i, 7, registrosLista[j].Salida);
-                    sl.SetCellStyle(i, 7, hora);
-                    sl.SetCellValue(i, 8, registrosLista[j].HorasTrabajadas);
-                    sl.SetCellStyle(i, 8, hora);
-                    sl.SetCellValue(i, 9, registrosLista[j].HorasExtras);
-                    sl.SetCellStyle(i, 9, hora);
-                    sl.SetCellValue(i, 10, registrosLista[j].Horas);
-                    sl.SetCellStyle(i, 10, hora);
-                    sl.SetCellValue(i, 11, registrosLista[j].Atraso);
-                    sl.SetCellStyle(i, 11, hora);
-                    sl.SetCellValue(i, 12, registrosLista[j].Campo);
-                    sl.SetCellValue(i, 13, registrosLista[j].Contratado);
+                    sl.SetCellValue(i, 5, registrosLista[j].Empresa);
+                    sl.SetCellValue(i, 6, registrosLista[j].Campo);
+                    sl.SetCellValue(i, 7, registrosLista[j].Habilitado);
 
                 }
 
@@ -1005,16 +844,17 @@ namespace ControlPersonalAppWeb.Controllers
             Response.Buffer = true;
             Response.ContentType = "application/vnd.ms-excel";
             Response.AddHeader("Content-Length", getContent.Length.ToString());
-            Response.AddHeader("content-disposition", "attachment;filename=" + strHeader + " " + DateTime.Now.ToShortDateString() + ".xlsx");
+            Response.AddHeader("content-disposition", "attachment;filename=" + strHeader +".xlsx");
             Response.BinaryWrite(getContent);
             Response.Flush();
             Response.End();
+            Utils.SessionManager.log("Generar excel registros");
             //System.Diagnostics.Process.Start("C:\\Data\\WorksheetOperations.xlsx");
         }
         public ActionResult PorDia()
         {
             List<RegistroTrabajador> registros = new List<RegistroTrabajador>();
-            DBManejoPersonalEntities database = new DBManejoPersonalEntities();
+            SgajcpEntities database = new SgajcpEntities();
             string empresa = Utils.SessionManager.CuentaAutenticada().Empresa;
             List<Trabajador> trabajadores = database.Trabajador.Where(x => x.Empresa == empresa).ToList();
             string date = DateTime.Now.ToShortDateString();
@@ -1043,22 +883,17 @@ namespace ControlPersonalAppWeb.Controllers
         public ActionResult PorDia(FormCollection collection)
         {
             List<RegistroTrabajador> registros = new List<RegistroTrabajador>();
-            DBManejoPersonalEntities database = new DBManejoPersonalEntities();
+            SgajcpEntities database = new SgajcpEntities();
             string empresa = Utils.SessionManager.CuentaAutenticada().Empresa;
             DateTime fecha = Convert.ToDateTime(collection["Inicio"]);
             DateTime fin = fecha.AddHours(Convert.ToUInt32(collection["Horas"]));
-           // List<Trabajador> trabajadores = database.Trabajador.Where(x => x.Empresa == empresa).ToList();
-            List<TrabajadorIndex> trabajadores = database.Trabajador.Where(x => x.Empresa == empresa).Select(x => new TrabajadorIndex { Id = x.Id, Nombre = x.Nombre, ApellidoPaterno=x.ApellidoPaterno, ApellidoMaterno=x.ApellidoMaterno, Uid = x.Uid, Empresa = x.Empresa, Contratado = x.Campo,
-                Entrada = x.Entrada,
-                EntradaA = x.EntradaA,
-                Salida = x.Salida,
-                SalidaA = x.SalidaA
-            }).ToList();
+            // List<Trabajador> trabajadores = database.Trabajador.Where(x => x.Empresa == empresa).ToList();
+            List<TrabajadorIndex> trabajadores = database.Trabajador.Where(x => x.Empresa == empresa).Select(x => new TrabajadorIndex { Id = x.Id, Nombre = x.Nombre, ApellidoPaterno = x.ApellidoPaterno, ApellidoMaterno = x.ApellidoMaterno, Uid = x.Uid, Empresa = x.Empresa }).ToList();
             int i = 0;
             while (i < trabajadores.Count)
             {
                 var trabajador = trabajadores[i];
-                var registry = database.RegistroTrabajador.Where(x => x.Fecha >= fecha && x.Fecha <=fin && x.Uid == trabajador.Uid).ToList();
+                var registry = database.RegistroTrabajador.Where(x => x.Fecha >= fecha && x.Fecha <= fin && x.Uid == trabajador.Uid).ToList();
                 if (registry.Count > 0)
                 {
                     registros.AddRange(registry);
@@ -1070,75 +905,31 @@ namespace ControlPersonalAppWeb.Controllers
                 }
             }
             ViewBag.trabajadores = trabajadores;
-            Utils.SessionManager.log("Consulta por día");
             return View(registros.OrderByDescending(x => x.Fecha));
-        }
-        public ActionResult PDFDetalle(int id)
-        {
-            DBManejoPersonalEntities database = new DBManejoPersonalEntities();
-            Trabajador trabajador = database.Trabajador.First(x => x.Id == id);
-            List<RegistroTrabajador> registros = database.RegistroTrabajador.Where(x => x.Uid == trabajador.Uid).ToList();
-            Utils.SessionManager.log("Solicitud de: "+ trabajador.Nombre + " " + trabajador.ApellidoPaterno + " " + trabajador.ApellidoMaterno);
-            generarPDFDetalle(trabajador, "Detalle", Utils.SessionManager.email);
-            return RedirectToAction("Index");
-        }
-        public ActionResult PDFCampo(int id)
-        {
-            DBManejoPersonalEntities database = new DBManejoPersonalEntities();
-            Campos campo = database.Campos.First(x => x.Id == id);
-            string empresa = Utils.SessionManager.CuentaAutenticada().Empresa;
-            var registroTrabajadors = database.RegistroTrabajador.Select(x => new { x.Uid, x.Campo, x.Empresa }).Where(x => x.Campo == campo.Nombre && x.Empresa == empresa).Distinct().ToList();
-            var registros = registroTrabajadors.Select(x => x.Uid).ToList();
-            List<TrabajadorIndex> trabajadores = new List<TrabajadorIndex>();
-
-            foreach (var uid in registros)
-            {
-                try
-                {
-                    TrabajadorIndex t = database.Trabajador.Select(x => new TrabajadorIndex { Id = x.Id, Nombre = x.Nombre, ApellidoPaterno = x.ApellidoPaterno, ApellidoMaterno=x.ApellidoMaterno, Rut = x.Rut, Uid = x.Uid, Gerente = x.Gerente, Empresa = x.Empresa, Contratado = x.Campo,
-                        Entrada = x.Entrada,
-                        EntradaA = x.EntradaA,
-                        Salida = x.Salida,
-                        SalidaA = x.SalidaA
-                    }).First(x => x.Uid == uid);
-                    trabajadores.Add(t);
-                }
-                catch { }
-            }
-
-            List<Registro> registrosLista = GetRegistroTrabajadores(trabajadores, null, null, campo.Nombre, null);
-            trabajadores.OrderBy(o => o.Uid);
-            trabajadores.Insert(0,new TrabajadorIndex { Nombre = campo.Nombre });
-
-            if (Utils.SessionManager.tipo == "PDF")
-            {
-                Utils.SessionManager.log("PDF huerto: " + campo.Nombre);
-                GenerarPDFRegistros(trabajadores, null, "Huerto "+campo.Nombre, registrosLista);
-            }
-            else
-            {
-                Utils.SessionManager.log("Excel campo" + campo.Nombre);
-                GenerarExcel(trabajadores, "Huerto " + campo.Nombre, registrosLista);
-            }
-            return RedirectToAction("Index","Campo");
         }
         public void PDFHoy()
         {
-            Utils.SessionManager.log("Pdf hoy");
-            DBManejoPersonalEntities database = new DBManejoPersonalEntities();
+            SgajcpEntities database = new SgajcpEntities();
             string empresa = Utils.SessionManager.CuentaAutenticada().Empresa;
-            List<TrabajadorIndex> trabajadores = database.Trabajador.Where(x => x.Empresa == empresa).Select(x => new TrabajadorIndex { 
-                                                 Id = x.Id, Nombre = x.Nombre, ApellidoMaterno = x.ApellidoMaterno, ApellidoPaterno = x.ApellidoPaterno,
-                                                 Rut = x.Rut, Uid = x.Uid, Gerente = x.Gerente, Empresa = x.Empresa, Contratado = x.Campo,
-                                                 Entrada = x.Entrada, EntradaA = x.EntradaA, Salida = x.Salida, SalidaA = x.SalidaA}).ToList();
+            List<TrabajadorIndex> trabajadores = database.Trabajador.Where(x => x.Empresa == empresa).Select(x => new TrabajadorIndex
+            {
+                Id = x.Id,
+                Nombre = x.Nombre,
+                ApellidoMaterno = x.ApellidoMaterno,
+                ApellidoPaterno = x.ApellidoPaterno,
+                Rut = x.Rut,
+                Uid = x.Uid,
+                Numero = x.Numero,
+                Empresa = x.Empresa
+            }).ToList();
             List<Registro> registros = GetRegistroTrabajadores(trabajadores, DateTime.Now, null, null, null);
 
             trabajadores.Insert(0, new TrabajadorIndex { Nombre = "Hoy" });
-            GenerarPDFRegistros(trabajadores, null, "Registro",registros);
+            GenerarPDFRegistros(trabajadores, null, "Registro", registros);
         }
         public List<Registro> GetRegistroTrabajadores(List<TrabajadorIndex> trabajadores, DateTime? inicio, DateTime? fin, string campo, DateTime? periodo)
         {
-            DBManejoPersonalEntities database = new DBManejoPersonalEntities();
+            SgajcpEntities database = new SgajcpEntities();
             List<RegistroTrabajador> registros = new List<RegistroTrabajador>();
             List<Registro> registrosLista = new List<Registro>();
             //Para cada trabajador se le cargan los registros solicitidaos
@@ -1146,22 +937,22 @@ namespace ControlPersonalAppWeb.Controllers
             {
                 var registrosTrabajador = new List<RegistroPDF>();
                 //Generar por periodo de tiempo
-                if(periodo!=null)
+                if (periodo != null)
                 {
                     int mes = periodo.Value.Month;
                     int año = periodo.Value.Year;
                     registrosTrabajador = database.RegistroTrabajador
                                         .Where(x => x.Fecha.Month == mes && x.Fecha.Year == año && x.Uid == trabajador.Uid)
-                                        .Select(x => new RegistroPDF { Campo = x.Campo, Empresa = x.Empresa, Fecha = x.Fecha, Uid = x.Uid, Causa = x.NombreTrabajador, Modificado = x.IdTrabajador}).ToList();
+                                        .Select(x => new RegistroPDF { Campo = x.Campo, Empresa = x.Empresa, Fecha = x.Fecha, Uid = x.Uid, Causa = x.NombreTrabajador, Modificado = x.IdTrabajador }).ToList();
                 }
                 //Un campo y un inicio
                 else if (inicio == null && fin == null && string.IsNullOrEmpty(campo))
                 {
                     registrosTrabajador = database.RegistroTrabajador
-                                          .Where(x => x.Uid == trabajador.Uid )
-                                          .Select(x=> new RegistroPDF {Campo = x.Campo, Empresa = x.Empresa, Fecha = x.Fecha, Uid = x.Uid, Causa = x.NombreTrabajador, Modificado = x.IdTrabajador }).ToList();
+                                          .Where(x => x.Uid == trabajador.Uid)
+                                          .Select(x => new RegistroPDF { Campo = x.Campo, Empresa = x.Empresa, Fecha = x.Fecha, Uid = x.Uid, Causa = x.NombreTrabajador, Modificado = x.IdTrabajador }).ToList();
                 }
-                else if (inicio!=null && fin == null && string.IsNullOrEmpty(campo))
+                else if (inicio != null && fin == null && string.IsNullOrEmpty(campo))
                 {
                     DateTime end = Convert.ToDateTime(inicio);
                     registrosTrabajador = database.RegistroTrabajador.Where(x => x.Uid == trabajador.Uid
@@ -1169,13 +960,13 @@ namespace ControlPersonalAppWeb.Controllers
                                                                             && x.Fecha.Month == end.Month
                                                                             && x.Fecha.Day == end.Day).Select(x => new RegistroPDF { Campo = x.Campo, Empresa = x.Empresa, Fecha = x.Fecha, Uid = x.Uid, Causa = x.NombreTrabajador, Modificado = x.IdTrabajador }).ToList();
                 }
-                else if(inicio!=null && fin!= null && string.IsNullOrEmpty(campo))
+                else if (inicio != null && fin != null && string.IsNullOrEmpty(campo))
                 {
                     DateTime end = Convert.ToDateTime(fin);
                     end = end.AddDays(1);
                     registrosTrabajador = database.RegistroTrabajador.Where(x => x.Uid == trabajador.Uid && x.Fecha > inicio && x.Fecha < end).Select(x => new RegistroPDF { Campo = x.Campo, Empresa = x.Empresa, Fecha = x.Fecha, Uid = x.Uid, Causa = x.NombreTrabajador, Modificado = x.IdTrabajador }).ToList();
                 }
-                else if(!string.IsNullOrEmpty(campo) && inicio != null && fin == null)
+                else if (!string.IsNullOrEmpty(campo) && inicio != null && fin == null)
                 {
                     DateTime end = Convert.ToDateTime(inicio);
                     registrosTrabajador = database.RegistroTrabajador.Where(x => x.Uid == trabajador.Uid
@@ -1183,11 +974,11 @@ namespace ControlPersonalAppWeb.Controllers
                                                                             && x.Fecha.Month == end.Month
                                                                             && x.Fecha.Day == end.Day && x.Campo == campo).Select(x => new RegistroPDF { Campo = x.Campo, Empresa = x.Empresa, Fecha = x.Fecha, Uid = x.Uid, Causa = x.NombreTrabajador, Modificado = x.IdTrabajador }).ToList();
                 }
-                else if(!string.IsNullOrEmpty(campo) && inicio == null && fin == null)
+                else if (!string.IsNullOrEmpty(campo) && inicio == null && fin == null)
                 {
                     registrosTrabajador = database.RegistroTrabajador.Where(x => x.Uid == trabajador.Uid && x.Campo == campo).Select(x => new RegistroPDF { Campo = x.Campo, Empresa = x.Empresa, Fecha = x.Fecha, Uid = x.Uid, Causa = x.NombreTrabajador, Modificado = x.IdTrabajador }).ToList();
                 }
-                else if(inicio != null && fin != null && !string.IsNullOrEmpty(campo))
+                else if (inicio != null && fin != null && !string.IsNullOrEmpty(campo))
                 {
                     DateTime end = Convert.ToDateTime(fin);
                     end = end.AddDays(1);
@@ -1274,11 +1065,21 @@ namespace ControlPersonalAppWeb.Controllers
                             //Ve si llegó antes de la hora para no sumar demás
                             if (0 > DateTime.Compare(primero.Fecha, t2) && 0 > DateTime.Compare(t2, segundo.Fecha))
                             {
-                                horas = horas + (extra - t2);
+                                if (extra > segundo.Fecha)
+                                {
+                                    horas = horas + (segundo.Fecha - t2);
+                                }
+                                else
+                                {
+                                    horas = horas + (extra - t2);
+                                }
                             }
                             else
                             {
-                                horas = horas + (extra - primero.Fecha);
+                                if (extra > primero.Fecha)
+                                    horas = horas + (extra - primero.Fecha);
+                                else
+                                    horas = horas + (primero.Fecha - extra);
                             }
                         }
                         else
@@ -1290,7 +1091,14 @@ namespace ControlPersonalAppWeb.Controllers
                         {
                             DateTime.TryParse("01/01/0001 " + trabajador.Salida, out entradaAlmuerzo);
                             DateTime.TryParse("01/01/0001 " + trabajador.EntradaA, out salidaAlmuerzo);
-                            almuerzo = almuerzo + (salidaAlmuerzo - entradaAlmuerzo);
+                            try
+                            {
+                                almuerzo = almuerzo + (salidaAlmuerzo - entradaAlmuerzo);
+                            }
+                            catch
+                            {
+                                DateTime.TryParse("01/01/0001 00:00", out almuerzo);
+                            }
                         }
                         else
                         {
@@ -1300,8 +1108,8 @@ namespace ControlPersonalAppWeb.Controllers
                         DateTime horasQL = new DateTime();
                         string raro = "";
                         DateTime salida = new DateTime();
-                        DateTime.TryParse("01/01/0001 " + segundo.Fecha.Hour+":"+ segundo.Fecha.Minute, out salida);
-                        if (almuerzo < horas &&  salidaAlmuerzo < salida)
+                        DateTime.TryParse("01/01/0001 " + segundo.Fecha.Hour + ":" + segundo.Fecha.Minute, out salida);
+                        if (almuerzo < horas && salidaAlmuerzo < salida)
 
                             horasQL = horasQL + (horas - almuerzo);
                         else
@@ -1340,12 +1148,10 @@ namespace ControlPersonalAppWeb.Controllers
                             SalidaModificada = segundo.Modificado,
                             CausaSalida = segundo.Causa,
                             SalidaOficial = extra.ToShortTimeString(),
-                            HorasExtras = horasExtras.ToShortTimeString(),
                             Atraso = atrasoP.ToShortTimeString(),
                             Campo = primero.Campo,
                             //Horas totales
                             Horas = horasT.ToShortTimeString() + raro,
-                            HorasTrabajadas = horasTrabajadas.ToShortTimeString(),
                             Contratado = trabajador.Contratado
 
                         };
@@ -1395,7 +1201,7 @@ namespace ControlPersonalAppWeb.Controllers
         }
         public void PDFConsolidado()
         {
-            DBManejoPersonalEntities database = new DBManejoPersonalEntities();
+            SgajcpEntities database = new SgajcpEntities();
             //var workers = database.RegistroTrabajador.Where(x => x.Uid == "63000000").ToList();
             //foreach (var registry in workers)
             //{
@@ -1411,13 +1217,14 @@ namespace ControlPersonalAppWeb.Controllers
 
             string Empresa = Utils.SessionManager.CuentaAutenticada().Empresa;
             List<TrabajadorIndex> trabajadores = database.Trabajador.Where(x => x.Empresa == Empresa)
-                                                .Select(x => new TrabajadorIndex { Id = x.Id, Nombre = x.Nombre, ApellidoMaterno = x.ApellidoMaterno,
+                                                .Select(x => new TrabajadorIndex
+                                                {
+                                                    Id = x.Id,
+                                                    Nombre = x.Nombre,
+                                                    ApellidoMaterno = x.ApellidoMaterno,
                                                     ApellidoPaterno = x.ApellidoPaterno,
-                                                    Rut = x.Rut, Uid = x.Uid , Contratado = x.Campo,
-                                                    Entrada = x.Entrada,
-                                                    EntradaA = x.EntradaA,
-                                                    Salida = x.Salida,
-                                                    SalidaA = x.SalidaA
+                                                    Rut = x.Rut,
+                                                    Uid = x.Uid
                                                 }).ToList();
             //List<RegistroTrabajador> registrosTrabajador = new List<RegistroTrabajador>();
             List<Registro> registrosLista = GetRegistroTrabajadores(trabajadores, null, null, null, null);
@@ -1425,49 +1232,48 @@ namespace ControlPersonalAppWeb.Controllers
             if (Utils.SessionManager.tipo == "PDF")
             {
                 GenerarPDFRegistros(trabajadores, null, "Consolidado", registrosLista);
-                Utils.SessionManager.log("PDF consolidado");
             }
             else
             {
-                GenerarExcel(trabajadores, "Consolidado", registrosLista);
-                Utils.SessionManager.log("Excel consolidado");
+                //GenerarExcel(trabajadores, "Consolidado", registrosLista);
             }
 
 
         }
         public void PDFRegistro(int id)
         {
-            DBManejoPersonalEntities database = new DBManejoPersonalEntities();
-            TrabajadorIndex trabajador = database.Trabajador.Select(x => new TrabajadorIndex { Id = x.Id, Nombre = x.Nombre, ApellidoMaterno = x.ApellidoMaterno,
-                                                                ApellidoPaterno = x.ApellidoPaterno, Rut = x.Rut, Uid = x.Uid, Gerente = x.Gerente,
-                                                                Empresa = x.Empresa, Contratado = x.Campo,
-                                                                Entrada = x.Entrada,
-                                                                EntradaA = x.EntradaA,
-                                                                Salida = x.Salida,
-                                                                SalidaA = x.SalidaA
-                                                            }).First(x => x.Id == id);
+            SgajcpEntities database = new SgajcpEntities();
+            TrabajadorIndex trabajador = database.Trabajador.Select(x => new TrabajadorIndex
+            {
+                Id = x.Id,
+                Nombre = x.Nombre,
+                ApellidoMaterno = x.ApellidoMaterno,
+                ApellidoPaterno = x.ApellidoPaterno,
+                Rut = x.Rut,
+                Uid = x.Uid,
+                Numero = x.Numero,
+                Empresa = x.Empresa,
+            }).First(x => x.Id == id);
             List<TrabajadorIndex> trabajadores = new List<TrabajadorIndex>
             {
                 trabajador
             };
-            List<Registro> registros = GetRegistroTrabajadores(trabajadores,null,null,null, null);
+            List<Registro> registros = GetRegistroTrabajadores(trabajadores, null, null, null, null);
 
             if (Utils.SessionManager.tipo == "PDF")
             {
                 GenerarPDFRegistros(trabajadores, null, "Registro", registros);
-                Utils.SessionManager.log("PDF registro");
             }
             else
             {
-                GenerarExcel(trabajadores, "Registro", registros);
-                Utils.SessionManager.log("Excel registro");
+                //GenerarExcel(trabajadores, "Registro", registros);
             }
         }
         public ActionResult PDFRegistroFecha()
         {
             List<TrabajadorIndex> trabajadores = Utils.SessionManager.trabajadores;
             List<Registro> registros = new List<Registro>();
-            if (Utils.SessionManager.inicio.ToShortDateString()=="01-01-0001" && Utils.SessionManager.fin.ToShortDateString() == "01-01-0001" && !string.IsNullOrEmpty(Utils.SessionManager.campo))
+            if (Utils.SessionManager.inicio.ToShortDateString() == "01-01-0001" && Utils.SessionManager.fin.ToShortDateString() == "01-01-0001" && !string.IsNullOrEmpty(Utils.SessionManager.campo))
             {
                 registros = GetRegistroTrabajadores(trabajadores, null, null, Utils.SessionManager.campo, null);
 
@@ -1479,7 +1285,14 @@ namespace ControlPersonalAppWeb.Controllers
             }
             if (Utils.SessionManager.inicio.ToShortDateString() != "01-01-0001" && Utils.SessionManager.fin.ToShortDateString() != "01-01-0001" && string.IsNullOrEmpty(Utils.SessionManager.campo))
             {
-                registros = GetRegistroTrabajadores(trabajadores, Utils.SessionManager.inicio, Utils.SessionManager.fin, null, null);
+                if (Utils.SessionManager.inicio.ToShortDateString() == Utils.SessionManager.fin.ToShortDateString())
+                {
+                    registros = GetRegistroTrabajadores(trabajadores, Utils.SessionManager.inicio, null, null, null);
+                }
+                else
+                {
+                    registros = GetRegistroTrabajadores(trabajadores, Utils.SessionManager.inicio, Utils.SessionManager.fin, null, null);
+                }
 
             }
             if (Utils.SessionManager.inicio.ToShortDateString() != "01-01-0001" && Utils.SessionManager.fin.ToShortDateString() != "01-01-0001" && !string.IsNullOrEmpty(Utils.SessionManager.campo))
@@ -1494,42 +1307,59 @@ namespace ControlPersonalAppWeb.Controllers
             }
             if (Utils.SessionManager.tipo == "PDF")
             {
-                Utils.SessionManager.log("PDF registro por fecha");
                 GenerarPDFRegistros(trabajadores, null, "Registro", registros);
             }
             else
             {
-                Utils.SessionManager.log("Excel registro por fecha");
-                GenerarExcel(trabajadores, "Registro", registros);
+                //GenerarExcel(trabajadores, "Registro", registros);
             }
             return RedirectToAction("Index");
         }
         public string formatearRut(string rut)
         {
-            int cont = 0;
-            string format;
-            if (rut.Length == 0)
+            // Si el RUT está vacío, retornar cadena vacía
+            if (string.IsNullOrEmpty(rut))
             {
                 return "";
             }
-            else
+
+            // Eliminar puntos, guiones y espacios
+            rut = rut.Replace(".", "");
+            rut = rut.Replace("-", "");
+            rut = rut.Replace(" ", "");
+            rut = rut.Replace("\t", "");
+
+            // Verificar que haya caracteres después de la limpieza
+            if (rut.Length <= 1)
             {
-                rut = rut.Replace(".", "");
-                rut = rut.Replace("-", "");
-                rut = rut.Replace(" ", "");
-                format = "-" + rut.Substring(rut.Length - 1);
-                for (int i = rut.Length - 2; i >= 0; i--)
-                {
-                    format = rut.Substring(i, 1) + format;
-                    cont++;
-                    if (cont == 3 && i != 0)
-                    {
-                        format = "." + format;
-                        cont = 0;
-                    }
-                }
-                return format;
+                return rut;
             }
+
+            // Obtener el dígito verificador (último carácter)
+            string dv = rut.Substring(rut.Length - 1);
+
+            // Obtener el número del RUT (sin dígito verificador)
+            string numero = rut.Substring(0, rut.Length - 1);
+
+            // Formatear el número con puntos cada tres dígitos desde la derecha
+            string numeroFormateado = "";
+            int contador = 0;
+
+            for (int i = numero.Length - 1; i >= 0; i--)
+            {
+                contador++;
+                numeroFormateado = numero[i] + numeroFormateado;
+
+                // Agregar punto después de cada tercer dígito, excepto al final
+                if (contador == 3 && i > 0)
+                {
+                    numeroFormateado = "." + numeroFormateado;
+                    contador = 0;
+                }
+            }
+
+            // Retornar el RUT formateado
+            return numeroFormateado + "-" + dv;
         }
         public bool validarRut(string rut)
         {
@@ -1568,7 +1398,7 @@ namespace ControlPersonalAppWeb.Controllers
             {
                 campos = db.Campos.Where(x => x.Empresa == empresa).Select(x => new { x.Nombre }).ToList();
             }
-            nombres = new string[campos.Count+1];
+            nombres = new string[campos.Count + 1];
             int count = 1;
             nombres[0] = "Todos";
             foreach (var campo in campos)
@@ -1578,94 +1408,70 @@ namespace ControlPersonalAppWeb.Controllers
             }
             return nombres;
         }
+
+        public byte[] getImage()
+        {
+            System.Drawing.Image img = System.Drawing.Image.FromFile(Server.MapPath("~/App_Data/Foto.png"));
+            MemoryStream ms = new MemoryStream();
+            img.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
+            return ms.ToArray();
+        }
         // GET: Trabajador
         public ActionResult Index(int? id)
         {
-            DBManejoPersonalEntities database = new DBManejoPersonalEntities();
-            if (id != null)
-            {
-                int idb = (int)id;
-                Trabajador trabajador = database.Trabajador.First(x => x.Id == id);
-                string file = "C:\\Data\\doc.pdf";
-                try
-                {
-                    MailMessage mail = new MailMessage();
-                    SmtpClient SmtpServer = new SmtpClient();
-                    mail.From = new MailAddress("notificacionjcp@ingenieriajcp.cl",
-                    "SGA JCP", System.Text.Encoding.UTF8);
-                    mail.To.Add("nicolasmorales@invina.net");
-                    //mail.To.Add("sebastianct36@outlook.com");
-                    mail.Subject = "Solicitud de Contrato de " + trabajador.Nombre + " " + trabajador.ApellidoPaterno + " " + trabajador.ApellidoMaterno;
-                    Utils.SessionManager.email = 2;
-                    PDFDetalle(idb);
-                    Utils.SessionManager.email = 1;
-                    MemoryStream ms = new MemoryStream(System.IO.File.ReadAllBytes(file));
-
-                    mail.Attachments.Add(new System.Net.Mail.Attachment(ms, trabajador.Nombre + " " + trabajador.ApellidoPaterno + " " + trabajador.ApellidoMaterno + ".pdf"));
-                    SmtpServer.DeliveryMethod = SmtpDeliveryMethod.Network;
-                    SmtpServer.UseDefaultCredentials = false;
-                    SmtpServer.Port = 25;
-                    SmtpServer.Host = "mail.ingenieriajcp.cl";
-                    SmtpServer.Credentials = new System.Net.NetworkCredential("notificacionjcp@ingenieriajcp.cl", "notificacion");
-                    SmtpServer.EnableSsl = true;
-                    SmtpServer.Send(mail);
-                    mail.Dispose();
-                    SmtpServer.Dispose();
-                    Utils.SessionManager.mensaje = "Enviado correctamente";
-                }
-                catch (Exception ex)
-                {
-                    ex.ToString();
-                    Utils.SessionManager.mensaje = "Falló el envío";
-                }
-                Utils.SessionManager.log("Envió un correo");
-            }
-
+            DeshabilitarExpirados();
             Cuentas cuenta = Utils.SessionManager.CuentaAutenticada();
             string empresa = cuenta.Empresa;
-            string[] campos;
             List<TrabajadorIndex> trabajadores = new List<TrabajadorIndex>();
-            if (empresa == "JCP")
+            if (empresa == "VSP")
             {
-                campos = GetNombreCampos("");
+                trabajadores = db.Trabajador.Select(x => new TrabajadorIndex
+                {
+                    Id = x.Id,
+                    Nombre = x.Nombre,
+                    ApellidoPaterno = x.ApellidoPaterno,
+                    ApellidoMaterno = x.ApellidoMaterno,
+                    Rut = x.Rut,
+                    Uid = x.Uid,
+                    Numero = x.Numero,
+                    Empresa = x.Empresa,
+                    Contratista = x.Contratista
+                }).OrderBy(x => x.ApellidoPaterno).ToList();
+
             }
             else
             {
-                campos = GetNombreCampos(empresa);
-            }
-            foreach (var campo in campos)
-            {
-                if (cuenta.Permisos.Contains(campo))
-                {
-                    trabajadores.AddRange(database.Trabajador.Where(x => x.Campo == campo).Select(x => new TrabajadorIndex { Id = x.Id, Nombre = x.Nombre, ApellidoPaterno = x.ApellidoPaterno, ApellidoMaterno = x.ApellidoMaterno, Rut = x.Rut, Uid = x.Uid, Gerente = x.Gerente, Empresa = x.Empresa, Contratado = x.Campo,
-                        Entrada = x.Entrada,
-                        EntradaA = x.EntradaA,
-                        Salida = x.Salida,
-                        SalidaA = x.SalidaA
-                    }).ToList());
-                }
-            }
-            Utils.SessionManager.log("Index trabajadores");
 
+                trabajadores = db.Trabajador.Select(x => new TrabajadorIndex
+                {
+                    Id = x.Id,
+                    Nombre = x.Nombre,
+                    ApellidoPaterno = x.ApellidoPaterno,
+                    ApellidoMaterno = x.ApellidoMaterno,
+                    Rut = x.Rut,
+                    Uid = x.Uid,
+                    Numero = x.Numero,
+                    Empresa = x.Empresa
+                }).Where(x => x.Empresa == cuenta.Empresa).ToList();
+            }
             return View(trabajadores);
         }
         // GET: Trabajador/Details/5
         public ActionResult Details(int id)
         {
-            DBManejoPersonalEntities database = new DBManejoPersonalEntities();
+            SgajcpEntities database = new SgajcpEntities();
             Trabajador trabajador = database.Trabajador.First(x => x.Id == id);
             if (Utils.SessionManager.alerta != 0)
             {
                 ViewBag.alerta = Utils.SessionManager.alerta;
                 Utils.SessionManager.alerta = 0;
             }
-            Utils.SessionManager.log("Detalle trabajador: " + trabajador.Nombre + " " + trabajador.ApellidoPaterno + " " + trabajador.ApellidoMaterno);
             return View(trabajador);
         }
         // GET: Trabajador/Create
         private void datosCreate()
         {
-            DBManejoPersonalEntities database = new DBManejoPersonalEntities();
+            SgajcpEntities database = new SgajcpEntities();
             string empresa = Utils.SessionManager.CuentaAutenticada().Empresa;
             var campos = database.Campos.Select(x => new { x.Nombre, x.Empresa, x.Encargado }).Where(x => x.Empresa == empresa).ToList();
             int count = 0;
@@ -1681,128 +1487,56 @@ namespace ControlPersonalAppWeb.Controllers
             ViewBag.jefes = jefes.Distinct().ToList();
             ViewBag.Campos = nombres;
         }
+
+        [HttpPost]
+        public JsonResult CheckRut(string rut)
+        {
+            // Aquí deberías implementar la lógica para verificar si el RUT ya existe en tu lista
+            // Puedes usar ViewBag.trabajadores o llamar a un servicio/repositorio para obtener la lista
+
+            // Supongamos que existe una lista llamada trabajadores
+            List<string> trabajadores = db.Trabajador.Select(x => x.Rut).ToList();
+
+            // Verificar si el RUT ya existe
+            bool isRutAvailable = !trabajadores.Contains(rut);
+
+            // Devolver el resultado como un objeto JSON
+            return Json(new { isAvailable = isRutAvailable });
+        }
+        [HttpPost]
+        public JsonResult CheckPulsera(string numero)
+        {
+            // Aquí deberías implementar la lógica para verificar si el RUT ya existe en tu lista
+            // Puedes usar ViewBag.trabajadores o llamar a un servicio/repositorio para obtener la lista
+
+            // Supongamos que existe una lista llamada trabajadores
+            List<string> pulseras = db.Trabajador.Select(x => x.Numero).ToList();
+
+            // Verificar si el RUT ya existe
+            bool isRutAvailable = !pulseras.Contains(numero);
+
+            // Devolver el resultado como un objeto JSON
+            return Json(new { isAvailable = isRutAvailable });
+        }
         public ActionResult Create()
         {
-            DBManejoPersonalEntities database = new DBManejoPersonalEntities();
-            string empresa = Utils.SessionManager.CuentaAutenticada().Empresa;
-            var campos = database.Campos.Select(x => new { x.Nombre, x.Empresa, x.Encargado }).Where(x => x.Empresa == empresa).ToList();
-            int count = 0;
-            string[] jefes = new string[campos.Count];
-            string[] nombres = new string[campos.Count];
-            foreach (var campo in campos)
-            {
-                nombres[count] = campo.Nombre;
-                jefes[count] = campo.Encargado;
-                count++;
-            }
-
-            ViewBag.jefes = jefes.Distinct().ToList();
-            ViewBag.Campos = nombres;
-            var empresita = database.Empresas.First(x => x.Nombre == empresa);
-            var cargos = database.Cargo.Where(x => x.IdEmpresa == empresita.Id).ToList();
-            List<String> nombresCargo = new List<string>();
-            foreach (var cargo in cargos)
-            {
-                nombresCargo.Add(cargo.Nombre);
-            }
-            ViewBag.Cargos = nombresCargo;
+            SgajcpEntities database = new SgajcpEntities();
+            ViewBag.empresas = db.Empresas.Select(x => x.Nombre).OrderBy(x => x).ToList();
             Trabajador trabajador = new Trabajador();
+            ViewBag.ruts = db.Trabajador.Select(x => x.Rut).ToList();
+            ViewBag.pulseras = db.Trabajador.Select(x => x.Numero).ToList();
             return View(trabajador);
         }
 
         // POST: Trabajador/Create
         [HttpPost]
         public ActionResult Create(FormCollection collection, HttpPostedFileBase file,
-            [Bind(Include = "Id,Salida,SalidaA,Entrada,EntradaA,Nombre,ApellidoPaterno,ApellidoMaterno,Rut,TipoCuenta,Banco,NumeroCuenta,Contratado,CodPersonal," +
-            "EstadoCivil,Nacionalidad,FechaNacimiento,Direccion,Sexo,Ciudad,Telefono,Email,CargasFamiliares,TrampoAsignacionFamiliar," +
-            "CargasSimples,CargasMaternales,CargasInvalidas,RegimenPrevicional,AsignacionFamiliar,AsignacionFamiliarRetroactiva," +
-            "ReintegroCargasFamiliares,SolicitudTrabajadorJoven,AFP,TipoLineaAFP,RentaImponibleAFP,CotizacionObligatoriaAFP,SIS," +
-            "AhorroVoluntarioAFP,RentaImpSustitutiva,TasaPactadaSus,AporteIndemSus,NPeriodosSus,PeriodosDesdeSus,PuestoTrabajoPesado," +
-            "PerodoHastaSus,PorcentajeTrabajoPesado,MontoTrabajoPesado,CodigoMovimientoDePersonal,InicioMovimientoPersonal,FinMovimientoPersonal," +
-            "TrampoAFP,Jubiulado,SeguroCesantia,Mutual,Salud,NombreEmer,VinculoEmer,DireccionEmer,TelefonoEmer,Cargo,NombreJefe,Campo,Empleador," +
-            "Contrato,Jornada,FechaIngreso,FechaTermino,SueldoBase,Gratificacion,SueldoBruto,TipoPago,FactorHE,Colacion,Movilizacion," +
-            "DiasVacacionesAño,JefeDirecto,Gerente,Uid,Empresa,APVI,CodigoAPVI,NumeroAPVI,FormaPagoAPVI,CotizacionAPVI," +
-            "CotizaciónDepositosConvenidos,APVC,CodigoAPVC,NumeroAPVC,FormaPagoAPVC,CotizacionTrabajadorAPVC,CotizacionEmpleadorAPVC," +
-            "AfiliadoVoluntario,RutAV,ApellidoPaternoAV,ApellidoMaternoAV,NombresAV,CodigoMovimientoPersonalAV,DesdeAV,HastaAV,AFPAV," +
-            "MontoCapitalizacionVoluntaria,MontoAV,PeriodosAV,CodigoExcaja,TasaExcaja,RentaImponibleIPS,CotizacionObligatoriaIPS," +
-            "RentaImponibleDesahucio,CodigoExcajaDesahucio,TasaCotizacionDesahucio,CotizaciónDesahucio,CotizacionFonasa,CotizacionISL," +
-            "BonificacionLey,DescuentoPorCargasFamiliaresISL,BonosGobierno,CodigoIntitucionSalud,NumeroFun,RentaImponibleIsapre," +
-            "MonedaDelPlanPactadoIsapre,CotizacionPactada,CotizacionIsapre,CotizacionIsapreAV,MontoGES,CodigoCCAF,RentaImponibleCCAF," +
-            "CreditosPersonalesCCAF,DescuentoDentalCCAF,DescuentosPorLeasing,DescuentoPorSeguroDeVidaCCAF,OtrosDescuentosCCAF," +
-            "CotizacionCCAFNoAfiniladosIsapres,DescuentoCargasFamiliaresCCAF,OtrosDescuentosCCAF1,OtrosDescuentosCCAF2,BonosGobiernoCCAF," +
-            "CodigoSucursalCCAF,CodigoMutualidad,RentaImponibleMutual,CotizacionAccidenteMutual,SucursalParaPagoMutual,RentaImponibleSeguroCensantia," +
-            "AporteTrabajadorSeguroCensatia,AporteEmpleadorSeguroCesantia,Subsidio,DatosEmpresa")] 
-            Trabajador trabajadorNew)
+            [Bind(Include = "Id,Nombre,ApellidoPaterno,ApellidoMaterno,Habilitado,Rut,Nacionalidad,Expiración,Direccion,Sexo,Ciudad,Telefono,Email,Numero,Empresa")] Trabajador trabajadorNew)
         {
             try
             {
-                DBManejoPersonalEntities database = new DBManejoPersonalEntities();
-                //Trabajador trabajadorNew = new Trabajador();
-                /*trabajadorNew.Nombre = collection["Nombre"].Replace(",","");
-                trabajadorNew.ApellidoPaterno = collection["ApellidoPaterno"].Replace(",", "");
-                trabajadorNew.ApellidoMaterno = collection["ApellidoMaterno"].Replace(",", "");
-                trabajadorNew.Rut = collection["Rut"];
-                trabajadorNew.Rut = formatearRut(trabajadorNew.Rut);
-                trabajadorNew.TipoCuenta = collection["TipoCuenta"];
-                trabajadorNew.Banco = collection["Banco"];
-                trabajadorNew.NumeroCuenta = collection["NumeroCuenta"];
-                trabajadorNew.Contratado = collection["Contratado"];
-                trabajadorNew.CodPersonal = collection["CodPersonal"];
-                trabajadorNew.EstadoCivil = collection["EstadoCivil"];
-                if (DateTime.TryParse(collection["FechaNacimiento"], out temp))
-                {
-                    trabajadorNew.FechaNacimiento = Convert.ToDateTime(collection["FechaNacimiento"]);
-                }
-                trabajadorNew.Direccion = collection["Direccion"];
-                trabajadorNew.Sexo = collection["Sexo"];
-                trabajadorNew.Ciudad = collection["Ciudad"];
-                trabajadorNew.CargasFamiliares = collection["CargasFamiliares"];
-                if (collection["CargasSimples"].ToString().Length>0)
-                {
-                    trabajadorNew.CargasSimples = Convert.ToInt32(collection["CargasSimples"]);
-                }
-                trabajadorNew.AFP = collection["AFP"];
-                trabajadorNew.Salud = collection["Salud"];
-                trabajadorNew.CodigoIntitucionSalud = trabajadorNew.Salud;
-                trabajadorNew.Telefono = collection["Telefono"];
-                trabajadorNew.NombreEmer = collection["NombreEmer"];
-                trabajadorNew.VinculoEmer = collection["VinculoEmer"];
-                trabajadorNew.DireccionEmer = collection["DireccionEmer"];
-                trabajadorNew.TelefonoEmer = collection["TelefonoEmer"];
-                trabajadorNew.Cargo = collection["Cargo"];
-                trabajadorNew.NombreJefe = collection["NombreJefe"];
-                trabajadorNew.Campo = collection["Campo"];
-                trabajadorNew.Empleador = collection["Empleador"];
-                trabajadorNew.Contrato = collection["Contrato"];
-                if (DateTime.TryParse(collection["FechaTermino"], out temp))
-                {
-                    trabajadorNew.FechaTermino = Convert.ToDateTime(collection["FechaTermino"]);
-                }
-                trabajadorNew.Jornada = collection["Jornada"];
-                if (DateTime.TryParse(collection["FechaIngreso"], out temp))
-                {
-                    trabajadorNew.FechaIngreso = Convert.ToDateTime(collection["FechaIngreso"]);
-                }
-                
-                if (collection["SueldoBase"].ToString().Length > 0)
-                {
-                    trabajadorNew.SueldoBase = Convert.ToInt32(collection["SueldoBase"]);
-                }
-                
-                if (collection["Gratificacion"].ToString().Length > 0)
-                {
-                    trabajadorNew.Gratificacion = Convert.ToInt32(collection["Gratificacion"]);  
-                }
-                
-                if (collection["SueldoBruto"].ToString().Length > 0)
-                {
-                    trabajadorNew.SueldoBruto = Convert.ToInt32(collection["SueldoBruto"]);
-                }
-                
-                trabajadorNew.Gerente = collection["Gerente"];
-                trabajadorNew.Empresa = collection["Empresa"];
-                */
-
+                SgajcpEntities database = new SgajcpEntities();
+                ViewBag.empresas = db.Empresas.Select(x => x.Nombre).OrderBy(x => x).ToList();
                 trabajadorNew.Rut = formatearRut(trabajadorNew.Rut);
                 HttpPostedFileBase postedFile = Request.Files["Foto"];
                 if (postedFile != null && postedFile.ContentLength > 0)
@@ -1810,33 +1544,23 @@ namespace ControlPersonalAppWeb.Controllers
                     trabajadorNew.FotoCarnet = getImageFromPostfile(postedFile, 850);
                     ViewBag.foto = Request.Files["Foto"];
                 }
-                if (String.IsNullOrEmpty(collection["aviso"]))
+                postedFile = Request.Files["FotoCarnet"];
+                if (postedFile != null && postedFile.ContentLength > 0)
                 {
-                    Trabajador trabajador1 = null;
-                    try
-                    {
-                        string uid = collection["Uid"];
-                        trabajador1 = database.Trabajador.First(x => x.Uid == uid);
-                    }
-                    catch { }
-                    if (trabajador1 != null)
-                    {
-                        ViewBag.texto = "Uid en uso, en\n "+trabajador1.Nombre+" "+trabajador1.ApellidoPaterno + " " +trabajador1.ApellidoMaterno+"\n " +trabajador1.Rut;
-                        ViewBag.aviso = "Avisado";
-                        datosCreate();
-                        return View(trabajadorNew);
-                    }
+                    trabajadorNew.Foto = getImageFromPostfile(postedFile, 850);
+                    ViewBag.fotocarnet = Request.Files["FotoCarnet"];
                 }
-                if (collection["Uid"] != null && collection["Uid"] != String.Empty)
+                if (trabajadorNew.Habilitado != true)
                 {
-                    trabajadorNew.Uid = cambiarUidCrear(collection["Uid"]);
+                    trabajadorNew.Habilitado = false;
                 }
+                /*
                 if (!validarRut(trabajadorNew.Rut))
                 {
                     ViewBag.texto = "Rut no válido";
                     datosCreate();
                     return View(trabajadorNew);
-                }
+                }/*
                 Trabajador trabajador = null;
                 try
                 {
@@ -1845,10 +1569,103 @@ namespace ControlPersonalAppWeb.Controllers
                     datosCreate();
                     return View(trabajadorNew);
                 }
-                catch { }
+                catch { }*/
                 database.Trabajador.Add(trabajadorNew);
                 database.SaveChanges();
-                Utils.SessionManager.log("Crear trabajador: " + trabajadorNew.Nombre + " "+trabajadorNew.ApellidoPaterno + " "+ trabajadorNew.ApellidoMaterno);
+                if (!Directory.Exists(path + "\\" + trabajadorNew.Id + "\\"))
+                {
+                    Directory.CreateDirectory(path + "\\" + trabajadorNew.Id + "\\");
+                }
+                postedFile = Request.Files["Nomina"];
+                if (postedFile != null && postedFile.ContentLength > 0)
+                {
+                    postedFile.SaveAs(path + "\\" + trabajadorNew.Id + "\\" + postedFile.FileName);
+                    trabajadorNew.Nomina = postedFile.FileName;
+                }
+                postedFile = Request.Files["Contrato"];
+                if (postedFile != null && postedFile.ContentLength > 0)
+                {
+                    postedFile.SaveAs(path + "\\" + trabajadorNew.Id + "\\" + postedFile.FileName);
+                    trabajadorNew.Contrato = postedFile.FileName;
+                }
+                postedFile = Request.Files["Anexo"];
+                if (postedFile != null && postedFile.ContentLength > 0)
+                {
+                    postedFile.SaveAs(path + "\\" + trabajadorNew.Id + "\\" + postedFile.FileName);
+                    trabajadorNew.Anexo = postedFile.FileName;
+                }
+                postedFile = Request.Files["Odi"];
+                if (postedFile != null && postedFile.ContentLength > 0)
+                {
+                    postedFile.SaveAs(path + "\\" + trabajadorNew.Id + "\\" + postedFile.FileName);
+                    trabajadorNew.Odi = postedFile.FileName;
+                }
+                postedFile = Request.Files["Registro_Epp"];
+                if (postedFile != null && postedFile.ContentLength > 0)
+                {
+                    postedFile.SaveAs(path + "\\" + trabajadorNew.Id + "\\" + postedFile.FileName);
+                    trabajadorNew.Registro_Epp = postedFile.FileName;
+                }
+                postedFile = Request.Files["Registro_RIOHS"];
+                if (postedFile != null && postedFile.ContentLength > 0)
+                {
+                    postedFile.SaveAs(path + "\\" + trabajadorNew.Id + "\\" + postedFile.FileName);
+                    trabajadorNew.Registro_RIOHS = postedFile.FileName;
+                }
+                postedFile = Request.Files["Registro_capacitación"];
+                if (postedFile != null && postedFile.ContentLength > 0)
+                {
+                    postedFile.SaveAs(path + "\\" + trabajadorNew.Id + "\\" + postedFile.FileName);
+                    trabajadorNew.Registro_capacitación = postedFile.FileName;
+                }
+                postedFile = Request.Files["Examen_altura_física"];
+                if (postedFile != null && postedFile.ContentLength > 0)
+                {
+                    postedFile.SaveAs(path + "\\" + trabajadorNew.Id + "\\" + postedFile.FileName);
+                    trabajadorNew.Examen_altura_física = postedFile.FileName;
+                }
+                postedFile = Request.Files["Procedimientos_de_trabajo"];
+                if (postedFile != null && postedFile.ContentLength > 0)
+                {
+                    postedFile.SaveAs(path + "\\" + trabajadorNew.Id + "\\" + postedFile.FileName);
+                    trabajadorNew.Procedimientos_de_trabajo = postedFile.FileName;
+                }
+                postedFile = Request.Files["Documento_Covid_19"];
+                if (postedFile != null && postedFile.ContentLength > 0)
+                {
+                    postedFile.SaveAs(path + "\\" + trabajadorNew.Id + "\\" + postedFile.FileName);
+                    trabajadorNew.Documento_Covid_19 = postedFile.FileName;
+                }
+                Utils.SessionManager.log("Trabajador crear: " + trabajadorNew.Nombre + " " + trabajadorNew.ApellidoPaterno + " " + trabajadorNew.ApellidoMaterno);
+                if (!string.IsNullOrEmpty(trabajadorNew.Numero))
+                {
+                    string numero = trabajadorNew.Numero;
+                    try
+                    {
+                        trabajadorNew.Uid = db.Pulseras.First(x => x.Numero == numero).Uid;
+                    }
+                    catch
+                    {
+
+                    }
+                    Trabajador trabajador1 = null;
+                    try
+                    {
+                        trabajador1 = database.Trabajador.First(x => x.Numero == numero);
+                    }
+                    catch { }
+                    if (trabajador1 != null && trabajador1.Rut != trabajadorNew.Rut && trabajadorNew.Uid != null)
+                    {
+                        trabajador1.Numero = trabajador1.Id.ToString();
+                        trabajador1.Uid = trabajador1.Id.ToString();
+                        db.Entry(trabajador1).State = EntityState.Modified;
+                        db.SaveChanges();
+                    }
+                    db.Entry(trabajadorNew).State = EntityState.Modified;
+                    db.SaveChanges();
+
+                }
+
                 return RedirectToAction("Index");
             }
             catch (DbEntityValidationException e)
@@ -1869,258 +1686,157 @@ namespace ControlPersonalAppWeb.Controllers
         // GET: Trabajador/Edit/5
         public ActionResult Edit(int id)
         {
-            DBManejoPersonalEntities database = new DBManejoPersonalEntities();
+            SgajcpEntities database = new SgajcpEntities();
+            ViewBag.empresas = db.Empresas.Select(x => x.Nombre).OrderBy(x => x).ToList();
             Trabajador trabajadorNew = database.Trabajador.First(x => x.Id == id);
-            string empresa = Utils.SessionManager.CuentaAutenticada().Empresa;
-            var campos = database.Campos.Select(x => new { x.Nombre, x.Empresa, x.Encargado }).Where(x => x.Empresa == empresa).ToList();
-            int count = 0;
-            string[] jefes = new string[campos.Count];
-            string[] nombres = new string[campos.Count];
-            foreach (var campo in campos)
-            {
-                if (!string.IsNullOrWhiteSpace(campo.Nombre))
-                    nombres[count] = campo.Nombre;
-                if (!string.IsNullOrWhiteSpace(campo.Encargado))
-                    jefes[count] = campo.Encargado;
-                count++;
-            }
-            var empresita = database.Empresas.First(x => x.Nombre == empresa); 
-            var cargos = database.Cargo.Where(x => x.IdEmpresa == empresita.Id).ToList();
-            List<String> nombresCargo = new List<string>();
-            foreach (var cargo in cargos)
-            {
-                nombresCargo.Add(cargo.Nombre);
-            }
-            ViewBag.Cargos = nombresCargo;
-
-            ViewBag.jefes = jefes.Distinct().ToList();
-            ViewBag.Campos = nombres;
-            if(trabajadorNew.Gerente == null)
-                trabajadorNew.Gerente = "";
-            if (trabajadorNew.Uid == null)
-                trabajadorNew.Uid = "";
-            if (trabajadorNew.TipoCuenta==null)
-                trabajadorNew.TipoCuenta = "";
-            if (trabajadorNew.Banco == null)
-                trabajadorNew.Banco = "";
-            if (trabajadorNew.NumeroCuenta == null)
-                trabajadorNew.NumeroCuenta = trabajadorNew.Rut.Substring(0, trabajadorNew.Rut.Length-2);
-            if (trabajadorNew.Contratado == null)
-                trabajadorNew.Contratado = "No";
-            if (trabajadorNew.CodPersonal == null)
-                trabajadorNew.CodPersonal = "";
-            if (trabajadorNew.EstadoCivil == null)
-                trabajadorNew.EstadoCivil = "";
-            if (trabajadorNew.FechaNacimiento == null)
-                trabajadorNew.FechaNacimiento = new DateTime();
-            if (trabajadorNew.Direccion == null)
-                trabajadorNew.Direccion = "";
-            if (trabajadorNew.Sexo == null)
-                trabajadorNew.Sexo = "";
-            if (trabajadorNew.Ciudad == null)
-                trabajadorNew.Ciudad = "";
-            if (trabajadorNew.CargasFamiliares == null)
-                trabajadorNew.CargasFamiliares = "";
-            if (trabajadorNew.CargasSimples == null)
-                trabajadorNew.CargasSimples = 0;
-            if (trabajadorNew.AFP == null)
-                trabajadorNew.AFP = "";
-            if (trabajadorNew.CodigoIntitucionSalud == null)
-                trabajadorNew.CodigoIntitucionSalud = "";
-            if (trabajadorNew.Salud == null)
-                trabajadorNew.Salud = "";
-            if (trabajadorNew.Telefono == null)
-                trabajadorNew.Telefono = "";
-            if (trabajadorNew.NombreEmer == null)
-                trabajadorNew.NombreEmer = "";
-            if (trabajadorNew.VinculoEmer == null)
-                trabajadorNew.VinculoEmer = "";
-            if (trabajadorNew.DireccionEmer == null)
-                trabajadorNew.DireccionEmer = "";
-            if (trabajadorNew.TelefonoEmer == null)
-                trabajadorNew.TelefonoEmer = "";
-            if (trabajadorNew.Cargo == null)
-                trabajadorNew.Cargo = "";
-            if (trabajadorNew.NombreJefe == null)
-                trabajadorNew.NombreJefe = "";
-            if (trabajadorNew.Campo == null)
-                trabajadorNew.Campo = "";
-            if (trabajadorNew.Empleador == null)
-                trabajadorNew.Empleador = "";
-            if (trabajadorNew.Contrato == null)
-                trabajadorNew.Contrato = "";
-            if (trabajadorNew.FechaTermino == null)
-                trabajadorNew.FechaTermino = new DateTime();
-            if (trabajadorNew.Jornada == null)
-                trabajadorNew.Jornada = "";
-            if (trabajadorNew.FechaIngreso == null)
-                trabajadorNew.FechaIngreso = new DateTime();
-            if (trabajadorNew.SueldoBase == null)
-                trabajadorNew.SueldoBase = 0;
-            if (trabajadorNew.Gratificacion == null)
-                trabajadorNew.Gratificacion = 0;
-            if (trabajadorNew.SueldoBruto == null)
-                trabajadorNew.SueldoBruto = 0;
-            if(trabajadorNew.FotoCarnet!=null)
+            if (trabajadorNew.FotoCarnet != null)
             {
                 Utils.SessionManager.FotoCarnet = trabajadorNew.FotoCarnet;
+            }
+            if (trabajadorNew.Foto != null)
+            {
+                Utils.SessionManager.Foto = trabajadorNew.Foto;
             }
             return View(trabajadorNew);
         }
         // POST: Trabajador/Edit/5
         [HttpPost]
-        public ActionResult Edit(int id, FormCollection collection, 
-                [Bind(Include = "Id,Salida,SalidaA,Entrada,EntradaA,Nombre,ApellidoPaterno,ApellidoMaterno,Rut,TipoCuenta,Banco,NumeroCuenta,Contratado," +
-                "CodPersonal,EstadoCivil,Nacionalidad,FechaNacimiento,Direccion,Sexo,Ciudad,Telefono,Email,CargasFamiliares," +
-                "TrampoAsignacionFamiliar,CargasSimples,CargasMaternales,CargasInvalidas,RegimenPrevicional,AsignacionFamiliar," +
-                "AsignacionFamiliarRetroactiva,ReintegroCargasFamiliares,SolicitudTrabajadorJoven,AFP,TipoLineaAFP,RentaImponibleAFP," +
-                "CotizacionObligatoriaAFP,SIS,AhorroVoluntarioAFP,RentaImpSustitutiva,TasaPactadaSus,AporteIndemSus,NPeriodosSus," +
-                "PeriodosDesdeSus,PuestoTrabajoPesado,PerodoHastaSus,PorcentajeTrabajoPesado,MontoTrabajoPesado,CodigoMovimientoDePersonal," +
-                "InicioMovimientoPersonal,FinMovimientoPersonal,TrampoAFP,Jubiulado,SeguroCesantia,Mutual,Salud,NombreEmer,VinculoEmer," +
-                "DireccionEmer,TelefonoEmer,Cargo,NombreJefe,Campo,Empleador,Contrato,Jornada,FechaIngreso,FechaTermino,SueldoBase," +
-                "Gratificacion,SueldoBruto,TipoPago,FactorHE,Colacion,Movilizacion,DiasVacacionesAño,JefeDirecto,Gerente,Empresa," +
-                "APVI,CodigoAPVI,NumeroAPVI,FormaPagoAPVI,CotizacionAPVI,CotizaciónDepositosConvenidos,APVC,CodigoAPVC,NumeroAPVC," +
-                "FormaPagoAPVC,CotizacionTrabajadorAPVC,CotizacionEmpleadorAPVC,AfiliadoVoluntario,RutAV,ApellidoPaternoAV,ApellidoMaternoAV," +
-                "NombresAV,CodigoMovimientoPersonalAV,DesdeAV,HastaAV,AFPAV,MontoCapitalizacionVoluntaria,MontoAV,PeriodosAV,CodigoExcaja," +
-                "TasaExcaja,RentaImponibleIPS,CotizacionObligatoriaIPS,RentaImponibleDesahucio,CodigoExcajaDesahucio,TasaCotizacionDesahucio," +
-                "CotizaciónDesahucio,CotizacionFonasa,CotizacionISL,BonificacionLey,DescuentoPorCargasFamiliaresISL,BonosGobierno," +
-                "CodigoIntitucionSalud,NumeroFun,RentaImponibleIsapre,MonedaDelPlanPactadoIsapre,CotizacionPactada,CotizacionIsapre," +
-                "CotizacionIsapreAV,MontoGES,CodigoCCAF,RentaImponibleCCAF,CreditosPersonalesCCAF,DescuentoDentalCCAF,DescuentosPorLeasing," +
-                "DescuentoPorSeguroDeVidaCCAF,OtrosDescuentosCCAF,CotizacionCCAFNoAfiniladosIsapres,DescuentoCargasFamiliaresCCAF," +
-                "OtrosDescuentosCCAF1,OtrosDescuentosCCAF2,BonosGobiernoCCAF,CodigoSucursalCCAF,CodigoMutualidad,RentaImponibleMutual," +
-                "CotizacionAccidenteMutual,SucursalParaPagoMutual,RentaImponibleSeguroCensantia,AporteTrabajadorSeguroCensatia," +
-                "AporteEmpleadorSeguroCesantia,Subsidio,DatosEmpresa")] 
-                 Trabajador trabajadorNew)
+        public ActionResult Edit(int id, FormCollection collection,
+                [Bind(Include = "Id,Nombre,ApellidoPaterno,ApellidoMaterno,Habilitado,Rut,Uid,Nacionalidad,Direccion,Sexo,Ciudad,Telefono,Email,Numero,Empresa" +
+                                "Nomina,Contrato,Anexo,Odi,Registro_Epp,Registro_RIOHS,Registro_capacitación,Expiración,Examen_altura_física,Procedimientos_de_trabajo,Documento_Covid_19")]
+                                Trabajador trabajadorNew)
         {
+            ViewBag.empresas = db.Empresas.Select(x => x.Nombre).OrderBy(x => x).ToList();
             try
             {
-                DBManejoPersonalEntities database = new DBManejoPersonalEntities();
-                string empresa = Utils.SessionManager.CuentaAutenticada().Empresa;
-                //Trabajador trabajadorNew = database.Trabajador.First(x => x.Id == id);
-                /*trabajadorNew.Nombre = collection["Nombre"];
-                trabajadorNew.ApellidoPaterno = collection["ApellidoPaterno"];
-                trabajadorNew.ApellidoMaterno = collection["ApellidoMaterno"];
-                trabajadorNew.Rut = collection["Rut"];
-                trabajadorNew.Rut = formatearRut(trabajadorNew.Rut);
-                trabajadorNew.Gerente = collection["Gerente"];
-                trabajadorNew.TipoCuenta = collection["TipoCuenta"];
-                trabajadorNew.Banco = collection["Banco"];
-                trabajadorNew.NumeroCuenta = collection["NumeroCuenta"];
-                trabajadorNew.Contratado = collection["Contratado"];
-                trabajadorNew.CodPersonal = collection["CodPersonal"];
-                trabajadorNew.EstadoCivil = collection["EstadoCivil"];
-                if (DateTime.TryParse(collection["FechaNacimiento"], out temp))
-                {
-                    trabajadorNew.FechaNacimiento = Convert.ToDateTime(collection["FechaNacimiento"]);
-                }
-                trabajadorNew.Direccion = collection["Direccion"];
-                trabajadorNew.Sexo = collection["Sexo"];
-                trabajadorNew.Ciudad = collection["Ciudad"];
-                trabajadorNew.CargasFamiliares = collection["CargasFamiliares"];
-                trabajadorNew.CargasSimples = Convert.ToInt32(collection["CargasSimples"]);
-                trabajadorNew.AFP = collection["AFP"];
-                trabajadorNew.Salud = collection["Salud"];
-                trabajadorNew.CodigoIntitucionSalud = trabajadorNew.Salud;
-                trabajadorNew.Telefono = collection["Telefono"];
-                trabajadorNew.NombreEmer = collection["NombreEmer"];
-                trabajadorNew.VinculoEmer = collection["VinculoEmer"];
-                trabajadorNew.DireccionEmer = collection["DireccionEmer"];
-                trabajadorNew.TelefonoEmer = collection["TelefonoEmer"];
-                trabajadorNew.Cargo = collection["Cargo"];
-                trabajadorNew.NombreJefe = collection["NombreJefe"];
-                trabajadorNew.Campo = collection["Campo"];
-                trabajadorNew.Empleador = collection["Empleador"];
-                trabajadorNew.Contrato = collection["Contrato"];
-                if (DateTime.TryParse(collection["FechaTermino"], out temp))
-                {
-                    trabajadorNew.FechaTermino = Convert.ToDateTime(collection["FechaTermino"]);
-                }
-                else
-                {
-                    trabajadorNew.FechaTermino = null;
-                }
-                trabajadorNew.Jornada = collection["Jornada"];
-                if (DateTime.TryParse(collection["FechaIngreso"], out temp))
-                {
-                    trabajadorNew.FechaIngreso = Convert.ToDateTime(collection["FechaIngreso"]);
-                }
+                SgajcpEntities database = new SgajcpEntities();
 
-                trabajadorNew.SueldoBase = Convert.ToInt32(collection["SueldoBase"]);
-                trabajadorNew.Gratificacion = Convert.ToInt32(collection["Gratificacion"]);
-                trabajadorNew.SueldoBruto = Convert.ToInt32(collection["SueldoBruto"]);
-                trabajadorNew.Gerente = collection["Gerente"];*/
-
-                Utils.SessionManager.log("Editar trabajador: " + trabajadorNew.Nombre + " " + trabajadorNew.ApellidoPaterno + " " + trabajadorNew.ApellidoMaterno);
                 trabajadorNew.Rut = formatearRut(trabajadorNew.Rut);
-                HttpPostedFileBase postedFile = Request.Files["Foto"];
-                if (postedFile != null && postedFile.ContentLength > 0)
+                trabajadorNew.Empresa = collection["Empresa"];
+                string numero = trabajadorNew.Numero;
+                string uid = db.Pulseras.First(x => x.Numero == numero).Uid;
+                Trabajador trabajador1 = null;
+                try
                 {
-                    trabajadorNew.FotoCarnet = getImageFromPostfile(postedFile, 850);
+                    trabajador1 = database.Trabajador.First(x => x.Numero == trabajadorNew.Numero);
                 }
-                trabajadorNew.Empresa = empresa;
+                catch { }
+                if (trabajador1 != null && trabajador1.Id != trabajadorNew.Id)
+                {
+                    trabajador1.Numero = trabajador1.Id.ToString();
+                    trabajador1.Uid = trabajador1.Id.ToString();
+                    db.Entry(trabajador1).State = EntityState.Modified;
+                    db.SaveChanges();
+                }
+                trabajadorNew.Uid = uid;
                 if (trabajadorNew.FotoCarnet == null && Utils.SessionManager.FotoCarnet != null)
                 {
                     trabajadorNew.FotoCarnet = Utils.SessionManager.FotoCarnet;
                     Utils.SessionManager.FotoCarnet = null;
                 }
-                if (String.IsNullOrEmpty(collection["aviso"]))
+                HttpPostedFileBase postedFile = Request.Files["FotoCarnet"];
+                if (postedFile != null && postedFile.ContentLength > 0)
                 {
-                    Trabajador trabajador1 = null;
-                    try
-                    {
-                        string uid = collection["Uid"];
-                        trabajador1 = database.Trabajador.First(x => x.Uid == uid);
-                    }
-                    catch { }
-                    if (trabajador1 != null && collection["Uid"] != trabajador1.Uid)
-                    {
-                        ViewBag.texto = "Uid en uso, en\n " + trabajador1.Nombre + " " + trabajador1.ApellidoPaterno + " " + trabajador1.ApellidoMaterno + "\n " + trabajador1.Rut;
-                        ViewBag.aviso = "Avisado";
-                        datosCreate();
-                        return View(trabajadorNew);
-                    }
+                    trabajadorNew.FotoCarnet = getImageFromPostfile(postedFile, 850);
                 }
-                if (collection["Uid"] != null && collection["Uid"] != String.Empty)
-                {
-                    Trabajador trabajadorUid = new Trabajador();
-                    try
-                    {
-                        trabajadorUid = database.Trabajador.First(x => x.Id == trabajadorNew.Id);
-                    }
-                    catch { }
 
-                    if (trabajadorUid != null)
-                    {
-                        if (trabajadorUid.Uid == collection["Uid"])
-                            trabajadorNew.Uid = collection["Uid"];
-                        else
-                            trabajadorNew.Uid = cambiarUidRegistros(collection["Uid"], trabajadorUid.Uid);
-                    }
-                    /*else
-                    {
-                        cambiarUidCrear(collection["Uid"]);
-                    }*/
+                if (trabajadorNew.Foto == null && Utils.SessionManager.Foto != null)
+                {
+                    trabajadorNew.Foto = Utils.SessionManager.Foto;
+                    Utils.SessionManager.Foto = null;
+                }
+                postedFile = Request.Files["Foto"];
+                if (postedFile != null && postedFile.ContentLength > 0)
+                {
+                    trabajadorNew.Foto = getImageFromPostfile(postedFile, 850);
+                }
+                if (trabajadorNew.Habilitado != true)
+                {
+                    trabajadorNew.Habilitado = false;
+                }
+                if (!Directory.Exists(path + "\\" + trabajadorNew.Id + "\\"))
+                {
+                    Directory.CreateDirectory(path + "\\" + trabajadorNew.Id + "\\");
+                }
+                postedFile = Request.Files["Nomina1"];
+                if (postedFile != null && postedFile.ContentLength > 0)
+                {
+                    postedFile.SaveAs(path + "\\" + trabajadorNew.Id + "\\" + postedFile.FileName);
+                    trabajadorNew.Nomina = postedFile.FileName;
+                }
+                postedFile = Request.Files["Contrato1"];
+                if (postedFile != null && postedFile.ContentLength > 0)
+                {
+                    postedFile.SaveAs(path + "\\" + trabajadorNew.Id + "\\" + postedFile.FileName);
+                    trabajadorNew.Contrato = postedFile.FileName;
+                }
+                postedFile = Request.Files["Anexo1"];
+                if (postedFile != null && postedFile.ContentLength > 0)
+                {
+                    postedFile.SaveAs(path + "\\" + trabajadorNew.Id + "\\" + postedFile.FileName);
+                    trabajadorNew.Anexo = postedFile.FileName;
+                }
+                postedFile = Request.Files["Odi1"];
+                if (postedFile != null && postedFile.ContentLength > 0)
+                {
+                    postedFile.SaveAs(path + "\\" + trabajadorNew.Id + "\\" + postedFile.FileName);
+                    trabajadorNew.Odi = postedFile.FileName;
+                }
+                postedFile = Request.Files["Registro_Epp1"];
+                if (postedFile != null && postedFile.ContentLength > 0)
+                {
+                    postedFile.SaveAs(path + "\\" + trabajadorNew.Id + "\\" + postedFile.FileName);
+                    trabajadorNew.Registro_Epp = postedFile.FileName;
+                }
+                postedFile = Request.Files["Registro_RIOHS1"];
+                if (postedFile != null && postedFile.ContentLength > 0)
+                {
+                    postedFile.SaveAs(path + "\\" + trabajadorNew.Id + "\\" + postedFile.FileName);
+                    trabajadorNew.Registro_RIOHS = postedFile.FileName;
+                }
+                postedFile = Request.Files["Registro_capacitación1"];
+                if (postedFile != null && postedFile.ContentLength > 0)
+                {
+                    postedFile.SaveAs(path + "\\" + trabajadorNew.Id + "\\" + postedFile.FileName);
+                    trabajadorNew.Registro_capacitación = postedFile.FileName;
+                }
+                postedFile = Request.Files["Examen_altura_física1"];
+                if (postedFile != null && postedFile.ContentLength > 0)
+                {
+                    postedFile.SaveAs(path + "\\" + trabajadorNew.Id + "\\" + postedFile.FileName);
+                    trabajadorNew.Examen_altura_física = postedFile.FileName;
+                }
+                postedFile = Request.Files["Procedimientos_de_trabajo1"];
+                if (postedFile != null && postedFile.ContentLength > 0)
+                {
+                    postedFile.SaveAs(path + "\\" + trabajadorNew.Id + "\\" + postedFile.FileName);
+                    trabajadorNew.Procedimientos_de_trabajo = postedFile.FileName;
+                }
+                postedFile = Request.Files["Documento_Covid_191"];
+                if (postedFile != null && postedFile.ContentLength > 0)
+                {
+                    postedFile.SaveAs(path + "\\" + trabajadorNew.Id + "\\" + postedFile.FileName);
+                    trabajadorNew.Documento_Covid_19 = postedFile.FileName;
                 }
                 if (!validarRut(trabajadorNew.Rut))
                 {
                     ViewBag.texto = "Rut no válido";
-                    datosCreate();
-                    return View(trabajadorNew);
+                    //return View(trabajadorNew);
                 }
                 try
                 {
                     Trabajador trabajador = database.Trabajador.First(x => x.Rut == trabajadorNew.Rut);
-                    if(trabajador.Id != trabajadorNew.Id)
+                    if (trabajador.Id != trabajadorNew.Id)
                     {
-                        ViewBag.texto = "Ya existe el rut";
-                        datosCreate();
-                        return View(trabajadorNew);
+                        //ViewBag.texto = "Ya existe el rut";
+                        //return View(trabajadorNew);
                     }
                 }
                 catch { }
                 if (ModelState.IsValid)
                 {
                     db.Entry(trabajadorNew).State = EntityState.Modified;
+                    Utils.SessionManager.log("Trabajador editar: " + trabajadorNew.Nombre + " " + trabajadorNew.ApellidoPaterno + " " + trabajadorNew.ApellidoMaterno);
                     db.SaveChanges();
                     return RedirectToAction("Index");
                 }
@@ -2166,9 +1882,9 @@ namespace ControlPersonalAppWeb.Controllers
         // GET: Trabajador/Delete/5
         public ActionResult Delete(int id)
         {
-            DBManejoPersonalEntities database = new DBManejoPersonalEntities();
+            SgajcpEntities database = new SgajcpEntities();
             Trabajador trabajador = database.Trabajador.First(x => x.Id == id);
-            Utils.SessionManager.log("Eliminar trabajador: " + trabajador.Nombre + " " + trabajador.ApellidoPaterno + " " + trabajador.ApellidoMaterno);
+            Utils.SessionManager.log("Trabajador eliminado: " + trabajador.Nombre + " " + trabajador.ApellidoPaterno + " " + trabajador.ApellidoMaterno);
             database.Trabajador.Remove(trabajador);
             database.SaveChanges();
             return RedirectToAction("Index");
@@ -2189,14 +1905,14 @@ namespace ControlPersonalAppWeb.Controllers
         }
         private string cambiarUidCrear(string Uid)
         {
-            DBManejoPersonalEntities database = new DBManejoPersonalEntities();
+            SgajcpEntities database = new SgajcpEntities();
             Empresas empresa = database.Empresas.First(x => x.Id == 1005);
             List<RegistroPDF> registros = database.RegistroTrabajador
                                          .Where(x => x.Uid == Uid)
                                          .Select(x => new RegistroPDF { Campo = x.Campo, Empresa = x.Empresa, Fecha = x.Fecha, Uid = x.Uid }).ToList();
 
             Trabajador trabajador = null;
-            try 
+            try
             {
                 trabajador = database.Trabajador.First(x => x.Uid == Uid);
             }
@@ -2204,7 +1920,7 @@ namespace ControlPersonalAppWeb.Controllers
             if (trabajador != null)
             {
                 trabajador.Uid = empresa.Nombre;
-                if(registros.Count>0)
+                if (registros.Count > 0)
                 {
                     cambiarUidRegistros(empresa.Nombre, Uid);
                 }
@@ -2215,18 +1931,18 @@ namespace ControlPersonalAppWeb.Controllers
         }
         private string cambiarUidEditar(string UidNuevo, string UidAnterior)
         {
-            
+
             return UidNuevo;
         }
         private string cambiarUid(string Uid, string Uid2)
         {
-            DBManejoPersonalEntities database = new DBManejoPersonalEntities();
+            SgajcpEntities database = new SgajcpEntities();
             List<Empresas> nombre = database.Empresas.Where(x => x.Id == 1005).ToList();
             var registros = database.RegistroTrabajador.Select(x => new { x.Uid }).Where(x => x.Uid == Uid).Distinct().ToList();
             var trabajadores = database.Trabajador.Select(x => new { x.Uid }).Where(x => x.Uid == Uid).Distinct().ToList();
             bool exist = false;
             string result = "";
-            if(trabajadores.Count>0)
+            if (trabajadores.Count > 0)
             {
                 var trabajador = database.Trabajador.Where(x => x.Uid == Uid).ToList();
                 trabajador[0].Uid = nombre[0].Nombre;
@@ -2241,10 +1957,10 @@ namespace ControlPersonalAppWeb.Controllers
                 //database.SaveChanges();
                 return Uid;
             }
-            if (registros.Count>0)
+            if (registros.Count > 0)
             {
                 var registers = database.RegistroTrabajador.Where(x => x.Uid == Uid).ToList();
-                foreach(var registro in registers)
+                foreach (var registro in registers)
                 {
                     registro.Uid = nombre[0].Nombre;
                 }
@@ -2260,7 +1976,7 @@ namespace ControlPersonalAppWeb.Controllers
                 }
                 database.SaveChanges();
             }
-            if(exist)
+            if (exist)
             {
                 int numero = Convert.ToInt32(nombre[0].Nombre);
                 nombre[0].Nombre = (numero + 1).ToString();
@@ -2271,7 +1987,7 @@ namespace ControlPersonalAppWeb.Controllers
 
         private string cambiarUidRegistros(string UidNuevo, string UidAterior)
         {
-            DBManejoPersonalEntities database = new DBManejoPersonalEntities();
+            SgajcpEntities database = new SgajcpEntities();
             try
             {
                 Trabajador trabajador = database.Trabajador.First(x => x.Uid == UidNuevo);
@@ -2280,7 +1996,7 @@ namespace ControlPersonalAppWeb.Controllers
                     cambiarUidCrear(UidNuevo);
                 }
             }
-            catch{}
+            catch { }
 
             List<RegistroTrabajador> registros = database.RegistroTrabajador.Where(x => x.Uid == UidAterior).ToList();
             foreach (var registro in registros)

@@ -3,65 +3,122 @@
 @{
     ViewBag.Title = "Registros del día";
     var tipo = "";
+    var cuenta = ControlPersonalAppWeb.Utils.SessionManager.CuentaAutenticada();
 }
 
-<h2>Registros del día @DateTime.Now.ToLongDateString()</h2>
+<h4 class="text-center display-4">Registros del día</h4>
+<hr />
+@using (Html.BeginForm("Hoy", "Registro", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-md-8">
+            @Html.Partial("Busqueda")
+        </div>
+        <div class="col-md-2">
+            <input type="date" class="form-control" name="Fecha" required />
+        </div>
+        <div class="col-md-2">
+            <input type="submit" value="Buscar" class="form-control btn btn-primary" />
+        </div>
+    </div>
 
-<script src="~/Scripts/fechaHoy.js"></script>
-<table class="table">
-    <tr>
-        <th>
-            Nombre
-        </th>
-        <th>
-            Tipo
-        </th>
-        <th>
-            Hora
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Campo)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Foto)
-        </th>
-        <th></th>
-    </tr>
-
-    @foreach (var item in Model)
-    {
-        <tr>
-            @foreach(var trabajador in ViewBag.trabajadores)
+}
+<div class="table-responsive">
+    <table class="table table-hover" id="tabla">
+        <thead>
+            <tr class="bg-primary">
+                <th>
+                    Fecha
+                </th>
+                <th id="Nombre">
+                    <div onclick="ordenar('Nombre')" title="Click para ordenar">
+                        Nombre
+                    </div>
+                </th>
+                <th id="Hora">
+                    <div onclick="ordenar('Hora')" title="Click para ordenar">
+                        Hora
+                    </div>
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Campo)
+                </th>
+                <th>
+                    Contratista
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Foto)
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
             {
-               if(trabajador.Uid.Contains(item.Uid))
-               {
-                   <td>
-                       @trabajador.Nombre
-                   </td>
-               }
+                <tr>
+                    <td>
+                        @item.Fecha.ToString("dd-MM-yyyy")
+                    </td>
+                    <td>
+                        @item.NombreTrabajador
+                    </td>
+                    <td>
+                        @item.Fecha.ToShortTimeString()
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Campo)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Empresa)
+                    </td>
+                    <td>
+                        <img src="@String.Format("data:image/jpg;base64,{0}",System.Convert.ToBase64String(item.Foto))" width="110" />
+                    </td>
+                </tr>
             }
-            <td>
-                @if (item.Fecha.Hour < 12)
-                {
-                    tipo = "Entrada";
-                }
-                else
-                {
-                    tipo = "Salida";
-                }
-                @tipo
-            </td>
-            <td>
-                @item.Fecha.ToShortTimeString()
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Campo)
-            </td>
-            <td>
-                <img src="@String.Format("data:image/jpg;base64,{0}",System.Convert.ToBase64String(item.Foto))" width="110" height="80" />
-            </td>
-        </tr>
+        </tbody>
+    </table>
+</div>
+<script>
+    function ordenar(tipo) {
+        let th = document.getElementById(tipo)
+        sortGrid(th.cellIndex, tipo)
+
+
     }
+    tabla.onclick = function (e) {
+        if (e.target.tagName != 'TH') return;
 
-</table>
+        let th = e.target;
+        // si TH, entonces ordena
+        // cellIndex es el número de th:
+        //   0 para la primera columna
+        //   1 para la segunda columna, etc.
+        sortGrid(th.cellIndex, th.dataset.type);
+    };
 
+    function sortGrid(colNum, type) {
+        let tbody = tabla.querySelector('tbody');
+        let rowsArray = Array.from(tbody.rows);
+        // compare(a, b) compara dos filas, necesario para ordenar
+        let compare;
+
+        switch (type) {
+            case 'Hora':
+                compare = function (rowA, rowB) {
+                    return rowA.cells[colNum].innerHTML > rowB.cells[colNum].innerHTML ? 1 : -1;
+                };
+                break;
+            case 'Nombre':
+                compare = function (rowA, rowB) {
+                    return rowA.cells[colNum].innerHTML > rowB.cells[colNum].innerHTML ? 1 : -1;
+                };
+                break;
+        }
+
+        // sort
+        rowsArray.sort(compare);
+
+        tbody.append(...rowsArray);
+    }
+</script>

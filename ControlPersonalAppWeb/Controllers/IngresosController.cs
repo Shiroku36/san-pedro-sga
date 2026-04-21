@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Web;
@@ -9,10 +12,10 @@ using System.Web.Mvc;
 using ControlPersonalAppWeb;
 
 namespace ControlPersonalAppWeb.Controllers
-{
+{/*
     public class IngresosController : Controller
     {
-        private DBManejoPersonalEntities db = new DBManejoPersonalEntities();
+        private SgajcpEntities db = new SgajcpEntities();
         private Cuentas cuenta = Utils.SessionManager.CuentaAutenticada();
 
         // GET: Ingresos
@@ -51,7 +54,7 @@ namespace ControlPersonalAppWeb.Controllers
             int empresaId = (int)cuenta.EmpresaId;
             ViewBag.productos = db.Stock.Where(x => x.EmpresaId == cuenta.EmpresaId && x.Tipo == "Producto").ToList();
             ViewBag.products = db.Producto.Where(x => x.EmpresaId == cuenta.EmpresaId).
-                Select(x => new { x.Nombre }).ToList();
+                Select(x => new { x.Nombre }).OrderBy(x => x.Nombre).ToList();
             return View();
         }
 
@@ -60,7 +63,7 @@ namespace ControlPersonalAppWeb.Controllers
         // más información vea https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(FormCollection collection, [Bind(Include = "Id,Ubicacion,Proveedor")] Ingreso ingreso)
+        public ActionResult Create(FormCollection collection, HttpPostedFileBase file, [Bind(Include = "Id,Ubicacion,Proveedor,Tipo,Numero")] Ingreso ingreso)
         {
             if (ModelState.IsValid)
             {
@@ -74,14 +77,31 @@ namespace ControlPersonalAppWeb.Controllers
                 ingreso.Empresa = cuenta.Empresa;
                 ingreso.EmpresaId = cuenta.EmpresaId;
                 ingreso.Productos = "";
+                ingreso.Tipo = collection["Tipo"];
+                ingreso.Numero = collection["Numero"];
+
+                HttpPostedFileBase postedFile = Request.Files["Foto"];
+                if (postedFile != null && postedFile.ContentLength > 0)
+                {
+                    ingreso.Foto = getImageFromPostfile(postedFile, 1280);
+                }
                 string[] productos = collection["Producto"].Split(new char[] { ',' });
                 string[] cantidades = collection["Cantidad"].Split(new char[] { ',' });
                 db.Ingreso.Add(ingreso);
                 db.SaveChanges();
                 for (int i = 0; i < productos.Length; i++)
                 {
+                    Stock stock = new Stock();
                     string nombre = productos[i];
                     Producto producto = db.Producto.First(x => x.Nombre == nombre);
+                    stock.Producto = producto.Nombre;
+                    stock.ProductoId = producto.Id;
+                    stock.Cantidad = Convert.ToInt32(cantidades[i]);
+                    stock.EmpresaId = cuenta.EmpresaId;
+                    stock.Unidad = producto.Unidad;
+                    stock.IngresoId = ingreso.Id;
+                    stock.Ubicacion = collection["Ubicacion"];
+                    db.Stock.Add(stock);
                     if (i == productos.Length - 1)
                     {
                         ingreso.Productos = ingreso.Productos + producto.Nombre;
@@ -98,6 +118,30 @@ namespace ControlPersonalAppWeb.Controllers
             }
 
             return View(ingreso);
+        }
+        public byte[] getImageFromPostfile(HttpPostedFileBase postedFile, int tamaño)
+        {
+            MemoryStream target = new MemoryStream();
+            System.Drawing.Image image = System.Drawing.Image.FromStream(postedFile.InputStream, true, true);
+            SizeF dimensiones = image.PhysicalDimension;
+            for (int i = 100; i > 0; i--)
+            {
+                float dimension = (dimensiones.Width * i) / 100;
+                if (dimension <= tamaño)
+                {
+                    int ancho = (int)dimensiones.Width * i / 100;
+                    int alto = (int)dimensiones.Height * i / 100;
+                    image = resizeImage(image, new Size(ancho, alto));
+                    i = 0;
+                }
+            }
+            image.Save(target, ImageFormat.Jpeg);
+            //postedFile.InputStream.CopyTo(target);
+            return target.ToArray();
+        }
+        public static System.Drawing.Image resizeImage(System.Drawing.Image imgToResize, Size size)
+        {
+            return (System.Drawing.Image)(new Bitmap(imgToResize, size));
         }
         /*
         // GET: Ingresos/Edit/5
@@ -201,6 +245,7 @@ namespace ControlPersonalAppWeb.Controllers
             return RedirectToAction("Index");
         }
         */
+    /*
         protected override void Dispose(bool disposing)
         {
             if (disposing)
@@ -227,6 +272,7 @@ namespace ControlPersonalAppWeb.Controllers
                     EmpresaId = cuenta.EmpresaId,
                     Producto = producto.Nombre,
                     ProductoId = producto.Id,
+                    Unidad = producto.Unidad,
                     Cantidad = 0
                 };
                 total.Cantidad += cantidad;
@@ -249,6 +295,7 @@ namespace ControlPersonalAppWeb.Controllers
                     Activo = true,
                     Producto = producto.Nombre,
                     ProductoId = producto.Id,
+                    Unidad = producto.Unidad,
                     RetirarBajo0 = false,
                     Cantidad = 0
                 };
@@ -290,5 +337,5 @@ namespace ControlPersonalAppWeb.Controllers
             }
             return nombres;
         }
-    }
+    }*/
 }

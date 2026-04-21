@@ -9,30 +9,6 @@
     <h2 class="display-4 text-center">Trabajador</h2>
     <div>
         <h3 class="text-muted font-weight-light">Detalle</h3>
-
-        <a href='@Url.Action("CreateTrabajador", "Cuenta", new { id = Model.Id })'>
-            <label title="Crear cuenta" type="submit" class="btn btn-info">Crear cuenta </label>
-        </a>
-        <div class="col-sm-10">
-            @if (ViewBag.alerta == 1)
-            {
-                <div class="my-3 alert alert-success" role="alert">
-                    ¡Cuenta creada correctamente!
-                </div>
-            }
-            @if (ViewBag.alerta == 2)
-            {
-                <div class="my-3 alert alert-warning" role="alert">
-                    Este trabajador ya posee una cuenta asociada
-                </div>
-            }
-            @if (ViewBag.alerta == 3)
-            {
-                <div class="my-3 alert alert-warning" role="alert">
-                    El trabajador no posee una cuenta de correo asociado
-                </div>
-            }
-        </div>
         <hr />
         <div class="col-sm-8 table-responsive">
             <table class="mx-auto table-borderless table-hover tabla-detalle">
@@ -79,64 +55,23 @@
 
                 <tr>
                     <td>
-                        @Html.DisplayNameFor(model => model.TipoCuenta)
+                        @Html.DisplayNameFor(model => model.Numero)
                     </td>
 
                     <td>
-                        @Html.DisplayFor(model => model.TipoCuenta)
+                        @Html.DisplayFor(model => model.Numero)
                     </td>
                 </tr>
 
                 <tr>
                     <td>
-                        @Html.DisplayNameFor(model => model.Banco)
+                        Contratista
                     </td>
 
                     <td>
-                        @Html.DisplayFor(model => model.Banco)
+                        @Html.DisplayFor(model => model.Empresa)
                     </td>
                 </tr>
-
-                <tr>
-                    <td>
-                        @Html.DisplayNameFor(model => model.Uid)
-                    </td>
-
-                    <td>
-                        @Html.DisplayFor(model => model.Uid)
-                    </td>
-                </tr>
-
-                <tr>
-                    <td>
-                        @Html.DisplayNameFor(model => model.NumeroCuenta)
-                    </td>
-
-                    <td>
-                        @Html.DisplayFor(model => model.NumeroCuenta)
-                    </td>
-                </tr>
-
-                <tr>
-                    <td>
-                        @Html.DisplayNameFor(model => model.Contratado)
-                    </td>
-
-                    <td>
-                        @Html.DisplayFor(model => model.Contratado)
-                    </td>
-                </tr>
-
-                <tr>
-                    <td>
-                        @Html.DisplayNameFor(model => model.CodPersonal)
-                    </td>
-
-                    <td>
-                        @Html.DisplayFor(model => model.CodPersonal)
-                    </td>
-                </tr>
-
                 <tr>
                     <td>
                         @Html.DisplayNameFor(model => model.Email)
@@ -144,25 +79,6 @@
 
                     <td>
                         @Html.DisplayFor(model => model.Email)
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        @Html.DisplayNameFor(model => model.EstadoCivil)
-                    </td>
-
-                    <td>
-                        @Html.DisplayFor(model => model.EstadoCivil)
-                    </td>
-                </tr>
-
-                <tr>
-                    <td>
-                        @Html.DisplayNameFor(model => model.FechaNacimiento)
-                    </td>
-
-                    <td>
-                        @Html.DisplayFor(model => model.FechaNacimiento)
                     </td>
                 </tr>
 
@@ -186,55 +102,6 @@
                     </td>
                 </tr>
 
-                <tr>
-                    <td>
-                        @Html.DisplayNameFor(model => model.Ciudad)
-                    </td>
-
-                    <td>
-                        @Html.DisplayFor(model => model.Ciudad)
-                    </td>
-                </tr>
-
-                <tr>
-                    <td>
-                        @Html.DisplayNameFor(model => model.CargasFamiliares)
-                    </td>
-
-                    <td>
-                        @Html.DisplayFor(model => model.CargasFamiliares)
-                    </td>
-                </tr>
-
-                <tr>
-                    <td>
-                        @Html.DisplayNameFor(model => model.CargasSimples)
-                    </td>
-
-                    <td>
-                        @Html.DisplayFor(model => model.CargasSimples)
-                    </td>
-                </tr>
-
-                <tr>
-                    <td>
-                        @Html.DisplayNameFor(model => model.AFP)
-                    </td>
-
-                    <td>
-                        @Html.DisplayFor(model => model.AFP)
-                    </td>
-                </tr>
-
-                <tr>
-                    <td>
-                        @Html.DisplayNameFor(model => model.Salud)
-                    </td>
-
-                    <td>
-                        @Html.DisplayFor(model => model.Salud)
-                    </td>
-                </tr>
 
                 <tr>
                     <td>
@@ -246,86 +113,34 @@
                     </td>
                 </tr>
 
-                <tr>
-                    <td>
-                        @Html.DisplayNameFor(model => model.NombreEmer)
-                    </td>
-
-                    <td>
-                        @Html.DisplayFor(model => model.NombreEmer)
-                    </td>
-                </tr>
 
                 <tr>
                     <td>
-                        @Html.DisplayNameFor(model => model.VinculoEmer)
+                        @Html.DisplayNameFor(model => model.Habilitado)
                     </td>
 
-                    <td>
-                        @Html.DisplayFor(model => model.VinculoEmer)
-                    </td>
+                    @if (Model.Habilitado == true)
+                    {
+                        <td>
+                            Si
+                        </td>
+                    }
+                    else
+                    {
+                        <td>
+                            No
+                        </td>
+                    }
                 </tr>
-
                 <tr>
                     <td>
-                        @Html.DisplayNameFor(model => model.DireccionEmer)
+                        @Html.DisplayNameFor(model => model.Nomina)
                     </td>
 
                     <td>
-                        @Html.DisplayFor(model => model.DireccionEmer)
+                        @Html.DisplayFor(model => model.Nomina)
                     </td>
                 </tr>
-
-                <tr>
-                    <td>
-                        @Html.DisplayNameFor(model => model.TelefonoEmer)
-                    </td>
-
-                    <td>
-                        @Html.DisplayFor(model => model.TelefonoEmer)
-                    </td>
-                </tr>
-
-                <tr>
-                    <td>
-                        @Html.DisplayNameFor(model => model.Cargo)
-                    </td>
-
-                    <td>
-                        @Html.DisplayFor(model => model.Cargo)
-                    </td>
-                </tr>
-
-                <tr>
-                    <td>
-                        @Html.DisplayNameFor(model => model.NombreJefe)
-                    </td>
-
-                    <td>
-                        @Html.DisplayFor(model => model.NombreJefe)
-                    </td>
-                </tr>
-
-                <tr>
-                    <td>
-                        Huerto
-                    </td>
-
-                    <td>
-                        @Html.DisplayFor(model => model.Campo)
-                    </td>
-                </tr>
-
-                <tr>
-                    <td>
-                        @Html.DisplayNameFor(model => model.Empleador)
-                    </td>
-
-                    <td>
-                        @Html.DisplayFor(model => model.Empleador)
-                    </td>
-                </tr>
-
                 <tr>
                     <td>
                         @Html.DisplayNameFor(model => model.Contrato)
@@ -335,66 +150,80 @@
                         @Html.DisplayFor(model => model.Contrato)
                     </td>
                 </tr>
-
                 <tr>
                     <td>
-                        @Html.DisplayNameFor(model => model.FechaTermino)
+                        @Html.DisplayNameFor(model => model.Anexo)
                     </td>
 
                     <td>
-                        @Html.DisplayFor(model => model.FechaTermino)
+                        @Html.DisplayFor(model => model.Anexo)
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        @Html.DisplayNameFor(model => model.Odi)
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(model => model.Odi)
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        @Html.DisplayNameFor(model => model.Registro_Epp)
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(model => model.Registro_Epp)
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        @Html.DisplayNameFor(model => model.Registro_RIOHS)
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(model => model.Registro_RIOHS)
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        @Html.DisplayNameFor(model => model.Registro_capacitación)
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(model => model.Registro_capacitación)
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        @Html.DisplayNameFor(model => model.Examen_altura_física)
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(model => model.Examen_altura_física)
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        @Html.DisplayNameFor(model => model.Procedimientos_de_trabajo)
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(model => model.Procedimientos_de_trabajo)
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        @Html.DisplayNameFor(model => model.Documento_Covid_19)
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(model => model.Documento_Covid_19)
                     </td>
                 </tr>
 
-                <tr>
-                    <td>
-                        @Html.DisplayNameFor(model => model.Jornada)
-                    </td>
 
-                    <td>
-                        @Html.DisplayFor(model => model.Jornada)
-                    </td>
-                </tr>
-
-                <tr>
-                    <td>
-                        @Html.DisplayNameFor(model => model.FechaIngreso)
-                    </td>
-
-                    <td>
-                        @Html.DisplayFor(model => model.FechaIngreso)
-                    </td>
-                </tr>
-
-                <tr>
-                    <td>
-                        @Html.DisplayNameFor(model => model.SueldoBase)
-                    </td>
-
-                    <td>
-                        @Html.DisplayFor(model => model.SueldoBase)
-                    </td>
-                </tr>
-
-                <tr>
-                    <td>
-                        @Html.DisplayNameFor(model => model.Gratificacion)
-                    </td>
-
-                    <td>
-                        @Html.DisplayFor(model => model.Gratificacion)
-                    </td>
-                </tr>
-
-                <tr>
-                    <td>
-                        @Html.DisplayNameFor(model => model.SueldoBruto)
-                    </td>
-
-                    <td>
-                        @Html.DisplayFor(model => model.SueldoBruto)
-                    </td>
-                </tr>
 
                 <tr>
                     @if (Model.FotoCarnet != null)
@@ -404,7 +233,19 @@
                         </td>
 
                         <td>
-                            <img src="@String.Format("data:image/jpg;base64,{0}",System.Convert.ToBase64String(Model.FotoCarnet))" width="400" height="280" />
+                            <img src="@String.Format("data:image/jpg;base64,{0}",System.Convert.ToBase64String(Model.FotoCarnet))" width="400" />
+                        </td>
+                    }
+                </tr>
+                <tr>
+                    @if (Model.Foto != null)
+                    {
+                        <td>
+                            @Html.DisplayNameFor(model => model.Foto)
+                        </td>
+
+                        <td>
+                            <img src="@String.Format("data:image/jpg;base64,{0}",System.Convert.ToBase64String(Model.Foto))" width="400"/>
                         </td>
                     }
                 </tr>

@@ -13,17 +13,17 @@ using iTextSharp.text;
 using iTextSharp.text.pdf;
 
 namespace ControlPersonalAppWeb.Controllers
-{
+{/*
     public class ControlInventariosController : Controller
     {
-        private DBManejoPersonalEntities db = new DBManejoPersonalEntities();
+        private SgajcpEntities db = new SgajcpEntities();
         private Cuentas cuenta = Utils.SessionManager.CuentaAutenticada();
 
         // GET: ControlInventarios
         public ActionResult Index()
         {
             Utils.SessionManager.log("Index control inventario");
-            return View(db.ControlInventario.Where(x => x.EmpresaId == cuenta.EmpresaId).ToList());
+            return View(db.ControlInventario.Where(x => x.EmpresaId == cuenta.EmpresaId).OrderByDescending(x => x.Id).ToList());
         }
 
         // GET: ControlInventarios/Details/5
@@ -51,7 +51,7 @@ namespace ControlPersonalAppWeb.Controllers
         {
             ViewBag.campos = GetNombreCampos(cuenta.Empresa);
             int empresaId = (int)cuenta.EmpresaId;
-            ViewBag.productos = db.Stock.Where(x => x.EmpresaId == cuenta.EmpresaId && x.Tipo == "Producto" && x.Cantidad > 0).ToList();
+            ViewBag.productos = db.Stock.Where(x => x.EmpresaId == cuenta.EmpresaId && x.Tipo == "Producto" && x.Cantidad > 0).OrderBy(x => x.Producto).ToList();
             return View();
         }
 
@@ -64,10 +64,11 @@ namespace ControlPersonalAppWeb.Controllers
         {
             if (ModelState.IsValid)
             {
+                int contador = db.ControlInventario.Where(x => x.EmpresaId == cuenta.EmpresaId).ToList().Count + 1;
                 controlInventario.Trabajador = cuenta.Nombre + " " + cuenta.Apellido;
                 controlInventario.TrabajadorId = cuenta.Id;
                 controlInventario.Fecha = DateTime.Now;
-                controlInventario.Empresa = cuenta.Empresa;
+                controlInventario.Empresa = contador.ToString();
                 controlInventario.EmpresaId = cuenta.EmpresaId;
                 controlInventario.Productos = "";
                 string[] productos = collection["Producto"].Split(new char[] { ',' });
@@ -82,6 +83,8 @@ namespace ControlPersonalAppWeb.Controllers
                     stock.Producto = producto.Nombre;
                     stock.ProductoId = producto.Id;
                     stock.Cantidad = Convert.ToInt32(cantidades[i]);
+                    stock.EmpresaId = cuenta.EmpresaId;
+                    stock.Unidad = producto.Unidad;
                     stock.ControlId = controlInventario.Id;
                     stock.Ubicacion = collection["Ubicacion"];
                     db.Stock.Add(stock);
@@ -277,6 +280,7 @@ namespace ControlPersonalAppWeb.Controllers
             return RedirectToAction("Index");
         }
         */
+    /*
         protected override void Dispose(bool disposing)
         {
             if (disposing)
@@ -324,5 +328,5 @@ namespace ControlPersonalAppWeb.Controllers
             }
             return nombres;
         }
-    }
+    }*/
 }

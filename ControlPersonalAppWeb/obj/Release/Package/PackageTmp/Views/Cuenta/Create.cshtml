@@ -1,64 +1,157 @@
 ﻿@model ControlPersonalAppWeb.Cuentas
 
 @{
-    ViewBag.Title = "Create";
+    ViewBag.Title = "Crear";
+    var cuenta = ControlPersonalAppWeb.Utils.SessionManager.CuentaAutenticada();
 }
 
-<h2>Create</h2>
-
-
-@using (Html.BeginForm()) 
+@using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
-        <h4>Cuentas</h4>
+        <h4 class="text-center display-4">Cuentas</h4>
+        <h3 class="text-muted font-weight-light">Crear</h3>
         <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <div class="form-group">
-            @Html.LabelFor(model => model.Usuario, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Usuario, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Usuario, "", new { @class = "text-danger" })
+        <div class="row">
+            <div class="col-sm-6">
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                <div class="form-group col-md-10 mx-auto">
+                    @Html.LabelFor(model => model.Usuario, htmlAttributes: new { @class = "control-label font-weight-normal" })
+                    @Html.EditorFor(model => model.Usuario, new { htmlAttributes = new { @class = "form-control", required = "required" } })
+                    @Html.ValidationMessageFor(model => model.Usuario, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group col-md-10 mx-auto">
+                    @Html.LabelFor(model => model.Password, htmlAttributes: new { @class = "control-label font-weight-normal" })
+                    @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control", @type = "password", required = "required" } })
+                    @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group col-md-10 mx-auto">
+                    <label>Confirmar password</label>
+                    <input class="form-control" type="password" id="Confirmar" oninput="password()" required />
+                </div>
+
+                <div class="form-group col-md-10 mx-auto">
+                    @Html.LabelFor(model => model.Nombre, htmlAttributes: new { @class = "control-label font-weight-normal" })
+                    @Html.EditorFor(model => model.Nombre, new { htmlAttributes = new { @class = "form-control", required = "required" } })
+                    @Html.ValidationMessageFor(model => model.Nombre, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group col-md-10 mx-auto">
+                    @Html.LabelFor(model => model.Apellido, htmlAttributes: new { @class = "control-label font-weight-normal" })
+                    @Html.EditorFor(model => model.Apellido, new { htmlAttributes = new { @class = "form-control", required = "required" } })
+                    @Html.ValidationMessageFor(model => model.Apellido, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group col-md-10 mx-auto">
+                    @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label font-weight-normal" })
+                    @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", @type = "Email", required = "required" } })
+                    @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+                </div>
+
+                <div class="form-group col-md-10 mx-auto">
+                    <label class="control-label font-weight-normal" >Contratista</label>
+                    <input list="Empresa" name="Empresa" required class="form-control" />
+                    <datalist id="Empresa">
+                        @foreach (var empresa in ViewBag.empresas)
+                        {
+                            <option value="@empresa"></option>
+                        }
+                    </datalist>
+                    @Html.ValidationMessageFor(model => model.Empresa, "", new { @class = "text-danger" })
+                </div>
+
+            </div>
+
+            <div class="form-group col-sm-6 mx-auto">
+                @Html.LabelFor(model => model.Permisos, htmlAttributes: new { @class = "control-label font-weight-normal" })
+                <br />
+                <label>Informes</label><br />
+                <label><input type="checkbox" id="Permisos" name="Permisos" value="InformesV" class="custom-checkbox chkCheckBoxId" />Ver</label>
+                <label><input type="checkbox" id="Permisos" name="Permisos" value="Ingreso" class="custom-checkbox chkCheckBoxId" />Aviso no habilitado</label>
+                <label><input type="checkbox" id="Permisos" name="Permisos" value="Log" class="custom-checkbox chkCheckBoxId" />Log</label><br />
+                <label>Huertos</label><br />
+                <label><input type="checkbox" id="Permisos" name="Permisos" value="HuertosV" class="custom-checkbox chkCheckBoxId" />Ver</label>
+                <label><input type="checkbox" id="Permisos" name="Permisos" value="HuertosC" class="custom-checkbox chkCheckBoxId" />Crear</label>
+                <label><input type="checkbox" id="Permisos" name="Permisos" value="HuertosE" class="custom-checkbox chkCheckBoxId" />Editar </label>
+                <label><input type="checkbox" id="Permisos" name="Permisos" value="HuertosD" class="custom-checkbox chkCheckBoxId" />Eliminar </label><br />
+                <label>Trabajadores</label><br />
+                <label><input type="checkbox" id="Permisos" name="Permisos" value="TrabajadoresV" class="custom-checkbox chkCheckBoxId" />Ver</label>
+                <label><input type="checkbox" id="Permisos" name="Permisos" value="TrabajadoresC" class="custom-checkbox chkCheckBoxId" />Crear</label>
+                <label><input type="checkbox" id="Permisos" name="Permisos" value="TrabajadoresE" class="custom-checkbox chkCheckBoxId" />Editar </label>
+                <label><input type="checkbox" id="Permisos" name="Permisos" value="TrabajadoresD" class="custom-checkbox chkCheckBoxId" />Eliminar </label>
+                <label><input type="checkbox" id="Permisos" name="Permisos" value="TrabajadoresU" class="custom-checkbox chkCheckBoxId" />Cargar </label><br />
+                <label>Registros</label><br />
+                <label><input type="checkbox" id="Permisos" name="Permisos" value="RegistrosV" class="custom-checkbox chkCheckBoxId" />Ver </label>
+                <label><input type="checkbox" id="Permisos" name="Permisos" value="RegistrosC" class="custom-checkbox chkCheckBoxId" />Crear </label>
+                <label><input type="checkbox" id="Permisos" name="Permisos" value="RegistrosE" class="custom-checkbox chkCheckBoxId" />Editar </label>
+                <label><input type="checkbox" id="Permisos" name="Permisos" value="RegistrosD" class="custom-checkbox chkCheckBoxId" />Eliminar </label><br />
+                <label>Cuentas</label><br />
+                <label><input type="checkbox" id="Permisos" name="Permisos" value="CuentasV" class="custom-checkbox chkCheckBoxId" />Ver </label>
+                <label><input type="checkbox" id="Permisos" name="Permisos" value="CuentasC" class="custom-checkbox chkCheckBoxId" />Crear </label>
+                <label><input type="checkbox" id="Permisos" name="Permisos" value="CuentasE" class="custom-checkbox chkCheckBoxId" />Editar </label>
+                <label><input type="checkbox" id="Permisos" name="Permisos" value="CuentasD" class="custom-checkbox chkCheckBoxId" />Eliminar </label><br />
+                <label>Archivos</label><br />
+                <label><input type="checkbox" id="Permisos" name="Permisos" value="ArchivoV" class="custom-checkbox chkCheckBoxId" />Ver </label>
+                <label><input type="checkbox" id="Permisos" name="Permisos" value="ArchivoC" class="custom-checkbox chkCheckBoxId" />Crear </label>
+                <label><input type="checkbox" id="Permisos" name="Permisos" value="ArchivoE" class="custom-checkbox chkCheckBoxId" />Editar </label>
+                <label><input type="checkbox" id="Permisos" name="Permisos" value="ArchivoD" class="custom-checkbox chkCheckBoxId" />Eliminar </label><br />
+                @Html.ValidationMessageFor(model => model.Permisos, "", new { @class = "text-danger" })
+                <label>Contratistas</label><br />
+                <label><input type="checkbox" id="Permisos" name="Permisos" value="EmpresasV" class="custom-checkbox chkCheckBoxId" /> Ver </label>
+                <label><input type="checkbox" id="Permisos" name="Permisos" value="EmpresasC" class="custom-checkbox chkCheckBoxId" /> Crear </label>
+                <label><input type="checkbox" id="Permisos" name="Permisos" value="EmpresasE" class="custom-checkbox chkCheckBoxId" /> Editar </label>
+                <label><input type="checkbox" id="Permisos" name="Permisos" value="EmpresasD" class="custom-checkbox chkCheckBoxId" /> Eliminar </label><br />
             </div>
         </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.Password, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Empresa, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownListFor(model => model.Empresa, new SelectList(ViewBag.Empresas), htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.Empresa, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Nivel, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Nivel, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Nivel, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
-            </div>
+        <div class="form-group col-md-9 mx-auto my-5">
+            <input type="submit" value="Crear" class="btn btn-primary btn-block" />
+            @Html.ActionLink("Volver a la lista", "Index", null, new { @class = "btn btn-block btn-danger mt-3" })
         </div>
     </div>
 }
 
-<div>
-    @Html.ActionLink("Volver a la lista", "Índice")
-</div>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+    <script>
+    function password(){
+        var todo = document.getElementById("Password");
+        var todo2 = document.getElementById("Confirmar");
+
+        if (todo.value != todo2.value) {
+            todo2.setCustomValidity("Las contraseñas no coinciden");
+            return false;
+        }
+        else
+        {
+            todo2.setCustomValidity('');
+        }
+    }
+    </script>
+    <script>
+        function filterFunction() {
+            var input, filter, a, i;
+            input = document.getElementById("myInput");
+            filter = input.value.toUpperCase();
+            div = document.getElementById("myDropdown");
+            a = div.getElementsByTagName("a");
+            for (i = 0; i < a.length; i++) {
+                if (filter.length > 0) {
+                    txtValue = a[i].textContent || a[i].innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        a[i].style.display = "";
+                    } else {
+                        a[i].style.display = "none";
+                    }
+                }
+                else {
+                    a[i].style.display = "none";
+                }
+            }
+        }
+    </script>
 }

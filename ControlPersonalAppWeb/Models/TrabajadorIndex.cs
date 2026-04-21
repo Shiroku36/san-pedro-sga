@@ -13,8 +13,10 @@ namespace ControlPersonalAppWeb.Models
         public string ApellidoPaterno { get; set; }
         public string ApellidoMaterno { get; set; }
         public string Rut { get; set; }
-        public string Gerente { get; set; }
+        public string Numero { get; set; }
+        public bool Habilitado { get; set; }
         public string Empresa { get; set; }
+        public string Contratista { get; set; }
         public string Contratado { get; set; }
         public string Entrada { get; set; }
         public string EntradaA { get; set; }

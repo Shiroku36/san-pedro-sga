@@ -22,12 +22,12 @@ namespace ControlPersonalAppWeb.Models
         public string Salida;
         public int? SalidaModificada;
         public string SalidaOficial;
-        public string HorasExtras;
-        public string HorasTrabajadas;
+        public string Empresa;
+        public string Habilitado;
         public string Horas;
         public string Atraso;
         public string Campo;
         public string Contratado;
-        public Image foto;
+        //public Image foto;
     }
 }

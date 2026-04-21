@@ -6,34 +6,59 @@
                 ViewBag.Title = "Busqueda";
 }
 
-<h2>Busqueda</h2>
-
 
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
 
-<div class="form-group col-lg-6">
-    <b class="control-label col-md-2">Antigua</b>
-    <div class="col-md-10">
-        <input class="form-control" type="text" name="Uid" />
+<div class="form-horizontal">
+    <h4 class="text-center display-4">Búsqueda de registros</h4>
+    <hr />
+    <div class="form-inline">
+        <div class="form-group mx-sm-3 mb-2">
+            <input class="form-control" type="text" placeholder="Buscar número pulsera" name="Uid" />
+        </div>
+        <div class="form-group mx-sm-3 mb-2">
+            <select class="form-control" name="Campo" id="Campo">
+                @foreach(var campo in ViewBag.Campos)
+                {
+                    <option value="@campo">@campo</option>
+                }
+            </select>
+        </div>
+        <div class="form-group mx-sm-3 mb-2">
+            <input type="submit" value="Buscar" class="btn btn-primary btn-block" />
+        </div>
     </div>
-    <br />
+    <!--<br />
     <b class="control-label col-md-2">Nuevo</b>
     <div class="col-md-10">
         <input class="form-control" type="text" name="Nueva" />
+    </div>
+
+    <b class="control-label col-md-2">Empresa</b>
+    <div class="col-md-10">
+        <input class="form-control" type="text" name="Empresa" />
+    </div>
+
+    <b class="control-label col-md-2">Empresa ID</b>
+    <div class="col-md-10">
+        <input class="form-control" type="text" name="EmpresaId" />
     </div>
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
             <input type="submit" value="Buscar" class="btn btn-default" />
         </div>
-    </div>
+    </div>-->
+
 </div>
 }
     <table class="table">
-        <tr>
+        <tr class="bg-primary">
             <th>
-
+            </th>
+            <th>
+                Numero pulsera
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Uid)
@@ -60,6 +85,9 @@
                 <input type="checkbox" checked="checked" name="id" value="@item.Id" />
             </td>
             <td>
+                @Html.DisplayFor(modelItem => item.NombreTrabajador)
+            </td>
+            <td>
                 @Html.DisplayFor(modelItem => item.Uid)
             </td>
             <td>
@@ -75,9 +103,12 @@
                 <img src="@String.Format("data:image/jpg;base64,{0}", System.Convert.ToBase64String(item.Foto))" width="110" />
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-                @Html.ActionLink("Details", "Details", new { id = item.Id }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                <a href='@Url.Action("Details", "Registro", new { id = item.Id })'>
+                    <label title="Detalle" type="submit" class="btn btn-info">Detalle </label>
+                </a>
+                <a href='@Url.Action("Delete", "Registro", new { id = item.Id })'>
+                    <label type="button" class="btn btn-danger" onclick="return confirm('¿Está seguro que desea eliminar el registro?');" })>Borrar</label>
+                </a>
             </td>
         </tr>
         }

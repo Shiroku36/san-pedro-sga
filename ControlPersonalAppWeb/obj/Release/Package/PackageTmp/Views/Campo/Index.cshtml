@@ -1,51 +1,77 @@
 ﻿@model IEnumerable<ControlPersonalAppWeb.Campos>
 
 @{
-    ViewBag.Title = "Huertos";
+    ViewBag.Title = "Predios";
+    var cuenta = ControlPersonalAppWeb.Utils.SessionManager.CuentaAutenticada().Permisos;
 }
+<h1 class="display-4 text-center">Índice Predios</h1>
+    <hr />
+@if(cuenta.Contains("HuertosV"))
+{ 
+    if(cuenta.Contains("HuertosC"))
+    { 
+        <a href='@Url.Action("Create", "Campo")'>
+            <button type="button" class="btn btn-primary float-right mb-3">Crear Nuevo</button>
+        </a>
+    }
 
-<h2>Índice Huertos</h2>
+<div class="table-responsive">
+    <table class="table table-hover">
+        <tr class="bg-primary">
 
-<p>
-    @Html.ActionLink("Crear nuevo", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Nombre)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Lugar)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Encargado)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Asistente)
-        </th>
-        <th></th>
-    </tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Nombre)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Lugar)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Encargado)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Asistente)
+            </th>
+            <th>
+                Accion
+            </th>
+        </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Nombre)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Lugar)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Encargado)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Asistente)
-        </td>
-        <td>
-            @Html.ActionLink("Editar", "Edit", new { id = item.Id }) |
-            @Html.ActionLink("Detalle", "Details", new { id = item.Id }) |
-            @Html.ActionLink("Borrar", "Delete", new { id = item.Id }, new { onclick = "return confirm('¿Está seguro que desea eliminar el Campo?');" })
-        </td>
-    </tr>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nombre)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Lugar)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Encargado)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Asistente)
+                </td>
+                <td>
+                    @if (cuenta.Contains("HuertosE"))
+                    {
+                        <a href='@Url.Action("Edit", "Campo", new { id = item.Id })'>
+                            <button type="button" class="btn btn-warning">Editar</button>
+                        </a>
+                    }
+                    <a href='@Url.Action("Details", "Campo", new { id = item.Id })'>
+                        <button type="button" class="btn btn-info">Detalle</button>
+                    </a>
+                    @if (cuenta.Contains("HuertosD"))
+                    {
+                        <a href='@Url.Action("Delete", "Campo", new { id = item.Id })'>
+                            <button type="button" class="btn btn-danger" onclick="return confirm('¿Está seguro que desea eliminar el Predio?');" })>Borrar</button>
+                        </a>
+                    }
+                </td>
+            </tr>
+        }
+
+    </table>
+</div>
+
 }
-
-</table>

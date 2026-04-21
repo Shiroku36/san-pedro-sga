@@ -2,49 +2,67 @@
 
 @{
     ViewBag.Title = "Detalle";
+    var cuenta = ControlPersonalAppWeb.Utils.SessionManager.CuentaAutenticada();
 }
 
-<h2>Detalle</h2>
 
+<h2 class="display-4 text-center">Cuentas</h2>
 <div>
-    <h4>Cuentas</h4>
+    <h3 class="text-muted font-weight-light">Detalle</h3>
     <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Usuario)
-        </dt>
+    <div class="col-sm-8 table-responsive">
+        <table class="mx-auto table-borderless table-hover tabla-detalle">
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.Usuario)
+                </td>
 
-        <dd>
-            @Html.DisplayFor(model => model.Usuario)
-        </dd>
+                <td>
+                    @Html.DisplayFor(model => model.Usuario)
+                </td>
+            </tr>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Password)
-        </dt>
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.Nombre)
+                </td>
 
-        <dd>
-            @Html.DisplayFor(model => model.Password)
-        </dd>
+                <td>
+                    @Html.DisplayFor(model => model.Nombre)
+                </td>
+            </tr>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Empresa)
-        </dt>
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.Apellido)
+                </td>
 
-        <dd>
-            @Html.DisplayFor(model => model.Empresa)
-        </dd>
+                <td>
+                    @Html.DisplayFor(model => model.Apellido)
+                </td>
+            </tr>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Nivel)
-        </dt>
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.Email)
+                </td>
 
-        <dd>
-            @Html.DisplayFor(model => model.Nivel)
-        </dd>
-
-    </dl>
+                <td>
+                    @Html.DisplayFor(model => model.Email)
+                </td>
+            </tr>
+        </table>
+    </div>
+    @if (cuenta.Id == Model.Id)
+    {
+    <div class="form-group col-md-9 mx-auto mt-5">
+        @Html.ActionLink("Cambiar contraseña", "Password", new { id= cuenta.Id }, new { @class = "btn btn-block btn-info" })
+    </div>
+    }
+    @if (cuenta.Permisos != null && cuenta.Permisos.Contains("CuentasV"))
+    {
+        <div class="form-group col-md-9 mx-auto mt-3">
+            @Html.ActionLink("Volver a la lista", "Index", null, new { @class = "btn btn-block btn-danger" })
+        </div>
+    }
 </div>
-<p>
-    @Html.ActionLink("Editar", "Edit", new { id = Model.Id }) |
-    @Html.ActionLink("Volver a la lista", "Índice")
-</p>

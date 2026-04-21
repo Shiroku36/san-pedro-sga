@@ -32,9 +32,18 @@
         {
     <tr>
         <td>
-            <a href="/Solicitudes/Details/@item.SolicitudId">
-                @Html.DisplayFor(modelItem => item.SolicitudId)
-            </a>
+            @if (item.Empresa == "producto")
+            {
+                <a href="/Solicitudes/Details/@item.SolicitudId">
+                    Ir a solicitud de producto
+                </a>
+            }
+            else
+            {
+                <a href="/SolicitudDeCompras/Details/@item.SolicitudId">
+                    Ir a solicitud de compra
+                </a>
+            }
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Ubicacion)

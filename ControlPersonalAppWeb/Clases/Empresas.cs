@@ -11,34 +11,12 @@ namespace ControlPersonalAppWeb
 {
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel;
-
+    
     public partial class Empresas
     {
         public int Id { get; set; }
         public string Nombre { get; set; }
         public string Rut { get; set; }
-        [DisplayName("Razón Social")]
-        public byte[] RazonSocial { get; set; }
-        [DisplayName("Nombre representante legal")]
-        public string RepresentanteLegalNombre { get; set; }
-        [DisplayName("Rut representante legal")]
-        public string RepresenntanteLegalRut { get; set; }
-        public string Giro { get; set; }
-        public string Dirección { get; set; }
-        public string Comuna { get; set; }
-        public string Ciudad { get; set; }
-        public string Telefono { get; set; }
-        public string Mutual { get; set; }
-        [DisplayName("Factor Mutual")]
-        public string FactorMutual { get; set; }
-        [DisplayName("Caja de compensación")]
-        public string CajaDeCompensacion { get; set; }
-        [DisplayName("Texto liquidación")]
-        public string TextoLiquidacion { get; set; }
-        public byte[] Logo { get; set; }
-        public string Invocada { get; set; }
-        public string NombreAnterior { get; set; }
-        public Nullable<int> InvocadaId { get; set; }
+        public string Nomina { get; set; }
     }
 }

@@ -10,21 +10,16 @@ using ControlPersonalAppWeb;
 
 namespace ControlPersonalAppWeb.Controllers
 {
+    
     public class LogController : Controller
     {
-        private DBManejoPersonalEntities db = new DBManejoPersonalEntities();
+        private SgajcpEntities db = new SgajcpEntities();
         private Cuentas cuenta = Utils.SessionManager.CuentaAutenticada();
 
         // GET: Log
         public ActionResult Index()
         {
-            Utils.SessionManager.log("Visitó log");
-            if (cuenta.EmpresaId==1)
-            {
-                ViewBag.empresa = cuenta.Empresa;
-                return View(db.Log.ToList().OrderByDescending(x => x.Fecha).ToList());
-            }
-            return View(db.Log.Where(x => x.EmpresaId == cuenta.EmpresaId).ToList().OrderByDescending(x => x.Fecha).ToList());
+            return View(db.Log.ToList().OrderByDescending(x => x.Fecha).Take(10000).ToList());
         }
         /*
         // GET: Log/Details/5
@@ -127,13 +122,6 @@ namespace ControlPersonalAppWeb.Controllers
             return RedirectToAction("Index");
         }
         */
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
-        }
+        
     }
 }

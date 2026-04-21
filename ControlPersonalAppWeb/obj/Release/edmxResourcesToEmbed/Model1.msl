@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-  <EntityContainerMapping StorageEntityContainer="DBManejoPersonalModelStoreContainer" CdmEntityContainer="DBManejoPersonalEntities">
+  <EntityContainerMapping StorageEntityContainer="SgajcpModelStoreContainer" CdmEntityContainer="SgajcpEntities">
     <EntitySetMapping Name="Campos">
-      <EntityTypeMapping TypeName="DBManejoPersonalModel.Campos">
+      <EntityTypeMapping TypeName="SgajcpModel.Campos">
         <MappingFragment StoreEntitySet="Campos">
           <ScalarProperty Name="TelefonoAsistente" ColumnName="TelefonoAsistente" />
           <ScalarProperty Name="Asistente" ColumnName="Asistente" />
@@ -18,8 +18,16 @@
       </EntityTypeMapping>
     </EntitySetMapping>
     <EntitySetMapping Name="Cuentas">
-      <EntityTypeMapping TypeName="DBManejoPersonalModel.Cuentas">
+      <EntityTypeMapping TypeName="SgajcpModel.Cuentas">
         <MappingFragment StoreEntitySet="Cuentas">
+          <ScalarProperty Name="Apellido" ColumnName="Apellido" />
+          <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+          <ScalarProperty Name="Email" ColumnName="Email" />
+          <ScalarProperty Name="Notificacion" ColumnName="Notificacion" />
+          <ScalarProperty Name="EmpresaId" ColumnName="EmpresaId" />
+          <ScalarProperty Name="TrabajadorId" ColumnName="TrabajadorId" />
+          <ScalarProperty Name="Trabajador" ColumnName="Trabajador" />
+          <ScalarProperty Name="Permisos" ColumnName="Permisos" />
           <ScalarProperty Name="Nivel" ColumnName="Nivel" />
           <ScalarProperty Name="Empresa" ColumnName="Empresa" />
           <ScalarProperty Name="Password" ColumnName="Password" />
@@ -28,66 +36,108 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="Empresas">
-      <EntityTypeMapping TypeName="DBManejoPersonalModel.Empresas">
-        <MappingFragment StoreEntitySet="Empresas">
-          <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+    <EntitySetMapping Name="RegistroTrabajador">
+      <EntityTypeMapping TypeName="SgajcpModel.RegistroTrabajador">
+        <MappingFragment StoreEntitySet="RegistroTrabajador">
+          <ScalarProperty Name="Enviado" ColumnName="Enviado" />
+          <ScalarProperty Name="NombreTrabajador" ColumnName="NombreTrabajador" />
+          <ScalarProperty Name="IdTrabajador" ColumnName="IdTrabajador" />
+          <ScalarProperty Name="Empresa" ColumnName="Empresa" />
+          <ScalarProperty Name="Campo" ColumnName="Campo" />
+          <ScalarProperty Name="Foto" ColumnName="Foto" />
+          <ScalarProperty Name="Fecha" ColumnName="Fecha" />
+          <ScalarProperty Name="Uid" ColumnName="Uid" />
           <ScalarProperty Name="Id" ColumnName="Id" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="Trabajador">
-      <EntityTypeMapping TypeName="DBManejoPersonalModel.Trabajador">
-        <MappingFragment StoreEntitySet="Trabajador">
-          <ScalarProperty Name="Empresa" ColumnName="Empresa" />
+    <EntitySetMapping Name="Pulseras">
+      <EntityTypeMapping TypeName="SgajcpModel.Pulseras">
+        <MappingFragment StoreEntitySet="Pulseras">
           <ScalarProperty Name="Uid" ColumnName="Uid" />
-          <ScalarProperty Name="Foto" ColumnName="Foto" />
-          <ScalarProperty Name="FotoCarnet" ColumnName="FotoCarnet" />
-          <ScalarProperty Name="Gerente" ColumnName="Gerente" />
-          <ScalarProperty Name="JefeDirecto" ColumnName="JefeDirecto" />
-          <ScalarProperty Name="SueldoBruto" ColumnName="SueldoBruto" />
-          <ScalarProperty Name="Gratificacion" ColumnName="Gratificacion" />
-          <ScalarProperty Name="SueldoBase" ColumnName="SueldoBase" />
-          <ScalarProperty Name="FechaIngreso" ColumnName="FechaIngreso" />
-          <ScalarProperty Name="Jornada" ColumnName="Jornada" />
-          <ScalarProperty Name="FechaTermino" ColumnName="FechaTermino" />
-          <ScalarProperty Name="Contrato" ColumnName="Contrato" />
-          <ScalarProperty Name="Empleador" ColumnName="Empleador" />
-          <ScalarProperty Name="Campo" ColumnName="Campo" />
-          <ScalarProperty Name="NombreJefe" ColumnName="NombreJefe" />
-          <ScalarProperty Name="Cargo" ColumnName="Cargo" />
-          <ScalarProperty Name="TelefonoEmer" ColumnName="TelefonoEmer" />
-          <ScalarProperty Name="DireccionEmer" ColumnName="DireccionEmer" />
-          <ScalarProperty Name="VinculoEmer" ColumnName="VinculoEmer" />
-          <ScalarProperty Name="NombreEmer" ColumnName="NombreEmer" />
-          <ScalarProperty Name="Telefono" ColumnName="Telefono" />
-          <ScalarProperty Name="Salud" ColumnName="Salud" />
-          <ScalarProperty Name="AFP" ColumnName="AFP" />
-          <ScalarProperty Name="Cuantas" ColumnName="Cuantas" />
-          <ScalarProperty Name="CargasFamiliares" ColumnName="CargasFamiliares" />
-          <ScalarProperty Name="Ciudad" ColumnName="Ciudad" />
-          <ScalarProperty Name="Sexo" ColumnName="Sexo" />
-          <ScalarProperty Name="Direccion" ColumnName="Direccion" />
-          <ScalarProperty Name="FechaNacimiento" ColumnName="FechaNacimiento" />
-          <ScalarProperty Name="EstadoCivil" ColumnName="EstadoCivil" />
-          <ScalarProperty Name="CodPersonal" ColumnName="CodPersonal" />
-          <ScalarProperty Name="Contratado" ColumnName="Contratado" />
-          <ScalarProperty Name="NumeroCuenta" ColumnName="NumeroCuenta" />
-          <ScalarProperty Name="Banco" ColumnName="Banco" />
-          <ScalarProperty Name="TipoCuenta" ColumnName="TipoCuenta" />
+          <ScalarProperty Name="Numero" ColumnName="Numero" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Empresas">
+      <EntityTypeMapping TypeName="SgajcpModel.Empresas">
+        <MappingFragment StoreEntitySet="Empresas">
+          <ScalarProperty Name="Nomina" ColumnName="Nomina" />
           <ScalarProperty Name="Rut" ColumnName="Rut" />
           <ScalarProperty Name="Nombre" ColumnName="Nombre" />
           <ScalarProperty Name="Id" ColumnName="Id" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="RegistroTrabajador">
-      <EntityTypeMapping TypeName="DBManejoPersonalModel.RegistroTrabajador">
-        <MappingFragment StoreEntitySet="RegistroTrabajador">
-          <ScalarProperty Name="Campo" ColumnName="Campo" />
-          <ScalarProperty Name="Foto" ColumnName="Foto" />
-          <ScalarProperty Name="Fecha" ColumnName="Fecha" />
+    <EntitySetMapping Name="Trabajador">
+      <EntityTypeMapping TypeName="SgajcpModel.Trabajador">
+        <MappingFragment StoreEntitySet="Trabajador">
+          <ScalarProperty Name="Expiración" ColumnName="Expiración" />
+          <ScalarProperty Name="Documento_Covid_19" ColumnName="Documento Covid-19" />
+          <ScalarProperty Name="Procedimientos_de_trabajo" ColumnName="Procedimientos de trabajo" />
+          <ScalarProperty Name="Examen_altura_física" ColumnName="Examen altura física" />
+          <ScalarProperty Name="Registro_capacitación" ColumnName="Registro capacitación" />
+          <ScalarProperty Name="Registro_RIOHS" ColumnName="Registro RIOHS" />
+          <ScalarProperty Name="Registro_Epp" ColumnName="Registro Epp" />
+          <ScalarProperty Name="Odi" ColumnName="Odi" />
+          <ScalarProperty Name="Anexo" ColumnName="Anexo" />
+          <ScalarProperty Name="Contrato" ColumnName="Contrato" />
+          <ScalarProperty Name="Nomina" ColumnName="Nomina" />
+          <ScalarProperty Name="Habilitado" ColumnName="Habilitado" />
+          <ScalarProperty Name="Empresa" ColumnName="Empresa" />
+          <ScalarProperty Name="Contratista" ColumnName="Contratista" />
           <ScalarProperty Name="Uid" ColumnName="Uid" />
+          <ScalarProperty Name="Foto" ColumnName="Foto" />
+          <ScalarProperty Name="FotoCarnet" ColumnName="FotoCarnet" />
+          <ScalarProperty Name="Numero" ColumnName="Numero" />
+          <ScalarProperty Name="Email" ColumnName="Email" />
+          <ScalarProperty Name="Telefono" ColumnName="Telefono" />
+          <ScalarProperty Name="Sexo" ColumnName="Sexo" />
+          <ScalarProperty Name="Direccion" ColumnName="Direccion" />
+          <ScalarProperty Name="Rut" ColumnName="Rut" />
+          <ScalarProperty Name="ApellidoMaterno" ColumnName="ApellidoMaterno" />
+          <ScalarProperty Name="ApellidoPaterno" ColumnName="ApellidoPaterno" />
+          <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Log">
+      <EntityTypeMapping TypeName="SgajcpModel.Log">
+        <MappingFragment StoreEntitySet="Log">
+          <ScalarProperty Name="Acción" ColumnName="Acción" />
+          <ScalarProperty Name="UsuarioId" ColumnName="UsuarioId" />
+          <ScalarProperty Name="Usuario" ColumnName="Usuario" />
+          <ScalarProperty Name="Empresa" ColumnName="Empresa" />
+          <ScalarProperty Name="Fecha" ColumnName="Fecha" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Casino">
+      <EntityTypeMapping TypeName="SgajcpModel.Casino">
+        <MappingFragment StoreEntitySet="Casino">
+          <ScalarProperty Name="Ubicacion" ColumnName="Ubicacion" />
+          <ScalarProperty Name="Foto" ColumnName="Foto" />
+          <ScalarProperty Name="Comida" ColumnName="Comida" />
+          <ScalarProperty Name="Fecha" ColumnName="Fecha" />
+          <ScalarProperty Name="Rut" ColumnName="Rut" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Personas">
+      <EntityTypeMapping TypeName="SgajcpModel.Personas">
+        <MappingFragment StoreEntitySet="Personas">
+          <ScalarProperty Name="GlosaPuesto" ColumnName="GlosaPuesto" />
+          <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+          <ScalarProperty Name="Rut" ColumnName="Rut" />
+          <ScalarProperty Name="Instalacion" ColumnName="Instalacion" />
+          <ScalarProperty Name="Ubicacion" ColumnName="Ubicacion" />
+          <ScalarProperty Name="GlosaCosto" ColumnName="GlosaCosto" />
+          <ScalarProperty Name="CentroCosto2" ColumnName="CentroCosto2" />
+          <ScalarProperty Name="CentroCosto1" ColumnName="CentroCosto1" />
           <ScalarProperty Name="Id" ColumnName="Id" />
         </MappingFragment>
       </EntityTypeMapping>

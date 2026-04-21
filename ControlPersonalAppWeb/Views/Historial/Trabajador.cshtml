@@ -1,0 +1,85 @@
+﻿@model IEnumerable<ControlPersonalAppWeb.Models.Historial>
+
+@{
+    ViewBag.Title = "Historial";
+    var cuenta = ControlPersonalAppWeb.Utils.SessionManager.CuentaAutenticada();
+}
+
+<h1 class="display-4 text-center">Historial - @ViewBag.Buscado</h1>
+<hr /><div style="margin-top:24px">
+    @Html.Partial("Busqueda")
+</div>
+<div class="table-responsive">
+    <table class="table table-hover" id="tabla">
+        <tr class="bg-primary">
+            <th>
+                @Html.DisplayNameFor(model => model.Fecha)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Trabajador)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Tipo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Productos)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Ubicación)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Destino)
+            </th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Fecha)
+        </td>
+        <td>
+            <a href='@Url.Action("Trabajador", "Historial", new { id = item.TrabajadorId })'>
+                @Html.DisplayFor(modelItem => item.Trabajador)
+            </a>
+        </td>
+        <td>
+            @if (item.Tipo == "Gestión")
+            {
+                <a href='@Url.Action("Details", "ControlInventarios", new { id = item.TipoId })'>
+                    @Html.DisplayFor(modelItem => item.Tipo)
+                </a>
+            }
+            @if (item.Tipo == "Solicitud")
+            {
+                <a href='@Url.Action("Details", "Solicitudes", new { id = item.TipoId })'>
+                    @Html.DisplayFor(modelItem => item.Tipo)
+                </a>
+            }
+            @if (item.Tipo == "Ingreso")
+            {
+                <a href='@Url.Action("Details", "Ingresos", new { id = item.TipoId })'>
+                    @Html.DisplayFor(modelItem => item.Tipo)
+                </a>
+            }
+        </td>
+        <td>
+            @foreach (var producto in item.Productos)
+            {
+                <a href='@Url.Action("Producto", "Historial", new { id = producto.ProductoId })'>
+                    @Html.DisplayFor(modelItem => producto.Producto): @Html.DisplayFor(modelItem => producto.Cantidad)
+                </a>
+            }
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Ubicación)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Destino)
+        </td>
+    </tr>
+        }
+
+    </table>
+
+</div>

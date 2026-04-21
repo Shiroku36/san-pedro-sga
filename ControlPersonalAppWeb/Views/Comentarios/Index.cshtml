@@ -31,7 +31,7 @@
         {
             <tr>
                 <td>
-                    <a href="/Cuenta/Details/@item.TrabajadorId">
+                    <a href='@Url.Action("Trabajador", "Historial", new { id = item.TrabajadorId })'>
                         @Html.DisplayFor(modelItem => item.Trabajador)
                     </a>
                 </td>
@@ -39,31 +39,31 @@
                     @if (item.AplicacionDeProgramaId != null)
                     {
                         <a href="/AplicacionDeProgramas/Details/@item.AplicacionDeProgramaId">
-                            @Html.DisplayFor(modelItem => item.AplicacionDeProgramaId)
+                            Ir a aplicación de programa
                         </a>
                     }
                     @if (item.SolicitudDeCompraId != null)
                     {
                         <a href="/SolicitudDeCompras/Details/@item.SolicitudDeCompraId">
-                            @Html.DisplayFor(modelItem => item.SolicitudDeCompraId)
+                            Ir a solicitud de compra
                         </a>
                     }
                     @if (item.SolicitudId != null)
                     {
                         <a href="/Solicitudes/Details/@item.SolicitudId">
-                            @Html.DisplayFor(modelItem => item.SolicitudId)
+                            Ir a solicitud de producto
                         </a>
                     }
                     @if (item.IngresoId != null)
                     {
                         <a href="/Ingresos/Details/@item.IngresoId">
-                            @Html.DisplayFor(modelItem => item.IngresoId)
+                            Ir a ingreso
                         </a>
                     }
                     @if (item.ControlInventarioId != null)
                     {
                         <a href="/ControlInventarios/Details/@item.ControlInventarioId">
-                            @Html.DisplayFor(modelItem => item.ControlInventarioId)
+                            Ir a gestión de insumos
                         </a>
                     }
 

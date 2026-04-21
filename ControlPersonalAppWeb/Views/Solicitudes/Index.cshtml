@@ -8,97 +8,110 @@
 <hr />
 
 
-    @Html.ActionLink("Crear solicitud", "Create",null,new { @class="btn btn-primary mt-2 float-right" } )
-    <div class="col-sm-10">
-        @if (ViewBag.alerta == 1)
-        {
-            <div class="my-3 alert alert-success" role="alert">
-                ¡Notificiación enviada al correo correctamente!
-            </div>
-        }
-        @if (ViewBag.alerta == 2)
-        {
-    <div class="my-3 alert alert-warning" role="alert">
-        Solicitud creada, pero hemos tenido un problema enviando la notificación al correo
-    </div>
-        }
-    </div>
-    <div style="margin-top:24px">
+<div class="col-sm-10">
+    @if (ViewBag.alerta == 1)
+    {
+        <div class="my-3 alert alert-success" role="alert">
+            ¡Notificiación enviada al correo correctamente!
+        </div>
+    }
+    @if (ViewBag.alerta == 2)
+    {
+        <div class="my-3 alert alert-warning" role="alert">
+            Solicitud creada, pero hemos tenido un problema enviando la notificación al correo
+        </div>
+    }
+</div>
+<div class="row">
+    <div class="col-8">
         @Html.Partial("Busqueda")
     </div>
-    <div class="clearfix"></div>
-    <div class="table-responsive">
-        <table class="table" id="tabla">
-            <tr class="bg-primary">
-                <th style="width:15%">
-                    @Html.DisplayNameFor(model => model.Trabajador)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Productos)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Observación)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Origen)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Destino)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Estado)
-                </th>
-                <th style="width:10%">
-                    @Html.DisplayNameFor(model => model.Fecha)
-                </th>
-                <th style="width:15%">
-                    Aplicaciones
-                </th>
-                <th>
-                    Solicitud
-                </th>
-            </tr>
-
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td>
-                        <a href="/Cuenta/Details/@item.TrabajadorId">
-                            @Html.DisplayFor(modelItem => item.Trabajador)
-                        </a>
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Productos)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Observación)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Origen)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Destino)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Estado)
-                    </td>
-                    <td>
-                        @if (item.Fecha != null)
-                        {
-                            <span>@item.Fecha.Value.ToShortDateString()</span>
-                        }
-                    </td>
-                    <td>
-                        <a class="btn btn-primary" href="@Url.Action("Create", "AplicacionDeProgramas", new { id = item.Id })">Agregar</a>
-                        <a class="btn btn-info" href="@Url.Action("Index", "AplicacionDeProgramas", new { id = item.Id })">Ver</a>
-
-                    </td>
-                    <td>
-                        @Html.ActionLink("Detalles", "Details", new { id = item.Id }, new { @class = "btn btn-info" })
-                    </td>
-                </tr>
-            }
-
-        </table>
+    <div class="col-2">
+        @Html.ActionLink("Informe", "Consolidado", null, new { @class = "btn btn-warning mt" })
     </div>
+    <div class="col-2">
+        @Html.ActionLink("Crear solicitud", "Create", null, new { @class = "btn btn-primary" })
+    </div>
+</div>
+<div class="clearfix"></div>
+<div class="table-responsive">
+    <table class="table" id="tabla">
+        <tr class="bg-primary">
+            <th>
+                ID
+            </th>
+            <th style="width:15%">
+                @Html.DisplayNameFor(model => model.Trabajador)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Productos)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Observación)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Origen)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Destino)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Estado)
+            </th>
+            <th style="width:10%">
+                @Html.DisplayNameFor(model => model.Fecha)
+            </th>
+            <th style="width:15%">
+                Aplicaciones
+            </th>
+            <th>
+                Solicitud
+            </th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Empresa)
+                </td>
+                <td>
+                    <a href="/Historial/Trabajador/@item.TrabajadorId">
+                        @Html.DisplayFor(modelItem => item.Trabajador)
+                    </a>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Productos)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Observación)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Origen)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Destino)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Estado)
+                </td>
+                <td>
+                    @if (item.Fecha != null)
+                    {
+                        <span>@item.Fecha.Value.ToShortDateString()</span>
+                    }
+                </td>
+                <td>
+                    <a class="btn btn-primary" href="@Url.Action("Create", "AplicacionDeProgramas", new { id = item.Id , origen = "producto"})">Agregar</a>
+                    <a class="btn btn-info" href="@Url.Action("Index", "AplicacionDeProgramas", new { id = item.Id })">Ver</a>
+
+                </td>
+                <td>
+                    @Html.ActionLink("Detalles", "Details", new { id = item.Id }, new { @class = "btn btn-info" })
+                </td>
+            </tr>
+        }
+
+    </table>
+</div>
 

@@ -1,0 +1,37 @@
+﻿
+@{
+    ViewBag.Title = "Pulseras";
+}
+
+<h1 class="display-4 text-center">Índice RR.HH.</h1>
+<hr />
+
+<div class="clearfix"></div>
+<div class="row">
+    <div class="col-sm-8 form-label-group">
+        <input type="text" id="busqueda" onkeyup="buscar()" class="mb-3 mt-1 form-control" placeholder="Búsqueda">
+    </div>
+</div>
+
+<div class="table-responsive">
+    <table class="table table-hover" id="tabla">
+        <tr class="bg-primary">
+            <th>
+                Número
+            </th>
+            <th style="width:40%">
+                Accion
+            </th>
+        </tr>
+        @foreach (var item in ViewBag.Pulseras)
+        {
+            <tr>
+                <td>
+                    @item.Numero
+                </td>
+            </tr>
+        }
+    </table>
+</div>
+
+<script src="~/Scripts/Busqueda.js"></script>

@@ -13,10 +13,10 @@ using ControlPersonalAppWeb;
 using ControlPersonalAppWeb.Utils;
 
 namespace ControlPersonalAppWeb.Controllers
-{
+{/*
     public class ProductosController : Controller
     {
-        private DBManejoPersonalEntities db = new DBManejoPersonalEntities();
+        private SgajcpEntities db = new SgajcpEntities();
         private Cuentas cuenta = Utils.SessionManager.CuentaAutenticada();
         string path = "C:\\Data\\Fichas\\";
         // GET: Productos
@@ -206,6 +206,11 @@ namespace ControlPersonalAppWeb.Controllers
             }
             Utils.SessionManager.log("Eliminar producto: " + producto.Nombre);
             db.Producto.Remove(producto);
+            List<Stock> productos = db.Stock.Where(x => x.ProductoId == id).ToList();
+            foreach (var product in productos)
+            {
+                db.Stock.Remove(product);
+            }
             db.SaveChanges();
             return RedirectToAction("Index");
         }
@@ -253,5 +258,5 @@ namespace ControlPersonalAppWeb.Controllers
                 ViewBag.unidades = new string[] { "" };
             }
         }
-    }
+    }*/
 }

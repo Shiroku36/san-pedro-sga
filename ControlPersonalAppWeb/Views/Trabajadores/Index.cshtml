@@ -47,7 +47,9 @@
                         @Html.ActionLink("Detalles", "Details", new { id = item.Id }, new { @class = "btn btn-block btn-info " })
                     </label>
                     <label>
-                        @Html.ActionLink("Eliminar", "Delete", new { id = item.Id }, new { @class = "btn btn-block btn-danger " })
+                        <a href='@Url.Action("Delete", "Productos", new { id = item.Id })' onclick="return confirm('¿Está seguro que desea eliminar el trabajador?')" })>
+                            <label title="Eliminar" type="submit" class="btn btn-danger mb-1">Borrar</label>
+                        </a>
                     </label>
 
                 </td>

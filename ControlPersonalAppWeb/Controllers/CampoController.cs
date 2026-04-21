@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DocumentFormat.OpenXml.Wordprocessing;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -6,9 +7,10 @@ using System.Web.Mvc;
 
 namespace ControlPersonalAppWeb.Controllers
 {
+    
     public class CampoController : Controller
     {
-        DBManejoPersonalEntities db = new DBManejoPersonalEntities();
+        SgajcpEntities db = new SgajcpEntities();
         private Cuentas cuenta = Utils.SessionManager.CuentaAutenticada();
         public string[] GetNombreCampos(string empresa)
         {
@@ -28,12 +30,25 @@ namespace ControlPersonalAppWeb.Controllers
             }
             return nombres;
         }
+
         // GET: Campo
         public ActionResult Index()
         {
-            Utils.SessionManager.log("Index huertos");
-            DBManejoPersonalEntities database = new DBManejoPersonalEntities();
-            Cuentas cuenta = Utils.SessionManager.CuentaAutenticada();
+
+            //Eliminar duplicados
+            /*
+            List<Trabajador> trabajadores = db.Trabajador.ToList();
+
+            List<Trabajador> trabajadoresSD = trabajadores
+            .GroupBy(p => p.Rut)
+            .Select(g => g.OrderBy(p => p.Id).First())
+            .ToList();
+            var ids = trabajadoresSD.Select(x => x.Id).ToList();
+            var duplicados = db.Trabajador.Where(x => !ids.Contains(x.Id)).ToList();
+            db.Trabajador.RemoveRange(duplicados);
+            db.SaveChanges();*/
+
+            /*Cuentas cuenta = Utils.SessionManager.CuentaAutenticada();
             string empresa = cuenta.Empresa;
             string[] nombres;
             List<Campos> campos = new List<Campos>();
@@ -53,14 +68,17 @@ namespace ControlPersonalAppWeb.Controllers
                 }
             }
             return View(campos);
+            */
+            Utils.SessionManager.log("Predio índice");
+            return View(db.Campos.OrderBy(x => x.Nombre).ToList());
         }
 
         // GET: Campo/Details/5
         public ActionResult Details(int id)
         {
-            DBManejoPersonalEntities database = new DBManejoPersonalEntities();
+            SgajcpEntities database = new SgajcpEntities();
             Campos campo = database.Campos.First(x => x.Id == id);
-            Utils.SessionManager.log("Detalle huerto: "+ campo.Nombre);
+            Utils.SessionManager.log("Predio detalle: " + campo.Nombre);
             return View(campo);
         } 
 
@@ -76,7 +94,7 @@ namespace ControlPersonalAppWeb.Controllers
         {
             try
             {
-                DBManejoPersonalEntities database = new DBManejoPersonalEntities();
+                SgajcpEntities database = new SgajcpEntities();
                 Campos campo = new Campos
                 {
                     Nombre = collection["Nombre"],
@@ -89,16 +107,23 @@ namespace ControlPersonalAppWeb.Controllers
                     Asistente = collection["Asistente"],
                     TelefonoAsistente = collection["TelefonoAsistente"]
                 };
-                List<Cuentas> cuentas = db.Cuentas.Where(x => x.EmpresaId == cuenta.EmpresaId).ToList();
+                List<Cuentas> cuentas = db.Cuentas.ToList();
                 foreach (var acount in cuentas)
                 {
-                    List<string> permisos = acount.Permisos.Split(',').ToList();
-                    permisos.Add(campo.Nombre);
-                    acount.Permisos = String.Join(",", permisos);
+                    if(acount.Permisos!=null)
+                    {
+                        List<string> permisos = acount.Permisos.Split(',').ToList();
+                        permisos.Add(campo.Nombre);
+                        acount.Permisos = String.Join(",", permisos);
+                    }
+                    else
+                    {
+                        acount.Permisos = campo.Nombre;
+                    }
                 }
                 database.Campos.Add(campo);
+                Utils.SessionManager.log("Predio crear: " + campo.Nombre);
                 database.SaveChanges();
-                Utils.SessionManager.log("Huerto creado: "+ campo.Nombre);
                 return RedirectToAction("Index");
             }
             catch
@@ -110,7 +135,7 @@ namespace ControlPersonalAppWeb.Controllers
         // GET: Campo/Edit/5
         public ActionResult Edit(int id)
         {
-            DBManejoPersonalEntities database = new DBManejoPersonalEntities();
+            SgajcpEntities database = new SgajcpEntities();
             Campos campo = database.Campos.First(x => x.Id == id);
             return View(campo);
         }
@@ -121,10 +146,9 @@ namespace ControlPersonalAppWeb.Controllers
         {
             try
             {
-                DBManejoPersonalEntities database = new DBManejoPersonalEntities();
+                SgajcpEntities database = new SgajcpEntities();
                 string empresa = Utils.SessionManager.CuentaAutenticada().Empresa;
                 Campos campo = database.Campos.First(x => x.Id == id);
-                Utils.SessionManager.log("Huerto editado: " + campo.Nombre);
                 campo.Nombre = collection["Nombre"];
                 campo.Empresa = collection["Empresa"];
                 campo.Lugar = collection["Lugar"];
@@ -135,6 +159,7 @@ namespace ControlPersonalAppWeb.Controllers
                 campo.Asistente = collection["Asistente"];
                 campo.TelefonoAsistente = collection["TelefonoAsistente"];
                 campo.Empresa = empresa;
+                Utils.SessionManager.log("Predio editar: " + campo.Nombre);
                 database.SaveChanges();
                 return RedirectToAction("Index");
             }
@@ -147,10 +172,10 @@ namespace ControlPersonalAppWeb.Controllers
         // GET: Campo/Delete/5
         public ActionResult Delete(int id)
         {
-            DBManejoPersonalEntities database = new DBManejoPersonalEntities();
+            SgajcpEntities database = new SgajcpEntities();
             Campos Campo = database.Campos.First(x => x.Id == id);
-            Utils.SessionManager.log("Huerto eliminado: " + Campo.Nombre);
             database.Campos.Remove(Campo);
+            Utils.SessionManager.log("Predio eliminar: " + Campo.Nombre);
             database.SaveChanges();
             return RedirectToAction("Index");
         }

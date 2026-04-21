@@ -27,12 +27,9 @@
             @Html.DisplayNameFor(model => model.StockMin)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Descripcion)
-        </th>
-        <th>
             @Html.DisplayNameFor(model => model.Miniatura)
         </th>
-        <th>
+        <th style="width:40%">
             Accion
         </th>
     </tr>
@@ -53,12 +50,9 @@
                 @Html.DisplayFor(modelItem => item.StockMin)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Descripcion)
-            </td>
-            <td>
                 @if (item.Miniatura != null)
                 {
-                    <img src="@String.Format("data:image/jgp;base64,{0}", System.Convert.ToBase64String(item.Miniatura))" />
+                    <img src="@String.Format("data:image/jgp;base64,{0}", System.Convert.ToBase64String(item.Miniatura))" width="80" />
                 }
             </td>
             <td>

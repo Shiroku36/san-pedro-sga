@@ -13,10 +13,10 @@ namespace ControlPersonalAppWeb
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
     
-    public partial class DBManejoPersonalEntities : DbContext
+    public partial class SgajcpEntities : DbContext
     {
-        public DBManejoPersonalEntities()
-            : base("name=DBManejoPersonalEntities")
+        public SgajcpEntities()
+            : base("name=SgajcpEntities")
         {
         }
     
@@ -28,29 +28,11 @@ namespace ControlPersonalAppWeb
         public virtual DbSet<Campos> Campos { get; set; }
         public virtual DbSet<Cuentas> Cuentas { get; set; }
         public virtual DbSet<RegistroTrabajador> RegistroTrabajador { get; set; }
-        public virtual DbSet<HorasExtras> HorasExtras { get; set; }
-        public virtual DbSet<Licencia> Licencia { get; set; }
-        public virtual DbSet<Prestamo> Prestamo { get; set; }
-        public virtual DbSet<HyD> HyD { get; set; }
-        public virtual DbSet<Vacaciones> Vacaciones { get; set; }
-        public virtual DbSet<Cargo> Cargo { get; set; }
-        public virtual DbSet<CentroDeCostos> CentroDeCostos { get; set; }
-        public virtual DbSet<Finiquito> Finiquito { get; set; }
-        public virtual DbSet<AFP> AFP { get; set; }
-        public virtual DbSet<Trabajador> Trabajador { get; set; }
-        public virtual DbSet<AplicacionDePrograma> AplicacionDePrograma { get; set; }
-        public virtual DbSet<Comentario> Comentario { get; set; }
-        public virtual DbSet<Ingreso> Ingreso { get; set; }
-        public virtual DbSet<Stock> Stock { get; set; }
-        public virtual DbSet<Notificacion> Notificacion { get; set; }
-        public virtual DbSet<ControlInventario> ControlInventario { get; set; }
-        public virtual DbSet<Solicitud> Solicitud { get; set; }
-        public virtual DbSet<TipoContrato> TipoContrato { get; set; }
-        public virtual DbSet<Log> Log { get; set; }
+        public virtual DbSet<Pulseras> Pulseras { get; set; }
         public virtual DbSet<Empresas> Empresas { get; set; }
-        public virtual DbSet<Datos> Datos { get; set; }
-        public virtual DbSet<Producto> Producto { get; set; }
-
-        public System.Data.Entity.DbSet<ControlPersonalAppWeb.SolicitudDeCompra> SolicitudDeCompras { get; set; }
+        public virtual DbSet<Trabajador> Trabajador { get; set; }
+        public virtual DbSet<Log> Log { get; set; }
+        public virtual DbSet<Casino> Casino { get; set; }
+        public virtual DbSet<Personas> Personas { get; set; }
     }
 }

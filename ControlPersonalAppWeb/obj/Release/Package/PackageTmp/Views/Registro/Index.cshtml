@@ -3,99 +3,77 @@
 @{
     ViewBag.Title = "Índice";
     var tipo = "";
+    var cuenta = ControlPersonalAppWeb.Utils.SessionManager.CuentaAutenticada();
 }
-<div class="col-lg-8">
-    <h2>
-        Registros - @ViewBag.Trabajador.Nombre
-    </h2>
 
-    <p>
-        @Html.ActionLink("PDF", "PDFRegistro", "Trabajador", new { id = ViewBag.id }, null)
-    </p>
-    <p>
-        @Html.ActionLink("Crear nuevo", "Create", new { id = ViewBag.Id }, null)
-    </p>
-</div>
+<h1 class="display-4 text-center">Registros - @ViewBag.Trabajador.Nombre @ViewBag.Trabajador.ApellidoPaterno @ViewBag.Trabajador.ApellidoMaterno</h1>
+
+@if (cuenta.Permisos.Contains("RegistrosC"))
+{
+    <a href='@Url.Action("Create", "Registro",new { id = ViewBag.trabajador.Id })'>
+        <label type="button" class="btn btn-primary float-right ml-2  mb-3">Crear Nuevo</label>
+    </a>
+}
+
+<div class="clearfix"></div>
 
 @using (Html.BeginForm())
 {
+    <br />
+    <br />
     @Html.AntiForgeryToken()
-    <input type="hidden" id="id" value="@ViewBag.idTrabajador" />
-    <div align="left" class="form-horizontal col-lg-4">
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <div class="form-group">
-            <b class="control-label col-md-2">Inicio</b>
-            <div class="col-md-10">
-                <input class="form-control" type="date" id="Inicio" name="Inicio" min="2019-01-01"
-                       max="" value="2019-01-01">
-            </div>
-            <b class="control-label col-md-2">Termino</b>
-            <div class="col-md-10">
-                <input class="form-control" type="date" id="Fin" name="Fin" min="2019-01-01"
-                       max="" value="">
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Generar" class="btn btn-default" />
-            </div>
-        </div>
+    <div class="table-responsive">
+        <table class="table table-hover" id="tabla">
+            <tr class="bg-primary">
+                <th>
+                    @Html.DisplayNameFor(model => model.Fecha)
+                </th>
+                <th>
+                    Hora
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Campo)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Foto)
+                </th>
+                <th></th>
+            </tr>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @item.Fecha.ToShortDateString()
+                    </td>
+                    <td>
+                        @item.Fecha.ToShortTimeString()
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Campo)
+                    </td>
+                    <td>
+                        <img src="@String.Format("data:image/jgp;base64,{0}", System.Convert.ToBase64String(item.Foto))" width="110" />
+                    </td>
+                    <td>
+                        @if (cuenta.Permisos.Contains("RegistrosE"))
+                        {
+                            <a href='@Url.Action("Edit", "Registro", new { id = item.Id , idTrabajador = ViewBag.trabajador.Id})'>
+                                <label title="Editar" type="submit" class="btn btn-warning">Editar</label>
+                            </a>
+                        }
+                        <a href='@Url.Action("Details", "Registro", new { id = item.Id, idTrabajador = ViewBag.trabajador.Id })'>
+                            <label title="Detalle" type="submit" class="btn btn-info">Detalle </label>
+                        </a>
+                        @if (cuenta.Permisos.Contains("RegistrosD"))
+                        {
+                            <a href='@Url.Action("Delete", "Registro", new { id = item.Id })'>
+                                <label type="button" class="btn btn-danger" onclick="return confirm('¿Está seguro que desea eliminar el registro?');" })>Borrar</label>
+                            </a>
+                        }
+                    </td>
+                </tr>
+            }
+
+        </table>
     </div>
 }
-
-<script src="~/Scripts/fechaHoy.js"></script>
-<table class="table">
-    <tr>
-        <th>
-            Tipo
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Fecha)
-        </th>
-        <th>
-            Hora
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Campo)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Foto)
-        </th>
-        <th></th>
-    </tr>
-
-    @foreach (var item in Model)
-    {
-    <tr>
-        <td>
-            @if (item.Fecha.Hour < 12)
-            {
-                tipo = "Entrada";
-            }
-            else
-            {
-                tipo = "Salida";
-            }
-            @tipo
-        </td>
-        <td>
-            @item.Fecha.ToShortDateString()
-        </td> 
-        <td>
-            @item.Fecha.ToShortTimeString()
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Campo)
-        </td>
-        <td>
-            <img src="@String.Format("data:image/jgp;base64,{0}",System.Convert.ToBase64String(item.Foto))" width="110" height="80" />
-        </td>
-        <td>
-            @Html.ActionLink("Editar", "Edit", new { id = item.Id }) |
-            @Html.ActionLink("Detalle", "Details", new { id = item.Id , idTrabajador = ViewBag.id}) |
-            @Html.ActionLink("Borrar", "Delete", new { id = item.Id }, new { onclick = "return confirm('¿Está seguro que desea eliminar el Registro?');" })
-        </td>
-    </tr>
-    }
-
-</table>

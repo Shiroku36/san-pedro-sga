@@ -1,0 +1,43 @@
+﻿
+@{
+    ViewBag.Title = "Cargar";
+}
+
+<h1 class="display-4 text-center">Carga de personas</h1>
+<hr />
+
+<div class="clearfix"></div>
+@using (Html.BeginForm("Cargar", "Personas", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div class="form-group col-md-10 mx-auto">
+        <div class="form-group col-md-10 mx-auto">
+            <div class="col-md-12 ">
+                <span class="control-label col-md-2">Documento</span>
+                <input id="Foto" type="file" name="csv" class="form-control" value="@ViewBag.documento">
+            </div>
+            <br />
+            <br />
+            <div class="col-md-offset-2 col-md-12 form-group">
+                <input type="submit" value="Cargar" class="btn btn-primary btn-block" />
+                @Html.ActionLink("Volver a la lista", "Index", null, new { @class = "btn btn-block btn-danger mt-3 mb-3" })
+                @if (ViewBag.mensaje != null)
+                {
+                    if (ViewBag.mensaje)
+                    {
+                        <div style="border-radius: 10px; background-color: #87CEEB; padding: 10px;">
+                            <p align="center" style="color: #fff;"><strong>Archivo cargado correctamente</strong></p>
+                        </div>
+                    }
+                    else
+                    {
+
+                        <!-- Marco Rojo -->
+                        <div style="border-radius: 10px; background-color: #FFC0CB; padding: 10px; margin-top: 10px;">
+                            <p align="center" style="color: #fff;"><strong>Error al cargar el archivo</strong></p>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+}

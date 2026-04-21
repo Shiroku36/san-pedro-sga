@@ -17,9 +17,8 @@ namespace ControlPersonalAppWeb
         public int Id { get; set; }
         public Nullable<System.DateTime> Fecha { get; set; }
         public string Empresa { get; set; }
-        public Nullable<int> EmpresaId { get; set; }
         public string Usuario { get; set; }
         public Nullable<int> UsuarioId { get; set; }
-        public string Accion { get; set; }
+        public string Acción { get; set; }
     }
 }

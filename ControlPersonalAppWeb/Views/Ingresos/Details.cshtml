@@ -19,7 +19,9 @@
                 </td>
 
                 <td>
-                    <a href="~/Cuenta/Details/@Model.TrabajadorId">@Model.Trabajador</a>
+                    <a href='@Url.Action("Trabajador", "Historial", new { id = Model.TrabajadorId })'>
+                        @Html.DisplayFor(modelItem => Model.Trabajador)
+                    </a>
                 </td>
             </tr>
 
@@ -31,7 +33,7 @@
                 <td>
                     @foreach (var stock in ViewBag.productos)
                     {
-                        <a href="~/Productos/Details/@stock.ProductoId">@stock.Producto</a><span>: @stock.Cantidad</span><br />
+                        <a href="~/Historial/Producto/@stock.ProductoId">@stock.Producto</a><span>: @stock.Cantidad</span><br />
                     }
                 </td>
             </tr>
@@ -74,6 +76,39 @@
                 <td>
                     @Html.DisplayFor(model => model.ProveedorRut)
                 </td>
+
+            </tr>
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.Tipo)
+                </td>
+
+                <td>
+                    @Html.DisplayFor(model => model.Tipo)
+                </td>
+
+            </tr>
+            <tr>
+                <td>
+                    @Html.DisplayNameFor(model => model.Numero)
+                </td>
+
+                <td>
+                    @Html.DisplayFor(model => model.Numero)
+                </td>
+
+            </tr>
+            <tr>
+
+                @if (Model.Foto != null)
+                {
+                    <td>
+                        @Html.DisplayNameFor(model => model.Foto)
+                    </td>
+                    <td>
+                        <img src="@String.Format("data:image/jpg;base64,{0}",System.Convert.ToBase64String(Model.Foto))" width="auto" height="600" />
+                    </td>
+                }
 
             </tr>
         </table>

@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<ControlPersonalAppWeb.Cuentas>
 
 @{
-    ViewBag.Title = "Índice";
+    ViewBag.Title = "Cuentas";
     var cuenta = ControlPersonalAppWeb.Utils.SessionManager.CuentaAutenticada();
 }
 
@@ -10,7 +10,7 @@
 @if (cuenta.Permisos.Contains("CuentasC"))
 {
     <a href='@Url.Action("Create", "Cuenta")'>
-        <button type="button" class="btn btn-primary float-right mb-3">Crear Nuevo</button>
+        <button type="button" class="btn btn-primary float-right mt-2">Crear Nuevo</button>
     </a>
 }<div style="margin-top:24px">
     @Html.Partial("Busqueda")
@@ -21,12 +21,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.Usuario)
             </th>
-            @if (cuenta.Empresa == "JCP")
-            {
-                <th>
-                    @Html.DisplayNameFor(model => model.Empresa)
-                </th>
-            }
+            <th>
+                Contratista
+            </th>
             <th>
                 @Html.DisplayNameFor(model => model.Nombre)
             </th>
@@ -35,9 +32,6 @@
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Email)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Notificacion)
             </th>
             <th>
                 Acción
@@ -50,12 +44,9 @@
         <td>
             @Html.DisplayFor(modelItem => item.Usuario)
         </td>
-        @if (cuenta.Empresa == "JCP")
-        {
-            <td>
-                @Html.DisplayFor(modelItem => item.Empresa)
-            </td>
-        }
+        <td>
+            @Html.DisplayFor(modelItem => item.Empresa)
+        </td>
         <td>
             @Html.DisplayFor(modelItem => item.Nombre)
         </td>
@@ -64,16 +55,6 @@
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Email)
-        </td>
-        <td>
-            @if (item.Notificacion!=null && (bool)item.Notificacion)
-            {
-                <span>Activada</span>
-            }
-            else
-            {
-                <span>Desactivada</span>
-            }
         </td>
         <td>
             @if (cuenta.Permisos.Contains("CuentasE"))

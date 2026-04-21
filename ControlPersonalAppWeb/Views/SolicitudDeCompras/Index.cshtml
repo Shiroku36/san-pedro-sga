@@ -45,7 +45,7 @@
         {
             <tr>
                 <td>
-                    <a href="/Cuenta/Details/@item.TrabajadorId">
+                    <a href='@Url.Action("Trabajador", "Historial", new { id = item.TrabajadorId })'>
                         @Html.DisplayFor(modelItem => item.Trabajador)
                     </a>
                 </td>
@@ -68,7 +68,7 @@
                     }
                 </td>
                 <td>
-                    <a class="btn btn-primary" href="@Url.Action("Create", "AplicacionDeProgramas", new { id = item.Id })">Agregar</a>
+                    <a class="btn btn-primary" href="@Url.Action("Create", "AplicacionDeProgramas", new { id = item.Id , origen = "compra"})">Agregar</a>
                     <a class="btn btn-info" href="@Url.Action("Index", "AplicacionDeProgramas", new { id = item.Id })">Ver</a>
 
                 </td>

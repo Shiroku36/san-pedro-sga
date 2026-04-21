@@ -1,51 +1,82 @@
 ﻿@model IEnumerable<ControlPersonalAppWeb.Cuentas>
 
 @{
-    ViewBag.Title = "Índice";
+    ViewBag.Title = "Cuentas";
+    var cuenta = ControlPersonalAppWeb.Utils.SessionManager.CuentaAutenticada();
 }
 
-<h2>Índice Cuentas</h2>
+<h1 class="display-4 text-center">Índice Cuentas</h1>
+<hr />
+@if (cuenta.Permisos.Contains("CuentasC"))
+{
+    <a href='@Url.Action("Create", "Cuenta")'>
+        <button type="button" class="btn btn-primary float-right mb-3">Crear Nuevo</button>
+    </a>
+}<div style="margin-top:24px">
+    @Html.Partial("Busqueda")
+</div>
+<div class="table-responsive">
+    <table class="table table-hover" id="tabla">
+        <tr class="bg-primary">
+            <th>
+                @Html.DisplayNameFor(model => model.Usuario)
+            </th>
+            <th>
+                Contratista
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Nombre)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Apellido)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Email)
+            </th>
+            <th>
+                Acción
+            </th>
+        </tr>
 
-<p>
-    @Html.ActionLink("Crear nuevo", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Usuario)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Password)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Empresa)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Nivel)
-        </th>
-        <th></th>
-    </tr>
-
-@foreach (var item in Model) {
+        @foreach (var item in Model)
+        {
     <tr>
         <td>
             @Html.DisplayFor(modelItem => item.Usuario)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.Password)
-        </td>
-        <td>
             @Html.DisplayFor(modelItem => item.Empresa)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.Nivel)
+            @Html.DisplayFor(modelItem => item.Nombre)
         </td>
         <td>
-            @Html.ActionLink("Editar", "Edit", new { id=item.Id }) |
-            @Html.ActionLink("Detalle", "Details", new { id=item.Id }) |
-            @Html.ActionLink("Borrar", "Delete", new { id=item.Id }, new { onclick = "return confirm('¿Está seguro que desea eliminar la Cuenta?');" })
+            @Html.DisplayFor(modelItem => item.Apellido)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Email)
+        </td>
+        <td>
+            @if (cuenta.Permisos.Contains("CuentasE"))
+            {
+                <a href='@Url.Action("Edit", "Cuenta", new { id = item.Id })'>
+                    <button type="button" class="btn btn-warning">Editar</button>
+                </a>
+            }
+            <a href='@Url.Action("Details", "Cuenta", new { id = item.Id })'>
+                <button type="button" class="btn btn-info">Detalle</button>
+            </a>
+
+            @if (cuenta.Permisos.Contains("CuentasD"))
+            {
+                <a href='@Url.Action("Delete", "Cuenta", new { id = item.Id })'>
+                    <button type="button" class="btn btn-danger" onclick="return confirm('¿Está seguro que desea eliminar la Cuenta?');" })>Borrar</button>
+                </a>
+            }
         </td>
     </tr>
-}
+        }
 
-</table>
+    </table>
+
+</div>

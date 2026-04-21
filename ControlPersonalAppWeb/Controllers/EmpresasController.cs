@@ -12,7 +12,7 @@ namespace ControlPersonalAppWeb.Controllers
 {
     public class EmpresasController : Controller
     {
-        private DBManejoPersonalEntities db = new DBManejoPersonalEntities();
+        private SgajcpEntities db = new SgajcpEntities();
         private Cuentas cuenta = Utils.SessionManager.CuentaAutenticada();
 
         // GET: Empresas
@@ -80,13 +80,13 @@ namespace ControlPersonalAppWeb.Controllers
         // más información vea https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Nombre,NombreAnterior,Rut,RazonSocial,RepresentanteLegalNombre,RepresenntanteLegalRut,Giro,Dirección,Comuna,Ciudad,Telefono,Mutual,FactorMutual,CajaDeCompensacion,TextoLiquidacion,Logo")] Empresas empresas)
+        public ActionResult Edit([Bind(Include = "Id,Nombre,Rut")] Empresas empresas)
         {
             if (ModelState.IsValid)
             {
 
+                string nombre = db.Empresas.First(x => x.Id == empresas.Id).Nombre;
                 db.Entry(empresas).State = EntityState.Modified;
-                string nombre = empresas.NombreAnterior;
                 if(nombre != empresas.Nombre)
                 {
 

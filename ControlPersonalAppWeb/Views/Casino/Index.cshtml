@@ -1,0 +1,218 @@
+﻿@model List<CasinoConNombreViewModel>
+
+@{
+    ViewBag.Title = "Casino";
+    var cuenta = ControlPersonalAppWeb.Utils.SessionManager.CuentaAutenticada();
+}
+
+<h4 class="text-center display-4 mb-4">Registros @ViewBag.Fecha</h4>
+
+
+<div class="container">
+    <div class="row align-items-center g-3">
+        <!-- Contenedor principal con espaciado -->
+        <!-- Primer formulario (Buscar por fecha única) -->
+
+        <div class="col-sm-8 form-label-group">
+            <input type="text" id="busqueda" onkeyup="buscar()" class=" mt-1 form-control" placeholder="Búsqueda">
+        </div>
+        <script src="~/Scripts/Busqueda.js"></script>
+        <div class="col-md-4 form-label-group">
+            @using (Html.BeginForm("Index", "Casino", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="row g-2 align-items-center">
+                    <div class="col-auto">
+                        <input type="date" name="Fecha" required class="form-control" />
+                    </div>
+                    <div class="col-auto">
+                        <button type="submit" class="btn btn-primary">Buscar</button>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <!-- Segundo formulario (Buscar por rango de fechas) -->
+        <div class="col-md-10 mb-4">
+            @using (Html.BeginForm("Informe", "Casino", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                @Html.AntiForgeryToken()
+                <div class="row g-3 align-items-center">
+                    <div class="col-auto">
+                        <input type="date" name="Inicio" id="fechaInicio" required class="form-control" max="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                        <small class="text-danger d-none" id="errorInicio">Fecha inválida</small>
+                    </div>
+                    <div class="col-auto">
+                        <input type="date" name="Fin" id="fechaFin" required class="form-control" max="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                        <small class="text-danger d-none" id="errorFin">Fecha fin debe ser mayor o igual a inicio</small>
+                    </div>
+                    <div class="row subir-div">
+                        <div class="col-auto">
+                            <button type="submit" class="btn btn-primary">Informe</button>
+                        </div>
+                        <div class="col-auto mt-1">
+                            <input class="form-check-input" type="radio" name="formato" id="formatoExcel" value="excel" checked>
+                            <label class="form-check-label" for="formatoExcel">Excel</label>
+                        </div>
+                        <div class="col-auto mt-1">
+                            <input class="form-check-input" type="radio" name="formato" id="formatoPdf" value="pdf">
+                            <label class="form-check-label" for="formatoPdf">PDF</label>
+                        </div>
+                    </div>
+
+                </div>
+            }
+        </div>
+
+        @if (cuenta.Permisos.Contains("PersonasV"))
+        {
+            <div class="col-md-2">
+                <a href='@Url.Action("Index", "Personas")'>
+                    <label type="button" class="btn btn-success">Personas</label>
+                </a>
+            </div>
+        }
+    </div>
+</div>
+<div class="table-responsive">
+    <table class="table table-hover" id="tabla">
+        <tr class="bg-primary">
+            <th class="th-auto">Rut</th>
+            <th class="th-auto">Nombre</th>
+            <th class="th-auto">Fecha</th>
+            <th class="th-auto">Hora</th>
+            <th class="th-auto">Comida</th>
+            <th class="th-auto">Ubicación</th>
+            <th class="th-auto">Foto</th>
+            <th class="th-auto"></th>
+
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Rut)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nombre)
+                </td>
+                <td>
+                    @item.Fecha.Value.ToShortDateString()
+                </td>
+                <td>
+                    @item.Fecha.Value.ToShortTimeString()
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Comida)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Ubicacion)
+                </td>
+                <td>
+                    <img src="@String.Format("data:image/jpeg;base64,{0}", System.Convert.ToBase64String(item.Foto))" width="110" onclick="mostrarImagen(this)" style="cursor:pointer;" />
+                </td>
+                <td>
+
+                    <a href='@Url.Action("Details", "Casino", new { id = item.Id })'>
+                        <label title="Detalles" type="button" class="btn btn-info mx-1">Detalles</label>
+                    </a>
+
+                    @if (cuenta.Permisos.Contains("CasinoD"))
+                    {
+                        <a href='@Url.Action("Delete", "Casino", new { id = item.Id })' onclick="return confirm('¿Está seguro que desea eliminar este registro?')">
+                            <label title="Eliminar" type="button" class="btn btn-danger">Eliminar</label>
+                        </a>
+                    }
+                </td>
+
+            </tr>
+        }
+
+    </table>
+
+    <style>
+        .modal {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            opacity: 0;
+            transform: scale(0.8);
+            transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
+            pointer-events: none;
+        }
+
+        .modal.mostrar {
+            opacity: 1;
+            transform: scale(1);
+            pointer-events: auto;
+        }
+
+        .modal-contenido {
+            max-width: 80%;
+            max-height: 80%;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(255, 255, 255, 0.2);
+        }
+
+        .cerrar {
+            position: absolute;
+            top: 15px;
+            right: 35px;
+            color: white;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .cerrar:hover {
+            color: #ccc;
+            transform: scale(1.1);
+        }
+
+        /* Servicio modal specific */
+        .servicio-contenido {
+            width: 420px;
+            max-width: 90%;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            color: #333;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+        }
+
+        .servicio-contenido h5 { margin-bottom: 10px; }
+        .servicio-contenido p { margin-bottom: 18px; font-size:15px; }
+    </style>
+
+    <!-- Modal imagen -->
+    <div id="modalImagen" class="modal" onclick="cerrarImagen()">
+        <span class="cerrar" onclick="cerrarImagen()">&times;</span>
+        <img class="modal-contenido" id="imgAmpliada">
+    </div>
+
+
+</div>
+
+<script>
+    function mostrarImagen(img) {
+        var modal = document.getElementById("modalImagen");
+        var imgAmpliada = document.getElementById("imgAmpliada");
+        imgAmpliada.src = img.src;
+        modal.classList.add("mostrar");
+    }
+
+    function cerrarImagen() {
+        var modal = document.getElementById("modalImagen");
+        modal.classList.remove("mostrar");
+    }
+</script>

@@ -2,18 +2,20 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
 using System.Web;
 using System.Web.Mvc;
 using ControlPersonalAppWeb;
+using SpreadsheetLight;
 
 namespace ControlPersonalAppWeb.Controllers
-{
+{/*
     public class SolicitudesController : Controller
     {
-        private DBManejoPersonalEntities db = new DBManejoPersonalEntities();
+        private SgajcpEntities db = new SgajcpEntities();
         private Cuentas cuenta = Utils.SessionManager.CuentaAutenticada();
 
         // GET: Solicitudes
@@ -24,6 +26,112 @@ namespace ControlPersonalAppWeb.Controllers
             return View(db.Solicitud.Where(x => x.EmpresaId == cuenta.EmpresaId).OrderByDescending(x => x.Fecha).ToList());
         }
 
+        public void Consolidado()
+        {
+            List<Solicitud> solicitudes = db.Solicitud.Where(x => x.EmpresaId == cuenta.EmpresaId).ToList();
+            List<ControlInventario> controlInventarios = db.ControlInventario.Where(x => x.EmpresaId == cuenta.EmpresaId).ToList();
+            try
+            {
+                //creamos el objeto SLDocument el cual creara el excel
+                SLDocument sl = new SLDocument();
+                sl.RenameWorksheet(SLDocument.DefaultFirstSheetName, "Solicitudes");
+                SLStyle fecha = sl.CreateStyle();
+                SLStyle hora = sl.CreateStyle();
+                fecha.FormatCode = "dd-mm-yyyy";
+                hora.FormatCode = "hh:mm";
+                //creamos las celdas en diagonal
+                //utilizando la función setcellvalue pueden navegar sobre el documento
+                //primer parametro es la fila el segundo la columna y el tercero el dato de la celda
+                sl.SetCellValue(1, 1, "Fecha");
+                sl.SetCellValue(1, 2, "Trabajador");
+                sl.SetCellValue(1, 3, "Observación");
+                sl.SetCellValue(1, 4, "Origen");
+                sl.SetCellValue(1, 5, "Destino");
+                sl.SetCellValue(1, 6, "Estado");
+                sl.SetCellValue(1, 7, "ID");
+                sl.SetCellValue(1, 8, "Productos");
+                sl.SetCellValue(1, 9, "Cantidad");
+                int j = 2;
+                for (int i = 0; i < solicitudes.Count; ++i)
+                {
+                    j = i + 2;
+                    int id = solicitudes[i].Id;
+                    List<Stock> productos = db.Stock.Where(x => x.SolicitudId == id).ToList();
+                    if(productos.Count !=0)
+                    {
+                        foreach (var producto in productos)
+                        {
+                            sl.SetCellValue(j, 1, solicitudes[i].Fecha.Value.ToShortDateString());
+                            sl.SetCellStyle(j, 1, fecha);
+                            sl.SetCellValue(j, 2, solicitudes[i].Trabajador);
+                            sl.SetCellValue(j, 3, solicitudes[i].Observación);
+                            sl.SetCellValue(j, 4, solicitudes[i].Origen);
+                            sl.SetCellValue(j, 5, solicitudes[i].Destino);
+                            sl.SetCellValue(j, 6, solicitudes[i].Estado);
+                            sl.SetCellValue(j, 7, solicitudes[i].Id);
+                            sl.SetCellValue(j, 8, producto.Producto);
+                            sl.SetCellValue(j, 9, Convert.ToString(producto.Cantidad));
+                            j++;
+                        }
+                    }
+
+                }
+                sl.AddWorksheet("Control invetario");
+
+                sl.SetCellValue(1, 1, "Fecha");
+                sl.SetCellValue(1, 2, "Trabajador");
+                sl.SetCellValue(1, 3, "Razón");
+                sl.SetCellValue(1, 4, "ID");
+                sl.SetCellValue(1, 5, "Productos");
+                sl.SetCellValue(1, 6, "Cantidad");
+                j = 2;
+                for (int i = 0; i < controlInventarios.Count; ++i)
+                {
+                    int id = controlInventarios[i].Id;
+                    List<Stock> productos = db.Stock.Where(x => x.ControlId == id).ToList();
+                    if (productos.Count != 0)
+                    {
+                        foreach (var producto in productos)
+                        {
+                            sl.SetCellStyle(j, 1, fecha);
+                            sl.SetCellValue(j, 1, controlInventarios[i].Fecha.Value.ToShortDateString());
+                            sl.SetCellValue(j, 4, controlInventarios[i].Id);
+                            sl.SetCellValue(j, 2, controlInventarios[i].Trabajador);
+                            sl.SetCellValue(j, 3, controlInventarios[i].Razon);
+                            sl.SetCellValue(j, 5, producto.Producto);
+                            sl.SetCellValue(j, 6, Convert.ToString(producto.Cantidad));
+                            j++;
+                        }
+                    }
+
+                }
+                //Guardar como, y aqui ponemos la ruta de nuestro archivo
+                sl.SaveAs("C:\\Data\\Informe.xlsx");
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Ocurrio una Excepción: " + ex.Message);
+            }
+
+            //doc.SaveAs("C:\\Data\\WorksheetOperations.xlsx");
+            FileStream sourceFile = new FileStream("C:\\Data\\Informe.xlsx", FileMode.Open);
+            float FileSize;
+            FileSize = sourceFile.Length;
+            byte[] getContent = new byte[(int)FileSize];
+            sourceFile.Read(getContent, 0, (int)sourceFile.Length);
+            sourceFile.Close();
+            Response.ClearContent();
+            Response.ClearHeaders();
+            Response.Buffer = true;
+            Response.ContentType = "application/vnd.ms-excel";
+            Response.AddHeader("Content-Length", getContent.Length.ToString());
+            Response.AddHeader("content-disposition", "attachment;filename=" + "Consolidado bodega" + " " + DateTime.Now.ToShortDateString() + ".xlsx");
+            Response.BinaryWrite(getContent);
+            Response.Flush();
+            Response.End();
+            //System.Diagnostics.Process.Start("C:\\Data\\WorksheetOperations.xlsx");
+        }
         // GET: Solicitudes/Details/5
         public ActionResult Details(int? id)
         {
@@ -49,7 +157,7 @@ namespace ControlPersonalAppWeb.Controllers
         {
             ViewBag.campos = GetNombreCampos(cuenta.Empresa);
             int empresaId =(int) cuenta.EmpresaId;
-            ViewBag.productos = db.Stock.Where(x => x.EmpresaId == cuenta.EmpresaId && x.Tipo == "Producto" && x.Cantidad>0).ToList();
+            ViewBag.productos = db.Stock.Where(x => x.EmpresaId == cuenta.EmpresaId && x.Tipo == "Producto" && x.Cantidad>0).OrderBy(x => x.Producto).ToList();
             //ViewBag.productos = db.Producto.Where(x => x.EmpresaId == empresaId).ToList();
             return View();
         }
@@ -63,11 +171,12 @@ namespace ControlPersonalAppWeb.Controllers
         {
             if (ModelState.IsValid)
             {
+                int contador = db.Solicitud.Where(x => x.EmpresaId == cuenta.EmpresaId).ToList().Count + 1;
                 solicitud.Trabajador = cuenta.Nombre + " " + cuenta.Apellido;
                 solicitud.TrabajadorId = cuenta.Id;
                 solicitud.Estado = "Solicitado";
                 solicitud.Fecha = DateTime.Now ;
-                solicitud.Empresa = cuenta.Empresa;
+                solicitud.Empresa = contador.ToString();
                 solicitud.EmpresaId = cuenta.EmpresaId;
                 solicitud.Productos = "";
                 string[] productos = collection["Producto"].Split(new char[] { ',' });
@@ -84,7 +193,9 @@ namespace ControlPersonalAppWeb.Controllers
                     stock.Producto = producto.Nombre;
                     stock.ProductoId = producto.Id;
                     stock.Cantidad = Convert.ToInt32(cantidades[i]);
+                    stock.EmpresaId = cuenta.EmpresaId;
                     stock.SolicitudId = solicitud.Id;
+                    stock.Unidad = producto.Unidad;
                     stock.Ubicacion = solicitud.Origen;
                     db.Stock.Add(stock);
                     if (i == productos.Length - 1)
@@ -106,12 +217,21 @@ namespace ControlPersonalAppWeb.Controllers
                     SolicitudId = solicitud.Id,
                     Estado = "Solicitado",
                     CuentaId = cuenta.EmpresaId,
-                    Info = "Producto",
-                    Texto = "El trabajador " + cuenta.Nombre + " " + cuenta.Apellido + " ha solicitado los siguientes productos: " +
-                    texto + ", desde: " + solicitud.Origen + " a " + solicitud.Destino + ", el día " + solicitud.Fecha.Value.ToLongDateString() +
-                    " a las " + solicitud.Fecha.Value.ToShortTimeString() + 
-                    "\nObservación: "+ solicitud.Observación
+                    Info = "Producto"
                 };
+                if(!string.IsNullOrEmpty(solicitud.Observación))
+                {
+                    notificacion.Texto = "El trabajador " + cuenta.Nombre + " " + cuenta.Apellido + " ha solicitado los siguientes productos: " +
+                    texto + ", desde: " + solicitud.Origen + " a " + solicitud.Destino + ", el día " + solicitud.Fecha.Value.ToLongDateString() +
+                    " a las " + solicitud.Fecha.Value.ToShortTimeString() +
+                    " Observación: " + solicitud.Observación;
+                }
+                else
+                {
+                    notificacion.Texto = "El trabajador " + cuenta.Nombre + " " + cuenta.Apellido + " ha solicitado los siguientes productos: " +
+                    texto + ", desde: " + solicitud.Origen + " a " + solicitud.Destino + ", el día " + solicitud.Fecha.Value.ToLongDateString() +
+                    " a las " + solicitud.Fecha.Value.ToShortTimeString();
+                }
                 //enviar correo
                 db.Notificacion.Add(notificacion);
                 db.SaveChanges();
@@ -228,7 +348,7 @@ namespace ControlPersonalAppWeb.Controllers
             db.SaveChanges();
             return RedirectToAction("Index");
         }
-        */
+        */ /*
         protected override void Dispose(bool disposing)
         {
             if (disposing)
@@ -255,5 +375,5 @@ namespace ControlPersonalAppWeb.Controllers
             }
             return nombres;
         }
-    }
+    }*/
 }

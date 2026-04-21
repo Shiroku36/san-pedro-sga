@@ -50,66 +50,65 @@
                     @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", @type = "Email", required = "required" } })
                     @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
                 </div>
-
-                <div class="form-group col-md-10 mx-auto">
-                    @Html.LabelFor(model => model.Empresa, htmlAttributes: new { @class = "control-label font-weight-normal" })
-                    @Html.DropDownListFor(model => model.Empresa, new SelectList(ViewBag.Empresas), htmlAttributes: new { @class = "form-control" })
-                    @Html.ValidationMessageFor(model => model.Empresa, "", new { @class = "text-danger" })
-                </div>
+                <input type="hidden" value="VSP" name="Empresa" />
 
             </div>
 
-            <div class="form-group col-sm-6 mx-auto">
-                @Html.LabelFor(model => model.Permisos, htmlAttributes: new { @class = "control-label font-weight-normal" })
-                <br />
-                <label>Sistema gestión bodega</label><br />
-                <label><input type="checkbox" id="Permisos" name="Permisos" value="SGA" class="custom-checkbox chkCheckBoxId" />Ver</label>
-                <label><input type="checkbox" id="Notificiacion" name="Notificacion" value="Notificiacion" class="custom-checkbox chkCheckBoxId " />Notificiación</label><br />
-                <label>Huertos</label><br />
-                <label><input type="checkbox" id="Permisos" name="Permisos" value="HuertosV" class="custom-checkbox chkCheckBoxId" />Ver</label>
-                <label><input type="checkbox" id="Permisos" name="Permisos" value="HuertosC" class="custom-checkbox chkCheckBoxId" />Crear</label>
-                <label><input type="checkbox" id="Permisos" name="Permisos" value="HuertosE" class="custom-checkbox chkCheckBoxId" />Editar </label>
-                <label><input type="checkbox" id="Permisos" name="Permisos" value="HuertosD" class="custom-checkbox chkCheckBoxId" />Eliminar </label><br />
-
-                <label>Huertos habilitados</label><br />
-                @foreach (var campo in ViewBag.Campos)
+            <div class="form-group col-sm-3">
+                <!--
+    <label><b>Informes</b></label><br />
+    <label><input type="checkbox" id="Permisos" name="Permisos" value="InformesV" class="custom-checkbox chkCheckBoxId" /> Ver</label><br />
+    <label><input type="checkbox" id="Permisos" name="Permisos" value="Ingreso" class="custom-checkbox chkCheckBoxId" /> Aviso no habilitado</label><br />
+        -->
+                <label><b>Predios habilitados</b></label><br />
+                @foreach (var predio in ViewBag.campos)
                 {
-                    <label><input type="checkbox" id="Permisos" name="Permisos" value="@campo" class="custom-checkbox chkCheckBoxId" />@campo</label>
-                }<br />
-                <label>Trabajadores</label><br />
-                <label><input type="checkbox" id="Permisos" name="Permisos" value="TrabajadoresV" class="custom-checkbox chkCheckBoxId" />Ver</label>
-                <label><input type="checkbox" id="Permisos" name="Permisos" value="TrabajadoresC" class="custom-checkbox chkCheckBoxId" />Crear</label>
-                <label><input type="checkbox" id="Permisos" name="Permisos" value="TrabajadoresE" class="custom-checkbox chkCheckBoxId" />Editar </label>
-                <label><input type="checkbox" id="Permisos" name="Permisos" value="TrabajadoresD" class="custom-checkbox chkCheckBoxId" />Eliminar </label>
-                <label><input type="checkbox" id="Permisos" name="Permisos" value="TrabajadoresS" class="custom-checkbox chkCheckBoxId" />Solicitud Contracion </label>
-                <label><input type="checkbox" id="Permisos" name="Permisos" value="TrabajadoresM" class="custom-checkbox chkCheckBoxId" />Correo </label><br />
-                <label>Registros</label><br />
-                <label><input type="checkbox" id="Permisos" name="Permisos" value="RegistrosV" class="custom-checkbox chkCheckBoxId" />Ver </label>
-                <label><input type="checkbox" id="Permisos" name="Permisos" value="RegistrosC" class="custom-checkbox chkCheckBoxId" />Crear </label>
-                <label><input type="checkbox" id="Permisos" name="Permisos" value="RegistrosE" class="custom-checkbox chkCheckBoxId" />Editar </label>
-                <label><input type="checkbox" id="Permisos" name="Permisos" value="RegistrosD" class="custom-checkbox chkCheckBoxId" />Eliminar </label><br />
-                <label>Cuentas</label><br />
-                <label><input type="checkbox" id="Permisos" name="Permisos" value="CuentasV" class="custom-checkbox chkCheckBoxId" />Ver </label>
-                <label><input type="checkbox" id="Permisos" name="Permisos" value="CuentasC" class="custom-checkbox chkCheckBoxId" />Crear </label>
-                <label><input type="checkbox" id="Permisos" name="Permisos" value="CuentasE" class="custom-checkbox chkCheckBoxId" />Editar </label>
-                <label><input type="checkbox" id="Permisos" name="Permisos" value="CuentasD" class="custom-checkbox chkCheckBoxId" />Borrar </label><br />
-                <label>Informes</label><br />
-                <label><input type="checkbox" id="Permisos" name="Permisos" value="InformesV" class="custom-checkbox chkCheckBoxId" />Ver </label>
-                <label><input type="checkbox" id="Permisos" name="Permisos" value="InformesA" class="custom-checkbox chkCheckBoxId" />Atrasos</label><br />
-                <label><input type="checkbox" id="Permisos" name="Permisos" value="Log" class="custom-checkbox chkCheckBoxId" />Ver Log</label><br />
-                @Html.ValidationMessageFor(model => model.Permisos, "", new { @class = "text-danger" })
-                @if (cuenta.Empresa == "JCP")
-                {
-                    <label>Empresas</label><br />
-                    <label><input type="checkbox" id="Permisos" name="Permisos" value="EmpresasV" class="custom-checkbox chkCheckBoxId" /> Ver </label>
-                    <label><input type="checkbox" id="Permisos" name="Permisos" value="EmpresasC" class="custom-checkbox chkCheckBoxId" /> Crear </label>
-                    <label><input type="checkbox" id="Permisos" name="Permisos" value="EmpresasE" class="custom-checkbox chkCheckBoxId" /> Editar </label>
-                    <label><input type="checkbox" id="Permisos" name="Permisos" value="EmpresasD" class="custom-checkbox chkCheckBoxId" /> Borrar </label><br />
-                    <label><input type="checkbox" id="Permisos" name="Permisos" value="ERP" class="custom-checkbox chkCheckBoxId" />Ver ERP</label><br />
-                    <label><input type="checkbox" id="Permisos" name="Permisos" value="Cosecha" class="custom-checkbox chkCheckBoxId" />Ver Cosecha</label><br />
-                    <label><input type="checkbox" id="Permisos" name="Permisos" value="Sueldo" class="custom-checkbox chkCheckBoxId" />Ver Sueldo</label><br />
-                    <label><input type="checkbox" id="Permisos" name="Permisos" value="Remuneracion" class="custom-checkbox chkCheckBoxId" />Remuneraciones</label><br />
+                    <label><input type="checkbox" id="Permisos" name="Permisos" value="@predio" class="custom-checkbox chkCheckBoxId" />@predio</label><br />
                 }
+                <label><input type="checkbox" id="Permisos" name="Permisos" value="Todos" class="custom-checkbox chkCheckBoxId" />Todos (informe)</label><br />
+                <label><b>Predios</b></label><br />
+                <label><input type="checkbox" id="Permisos" name="Permisos" value="HuertosV" class="custom-checkbox chkCheckBoxId" />Ver</label><br />
+                <label><input type="checkbox" id="Permisos" name="Permisos" value="HuertosC" class="custom-checkbox chkCheckBoxId" />Crear</label><br />
+                <label><input type="checkbox" id="Permisos" name="Permisos" value="HuertosE" class="custom-checkbox chkCheckBoxId" />Editar </label><br />
+                <label><input type="checkbox" id="Permisos" name="Permisos" value="HuertosD" class="custom-checkbox chkCheckBoxId" />Eliminar </label><br />
+                <label><b>Contratistas</b></label><br />
+                <label><input type="checkbox" id="Permisos" name="Permisos" value="EmpresasV" class="custom-checkbox chkCheckBoxId" /> Ver </label><br />
+                <label><input type="checkbox" id="Permisos" name="Permisos" value="EmpresasC" class="custom-checkbox chkCheckBoxId" /> Crear </label><br />
+                <label><input type="checkbox" id="Permisos" name="Permisos" value="EmpresasE" class="custom-checkbox chkCheckBoxId" /> Editar </label><br />
+                <label><input type="checkbox" id="Permisos" name="Permisos" value="EmpresasD" class="custom-checkbox chkCheckBoxId" /> Eliminar </label><br />
+            </div>
+
+            <div class="form-group col-sm-3">
+                <label><b>Trabajadores</b></label><br />
+                <label><input type="checkbox" id="Permisos" name="Permisos" value="TrabajadoresV" class="custom-checkbox chkCheckBoxId" />Ver</label><br />
+                <label><input type="checkbox" id="Permisos" name="Permisos" value="TrabajadoresC" class="custom-checkbox chkCheckBoxId" />Crear</label><br />
+                <label><input type="checkbox" id="Permisos" name="Permisos" value="TrabajadoresE" class="custom-checkbox chkCheckBoxId" />Editar </label><br />
+                <label><input type="checkbox" id="Permisos" name="Permisos" value="TrabajadoresD" class="custom-checkbox chkCheckBoxId" />Eliminar </label><br />
+                <label><input type="checkbox" id="Permisos" name="Permisos" value="TrabajadoresU" class="custom-checkbox chkCheckBoxId" />Cargar </label><br />
+                <label><b>Registros</b></label><br />
+                <label><input type="checkbox" id="Permisos" name="Permisos" value="RegistrosV" class="custom-checkbox chkCheckBoxId" />Ver </label><br />
+                <label><input type="checkbox" id="Permisos" name="Permisos" value="RegistrosC" class="custom-checkbox chkCheckBoxId" />Crear </label><br />
+                <label><input type="checkbox" id="Permisos" name="Permisos" value="RegistrosE" class="custom-checkbox chkCheckBoxId" />Editar </label><br />
+                <label><input type="checkbox" id="Permisos" name="Permisos" value="RegistrosD" class="custom-checkbox chkCheckBoxId" />Eliminar </label><br />
+                <label><b>Cuentas</b></label><br />
+                <label><input type="checkbox" id="Permisos" name="Permisos" value="CuentasV" class="custom-checkbox chkCheckBoxId" />Ver </label><br />
+                <label><input type="checkbox" id="Permisos" name="Permisos" value="CuentasC" class="custom-checkbox chkCheckBoxId" />Crear </label><br />
+                <label><input type="checkbox" id="Permisos" name="Permisos" value="CuentasE" class="custom-checkbox chkCheckBoxId" />Editar </label><br />
+                <label><input type="checkbox" id="Permisos" name="Permisos" value="CuentasD" class="custom-checkbox chkCheckBoxId" />Eliminar </label><br />
+                <label><b>Archivos</b></label><br />
+                <label><input type="checkbox" id="Permisos" name="Permisos" value="ArchivoV" class="custom-checkbox chkCheckBoxId" />Ver </label><br />
+                <label><input type="checkbox" id="Permisos" name="Permisos" value="ArchivoC" class="custom-checkbox chkCheckBoxId" />Crear </label><br />
+                <label><input type="checkbox" id="Permisos" name="Permisos" value="ArchivoE" class="custom-checkbox chkCheckBoxId" />Editar </label><br />
+                <label><input type="checkbox" id="Permisos" name="Permisos" value="ArchivoD" class="custom-checkbox chkCheckBoxId" />Eliminar </label><br />
+                <label><b>Casino</b></label><br />
+                <label><input type="checkbox" id="Permisos" name="Permisos" value="CasinoV" class="custom-checkbox chkCheckBoxId" /> Ver </label><br />
+                <label><input type="checkbox" id="Permisos" name="Permisos" value="CasinoD" class="custom-checkbox chkCheckBoxId" /> Eliminar </label><br /><br />
+                <label><b>Personas</b></label><br />
+                <label><input type="checkbox" id="Permisos" name="Permisos" value="PersonasV" class="custom-checkbox chkCheckBoxId" /> Ver </label><br />
+                <label><input type="checkbox" id="Permisos" name="Permisos" value="PersonasC" class="custom-checkbox chkCheckBoxId" /> Crear </label><br />
+                <label><input type="checkbox" id="Permisos" name="Permisos" value="PersonasE" class="custom-checkbox chkCheckBoxId" /> Editar </label><br />
+                <label><input type="checkbox" id="Permisos" name="Permisos" value="PersonasD" class="custom-checkbox chkCheckBoxId" /> Eliminar </label><br />
+
             </div>
         </div>
 
@@ -124,19 +123,18 @@
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
     <script>
-    function password(){
-        var todo = document.getElementById("Password");
-        var todo2 = document.getElementById("Confirmar");
+        function password() {
+            var todo = document.getElementById("Password");
+            var todo2 = document.getElementById("Confirmar");
 
-        if (todo.value != todo2.value) {
-            todo2.setCustomValidity("Las contraseñas no coinciden");
-            return false;
+            if (todo.value != todo2.value) {
+                todo2.setCustomValidity("Las contraseñas no coinciden");
+                return false;
+            }
+            else {
+                todo2.setCustomValidity('');
+            }
         }
-        else
-        {
-            todo2.setCustomValidity('');
-        }
-    }
     </script>
     <script>
         function filterFunction() {

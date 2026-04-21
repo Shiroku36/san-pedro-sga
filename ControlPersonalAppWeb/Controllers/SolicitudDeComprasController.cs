@@ -9,16 +9,16 @@ using System.Web.Mvc;
 using ControlPersonalAppWeb;
 
 namespace ControlPersonalAppWeb.Controllers
-{
+{/*
     public class SolicitudDeComprasController : Controller
     {
-        private DBManejoPersonalEntities db = new DBManejoPersonalEntities();
+        private SgajcpEntities db = new SgajcpEntities();
         private Cuentas cuenta = Utils.SessionManager.CuentaAutenticada();
 
         // GET: SolicitudDeCompras
         public ActionResult Index()
         {
-            return View(db.SolicitudDeCompras.Where(x => x.EmpresaId == cuenta.EmpresaId).OrderByDescending(x => x.Fecha).ToList());
+            return View(db.SolicitudDeCompra.Where(x => x.EmpresaId == cuenta.EmpresaId).OrderByDescending(x => x.Fecha).ToList());
         }
 
         // GET: SolicitudDeCompras/Details/5
@@ -28,7 +28,7 @@ namespace ControlPersonalAppWeb.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            SolicitudDeCompra solicitudDeCompra = db.SolicitudDeCompras.Find(id);
+            SolicitudDeCompra solicitudDeCompra = db.SolicitudDeCompra.Find(id);
             if (solicitudDeCompra == null)
             {
                 return HttpNotFound();
@@ -71,7 +71,7 @@ namespace ControlPersonalAppWeb.Controllers
                 solicitudDeCompra.Productos = "";
                 string[] productos = collection["Producto"].Split(new char[] { ',' });
                 string[] cantidades = collection["Cantidad"].Split(new char[] { ',' });
-                db.SolicitudDeCompras.Add(solicitudDeCompra);
+                db.SolicitudDeCompra.Add(solicitudDeCompra);
                 db.SaveChanges();
                 Utils.SessionManager.log("Crear solicitudDeCompra: " + solicitudDeCompra.Id);
                 string texto = "";
@@ -197,14 +197,6 @@ namespace ControlPersonalAppWeb.Controllers
             db.SaveChanges();
             return RedirectToAction("Index");
         }
-        */
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
-        }
     }
+        */
 }

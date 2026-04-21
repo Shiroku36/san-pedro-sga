@@ -14,29 +14,32 @@
 }
 <h1 class="display-4 text-center">Índice RR.HH.</h1>
 <hr />
-<div class="form-group">
-    @if (cuenta.Permisos.Contains("TrabajadoresC"))
-    {
-        <a href='@Url.Action("Create", "Trabajador")'>
-            <label type="button" class="btn btn-primary float-right ml-2  mb-3">Crear Nuevo</label>
-        </a>
-    }
-    <a href='@Url.Action("Hoy", "Registro")'>
-        <label type="button" class="btn btn-primary float-right  ">Registros del día</label>
-    </a>
-    <!--
-    <a href='@Url.Action("Borrar", "Trabajador")'>
-        <button type="button" class="btn btn-default">borrar</button>
-    </a>-->
-</div>
 
 <div class="clearfix"></div>
 <div class="row">
-    <div class="col-sm-2">
-        <h4 class="busqueda">Búsqueda: </h4>
-    </div>
     <div class="col-sm-8 form-label-group">
-        <input type="text" id="busqueda" onkeyup="buscar()" class="mb-3 mt-1 form-control">
+        <input type="text" id="busqueda" onkeyup="buscar()" class="mb-3 mt-1 form-control" placeholder="Búsqueda">
+    </div>
+    <div class="form-group col-sm-4 mt-1">
+        @if (cuenta.Permisos.Contains("TrabajadoresC"))
+        {
+            <a href='@Url.Action("Create", "Trabajador")'>
+                <label type="button" class="btn btn-primary float-right ml-2  mb-3">Crear Nuevo</label>
+            </a>
+        }
+        @if (cuenta.Permisos.Contains("TrabajadoresU"))
+        {
+            <a href='@Url.Action("Cargar", "Trabajador")'>
+                <label type="button" class="btn btn-primary float-right ml-2  mb-3">Cargar</label>
+            </a>
+        }
+        <a href='@Url.Action("Hoy", "Registro")'>
+            <label type="button" class="btn btn-primary float-right  ">Registros del día</label>
+        </a>
+        <!--
+    <a href='@Url.Action("Borrar", "Trabajador")'>
+        <button type="button" class="btn btn-default">borrar</button>
+    </a>-->
     </div>
 </div>
 
@@ -50,30 +53,30 @@
                 @Html.DisplayNameFor(model => model.Nombre)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Uid)
+                Contratista
             </th>
             <th>
                 Numero pulsera
             </th>
             <th style="width:40%">
-                Accion
+                Acción
             </th>
         </tr>
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td>
-                        @item.Rut
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Nombre) @Html.DisplayFor(modelItem => item.ApellidoPaterno) @Html.DisplayFor(modelItem => item.ApellidoMaterno)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Uid)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Gerente)
-                    </td>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @item.Rut
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ApellidoPaterno) @Html.DisplayFor(modelItem => item.ApellidoMaterno) @Html.DisplayFor(modelItem => item.Nombre)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Empresa)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Numero)
+                </td>
 
                 <td>
                     @if (cuenta.Permisos.Contains("RegistrosV"))
@@ -94,39 +97,15 @@
                     </a>
                     @if (cuenta.Permisos.Contains("TrabajadoresD"))
                     {
-                        <a href='@Url.Action("Delete", "Trabajador", new { id = item.Id })' onclick="return confirm('¿Está seguro que desea eliminar el Trabajador?')"})>
+                        <a href='@Url.Action("Delete", "Trabajador", new { id = item.Id })' onclick="return confirm('¿Está seguro que desea eliminar el Trabajador?')" })>
                             <label title="Eliminar" type="submit" class="btn btn-danger">Borrar</label>
                         </a>
-                   }
-
-                    @if (cuenta.Permisos.Contains("Sueldo"))
-                    {
-                        <a href='@Url.Action("Index", "Remuneracion", new { id = item.Id })'>
-                            <label title="Remuneración" type="submit" class="btn btn-light">Remuneracion</label>
-                        </a>
                     }
 
-                    @if (cuenta.Permisos.Contains("TrabajadoresS"))
-                    {
-                        <a href='@Url.Action("PDFDetalle", "Trabajador", new { id = item.Id })'>
-                            <label title="Solicitud Contratación" type="submit" class="btn btn-success">
-                                Contrato
-                            </label>
-                        </a>
-                    }
-                    @if (cuenta.Permisos.Contains("TrabajadoresM"))
-                    {
-                        <a href='@Url.Action("Index", "Trabajador", new { id = item.Id })' target="_blank">
-
-                            <label title="Correo" type="submit" class="btn btn-light">
-                                Correo
-                            </label>
-                        </a>
-                    }
                 </td>
 
-                </tr>
-            }
+            </tr>
+        }
     </table>
 </div>
 

@@ -18,7 +18,9 @@
                     </td>
 
                     <td>
-                        <a href="~/Cuenta/Details/@Model.TrabajadorId">@Model.Trabajador</a>
+                        <a href='@Url.Action("Trabajador", "Historial", new { id = Model.TrabajadorId })'>
+                            @Html.DisplayFor(modelItem => Model.Trabajador)
+                        </a>
                     </td>
                 </tr>
 
@@ -30,7 +32,7 @@
                     <td>
                         @foreach (var stock in ViewBag.productos)
                         {
-                            <a href="~/Productos/Details/@stock.ProductoId">@stock.Producto</a><span>: @stock.Cantidad</span><br />
+                            <a href="~/Historial/Producto/@stock.ProductoId">@stock.Producto</a><span>: @stock.Cantidad</span><br />
                         }
                     </td>
                 </tr>
