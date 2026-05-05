@@ -1,72 +1,75 @@
 ﻿@model ControlPersonalAppWeb.Casino
 
 @{
-    Layout = null;
+    ViewBag.Title = "Eliminar servicio";
 }
 
-<!DOCTYPE html>
-
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Delete</title>
-</head>
-<body>
-    <h3>Are you sure you want to delete this?</h3>
+<section class="page-header">
     <div>
-        <h4>Casino</h4>
-        <hr />
-        <dl class="dl-horizontal">
-            <dt>
-                @Html.DisplayNameFor(model => model.Rut)
-            </dt>
-    
-            <dd>
-                @Html.DisplayFor(model => model.Rut)
-            </dd>
-    
-            <dt>
-                @Html.DisplayNameFor(model => model.Fecha)
-            </dt>
-    
-            <dd>
-                @Html.DisplayFor(model => model.Fecha)
-            </dd>
-    
-            <dt>
-                @Html.DisplayNameFor(model => model.Comida)
-            </dt>
-    
-            <dd>
-                @Html.DisplayFor(model => model.Comida)
-            </dd>
-    
-            <dt>
-                @Html.DisplayNameFor(model => model.Foto)
-            </dt>
-    
-            <dd>
-                @Html.DisplayFor(model => model.Foto)
-            </dd>
-    
-            <dt>
-                @Html.DisplayNameFor(model => model.Ubicacion)
-            </dt>
-    
-            <dd>
-                @Html.DisplayFor(model => model.Ubicacion)
-            </dd>
-    
-        </dl>
-    
-        @using (Html.BeginForm()) {
+        <span class="page-header__eyebrow">Módulo Casino</span>
+        <h1>Eliminar registro</h1>
+        <p>Confirma si realmente quieres sacar este consumo del historial.</p>
+    </div>
+
+    <div class="page-header__actions">
+        <a class="btn btn-outline-secondary" href="@Url.Action("Index", "Casino")">Volver a Casino</a>
+    </div>
+</section>
+
+<section class="worker-detail-grid">
+    <article class="surface worker-panel casino-panel">
+        <div class="worker-panel__header">
+            <span class="worker-panel__eyebrow">Confirmacion</span>
+            <h2>Vas a eliminar este registro</h2>
+            <p>Revisa los datos antes de confirmar. Esta accion eliminara el registro y su foto asociada.</p>
+        </div>
+
+        <div class="worker-detail-list">
+            <div class="worker-detail-list__row">
+                <span class="worker-detail-list__label">@Html.DisplayNameFor(model => model.Rut)</span>
+                <span class="worker-detail-list__value">@Html.DisplayFor(model => model.Rut)</span>
+            </div>
+            <div class="worker-detail-list__row">
+                <span class="worker-detail-list__label">@Html.DisplayNameFor(model => model.Fecha)</span>
+                <span class="worker-detail-list__value">@Html.DisplayFor(model => model.Fecha)</span>
+            </div>
+            <div class="worker-detail-list__row">
+                <span class="worker-detail-list__label">@Html.DisplayNameFor(model => model.Comida)</span>
+                <span class="worker-detail-list__value"><span class="casino-service-pill">@Html.DisplayFor(model => model.Comida)</span></span>
+            </div>
+            <div class="worker-detail-list__row">
+                <span class="worker-detail-list__label">@Html.DisplayNameFor(model => model.Ubicacion)</span>
+                <span class="worker-detail-list__value">@Html.DisplayFor(model => model.Ubicacion)</span>
+            </div>
+        </div>
+
+        @using (Html.BeginForm())
+        {
             @Html.AntiForgeryToken()
-    
-            <div class="form-actions no-color">
-                <input type="submit" value="Delete" class="btn btn-default" /> |
-                @Html.ActionLink("Back to List", "Index")
+            <div class="worker-actions mt-4">
+                <input type="submit" value="Eliminar registro" class="btn btn-danger" />
+                <a class="btn btn-outline-secondary" href="@Url.Action("Index", "Casino")">Cancelar</a>
             </div>
         }
-    </div>
-</body>
-</html>
+    </article>
+
+    <article class="surface worker-panel casino-panel">
+        <div class="worker-panel__header">
+            <span class="worker-panel__eyebrow">Evidencia</span>
+            <h2>Foto asociada</h2>
+        </div>
+
+        @if (Model.Foto != null)
+        {
+            <div class="worker-photo-preview">
+                <img src="@String.Format("data:image/jpeg;base64,{0}", System.Convert.ToBase64String(Model.Foto))" alt="Foto del servicio" class="record-photo--clickable" data-image-preview />
+            </div>
+        }
+        else
+        {
+            <div class="form-feedback form-feedback--info">
+                No hay fotografia asociada para este registro.
+            </div>
+        }
+    </article>
+</section>

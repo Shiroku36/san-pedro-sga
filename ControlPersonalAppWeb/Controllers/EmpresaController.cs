@@ -1,4 +1,5 @@
-﻿using DocumentFormat.OpenXml.Office2010.Excel;
+﻿using ControlPersonalAppWeb.Infrastructure;
+using DocumentFormat.OpenXml.Office2010.Excel;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -11,9 +12,8 @@ namespace ControlPersonalAppWeb.Controllers
 {
     public class EmpresaController : Controller
     {
-        private Cuentas cuenta = Utils.SessionManager.CuentaAutenticada();
+        private Cuentas cuenta => Utils.SessionManager.CuentaAutenticada();
         SgajcpEntities db = new SgajcpEntities();
-        string path = "C:\\Data\\Archivos\\";
         // GET: Empresas
         public ActionResult Habilitados(int Id)
         {
@@ -24,16 +24,21 @@ namespace ControlPersonalAppWeb.Controllers
                     DateTime.Today);
             }
             catch { }
-            Empresas empresa = db.Empresas.First(x => x.Id == Id);
+            Empresas empresa = db.Empresas.FirstOrDefault(x => x.Id == Id);
+            if (empresa == null)
+                return HttpNotFound();
             List<Trabajador> trabajadores = db.Trabajador.Where(x => x.Empresa == empresa.Nombre).ToList();
             ViewBag.id = Id;
             return View(trabajadores);
         }
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Habilitados(FormCollection collection)
         {
             int Id =Convert.ToInt32(collection["IdEmpresa"]);
-            Empresas empresa = db.Empresas.First(x => x.Id == Id);
+            Empresas empresa = db.Empresas.FirstOrDefault(x => x.Id == Id);
+            if (empresa == null)
+                return RedirectToAction("Index");
             foreach (var trabajador in db.Trabajador.Where(x => x.Empresa == empresa.Nombre).ToList())
             {
                 trabajador.Habilitado = false;
@@ -45,7 +50,9 @@ namespace ControlPersonalAppWeb.Controllers
                 foreach (string aid in ids)
                 {
                     int id = Convert.ToInt32(aid);
-                    Trabajador trabajador = db.Trabajador.First(x => x.Id == id);
+                    Trabajador trabajador = db.Trabajador.FirstOrDefault(x => x.Id == id);
+                    if (trabajador == null)
+                        continue;
                     trabajador.Habilitado = true;
                 }
             }
@@ -66,7 +73,9 @@ namespace ControlPersonalAppWeb.Controllers
         public ActionResult Details(int id)
         {
             SgajcpEntities database = new SgajcpEntities();
-            Empresas empresas = database.Empresas.First(x => x.Id == id);
+            Empresas empresas = database.Empresas.FirstOrDefault(x => x.Id == id);
+            if (empresas == null)
+                return HttpNotFound();
             return View(empresas);
         }
 
@@ -83,6 +92,7 @@ namespace ControlPersonalAppWeb.Controllers
 
         // POST: Empresas/Create
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Create(FormCollection collection, HttpPostedFileBase file)
         {
             try
@@ -95,15 +105,11 @@ namespace ControlPersonalAppWeb.Controllers
                 empresa.Nomina = collection["Nomina"];  
                 empresa.Rut = formatearRut(collection["Rut"]);
 
-                if (!Directory.Exists(path + "\\Empresas\\" + empresa.Id + "\\"))
-                {
-                    Directory.CreateDirectory(path + "\\Empresas\\" + empresa.Id + "\\");
-                }
                 HttpPostedFileBase postedFile = Request.Files["Nomina"];
                 if (postedFile != null && postedFile.ContentLength > 0)
                 {
-                    postedFile.SaveAs(path + "\\Empresas\\" + empresa.Id + "\\" + postedFile.FileName);
-                    empresa.Nomina = postedFile.FileName;
+                    string savedName = FileUploadService.SaveFile(postedFile, "Empresas");
+                    empresa.Nomina = savedName;
                 }
                 database.Empresas.Add(empresa);
                 Utils.SessionManager.log("Contratistas crear: " + empresa.Nombre);
@@ -121,12 +127,15 @@ namespace ControlPersonalAppWeb.Controllers
         public ActionResult Edit(int id)
         {
             SgajcpEntities database = new SgajcpEntities();
-            Empresas empresa = database.Empresas.First(x => x.Id == id);
+            Empresas empresa = database.Empresas.FirstOrDefault(x => x.Id == id);
+            if (empresa == null)
+                return HttpNotFound();
             return View(empresa);
         }
 
         // POST: Empresas/Edit/5
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, FormCollection collection, HttpPostedFileBase file)
         {
             try
@@ -136,15 +145,11 @@ namespace ControlPersonalAppWeb.Controllers
                 empresa.Nombre = collection["Nombre"];
                 empresa.Rut = collection["Rut"];
                 empresa.Nomina = collection["Nomina"];
-                if (!Directory.Exists(path + "\\Empresas\\" + empresa.Id + "\\"))
-                {
-                    Directory.CreateDirectory(path + "\\Empresas\\" + empresa.Id + "\\");
-                }
                 HttpPostedFileBase postedFile = Request.Files["Nomina1"];
                 if (postedFile != null && postedFile.ContentLength > 0)
                 {
-                    postedFile.SaveAs(path + "\\Empresas\\" + empresa.Id + "\\" + postedFile.FileName);
-                    empresa.Nomina = postedFile.FileName;
+                    string savedName = FileUploadService.SaveFile(postedFile, "Empresas");
+                    empresa.Nomina = savedName;
                 }
                 Utils.SessionManager.log("Contratistas editar: " + empresa.Nombre);
                 database.SaveChanges();
@@ -160,26 +165,30 @@ namespace ControlPersonalAppWeb.Controllers
         public ActionResult Delete(int id)
         {
             SgajcpEntities database = new SgajcpEntities();
-            Empresas empresa = database.Empresas.First(x => x.Id == id);
-            Utils.SessionManager.log("Contratistas eliminar: " + empresa.Nombre);
-            database.Empresas.Remove(empresa);
-            database.SaveChanges();
-            return RedirectToAction("Index");
+            Empresas empresa = database.Empresas.FirstOrDefault(x => x.Id == id);
+            if (empresa == null)
+                return HttpNotFound();
+            return View(empresa);
         }
 
         // POST: Empresas/Delete/5
         [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
+        [ValidateAntiForgeryToken]
+        [ActionName("Delete")]
+        public ActionResult DeleteConfirmed(int id)
         {
             try
             {
-                // TODO: Add delete logic here
-
+                SgajcpEntities database = new SgajcpEntities();
+                Empresas empresa = database.Empresas.First(x => x.Id == id);
+                Utils.SessionManager.log("Contratistas eliminar: " + empresa.Nombre);
+                database.Empresas.Remove(empresa);
+                database.SaveChanges();
                 return RedirectToAction("Index");
             }
             catch
             {
-                return View();
+                return RedirectToAction("Index");
             }
         }
         public ActionResult Campos(int id)
@@ -213,6 +222,12 @@ namespace ControlPersonalAppWeb.Controllers
                 }
                 return format;
             }
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing) db.Dispose();
+            base.Dispose(disposing);
         }
     }
 }

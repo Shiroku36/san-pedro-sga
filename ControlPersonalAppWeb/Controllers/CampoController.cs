@@ -11,7 +11,7 @@ namespace ControlPersonalAppWeb.Controllers
     public class CampoController : Controller
     {
         SgajcpEntities db = new SgajcpEntities();
-        private Cuentas cuenta = Utils.SessionManager.CuentaAutenticada();
+        private Cuentas cuenta => Utils.SessionManager.CuentaAutenticada();
         public string[] GetNombreCampos(string empresa)
         {
 
@@ -77,7 +77,9 @@ namespace ControlPersonalAppWeb.Controllers
         public ActionResult Details(int id)
         {
             SgajcpEntities database = new SgajcpEntities();
-            Campos campo = database.Campos.First(x => x.Id == id);
+            Campos campo = database.Campos.FirstOrDefault(x => x.Id == id);
+            if (campo == null)
+                return HttpNotFound();
             Utils.SessionManager.log("Predio detalle: " + campo.Nombre);
             return View(campo);
         } 
@@ -90,6 +92,7 @@ namespace ControlPersonalAppWeb.Controllers
 
         // POST: Campo/Create
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Create(FormCollection collection)
         {
             try
@@ -136,12 +139,15 @@ namespace ControlPersonalAppWeb.Controllers
         public ActionResult Edit(int id)
         {
             SgajcpEntities database = new SgajcpEntities();
-            Campos campo = database.Campos.First(x => x.Id == id);
+            Campos campo = database.Campos.FirstOrDefault(x => x.Id == id);
+            if (campo == null)
+                return HttpNotFound();
             return View(campo);
         }
 
         // POST: Campo/Edit/5
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, FormCollection collection)
         {
             try
@@ -173,27 +179,37 @@ namespace ControlPersonalAppWeb.Controllers
         public ActionResult Delete(int id)
         {
             SgajcpEntities database = new SgajcpEntities();
-            Campos Campo = database.Campos.First(x => x.Id == id);
-            database.Campos.Remove(Campo);
-            Utils.SessionManager.log("Predio eliminar: " + Campo.Nombre);
-            database.SaveChanges();
-            return RedirectToAction("Index");
+            Campos Campo = database.Campos.FirstOrDefault(x => x.Id == id);
+            if (Campo == null)
+                return HttpNotFound();
+            return View(Campo);
         }
 
         // POST: Campo/Delete/5
         [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
+        [ValidateAntiForgeryToken]
+        [ActionName("Delete")]
+        public ActionResult DeleteConfirmed(int id)
         {
             try
             {
-                // TODO: Add delete logic here
-
+                SgajcpEntities database = new SgajcpEntities();
+                Campos Campo = database.Campos.First(x => x.Id == id);
+                database.Campos.Remove(Campo);
+                Utils.SessionManager.log("Predio eliminar: " + Campo.Nombre);
+                database.SaveChanges();
                 return RedirectToAction("Index");
             }
             catch
             {
-                return View();
+                return RedirectToAction("Index");
             }
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing) db.Dispose();
+            base.Dispose(disposing);
         }
     }
 }

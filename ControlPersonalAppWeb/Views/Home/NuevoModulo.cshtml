@@ -1,22 +1,27 @@
-﻿
-@{
-    ViewBag.Title = "Nuevo modulo";
+﻿@{
+    ViewBag.Title = "Nuevo módulo";
 }
 
-    <div class="jumbotron">
-        <h4 class="display-4 text-center font-weight-light mb-5">Contactenos para cotizar estos servicios!</h4>
+<section class="public-section">
+    <div class="public-card public-card--accent">
+                <span class="public-card__eyebrow">Módulo adicional</span>
+            <h1>Bodega y nuevos módulos se cotizan como una siguiente etapa.</h1>
+        <p>Este acceso queda visible para mostrar que el sistema puede crecer por capas. Si quieres habilitarlo, lo evaluamos como una extension sobre la base ya implementada.</p>
 
-        <div class="row justify-content-center">
-
-            <a  href='@Url.Action("Contact", "Home")' class="w-25">
-                <button class="btn btn-primary w-100">Contactenos</button>
-            </a>
-
+        <div class="public-info-grid public-info-grid--compact">
+            <article class="public-contact-item public-contact-item--dark">
+                <strong>Que incluye</strong>
+                <span>Analisis funcional, definicion de flujo y presupuesto de implementacion.</span>
+            </article>
+            <article class="public-contact-item public-contact-item--dark">
+                <strong>Enfoque</strong>
+                    <span>Se toma como una ampliación del sistema, no como una promesa funcional en esta versión.</span>
+            </article>
         </div>
-        
-        
 
+        <div class="public-hero__actions">
+            <a class="btn btn-primary" href="@Url.Action("Contact", "Home")">Solicitar información</a>
+            <a class="btn btn-outline-light" href="@Url.Action("Index", "Home")">Volver al inicio</a>
+        </div>
     </div>
-
-    
-
+</section>

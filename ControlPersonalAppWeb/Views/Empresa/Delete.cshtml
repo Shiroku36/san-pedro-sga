@@ -1,0 +1,24 @@
+@model ControlPersonalAppWeb.Empresas
+
+@{
+    ViewBag.Title = "Eliminar Contratista";
+}
+
+<h2>Confirmar eliminación</h2>
+
+<div class="surface">
+    <h3>¿Está seguro de que desea eliminar este contratista?</h3>
+    <dl class="dl-horizontal">
+        <dt>Nombre</dt>
+        <dd>@Model.Nombre</dd>
+        <dt>Rut</dt>
+        <dd>@Model.Rut</dd>
+    </dl>
+
+    @using (Html.BeginForm("Delete", "Empresa", new { id = Model.Id }, FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        <input type="submit" value="Eliminar" class="btn btn-danger" />
+        @Html.ActionLink("Cancelar", "Index", null, new { @class = "btn btn-secondary" })
+    }
+</div>

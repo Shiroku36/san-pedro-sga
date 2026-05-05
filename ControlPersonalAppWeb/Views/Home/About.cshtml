@@ -1,73 +1,82 @@
 ﻿@{
-    ViewBag.Title = "About";
+    ViewBag.Title = "Nosotros";
 }
-<div class="jumbotron">
-    <h1 class="display-4">INGENIERÍA JCP</h1>
-    <p class="lead">Somos una empresa dedicada a los sistemas de seguridad, sistemas de gestión, software a medida, sistema de monitoreo satelital y proyectos de ingeniería en general. Contamos con ingenieros y técnicos de gran calidad con el fin de garantizar un servicio eficiente y manejable para nuestros clientes.</p>
-    <hr class="my-4">
-    <p>Para mas informacion contactanos</p>
-    <a class="btn btn-primary btn-lg" href="#" role="button">Contactanos</a>
-</div>
 
-<div class="row">
-    <div class="col-md-6">
-        <div class="card mb-3 ">
-            <h5 class="card-header">Mision</h5>
-            <div class="card-body">
-                <p class="card-text ">Destacamos la excelencia ante todo, contribuyendo en el desarrollo de proyectos sustentables para cada uno de nuestros clientes a través de un equipo de ingenieros con integridad y compromiso que entregan un sello de calidad en el servicio.</p>
+<section class="public-section">
+    <div class="public-section__hero">
+        <span class="auth-kicker">Ingenieria JCP</span>
+            <h1>Software, seguridad y gestión operativa con enfoque práctico.</h1>
+        <p>Desarrollamos soluciones para control de personas, seguimiento operativo, sistemas de seguridad y proyectos de ingenieria aplicados a terreno.</p>
+    </div>
+</section>
+
+<section class="public-section">
+    <div class="public-info-grid">
+        <article class="public-card">
+            <span class="public-card__eyebrow">Quienes somos</span>
+            <h2>Equipo tecnico con criterio de terreno</h2>
+                <p>Combinamos ingeniería, desarrollo y soporte para entregar plataformas operables, claras y adaptadas al día a día del cliente.</p>
+        </article>
+
+        <article class="public-card public-card--accent">
+            <span class="public-card__eyebrow">Cobertura</span>
+            <h2>Servicios integrados</h2>
+            <ul class="public-list">
+                <li>Sistemas de seguridad y control</li>
+                    <li>Software a medida y plataformas de gestión</li>
+                <li>Monitoreo satelital y soporte tecnico</li>
+                <li>Proyectos de ingenieria en general</li>
+            </ul>
+        </article>
+    </div>
+</section>
+
+<section class="public-section">
+    <div class="public-info-grid">
+        <article class="public-card">
+            <span class="public-card__eyebrow">Mision</span>
+            <h2>Excelencia aplicada a resultados sostenibles.</h2>
+                <p>Buscamos aportar soluciones estables y útiles para cada cliente, con un equipo comprometido que cuida la calidad del servicio desde el diseño hasta la operación.</p>
+        </article>
+
+        <article class="public-card">
+            <span class="public-card__eyebrow">Vision</span>
+            <h2>Ser una referencia confiable a nivel nacional.</h2>
+            <p>Queremos consolidarnos como primera alternativa en servicios de ingenieria y software para organizaciones que necesitan control, trazabilidad y soporte real.</p>
+        </article>
+    </div>
+</section>
+
+<section class="public-section">
+    <div class="public-contact-card">
+        <div>
+            <span class="public-card__eyebrow">Contacto directo</span>
+            <h2>Julio Castro Parra</h2>
+            <p>Gerente de proyectos y punto de contacto para evaluaciones, soporte comercial y nuevas implementaciones.</p>
+        </div>
+
+        <div class="public-contact-grid">
+            <div class="public-contact-item">
+                <strong>Correo</strong>
+                <a href="mailto:jcastro@ingenieriajcp.cl">jcastro@ingenieriajcp.cl</a>
+            </div>
+            <div class="public-contact-item">
+                <strong>Soporte</strong>
+                <a href="mailto:ventas@ingenieriajcp.cl">ventas@ingenieriajcp.cl</a>
+            </div>
+            <div class="public-contact-item">
+                <strong>Direccion</strong>
+                <span>Camino Zapallar km 4.3</span>
+            </div>
+            <div class="public-contact-item">
+                <strong>Telefonos</strong>
+                <span>+56 75 2553954 | +56 9 7666 5757</span>
             </div>
         </div>
-    </div>
-    <div class="col-md-6 mb-3 ">
-        <div class="card">
-            <h5 class="card-header">Vision</h5>
-            <div class="card-body">
-                <p class="card-text">Ser la primera alternativa para cada una de las organizaciones que requieran servicios de ingeniería a nivel nacional.</p>
-            </div>
+
+        <div class="public-hero__actions">
+            <a class="btn btn-primary" href="@Url.Action("Contact", "Home")">Contactanos</a>
+            <a class="btn btn-outline-light" href="@Url.Action("Index", "Home")">Volver al inicio</a>
         </div>
     </div>
-
-</div>
-<div class="card my-3 ">
-    <div class="card-body">
-        <h5 class="text-center">Julio Castro Parra</h5>
-        <p class="text-center text-muted">Gerente de proyectos </p>
-        <hr />
-        <div class="row">
-
-            <div class="col-md-6">
-                <div class="card">
-                    <h5 class="card-header">Correo</h5>
-                    <div class="card-body">
-                        <a href="mailto:jcastro@ingenieriajcp.cl">jcastro@ingenieriajcp.cl</a>
-                    </div>
-                </div>
-                <div class="card mt-2">
-                    <h5 class="card-header">Soporte</h5>
-                    <div class="card-body">
-                        <a href="mailto:ventas@ingenieriajcp.cl">ventas@ingenieriajcp.cl</a>
-                    </div>
-                </div>
-
-
-            </div>
-            <div class="col-md-6">
-                <div class="card">
-                    <h5 class="card-header">Direccion</h5>
-                    <div class="card-body">
-                        <label> Camino Zapallar km 4.3 </label>
-                    </div>
-                </div>
-                <div class="card mt-2">
-                    <h5 class="card-header">Numero</h5>
-                    <div class="card-body">
-                        <label> +56 75 2553954 | +56976665757 </label>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </div>
-
-
-</div>
+</section>

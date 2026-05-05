@@ -19,13 +19,11 @@ namespace ControlPersonalAppWeb
                         "~/Scripts/modernizr-*"));
 
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
-                       "~/Scripts/bootstrap.min.js",
                        "~/Scripts/bootstrap.bundle.min.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.min.css",
-                      "~/Content/Style.css",
-                      "~/Content/bootstrap.css"));
+                      "~/Content/Style.css"));
         }
     }
 }

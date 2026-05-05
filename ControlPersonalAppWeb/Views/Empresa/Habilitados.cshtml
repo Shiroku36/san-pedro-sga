@@ -2,60 +2,74 @@
 
 @{
     ViewBag.Title = "Habilitados";
+    var totalTrabajadores = Model != null ? Model.Count() : 0;
+    ViewData["SearchPlaceholder"] = "Buscar por nombre o RUT";
 }
-<h1 class="display-4 text-center">Habilitados</h1>
-<hr />
+
+<section class="page-header">
+    <div>
+        <span class="page-header__eyebrow">Módulo Contratistas</span>
+        <h1>Habilitados</h1>
+<p>@totalTrabajadores trabajadores de este contratista para activar o desactivar en un solo paso.</p>
+    </div>
+
+    <div class="page-header__actions">
+        <a class="btn btn-outline-secondary" href="@Url.Action("Index", "Empresa")">Volver a Contratistas</a>
+    </div>
+</section>
+
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    <a href='@Url.Action("Habilitados", "Empresa")'>
-        <button type="submit" class="btn btn-primary float-right mb-3">Modificar</button>
-    </a>
     <input type="hidden" value="@ViewBag.id" name="IdEmpresa" id="IdEmpresa" />
-    <div class="table-responsive">
-        <table class="table table-hover">
-            <tr class="bg-primary">
-                <th>
-                    @Html.DisplayNameFor(model => model.Nombre)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Rut)
-                </th>
-                <th>
-                    <label><input type="checkbox" onClick="toggle(this)" /> Seleccionar todos</label><br />
-                </th>
-            </tr>
 
-            @foreach (var item in Model)
-            {
+    <section class="surface">
+        <div class="toolbar">
+            <div>
+                @Html.Partial("Busqueda")
+            </div>
+            <div class="toolbar__actions toolbar__actions--emphasis">
+<button type="submit" class="btn btn-primary">Guardar cambios</button>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table data-table table-hover" id="tabla">
+            <thead>
                 <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Nombre) @Html.DisplayFor(modelItem => item.ApellidoPaterno) @Html.DisplayFor(modelItem => item.ApellidoMaterno)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Rut)
-                    </td>
-                    <td>
-                        @if (item.Habilitado == true)
-                        {
-                            <input type="checkbox" value="@item.Id" name="esta" id="esta" class="custom-checkbox chkCheckBoxId form-control" checked />
-                        }
-                        else
-                        {
-                            <input type="checkbox" value="@item.Id" name="esta" id="esta" class="custom-checkbox chkCheckBoxId form-control" />
-                        }
-
-                    </td>
-                </tr>
-            }
-
-        </table>
-    </div>
+                    <th>@Html.DisplayNameFor(model => model.Nombre)</th>
+                    <th>@Html.DisplayNameFor(model => model.Rut)</th>
+                    <th class="data-table__actions">
+                            <label class="permission-check permission-check--select-all">
+                                <input type="checkbox" onClick="toggle(this)" />
+<span>Seleccionar todos</span>
+                            </label>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.Nombre @item.ApellidoPaterno @item.ApellidoMaterno</td>
+                            <td>@Html.DisplayFor(modelItem => item.Rut)</td>
+                            <td class="data-table__actions">
+                                <label class="permission-check permission-check--compact">
+                                    <input type="checkbox" value="@item.Id" name="esta" id="esta" class="chkCheckBoxId" @(item.Habilitado == true ? "checked=\"checked\"" : null) />
+                                    <span>@(item.Habilitado == true ? "Habilitado" : "Deshabilitado")</span>
+                                </label>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </section>
 }
+
 <script>
     function toggle(source) {
-        checkboxes = document.getElementsByName('esta');
-
+        var checkboxes = document.getElementsByName('esta');
         for (var i = 0, n = checkboxes.length; i < n; i++) {
             checkboxes[i].checked = source.checked;
         }

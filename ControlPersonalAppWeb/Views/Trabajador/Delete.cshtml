@@ -1,0 +1,26 @@
+@model ControlPersonalAppWeb.Trabajador
+
+@{
+    ViewBag.Title = "Eliminar Trabajador";
+}
+
+<h2>Confirmar eliminación</h2>
+
+<div class="surface">
+    <h3>¿Está seguro de que desea eliminar este trabajador?</h3>
+    <dl class="dl-horizontal">
+        <dt>Nombre</dt>
+        <dd>@Model.Nombre @Model.ApellidoPaterno @Model.ApellidoMaterno</dd>
+        <dt>RUT</dt>
+        <dd>@Model.Rut</dd>
+        <dt>Empresa</dt>
+        <dd>@Model.Empresa</dd>
+    </dl>
+
+    @using (Html.BeginForm("Delete", "Trabajador", new { id = Model.Id }, FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        <input type="submit" value="Eliminar" class="btn btn-danger" />
+        @Html.ActionLink("Cancelar", "Index", null, new { @class = "btn btn-secondary" })
+    }
+</div>

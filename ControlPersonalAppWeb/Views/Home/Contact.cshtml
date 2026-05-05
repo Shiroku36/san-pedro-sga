@@ -1,118 +1,104 @@
 ﻿@{
     ViewBag.Title = "Contacto";
 }
-<h3>@ViewBag.Message</h3>
 
+<section class="public-section">
+    <div class="public-info-grid">
+        <article class="public-card public-card--accent">
+            <span class="public-card__eyebrow">Contacto</span>
+            <h1>Conversemos sobre el sistema y sus módulos.</h1>
+            <p>Si quieres cotizar una implementación, extender funcionalidades o pedir información comercial, usa este formulario y te contactaremos.</p>
 
-
-
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
-    <div class="container jumbotron">
-        <div class="row">
-            <div class="col-md-3">
-                <div class="contact-info">
-                    <img width="50" height="50" src="~/images/correo.svg" alt="image" />
-                    <h3 class="mb-3">Contactanos</h3>
-                    <h5>Nos gustaria escuchar tus peticiones!</h5>
+            <div class="public-contact-grid">
+                <div class="public-contact-item public-contact-item--dark">
+                    <strong>Correo comercial</strong>
+                    <span>jcastro@ingenieriajcp.cl</span>
+                </div>
+                <div class="public-contact-item public-contact-item--dark">
+                    <strong>Soporte</strong>
+                    <span>ventas@ingenieriajcp.cl</span>
                 </div>
             </div>
+        </article>
 
-            <div  class="col-md-9">
-                <div class="contact-form">
-                    <div class="form-group">
-                        <label class="control-label col-sm-4" for="fname">Nombre:</label>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" id="fname" placeholder="Ingresa nombre" name="nombre" required>
-                        </div>
+        <article class="public-card">
+            <span class="public-card__eyebrow">Formulario</span>
+            <h2>Escribenos</h2>
+            <p>Deja tus datos y una breve descripcion de lo que necesitas para responder con contexto.</p>
+
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+
+                if (ViewBag.alerta == 1)
+                {
+                    <div class="form-feedback form-feedback--success">
+                        Tu mensaje fue enviado correctamente.
                     </div>
-                    <div class="form-group">
-                        <label class="control-label col-sm-4" for="lname">Número teléfono:</label>
-                        <div class="col-sm-10">
-                            <input type="text" class="form-control" id="lname" placeholder="Ingresa número de teléfono" name="telefono" required>
-                        </div>
+                }
+                if (ViewBag.alerta == 2)
+                {
+                    <div class="form-feedback form-feedback--error">
+                        Hubo un problema enviando el mensaje. Intenta nuevamente.
                     </div>
+                }
+
+                <div class="public-form-grid">
                     <div class="form-group">
-                        <label class="control-label col-sm-4" for="email">Email:</label>
-                        <div class="col-sm-10">
-                            <input type="email" class="form-control" id="email" placeholder="Ingresa email" name="email" required>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="control-label col-sm-4" for="comment">Comentario:</label>
-                        <div class="col-sm-10">
-                            <textarea class="form-control" rows="5" id="comment" placeholder="Ingresa el comentario" name="comentario" required></textarea>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <div class="col-sm-offset-2 col-sm-10 align-content-center">
-
-                            <button id="boton" type="submit" class="btn btn-lg btn-block btn-primary">
-                                <span id="botonText">
-                                    Enviar
-                                </span>
-                                <span id="cargando" class=" spinner-border text-warning" role="status" style="display:none">
-                                </span>
-
-
-                            </button>
-
-                        </div>
+                        <label class="toolbar__label" for="fname">Nombre</label>
+                        <input type="text" class="form-control" id="fname" placeholder="Ingresa nombre" name="nombre" required />
                     </div>
 
+                    <div class="form-group">
+                        <label class="toolbar__label" for="lname">Numero telefono</label>
+                        <input type="text" class="form-control" id="lname" placeholder="Ingresa numero de telefono" name="telefono" required />
+                    </div>
 
-                    <div class="col-sm-10">
-                        @if (ViewBag.alerta == 1)
-                        {
-                            <div class="my-3 alert alert-success" role="alert">
-                                ¡Tu correo ha sido enviado!
-                            </div>
-                        }
-                        @if (ViewBag.alerta == 2)
-                        {
-                            <div class="my-3 alert alert-warning" role="alert">
-                                Hemos tenido un problema enviando tu correo, intente nuevamente
-                            </div>
-                        }
+                    <div class="form-group public-form-grid__wide">
+                    <label class="toolbar__label" for="email">Correo</label>
+                    <input type="email" class="form-control" id="email" placeholder="Ingresa tu correo" name="email" required />
+                    </div>
+
+                    <div class="form-group public-form-grid__wide">
+                        <label class="toolbar__label" for="comment">Comentario</label>
+                        <textarea class="form-control form-control--textarea" rows="5" id="comment" placeholder="Ingresa el comentario" name="comentario" required></textarea>
                     </div>
                 </div>
-            </div>
-        </div>
+
+                <div class="public-hero__actions">
+                    <button id="boton" type="submit" class="btn btn-primary">
+                        <span id="botonText">Enviar</span>
+                        <span id="cargando" class="spinner-border spinner-border-sm ml-2" role="status" style="display:none"></span>
+                    </button>
+                <a class="btn btn-outline-primary" href="@Url.Action("About", "Home")">Ver información de la empresa</a>
+                </div>
+            }
+        </article>
     </div>
-}
+</section>
+
 <script>
-
     var alerta = @Html.Raw(Json.Encode((ViewBag.alerta)));
-
     var spinner = document.getElementById("cargando");
     var boton = document.getElementById("boton");
 
-    if (alerta!=0) {
+    if (alerta != 0) {
         spinner.style.display = "none";
-        document.getElementById("botonText").innerHTML = "Enviar"
+        document.getElementById("botonText").innerHTML = "Enviar";
     }
 
-    var fo = function() {
-
+    var fo = function () {
         if (
             document.getElementById("fname").value != "" &&
             document.getElementById("lname").value != "" &&
             document.getElementById("email").value != "" &&
             document.getElementById("comment").value != ""
-            ){
-
-        document.getElementById("botonText").innerHTML = "Enviando"
-        spinner.style.display = "inline-block";
-    }
+        ) {
+            document.getElementById("botonText").innerHTML = "Enviando";
+            spinner.style.display = "inline-block";
+        }
     }
 
     spinner.style.display = "none";
-
-    boton.addEventListener("click", fo)
-
-
-    </script>
-
-
+    boton.addEventListener("click", fo);
+</script>

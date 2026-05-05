@@ -1,58 +1,127 @@
 ﻿@model ControlPersonalAppWeb.Campos
 
 @{
-    ViewBag.Title = "Crear Predio";
+    ViewBag.Title = "Crear predio";
 }
 
+<section class="page-header">
+    <div>
+        <span class="page-header__eyebrow">Módulo Predios</span>
+<h1>Nuevo predio</h1>
+        <p>Agrega el predio con su equipo y datos de contacto para dejarlo listo desde el primer día.</p>
+    </div>
 
+    <div class="page-header__actions">
+        <a class="btn btn-outline-primary" href="@Url.Action("Index", "Campo")">Volver a Predios</a>
+    </div>
+</section>
 
-@using (Html.BeginForm()) 
+@using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
-<div class="form-horizontal">
-    <h4 class="text-center display-4">Predio</h4>
-    <h3 class="text-muted font-weight-light">Crear</h3>
-    <hr />
 
-    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-
-    <div class="form-group col-md-8 mx-auto">
-        @Html.LabelFor(model => model.Nombre, htmlAttributes: new { @class = "control-label" })
-        @Html.EditorFor(model => model.Nombre, new { htmlAttributes = new { @class = "form-control" } })
-        @Html.ValidationMessageFor(model => model.Nombre, "", new { @class = "text-danger" })
-    </div>
-
-    <div class="form-group col-md-8 mx-auto">
-        @Html.LabelFor(model => model.Lugar, htmlAttributes: new { @class = "control-label" })
-        @Html.EditorFor(model => model.Lugar, new { htmlAttributes = new { @class = "form-control" } })
-        @Html.ValidationMessageFor(model => model.Lugar, "", new { @class = "text-danger" })
-    </div>
-
-    <div class="form-group col-md-8 mx-auto">
-        @Html.LabelFor(model => model.Encargado, htmlAttributes: new { @class = "control-label" })
-        @Html.EditorFor(model => model.Encargado, new { htmlAttributes = new { @class = "form-control" } })
-        @Html.ValidationMessageFor(model => model.Encargado, "", new { @class = "text-danger" })
-    </div>
-
-    <div class="form-group col-md-8 mx-auto">
-        @Html.LabelFor(model => model.Correo, htmlAttributes: new { @class = "control-label" })
-        @Html.EditorFor(model => model.Correo, new { htmlAttributes = new { @class = "form-control" } })
-        @Html.ValidationMessageFor(model => model.Correo, "", new { @class = "text-danger" })
-    </div>
-
-    <div class="form-group col-md-8 mx-auto">
-        @Html.LabelFor(model => model.Telefono, htmlAttributes: new { @class = "control-label" })
-        @Html.EditorFor(model => model.Telefono, new { htmlAttributes = new { @class = "form-control" } })
-        @Html.ValidationMessageFor(model => model.Telefono, "", new { @class = "text-danger" })
-    </div>
-
+    @Html.ValidationSummary(true, "", new { @class = "text-danger mb-4" })
     <input type="hidden" value="VSP" name="Empresa" />
 
-    <div class="form-group col-md-9 mx-auto my-5">
-        <input type="submit" value="Guardar" class="btn btn-primary btn-block" />
-        @Html.ActionLink("Volver a la lista", "Index", null, new { @class = "btn btn-block btn-danger mt-3" })
-    </div>
+    <div class="worker-create">
+        <div class="worker-create__main">
+            <section class="surface worker-panel">
+                <div class="worker-panel__header">
+                    <span class="worker-panel__eyebrow">Identidad</span>
+                    <h2>Datos principales</h2>
+<p>Completa lo esencial para reconocer el predio de inmediato.</p>
+                </div>
 
-</div>
+                <div class="worker-form-grid">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Nombre, htmlAttributes: new { @class = "toolbar__label" })
+                        @Html.EditorFor(model => model.Nombre, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Nombre, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Lugar, htmlAttributes: new { @class = "toolbar__label" })
+                        @Html.EditorFor(model => model.Lugar, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Lugar, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="form-group worker-form-grid__wide">
+                        @Html.LabelFor(model => model.Coordenadas, htmlAttributes: new { @class = "toolbar__label" })
+                        @Html.EditorFor(model => model.Coordenadas, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Coordenadas, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </section>
+
+            <section class="surface worker-panel">
+                <div class="worker-panel__header">
+                    <span class="worker-panel__eyebrow">Responsables</span>
+                    <h2>Equipo del predio</h2>
+<p>Indica quien lo lidera y a quien conviene contactar.</p>
+                </div>
+
+                <div class="worker-form-grid">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Encargado, htmlAttributes: new { @class = "toolbar__label" })
+                        @Html.EditorFor(model => model.Encargado, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Encargado, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Asistente, htmlAttributes: new { @class = "toolbar__label" })
+                        @Html.EditorFor(model => model.Asistente, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Asistente, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </section>
+
+            <section class="surface worker-panel">
+                <div class="worker-panel__header">
+                    <span class="worker-panel__eyebrow">Contacto</span>
+                    <h2>Canales de comunicacion</h2>
+<p>Deja correo y telefonos a mano para usar la ficha sin vueltas.</p>
+                </div>
+
+                <div class="worker-form-grid">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Correo, htmlAttributes: new { @class = "toolbar__label" })
+                        @Html.EditorFor(model => model.Correo, new { htmlAttributes = new { @class = "form-control", type = "email" } })
+                        @Html.ValidationMessageFor(model => model.Correo, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Telefono, htmlAttributes: new { @class = "toolbar__label" })
+                        @Html.EditorFor(model => model.Telefono, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Telefono, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.TelefonoAsistente, htmlAttributes: new { @class = "toolbar__label" })
+                        @Html.EditorFor(model => model.TelefonoAsistente, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.TelefonoAsistente, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </section>
+
+            <div class="worker-actions">
+                <input type="submit" value="Guardar predio" class="btn btn-primary" />
+                <a class="btn btn-outline-secondary" href="@Url.Action("Index", "Campo")">Cancelar</a>
+            </div>
+        </div>
+
+        <aside class="worker-create__aside">
+            <section class="surface worker-panel">
+                <div class="worker-panel__header">
+                    <span class="worker-panel__eyebrow">Antes de guardar</span>
+<h2>Antes de guardar</h2>
+<p>Con nombre, lugar y un responsable ya puedes empezar a usar este predio.</p>
+                </div>
+
+                <ul class="entity-note-list">
+                    <li>El nombre se reutiliza en permisos y en varios filtros del sistema.</li>
+                    <li>Si falta algun dato, siempre puedes completarlo mas adelante.</li>
+                </ul>
+            </section>
+        </aside>
+    </div>
 }

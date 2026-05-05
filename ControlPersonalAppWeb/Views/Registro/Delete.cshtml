@@ -1,0 +1,26 @@
+@model ControlPersonalAppWeb.RegistroTrabajador
+
+@{
+    ViewBag.Title = "Eliminar Registro";
+}
+
+<h2>Confirmar eliminación</h2>
+
+<div class="surface">
+    <h3>¿Está seguro de que desea eliminar este registro?</h3>
+    <dl class="dl-horizontal">
+        <dt>Fecha</dt>
+        <dd>@Model.Fecha.ToShortDateString()</dd>
+        <dt>Campo</dt>
+        <dd>@Model.Campo</dd>
+        <dt>Trabajador</dt>
+        <dd>@Model.NombreTrabajador</dd>
+    </dl>
+
+    @using (Html.BeginForm("Delete", "Registro", new { id = Model.Id }, FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        <input type="submit" value="Eliminar" class="btn btn-danger" />
+        @Html.ActionLink("Cancelar", "Index", new { id = ViewBag.idTrabajador }, new { @class = "btn btn-secondary" })
+    }
+</div>

@@ -1,43 +1,67 @@
-﻿
-@{
-    ViewBag.Title = "Cargar";
+﻿@{
+    ViewBag.Title = "Cargar personas";
+    var empresas = ViewBag.Empresas as IEnumerable<string>;
 }
 
-<h1 class="display-4 text-center">Carga de personas</h1>
-<hr />
+<section class="page-header">
+    <div>
+        <span class="page-header__eyebrow">Módulo Personas</span>
+        <h1>Cargar personas</h1>
+        <p>Importa o actualiza personas desde un archivo plano y refresca la base administrativa del módulo.</p>
+    </div>
 
-<div class="clearfix"></div>
+    <div class="page-header__actions">
+        <a class="btn btn-outline-secondary" href="@Url.Action("Index", "Personas")">Volver a Personas</a>
+    </div>
+</section>
+
 @using (Html.BeginForm("Cargar", "Personas", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
-    <div class="form-group col-md-10 mx-auto">
-        <div class="form-group col-md-10 mx-auto">
-            <div class="col-md-12 ">
-                <span class="control-label col-md-2">Documento</span>
-                <input id="Foto" type="file" name="csv" class="form-control" value="@ViewBag.documento">
-            </div>
-            <br />
-            <br />
-            <div class="col-md-offset-2 col-md-12 form-group">
-                <input type="submit" value="Cargar" class="btn btn-primary btn-block" />
-                @Html.ActionLink("Volver a la lista", "Index", null, new { @class = "btn btn-block btn-danger mt-3 mb-3" })
-                @if (ViewBag.mensaje != null)
-                {
-                    if (ViewBag.mensaje)
-                    {
-                        <div style="border-radius: 10px; background-color: #87CEEB; padding: 10px;">
-                            <p align="center" style="color: #fff;"><strong>Archivo cargado correctamente</strong></p>
-                        </div>
-                    }
-                    else
-                    {
+    @Html.AntiForgeryToken()
 
-                        <!-- Marco Rojo -->
-                        <div style="border-radius: 10px; background-color: #FFC0CB; padding: 10px; margin-top: 10px;">
-                            <p align="center" style="color: #fff;"><strong>Error al cargar el archivo</strong></p>
-                        </div>
-                    }
+    <section class="worker-create">
+        <div class="worker-create__main">
+            <section class="surface worker-panel">
+                <div class="worker-panel__header">
+                    <span class="worker-panel__eyebrow">Importacion</span>
+                    <h2>Documento fuente</h2>
+                    <p>Selecciona el archivo de carga y procesa los registros disponibles para este entorno.</p>
+                </div>
+
+                <div class="form-group">
+                    <label class="toolbar__label" for="csv">Documento</label>
+                    <input id="csv" type="file" name="csv" class="form-control" />
+                </div>
+
+                @if (empresas != null)
+                {
+                    <div class="worker-panel__header mt-4">
+                        <span class="worker-panel__eyebrow">Empresas visibles</span>
+                        <h2>Alcance de la carga</h2>
+                    </div>
+                    <div class="import-company-list">
+                        @foreach (var empresa in empresas)
+                        {
+                            <span class="import-company-list__item">@empresa</span>
+                        }
+                    </div>
                 }
-            </div>
+
+                <div class="worker-actions mt-4">
+                    <input type="submit" value="Cargar archivo" class="btn btn-primary" />
+                    <a class="btn btn-outline-secondary" href="@Url.Action("Index", "Personas")">Cancelar</a>
+                </div>
+            </section>
         </div>
-    </div>
+
+        <aside class="worker-create__aside">
+            <section class="surface worker-panel">
+                <div class="worker-panel__header">
+                    <span class="worker-panel__eyebrow">Formato</span>
+                    <h2>Columnas esperadas</h2>
+                    <p>La carga considera centro de costo, ubicacion, instalacion, rut, nombre completo y glosa de puesto.</p>
+                </div>
+            </section>
+        </aside>
+    </section>
 }

@@ -1,49 +1,63 @@
 ﻿@model ControlPersonalAppWeb.RegistroTrabajador
 
 @{
-    ViewBag.Title = "Detalle";
-    string foto = Model.Foto.ToString();
+    ViewBag.Title = "Detalle de registro";
+    var workerId = ViewBag.idTrabajador;
 }
-    <h2 class="display-4 text-center">Registro trabajador</h2>
 
-<div>
-    <h3 class="text-muted font-weight-light">Detalle</h3>
-    <hr />
-    <div class="col-sm-8 table-responsive">
-        <table class="mx-auto table-borderless table-hover tabla-detalle">
-
-            <tr>
-                <td>
-                    @Html.DisplayNameFor(model => model.Fecha)
-                </td>
-
-                <td>
-                    @Html.DisplayFor(model => model.Fecha)
-                </td>
-            </tr>
-
-            <tr>
-                <td>
-                    @Html.DisplayNameFor(model => model.Campo)
-                </td>
-
-                <td>
-                    @Html.DisplayFor(model => model.Campo)
-                </td>
-            </tr>
-
-            <tr>
-                <td>
-                    @Html.DisplayNameFor(model => model.Foto)
-                </td>
-                <td>
-                    <img src="@String.Format("data:image/jpg;base64,{0}",System.Convert.ToBase64String(Model.Foto))" width="400" />
-                </td>
-            </tr>
-        </table>
+<section class="page-header">
+    <div>
+        <span class="page-header__eyebrow">Módulo Registros</span>
+        <h1>Detalle del registro</h1>
+        <p>Consulta la marcacion, su fecha, el predio y la foto de respaldo.</p>
     </div>
 
-    <div class="form-group col-md-9 mx-auto my-5">
-        @Html.ActionLink("Volver a la lista", "Index", new { id = ViewBag.idTrabajador }, new { @class = "btn btn-block btn-danger mt-3" } )
+    <div class="page-header__actions">
+        <a class="btn btn-outline-secondary" href="@Url.Action("Index", "Registro", new { id = workerId })">Volver a registros</a>
     </div>
-    </div>
+</section>
+
+<section class="worker-detail-grid">
+    <article class="surface worker-panel">
+        <div class="worker-panel__header">
+            <span class="worker-panel__eyebrow">Resumen</span>
+            <h2>Datos principales</h2>
+        </div>
+
+        <div class="worker-detail-list">
+            <div class="worker-detail-list__row">
+                <span class="worker-detail-list__label">@Html.DisplayNameFor(model => model.Fecha)</span>
+                <span class="worker-detail-list__value">@Html.DisplayFor(model => model.Fecha)</span>
+            </div>
+            <div class="worker-detail-list__row">
+                <span class="worker-detail-list__label">@Html.DisplayNameFor(model => model.Campo)</span>
+                <span class="worker-detail-list__value">@Html.DisplayFor(model => model.Campo)</span>
+            </div>
+            <div class="worker-detail-list__row">
+                <span class="worker-detail-list__label">@Html.DisplayNameFor(model => model.NombreTrabajador)</span>
+                <span class="worker-detail-list__value">@Html.DisplayFor(model => model.NombreTrabajador)</span>
+            </div>
+        </div>
+    </article>
+
+    <article class="surface worker-panel">
+        <div class="worker-panel__header">
+            <span class="worker-panel__eyebrow">Respaldo</span>
+            <h2>Fotografia</h2>
+            <p>Imagen asociada al registro, si existe.</p>
+        </div>
+
+        @if (Model.Foto != null)
+        {
+            <div class="worker-photo-preview">
+                <img src="@String.Format("data:image/jpg;base64,{0}", System.Convert.ToBase64String(Model.Foto))" alt="Fotografia del registro" class="record-photo--clickable" data-image-preview />
+            </div>
+        }
+        else
+        {
+            <div class="form-feedback form-feedback--info">
+                Este registro no tiene fotografia asociada.
+            </div>
+        }
+    </article>
+</section>

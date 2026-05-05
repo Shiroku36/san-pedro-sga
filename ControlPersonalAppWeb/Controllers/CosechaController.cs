@@ -28,6 +28,7 @@ namespace ControlPersonalAppWeb.Controllers
 
         // POST: Cosecha/Create
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Create(FormCollection collection)
         {
             try
@@ -50,6 +51,7 @@ namespace ControlPersonalAppWeb.Controllers
 
         // POST: Cosecha/Edit/5
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, FormCollection collection)
         {
             try

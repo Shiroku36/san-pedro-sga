@@ -1,78 +1,68 @@
-﻿
-
-@model IEnumerable<ControlPersonalAppWeb.Empresas>
+﻿@model IEnumerable<ControlPersonalAppWeb.Empresas>
 
 @{
     ViewBag.Title = "Contratistas";
     var cuenta = ControlPersonalAppWeb.Utils.SessionManager.CuentaAutenticada();
-}
-<h1 class="display-4 text-center">Índice Contratistas</h1>
-<hr />
-@if (cuenta.Permisos.Contains("EmpresasC"))
-{
-    <a href='@Url.Action("Create", "Empresa")'>
-        <button type="button" class="btn btn-primary float-right mb-3">Crear Nuevo</button>
-    </a>
+    var totalContratistas = Model != null ? Model.Count() : 0;
+    ViewData["SearchPlaceholder"] = "Buscar por contratista o RUT";
 }
 
-<div class="col-sm-8 form-label-group">
-    <input type="text" id="busqueda" onkeyup="buscar()" class="mb-3 mt-1 form-control" placeholder="Búsqueda">
-    <script src="~/Scripts/Busqueda.js"></script>
-</div>
-<div class="table-responsive">
-    <table class="table table-hover" id="tabla">
-        <tr class="bg-primary">
-            <th>
-                @Html.DisplayNameFor(model => model.Nombre)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Rut)
-            </th>
-            <th>
-                Acción
-            </th>
-        </tr>
+<section class="page-header">
+    <div>
+        <span class="page-header__eyebrow">Módulo Contratistas</span>
+        <h1>Contratistas</h1>
+<p>@totalContratistas contratistas listos para revisar, actualizar y gestionar su personal.</p>
+    </div>
 
-        @foreach (var item in Model)
+    <div class="page-header__actions">
+        @if (cuenta.Permisos.Contains("EmpresasC"))
         {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Nombre)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Rut)
-                </td>
-                <td>
-                    @if (cuenta.Permisos.Contains("EmpresasE"))
-                    {
-                        <a href='@Url.Action("Edit", "Empresa", new { id = item.Id })'>
-                            <button type="button" class="btn btn-warning">Editar</button>
-                        </a>
-                    }
-                    <a href='@Url.Action("Details", "Empresa", new { id = item.Id })'>
-                        <button type="button" class="btn btn-info">Detalle</button>
-                    </a>
-
-                    @if (cuenta.Permisos.Contains("EmpresasD"))
-                    {
-                        <a href='@Url.Action("Delete", "Empresa", new { id = item.Id })'>
-                            <button type="button" class="btn btn-danger" onclick="return confirm('¿Está seguro que desea eliminar el contratista?');" })>Borrar</button>
-                        </a>
-                    }
-                    <a href='@Url.Action("Habilitados", "Empresa", new { id = item.Id })'>
-                        <button type="button" class="btn btn-success">Habilitados</button>
-                    </a>
-                    <!--
-                    <a href='@Url.Action("Index", "Cargos", new { id = item.Id })'>
-                        <button type="button" class="btn btn-dark" )>Cargos</button>
-                    </a>
-                    <a href='@Url.Action("Index", "CentroDeCostos", new { id = item.Id })'>
-                        <button type="button" class="btn btn-success" )>Centros de costos </button>
-                    </a>-->
-                </td>
-            </tr>
+<a class="btn btn-primary" href="@Url.Action("Create", "Empresa")">Crear contratista</a>
         }
+    </div>
+</section>
 
-    </table>
-</div>
+<section class="surface">
+    <div class="toolbar">
+        <div>
+            @Html.Partial("Busqueda")
+        </div>
+    </div>
 
+    <div class="table-responsive">
+        <table class="table data-table table-hover" id="tabla">
+            <thead>
+                <tr>
+                    <th>@Html.DisplayNameFor(model => model.Nombre)</th>
+                    <th>@Html.DisplayNameFor(model => model.Rut)</th>
+                    <th>@Html.DisplayNameFor(model => model.Nomina)</th>
+                    <th class="data-table__actions">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(modelItem => item.Nombre)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Rut)</td>
+                        <td>@(!String.IsNullOrEmpty(item.Nomina) ? item.Nomina : "Sin archivo")</td>
+                        <td>
+                            <div class="table-actions">
+                                @if (cuenta.Permisos.Contains("EmpresasE"))
+                                {
+                                    <a class="btn btn-sm btn-warning" href="@Url.Action("Edit", "Empresa", new { id = item.Id })">Editar</a>
+                                }
+                                <a class="btn btn-sm btn-info" href="@Url.Action("Details", "Empresa", new { id = item.Id })">Detalle</a>
+                                @if (cuenta.Permisos.Contains("EmpresasD"))
+                                {
+                                    <a class="btn btn-sm btn-danger" href="@Url.Action("Delete", "Empresa", new { id = item.Id })" onclick="return confirm('¿Está seguro que desea eliminar el contratista?');">Eliminar</a>
+                                }
+                                <a class="btn btn-sm btn-success" href="@Url.Action("Habilitados", "Empresa", new { id = item.Id })">Habilitados</a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</section>

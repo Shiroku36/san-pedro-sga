@@ -1,68 +1,76 @@
 ﻿@model ControlPersonalAppWeb.Cuentas
 
 @{
-    ViewBag.Title = "Detalle";
+    ViewBag.Title = "Detalle de cuenta";
     var cuenta = ControlPersonalAppWeb.Utils.SessionManager.CuentaAutenticada();
 }
 
-
-<h2 class="display-4 text-center">Cuentas</h2>
-<div>
-    <h3 class="text-muted font-weight-light">Detalle</h3>
-    <hr />
-    <div class="col-sm-8 table-responsive">
-        <table class="mx-auto table-borderless table-hover tabla-detalle">
-            <tr>
-                <td>
-                    @Html.DisplayNameFor(model => model.Usuario)
-                </td>
-
-                <td>
-                    @Html.DisplayFor(model => model.Usuario)
-                </td>
-            </tr>
-
-            <tr>
-                <td>
-                    @Html.DisplayNameFor(model => model.Nombre)
-                </td>
-
-                <td>
-                    @Html.DisplayFor(model => model.Nombre)
-                </td>
-            </tr>
-
-            <tr>
-                <td>
-                    @Html.DisplayNameFor(model => model.Apellido)
-                </td>
-
-                <td>
-                    @Html.DisplayFor(model => model.Apellido)
-                </td>
-            </tr>
-
-            <tr>
-                <td>
-                    @Html.DisplayNameFor(model => model.Email)
-                </td>
-
-                <td>
-                    @Html.DisplayFor(model => model.Email)
-                </td>
-            </tr>
-        </table>
+<section class="page-header">
+    <div>
+        <span class="page-header__eyebrow">Ficha de cuenta</span>
+        <h1>@Model.Nombre @Model.Apellido</h1>
+<p>Revisa los datos de acceso y contacto del usuario en una vista simple.</p>
     </div>
-    @if (cuenta.Id == Model.Id)
-    {
-    <div class="form-group col-md-9 mx-auto mt-5">
-        @Html.ActionLink("Cambiar contraseña", "Password", new { id= cuenta.Id }, new { @class = "btn btn-block btn-info" })
+
+    <div class="page-header__actions">
+        @if (cuenta != null && cuenta.Permisos != null && cuenta.Permisos.Contains("CuentasE"))
+        {
+<a class="btn btn-primary" href="@Url.Action("Edit", "Cuenta", new { id = Model.Id })">Editar</a>
+        }
+        @if (cuenta != null && cuenta.Id == Model.Id)
+        {
+        <a class="btn btn-outline-primary" href="@Url.Action("Password", "Cuenta", new { id = cuenta.Id })">Cambiar contraseña</a>
+        }
+        @if (cuenta != null && cuenta.Permisos != null && cuenta.Permisos.Contains("CuentasV"))
+        {
+            <a class="btn btn-outline-secondary" href="@Url.Action("Index", "Cuenta")">Volver</a>
+        }
     </div>
-    }
-    @if (cuenta.Permisos != null && cuenta.Permisos.Contains("CuentasV"))
-    {
-        <div class="form-group col-md-9 mx-auto mt-3">
-            @Html.ActionLink("Volver a la lista", "Index", null, new { @class = "btn btn-block btn-danger" })
+</section>
+
+<div class="worker-detail-grid">
+    <section class="surface worker-panel">
+        <div class="worker-panel__header">
+            <span class="worker-panel__eyebrow">Acceso</span>
+            <h2>Datos principales</h2>
+<p>Datos que usa la persona para ingresar y mantenerse identificada en la plataforma.</p>
         </div>
-    }
+
+        <div class="worker-detail-list">
+            <div class="worker-detail-list__row">
+                <span class="worker-detail-list__label">Usuario</span>
+                <span class="worker-detail-list__value">@Model.Usuario</span>
+            </div>
+            <div class="worker-detail-list__row">
+                <span class="worker-detail-list__label">Nombre</span>
+                <span class="worker-detail-list__value">@Model.Nombre</span>
+            </div>
+            <div class="worker-detail-list__row">
+                <span class="worker-detail-list__label">Apellido</span>
+                <span class="worker-detail-list__value">@Model.Apellido</span>
+            </div>
+            <div class="worker-detail-list__row">
+                        <span class="worker-detail-list__label">Correo</span>
+                <span class="worker-detail-list__value">@Model.Email</span>
+            </div>
+            <div class="worker-detail-list__row">
+                <span class="worker-detail-list__label">Contratista</span>
+                <span class="worker-detail-list__value">@Model.Empresa</span>
+            </div>
+        </div>
+    </section>
+
+    <section class="surface worker-panel">
+        <div class="worker-panel__header">
+            <span class="worker-panel__eyebrow">Resumen</span>
+<h2>Acciones relacionadas</h2>
+<p>Desde aquí puedes revisar el perfil antes de cambiar permisos o actualizar la contraseña.</p>
+        </div>
+
+        <ul class="entity-note-list">
+                    <li>El cambio de contraseña solo aparece para la propia cuenta autenticada.</li>
+            <li>La administración completa del acceso se realiza desde la vista de edición.</li>
+            <li>La empresa visible corresponde al contexto configurado para esta cuenta.</li>
+        </ul>
+    </section>
 </div>

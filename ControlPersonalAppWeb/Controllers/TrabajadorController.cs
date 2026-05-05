@@ -32,7 +32,7 @@ namespace ControlPersonalAppWeb.Controllers
     {
 
         SgajcpEntities db = new SgajcpEntities();
-        private Cuentas cuenta = Utils.SessionManager.CuentaAutenticada();
+        private Cuentas cuenta => Utils.SessionManager.CuentaAutenticada();
         Dictionary<TrabajadorIndex, Ranking> rankings = new Dictionary<TrabajadorIndex, Ranking>();
 
         private void DeshabilitarExpirados()
@@ -46,7 +46,27 @@ namespace ControlPersonalAppWeb.Controllers
             catch { }
         }
         Dictionary<TrabajadorIndex, List<DateTime>> diasTrabajados = new Dictionary<TrabajadorIndex, List<DateTime>>();
-        string path = "C:\\Data\\Archivos\\";
+        string path = Infrastructure.AppSettings.FileStoragePath;
+
+        private static readonly HashSet<string> _allowedExtensions = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+        {
+            ".pdf", ".doc", ".docx", ".xls", ".xlsx", ".jpg", ".jpeg", ".png", ".gif", ".bmp", ".txt", ".csv"
+        };
+
+        private string GuardarArchivoSeguro(HttpPostedFileBase postedFile, int trabajadorId)
+        {
+            string safeFileName = Path.GetFileName(postedFile.FileName);
+            string extension = Path.GetExtension(safeFileName);
+            if (!_allowedExtensions.Contains(extension))
+                return null;
+            string dirPath = Path.Combine(path, trabajadorId.ToString());
+            if (!Directory.Exists(dirPath))
+                Directory.CreateDirectory(dirPath);
+            string fullPath = Path.Combine(dirPath, safeFileName);
+            postedFile.SaveAs(fullPath);
+            return safeFileName;
+        }
+
         public ActionResult Borrar()
         {
             return RedirectToAction("Index");
@@ -65,9 +85,10 @@ namespace ControlPersonalAppWeb.Controllers
             Response.TransmitFile(rutaArchivo);
 
             // Finalizar la respuesta
-            Response.End();
+            Response.Flush();
+            HttpContext.ApplicationInstance.CompleteRequest();
 
-            return RedirectToAction("Cargar");
+            return new EmptyResult();
         }
         public ActionResult Cargar()
         {
@@ -82,6 +103,7 @@ namespace ControlPersonalAppWeb.Controllers
             return View();
         }
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Cargar(FormCollection collection)
         {
             SgajcpEntities db = new SgajcpEntities();
@@ -109,6 +131,11 @@ namespace ControlPersonalAppWeb.Controllers
             HttpPostedFileBase hpf = Request.Files["csv"];
             if (hpf != null && hpf.ContentLength > 0)
             {
+                if (hpf.ContentLength > 5 * 1024 * 1024)
+                {
+                    ViewBag.mensaje = "El archivo excede el tamaño máximo permitido (5 MB).";
+                    return View();
+                }
                 StreamReader csvreader = new StreamReader(hpf.InputStream);
                 var line1 = csvreader.ReadLine();
                 string rut = "";
@@ -319,8 +346,8 @@ namespace ControlPersonalAppWeb.Controllers
                     Response.ContentType = "application/pdf";
                     Response.Cache.SetCacheability(HttpCacheability.NoCache);
                     Response.AddHeader("content-disposition", "attachment;filename=" + strHeader + ".pdf");
-                    Response.Write(document);
-                    Response.End();
+                    Response.Flush();
+                    HttpContext.ApplicationInstance.CompleteRequest();
                 }
             }
             return RedirectToAction("Index", "Informes");
@@ -424,8 +451,8 @@ namespace ControlPersonalAppWeb.Controllers
                     Response.ContentType = "application/pdf";
                     Response.AddHeader("content-disposition", "attachment;filename=" + strHeader + " " + DateTime.Now.ToShortDateString() + ".pdf");
                     Response.Cache.SetCacheability(HttpCacheability.NoCache);
-                    Response.Write(document);
-                    Response.End();
+                    Response.Flush();
+                    HttpContext.ApplicationInstance.CompleteRequest();
                     Utils.SessionManager.entrada = "";
                     Utils.SessionManager.salida = "";
                     Utils.SessionManager.almuerzo = "";
@@ -723,8 +750,8 @@ namespace ControlPersonalAppWeb.Controllers
                     Response.ContentType = "application/pdf";
                     Response.AddHeader("content-disposition", "attachment;filename=" + strHeader + " " + DateTime.Now.ToShortDateString() + ".pdf");
                     Response.Cache.SetCacheability(HttpCacheability.NoCache);
-                    Response.Write(document);
-                    Response.End();
+                    Response.Flush();
+                    HttpContext.ApplicationInstance.CompleteRequest();
                     Utils.SessionManager.entrada = "";
                     Utils.SessionManager.salida = "";
                     Utils.SessionManager.almuerzo = "";
@@ -788,18 +815,14 @@ namespace ControlPersonalAppWeb.Controllers
         }
         public void GenerarExcel(List<Registro> registrosLista, string strHeader)
         {
-
+            string tempFile = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N") + ".xlsx");
             try
             {
-                //creamos el objeto SLDocument el cual creara el excel
                 SLDocument sl = new SLDocument();
                 SLStyle fecha = sl.CreateStyle();
                 SLStyle hora = sl.CreateStyle();
                 fecha.FormatCode = "dd-mm-yyyy";
                 hora.FormatCode = "hh:mm";
-                //creamos las celdas en diagonal
-                //utilizando la función setcellvalue pueden navegar sobre el documento
-                //primer parametro es la fila el segundo la columna y el tercero el dato de la celda
                 sl.SetCellValue(1, 1, "Fecha");
                 sl.SetCellValue(1, 2, "Nombre");
                 sl.SetCellValue(1, 3, "Rut");
@@ -820,36 +843,27 @@ namespace ControlPersonalAppWeb.Controllers
                     sl.SetCellValue(i, 5, registrosLista[j].Empresa);
                     sl.SetCellValue(i, 6, registrosLista[j].Campo);
                     sl.SetCellValue(i, 7, registrosLista[j].Habilitado);
-
                 }
 
-                //Guardar como, y aqui ponemos la ruta de nuestro archivo
-                sl.SaveAs("C:\\Data\\WorksheetOperations.xlsx");
-
+                sl.SaveAs(tempFile);
             }
-            catch (Exception ex)
+            catch
             {
-                Console.WriteLine("Ocurrio una Excepción: " + ex.Message);
+                return;
             }
 
-            //doc.SaveAs("C:\\Data\\WorksheetOperations.xlsx");
-            FileStream sourceFile = new FileStream("C:\\Data\\WorksheetOperations.xlsx", FileMode.Open);
-            float FileSize;
-            FileSize = sourceFile.Length;
-            byte[] getContent = new byte[(int)FileSize];
-            sourceFile.Read(getContent, 0, (int)sourceFile.Length);
-            sourceFile.Close();
+            byte[] getContent = System.IO.File.ReadAllBytes(tempFile);
+            try { System.IO.File.Delete(tempFile); } catch { }
             Response.ClearContent();
             Response.ClearHeaders();
             Response.Buffer = true;
             Response.ContentType = "application/vnd.ms-excel";
             Response.AddHeader("Content-Length", getContent.Length.ToString());
-            Response.AddHeader("content-disposition", "attachment;filename=" + strHeader +".xlsx");
+            Response.AddHeader("content-disposition", "attachment;filename=" + strHeader + ".xlsx");
             Response.BinaryWrite(getContent);
             Response.Flush();
-            Response.End();
+            HttpContext.ApplicationInstance.CompleteRequest();
             Utils.SessionManager.log("Generar excel registros");
-            //System.Diagnostics.Process.Start("C:\\Data\\WorksheetOperations.xlsx");
         }
         public ActionResult PorDia()
         {
@@ -880,6 +894,7 @@ namespace ControlPersonalAppWeb.Controllers
             return View(registros.OrderByDescending(x => x.Fecha));
         }
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult PorDia(FormCollection collection)
         {
             List<RegistroTrabajador> registros = new List<RegistroTrabajador>();
@@ -1253,7 +1268,9 @@ namespace ControlPersonalAppWeb.Controllers
                 Uid = x.Uid,
                 Numero = x.Numero,
                 Empresa = x.Empresa,
-            }).First(x => x.Id == id);
+            }).FirstOrDefault(x => x.Id == id);
+            if (trabajador == null)
+                return;
             List<TrabajadorIndex> trabajadores = new List<TrabajadorIndex>
             {
                 trabajador
@@ -1460,7 +1477,9 @@ namespace ControlPersonalAppWeb.Controllers
         public ActionResult Details(int id)
         {
             SgajcpEntities database = new SgajcpEntities();
-            Trabajador trabajador = database.Trabajador.First(x => x.Id == id);
+            Trabajador trabajador = database.Trabajador.FirstOrDefault(x => x.Id == id);
+            if (trabajador == null)
+                return HttpNotFound();
             if (Utils.SessionManager.alerta != 0)
             {
                 ViewBag.alerta = Utils.SessionManager.alerta;
@@ -1489,6 +1508,7 @@ namespace ControlPersonalAppWeb.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public JsonResult CheckRut(string rut)
         {
             // Aquí deberías implementar la lógica para verificar si el RUT ya existe en tu lista
@@ -1504,6 +1524,7 @@ namespace ControlPersonalAppWeb.Controllers
             return Json(new { isAvailable = isRutAvailable });
         }
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public JsonResult CheckPulsera(string numero)
         {
             // Aquí deberías implementar la lógica para verificar si el RUT ya existe en tu lista
@@ -1530,6 +1551,7 @@ namespace ControlPersonalAppWeb.Controllers
 
         // POST: Trabajador/Create
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Create(FormCollection collection, HttpPostedFileBase file,
             [Bind(Include = "Id,Nombre,ApellidoPaterno,ApellidoMaterno,Habilitado,Rut,Nacionalidad,Expiración,Direccion,Sexo,Ciudad,Telefono,Email,Numero,Empresa")] Trabajador trabajadorNew)
         {
@@ -1572,70 +1594,36 @@ namespace ControlPersonalAppWeb.Controllers
                 catch { }*/
                 database.Trabajador.Add(trabajadorNew);
                 database.SaveChanges();
-                if (!Directory.Exists(path + "\\" + trabajadorNew.Id + "\\"))
-                {
-                    Directory.CreateDirectory(path + "\\" + trabajadorNew.Id + "\\");
-                }
                 postedFile = Request.Files["Nomina"];
                 if (postedFile != null && postedFile.ContentLength > 0)
-                {
-                    postedFile.SaveAs(path + "\\" + trabajadorNew.Id + "\\" + postedFile.FileName);
-                    trabajadorNew.Nomina = postedFile.FileName;
-                }
+                    trabajadorNew.Nomina = GuardarArchivoSeguro(postedFile, trabajadorNew.Id);
                 postedFile = Request.Files["Contrato"];
                 if (postedFile != null && postedFile.ContentLength > 0)
-                {
-                    postedFile.SaveAs(path + "\\" + trabajadorNew.Id + "\\" + postedFile.FileName);
-                    trabajadorNew.Contrato = postedFile.FileName;
-                }
+                    trabajadorNew.Contrato = GuardarArchivoSeguro(postedFile, trabajadorNew.Id);
                 postedFile = Request.Files["Anexo"];
                 if (postedFile != null && postedFile.ContentLength > 0)
-                {
-                    postedFile.SaveAs(path + "\\" + trabajadorNew.Id + "\\" + postedFile.FileName);
-                    trabajadorNew.Anexo = postedFile.FileName;
-                }
+                    trabajadorNew.Anexo = GuardarArchivoSeguro(postedFile, trabajadorNew.Id);
                 postedFile = Request.Files["Odi"];
                 if (postedFile != null && postedFile.ContentLength > 0)
-                {
-                    postedFile.SaveAs(path + "\\" + trabajadorNew.Id + "\\" + postedFile.FileName);
-                    trabajadorNew.Odi = postedFile.FileName;
-                }
+                    trabajadorNew.Odi = GuardarArchivoSeguro(postedFile, trabajadorNew.Id);
                 postedFile = Request.Files["Registro_Epp"];
                 if (postedFile != null && postedFile.ContentLength > 0)
-                {
-                    postedFile.SaveAs(path + "\\" + trabajadorNew.Id + "\\" + postedFile.FileName);
-                    trabajadorNew.Registro_Epp = postedFile.FileName;
-                }
+                    trabajadorNew.Registro_Epp = GuardarArchivoSeguro(postedFile, trabajadorNew.Id);
                 postedFile = Request.Files["Registro_RIOHS"];
                 if (postedFile != null && postedFile.ContentLength > 0)
-                {
-                    postedFile.SaveAs(path + "\\" + trabajadorNew.Id + "\\" + postedFile.FileName);
-                    trabajadorNew.Registro_RIOHS = postedFile.FileName;
-                }
+                    trabajadorNew.Registro_RIOHS = GuardarArchivoSeguro(postedFile, trabajadorNew.Id);
                 postedFile = Request.Files["Registro_capacitación"];
                 if (postedFile != null && postedFile.ContentLength > 0)
-                {
-                    postedFile.SaveAs(path + "\\" + trabajadorNew.Id + "\\" + postedFile.FileName);
-                    trabajadorNew.Registro_capacitación = postedFile.FileName;
-                }
+                    trabajadorNew.Registro_capacitación = GuardarArchivoSeguro(postedFile, trabajadorNew.Id);
                 postedFile = Request.Files["Examen_altura_física"];
                 if (postedFile != null && postedFile.ContentLength > 0)
-                {
-                    postedFile.SaveAs(path + "\\" + trabajadorNew.Id + "\\" + postedFile.FileName);
-                    trabajadorNew.Examen_altura_física = postedFile.FileName;
-                }
+                    trabajadorNew.Examen_altura_física = GuardarArchivoSeguro(postedFile, trabajadorNew.Id);
                 postedFile = Request.Files["Procedimientos_de_trabajo"];
                 if (postedFile != null && postedFile.ContentLength > 0)
-                {
-                    postedFile.SaveAs(path + "\\" + trabajadorNew.Id + "\\" + postedFile.FileName);
-                    trabajadorNew.Procedimientos_de_trabajo = postedFile.FileName;
-                }
+                    trabajadorNew.Procedimientos_de_trabajo = GuardarArchivoSeguro(postedFile, trabajadorNew.Id);
                 postedFile = Request.Files["Documento_Covid_19"];
                 if (postedFile != null && postedFile.ContentLength > 0)
-                {
-                    postedFile.SaveAs(path + "\\" + trabajadorNew.Id + "\\" + postedFile.FileName);
-                    trabajadorNew.Documento_Covid_19 = postedFile.FileName;
-                }
+                    trabajadorNew.Documento_Covid_19 = GuardarArchivoSeguro(postedFile, trabajadorNew.Id);
                 Utils.SessionManager.log("Trabajador crear: " + trabajadorNew.Nombre + " " + trabajadorNew.ApellidoPaterno + " " + trabajadorNew.ApellidoMaterno);
                 if (!string.IsNullOrEmpty(trabajadorNew.Numero))
                 {
@@ -1688,7 +1676,9 @@ namespace ControlPersonalAppWeb.Controllers
         {
             SgajcpEntities database = new SgajcpEntities();
             ViewBag.empresas = db.Empresas.Select(x => x.Nombre).OrderBy(x => x).ToList();
-            Trabajador trabajadorNew = database.Trabajador.First(x => x.Id == id);
+            Trabajador trabajadorNew = database.Trabajador.FirstOrDefault(x => x.Id == id);
+            if (trabajadorNew == null)
+                return HttpNotFound();
             if (trabajadorNew.FotoCarnet != null)
             {
                 Utils.SessionManager.FotoCarnet = trabajadorNew.FotoCarnet;
@@ -1701,6 +1691,7 @@ namespace ControlPersonalAppWeb.Controllers
         }
         // POST: Trabajador/Edit/5
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, FormCollection collection,
                 [Bind(Include = "Id,Nombre,ApellidoPaterno,ApellidoMaterno,Habilitado,Rut,Uid,Nacionalidad,Direccion,Sexo,Ciudad,Telefono,Email,Numero,Empresa" +
                                 "Nomina,Contrato,Anexo,Odi,Registro_Epp,Registro_RIOHS,Registro_capacitación,Expiración,Examen_altura_física,Procedimientos_de_trabajo,Documento_Covid_19")]
@@ -1754,70 +1745,36 @@ namespace ControlPersonalAppWeb.Controllers
                 {
                     trabajadorNew.Habilitado = false;
                 }
-                if (!Directory.Exists(path + "\\" + trabajadorNew.Id + "\\"))
-                {
-                    Directory.CreateDirectory(path + "\\" + trabajadorNew.Id + "\\");
-                }
                 postedFile = Request.Files["Nomina1"];
                 if (postedFile != null && postedFile.ContentLength > 0)
-                {
-                    postedFile.SaveAs(path + "\\" + trabajadorNew.Id + "\\" + postedFile.FileName);
-                    trabajadorNew.Nomina = postedFile.FileName;
-                }
+                    trabajadorNew.Nomina = GuardarArchivoSeguro(postedFile, trabajadorNew.Id);
                 postedFile = Request.Files["Contrato1"];
                 if (postedFile != null && postedFile.ContentLength > 0)
-                {
-                    postedFile.SaveAs(path + "\\" + trabajadorNew.Id + "\\" + postedFile.FileName);
-                    trabajadorNew.Contrato = postedFile.FileName;
-                }
+                    trabajadorNew.Contrato = GuardarArchivoSeguro(postedFile, trabajadorNew.Id);
                 postedFile = Request.Files["Anexo1"];
                 if (postedFile != null && postedFile.ContentLength > 0)
-                {
-                    postedFile.SaveAs(path + "\\" + trabajadorNew.Id + "\\" + postedFile.FileName);
-                    trabajadorNew.Anexo = postedFile.FileName;
-                }
+                    trabajadorNew.Anexo = GuardarArchivoSeguro(postedFile, trabajadorNew.Id);
                 postedFile = Request.Files["Odi1"];
                 if (postedFile != null && postedFile.ContentLength > 0)
-                {
-                    postedFile.SaveAs(path + "\\" + trabajadorNew.Id + "\\" + postedFile.FileName);
-                    trabajadorNew.Odi = postedFile.FileName;
-                }
+                    trabajadorNew.Odi = GuardarArchivoSeguro(postedFile, trabajadorNew.Id);
                 postedFile = Request.Files["Registro_Epp1"];
                 if (postedFile != null && postedFile.ContentLength > 0)
-                {
-                    postedFile.SaveAs(path + "\\" + trabajadorNew.Id + "\\" + postedFile.FileName);
-                    trabajadorNew.Registro_Epp = postedFile.FileName;
-                }
+                    trabajadorNew.Registro_Epp = GuardarArchivoSeguro(postedFile, trabajadorNew.Id);
                 postedFile = Request.Files["Registro_RIOHS1"];
                 if (postedFile != null && postedFile.ContentLength > 0)
-                {
-                    postedFile.SaveAs(path + "\\" + trabajadorNew.Id + "\\" + postedFile.FileName);
-                    trabajadorNew.Registro_RIOHS = postedFile.FileName;
-                }
+                    trabajadorNew.Registro_RIOHS = GuardarArchivoSeguro(postedFile, trabajadorNew.Id);
                 postedFile = Request.Files["Registro_capacitación1"];
                 if (postedFile != null && postedFile.ContentLength > 0)
-                {
-                    postedFile.SaveAs(path + "\\" + trabajadorNew.Id + "\\" + postedFile.FileName);
-                    trabajadorNew.Registro_capacitación = postedFile.FileName;
-                }
+                    trabajadorNew.Registro_capacitación = GuardarArchivoSeguro(postedFile, trabajadorNew.Id);
                 postedFile = Request.Files["Examen_altura_física1"];
                 if (postedFile != null && postedFile.ContentLength > 0)
-                {
-                    postedFile.SaveAs(path + "\\" + trabajadorNew.Id + "\\" + postedFile.FileName);
-                    trabajadorNew.Examen_altura_física = postedFile.FileName;
-                }
+                    trabajadorNew.Examen_altura_física = GuardarArchivoSeguro(postedFile, trabajadorNew.Id);
                 postedFile = Request.Files["Procedimientos_de_trabajo1"];
                 if (postedFile != null && postedFile.ContentLength > 0)
-                {
-                    postedFile.SaveAs(path + "\\" + trabajadorNew.Id + "\\" + postedFile.FileName);
-                    trabajadorNew.Procedimientos_de_trabajo = postedFile.FileName;
-                }
+                    trabajadorNew.Procedimientos_de_trabajo = GuardarArchivoSeguro(postedFile, trabajadorNew.Id);
                 postedFile = Request.Files["Documento_Covid_191"];
                 if (postedFile != null && postedFile.ContentLength > 0)
-                {
-                    postedFile.SaveAs(path + "\\" + trabajadorNew.Id + "\\" + postedFile.FileName);
-                    trabajadorNew.Documento_Covid_19 = postedFile.FileName;
-                }
+                    trabajadorNew.Documento_Covid_19 = GuardarArchivoSeguro(postedFile, trabajadorNew.Id);
                 if (!validarRut(trabajadorNew.Rut))
                 {
                     ViewBag.texto = "Rut no válido";
@@ -1883,25 +1840,26 @@ namespace ControlPersonalAppWeb.Controllers
         public ActionResult Delete(int id)
         {
             SgajcpEntities database = new SgajcpEntities();
-            Trabajador trabajador = database.Trabajador.First(x => x.Id == id);
+            Trabajador trabajador = database.Trabajador.FirstOrDefault(x => x.Id == id);
+            if (trabajador == null)
+                return HttpNotFound();
+            return View(trabajador);
+        }
+
+        // POST: Trabajador/Delete/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [ActionName("Delete")]
+        public ActionResult DeleteConfirmed(int id)
+        {
+            SgajcpEntities database = new SgajcpEntities();
+            Trabajador trabajador = database.Trabajador.FirstOrDefault(x => x.Id == id);
+            if (trabajador == null)
+                return HttpNotFound();
             Utils.SessionManager.log("Trabajador eliminado: " + trabajador.Nombre + " " + trabajador.ApellidoPaterno + " " + trabajador.ApellidoMaterno);
             database.Trabajador.Remove(trabajador);
             database.SaveChanges();
             return RedirectToAction("Index");
-        }
-        [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
-        {
-            try
-            {
-                // TODO: Add delete logic here
-
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
         }
         private string cambiarUidCrear(string Uid)
         {
@@ -2007,6 +1965,11 @@ namespace ControlPersonalAppWeb.Controllers
             return UidNuevo;
 
         }
-        // POST: Trabajador/Delete/5
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing) db.Dispose();
+            base.Dispose(disposing);
+        }
     }
 }

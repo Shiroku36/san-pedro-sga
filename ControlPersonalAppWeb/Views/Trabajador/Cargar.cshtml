@@ -1,46 +1,95 @@
-﻿
-@{
-    ViewBag.Title = "Cargar";
+﻿@{
+    ViewBag.Title = "Carga masiva";
+    var empresas = ViewBag.Empresas as IEnumerable<string>;
 }
 
-<h1 class="display-4 text-center">Carga de trabajadores</h1>
-<hr />
+<section class="page-header">
+    <div>
+        <span class="page-header__eyebrow">Módulo RR.HH.</span>
+        <h1>Carga masiva de trabajadores</h1>
+<p>Importa trabajadores desde la plantilla oficial para registrar ingresos de forma rápida y ordenada.</p>
+    </div>
 
-<div class="clearfix"></div>
+    <div class="page-header__actions">
+        <a class="btn btn-outline-primary" href="@Url.Action("DescargarArchivo", "Trabajador")">Descargar plantilla</a>
+        <a class="btn btn-outline-secondary" href="@Url.Action("Index", "Trabajador")">Volver a Trabajadores</a>
+    </div>
+</section>
+
 @using (Html.BeginForm("Cargar", "Trabajador", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
-    <div class="text-center col-md-12 mb-5">
-        <h1><a href="@Url.Action("DescargarArchivo", "Trabajador")">Descargar archivo formato</a></h1>
-    </div>
-    <div class="form-group col-md-10 mx-auto">
-        <div class="form-group col-md-10 mx-auto">
-            <div class="col-md-12 ">
-                <span class="control-label col-md-2">Documento</span>
-                <input id="Foto" type="file" name="csv" class="form-control" value="@ViewBag.documento">
-            </div>
-            <br />
-            <br />
-            <div class="col-md-offset-2 col-md-12 form-group">
-                <input type="submit" value="Cargar" class="btn btn-primary btn-block" />
-                @Html.ActionLink("Volver a la lista", "Index", null, new { @class = "btn btn-block btn-danger mt-3 mb-3" })
+    @Html.AntiForgeryToken()
+    <section class="worker-create worker-create--wide">
+        <div class="worker-create__main">
+            <section class="surface worker-panel">
+                <div class="worker-panel__header">
+                    <span class="worker-panel__eyebrow">Archivo</span>
+                    <h2>Subir documento de carga</h2>
+<p>Usa la plantilla base y mantén su estructura para que la carga funcione sin problemas.</p>
+                </div>
+
                 @if (ViewBag.mensaje != null)
                 {
                     if (ViewBag.mensaje)
                     {
-                        <div style="border-radius: 10px; background-color: #87CEEB; padding: 10px;">
-                            <p align="center" style="color: #fff;"><strong>Archivo cargado correctamente</strong></p>
+                        <div class="form-feedback form-feedback--success">
+                            Archivo cargado correctamente.
                         </div>
                     }
                     else
                     {
-
-                        <!-- Marco Rojo -->
-                        <div style="border-radius: 10px; background-color: #FFC0CB; padding: 10px; margin-top: 10px;">
-                            <p align="center" style="color: #fff;"><strong>Error al cargar el archivo</strong></p>
+                        <div class="form-feedback form-feedback--error">
+                            Error al cargar el archivo. Revisa el formato de la plantilla e intenta nuevamente.
                         </div>
                     }
                 }
-            </div>
+
+                <div class="worker-form-grid">
+                    <div class="form-group worker-form-grid__wide">
+                        <label class="toolbar__label" for="csv">Documento</label>
+                        <input id="csv" type="file" name="csv" class="form-control" value="@ViewBag.documento" />
+                    </div>
+                </div>
+
+                <div class="worker-actions">
+                    <input type="submit" value="Cargar trabajadores" class="btn btn-primary" />
+                    <a class="btn btn-outline-secondary" href="@Url.Action("Index", "Trabajador")">Cancelar</a>
+                </div>
+            </section>
         </div>
-    </div>
+
+        <aside class="worker-create__aside">
+            <section class="surface worker-panel">
+                <div class="worker-panel__header">
+                    <span class="worker-panel__eyebrow">Antes de importar</span>
+                    <h2>Recomendaciones</h2>
+<p>Una carga limpia evita duplicados y te ahorra correcciones después.</p>
+                </div>
+
+                <ul class="entity-note-list">
+                        <li>Descarga la plantilla desde este mismo módulo para mantener el orden de columnas esperado.</li>
+                    <li>Verifica RUT, numero de pulsera y contratista antes de subir el archivo.</li>
+                    <li>Si la cuenta no es administradora, la lista quedara limitada a su propio contratista.</li>
+                </ul>
+            </section>
+
+            @if (empresas != null && empresas.Any())
+            {
+                <section class="surface worker-panel">
+                    <div class="worker-panel__header">
+                        <span class="worker-panel__eyebrow">Contexto</span>
+                        <h2>Empresas disponibles</h2>
+<p>La carga se valida con las empresas que tu cuenta puede ver.</p>
+                    </div>
+
+                    <div class="import-company-list">
+                        @foreach (var empresa in empresas)
+                        {
+                            <span class="import-company-list__item">@empresa</span>
+                        }
+                    </div>
+                </section>
+            }
+        </aside>
+    </section>
 }

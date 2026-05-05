@@ -1,96 +1,83 @@
 ﻿@model ControlPersonalAppWeb.Personas
 
 @{
-    Layout = null;
+    ViewBag.Title = "Eliminar persona";
 }
 
-<!DOCTYPE html>
-
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>Delete</title>
-</head>
-<body>
-    <h3>Are you sure you want to delete this?</h3>
+<section class="page-header">
     <div>
-        <h4>Personas</h4>
-        <hr />
-        <dl class="dl-horizontal">
-            <dt>
-                @Html.DisplayNameFor(model => model.CentroCosto1)
-            </dt>
-    
-            <dd>
-                @Html.DisplayFor(model => model.CentroCosto1)
-            </dd>
-    
-            <dt>
-                @Html.DisplayNameFor(model => model.CentroCosto2)
-            </dt>
-    
-            <dd>
-                @Html.DisplayFor(model => model.CentroCosto2)
-            </dd>
-    
-            <dt>
-                @Html.DisplayNameFor(model => model.GlosaCosto)
-            </dt>
-    
-            <dd>
-                @Html.DisplayFor(model => model.GlosaCosto)
-            </dd>
-    
-            <dt>
-                @Html.DisplayNameFor(model => model.Ubicacion)
-            </dt>
-    
-            <dd>
-                @Html.DisplayFor(model => model.Ubicacion)
-            </dd>
-    
-            <dt>
-                @Html.DisplayNameFor(model => model.Instalacion)
-            </dt>
-    
-            <dd>
-                @Html.DisplayFor(model => model.Instalacion)
-            </dd>
-    
-            <dt>
-                @Html.DisplayNameFor(model => model.Rut)
-            </dt>
-    
-            <dd>
-                @Html.DisplayFor(model => model.Rut)
-            </dd>
-    
-            <dt>
-                @Html.DisplayNameFor(model => model.Nombre)
-            </dt>
-    
-            <dd>
-                @Html.DisplayFor(model => model.Nombre)
-            </dd>
-    
-            <dt>
-                @Html.DisplayNameFor(model => model.GlosaPuesto)
-            </dt>
-    
-            <dd>
-                @Html.DisplayFor(model => model.GlosaPuesto)
-            </dd>
-    
-        </dl>
-    
-        @using (Html.BeginForm()) {
+        <span class="page-header__eyebrow">Módulo Personas</span>
+        <h1>Eliminar persona</h1>
+        <p>Confirma la eliminacion del registro antes de retirarlo del listado.</p>
+    </div>
+
+    <div class="page-header__actions">
+        <a class="btn btn-outline-secondary" href="@Url.Action("Index", "Personas")">Volver a Personas</a>
+    </div>
+</section>
+
+<section class="worker-detail-grid">
+    <article class="surface worker-panel">
+        <div class="worker-panel__header">
+            <span class="worker-panel__eyebrow">Confirmacion</span>
+            <h2>Vas a eliminar este registro</h2>
+            <p>Revisa los datos antes de confirmar esta accion.</p>
+        </div>
+
+        <div class="worker-detail-list">
+            <div class="worker-detail-list__row">
+                <span class="worker-detail-list__label">@Html.DisplayNameFor(model => model.Rut)</span>
+                <span class="worker-detail-list__value">@Html.DisplayFor(model => model.Rut)</span>
+            </div>
+            <div class="worker-detail-list__row">
+                <span class="worker-detail-list__label">@Html.DisplayNameFor(model => model.Nombre)</span>
+                <span class="worker-detail-list__value">@Html.DisplayFor(model => model.Nombre)</span>
+            </div>
+            <div class="worker-detail-list__row">
+                <span class="worker-detail-list__label">@Html.DisplayNameFor(model => model.GlosaCosto)</span>
+                <span class="worker-detail-list__value">@Html.DisplayFor(model => model.GlosaCosto)</span>
+            </div>
+            <div class="worker-detail-list__row">
+                <span class="worker-detail-list__label">@Html.DisplayNameFor(model => model.Ubicacion)</span>
+                <span class="worker-detail-list__value">@Html.DisplayFor(model => model.Ubicacion)</span>
+            </div>
+        </div>
+
+        @using (Html.BeginForm())
+        {
             @Html.AntiForgeryToken()
-    
-            <div class="form-actions no-color">
-                <input type="submit" value="Delete" class="btn btn-default" /> |
-                @Html.ActionLink("Back to List", "Index")
+
+            <div class="worker-actions mt-4">
+                <input type="submit" value="Eliminar persona" class="btn btn-danger" />
+                <a class="btn btn-outline-secondary" href="@Url.Action("Index", "Personas")">Cancelar</a>
             </div>
         }
-    </div>
-</body>
-</html>
+    </article>
+
+    <article class="surface worker-panel">
+        <div class="worker-panel__header">
+            <span class="worker-panel__eyebrow">Contexto</span>
+                    <h2>Información asociada</h2>
+            <p>Este registro incluye referencia de costo, instalacion y puesto actual.</p>
+        </div>
+
+        <div class="worker-detail-list">
+            <div class="worker-detail-list__row">
+                <span class="worker-detail-list__label">@Html.DisplayNameFor(model => model.CentroCosto1)</span>
+                <span class="worker-detail-list__value">@Html.DisplayFor(model => model.CentroCosto1)</span>
+            </div>
+            <div class="worker-detail-list__row">
+                <span class="worker-detail-list__label">@Html.DisplayNameFor(model => model.CentroCosto2)</span>
+                <span class="worker-detail-list__value">@Html.DisplayFor(model => model.CentroCosto2)</span>
+            </div>
+            <div class="worker-detail-list__row">
+                <span class="worker-detail-list__label">@Html.DisplayNameFor(model => model.GlosaPuesto)</span>
+                <span class="worker-detail-list__value">@Html.DisplayFor(model => model.GlosaPuesto)</span>
+            </div>
+            <div class="worker-detail-list__row">
+                <span class="worker-detail-list__label">@Html.DisplayNameFor(model => model.Instalacion)</span>
+                <span class="worker-detail-list__value">@Html.DisplayFor(model => model.Instalacion)</span>
+            </div>
+        </div>
+    </article>
+</section>

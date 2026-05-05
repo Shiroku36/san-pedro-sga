@@ -1,0 +1,350 @@
+﻿@{
+    var cuentaActual = ControlPersonalAppWeb.Utils.SessionManager.CuentaAutenticada();
+    var permisos = cuentaActual != null && cuentaActual.Permisos != null ? cuentaActual.Permisos : "";
+    var mostrarRemuneracion = ViewBag.Remuneracion != null;
+    var controllerActual = Convert.ToString(ViewContext.RouteData.Values["controller"]);
+    var controllerActualLower = string.IsNullOrEmpty(controllerActual) ? "" : controllerActual.ToLowerInvariant();
+    var themeStorageKey = cuentaActual != null ? "sga-theme:" + cuentaActual.Id : "sga-theme:default";
+    var appLayoutClass = String.Equals(controllerActual, "Casino", StringComparison.OrdinalIgnoreCase)
+        ? "app-layout app-layout--casino"
+        : "app-layout";
+}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>@ViewBag.Title - SGA</title>
+    <script>
+        (function () {
+            var fallbackTheme = "arena";
+            var storageKey = "@themeStorageKey";
+            var availableThemes = ["arena", "glaciar", "grafito", "bosque"];
+            var theme = fallbackTheme;
+
+            try {
+                var savedTheme = window.localStorage.getItem(storageKey);
+                if (availableThemes.indexOf(savedTheme) >= 0) {
+                    theme = savedTheme;
+                }
+            } catch (error) {
+            }
+
+            document.documentElement.setAttribute("data-theme", theme);
+        })();
+    </script>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+</head>
+<body class="@appLayoutClass" data-theme-storage-key="@themeStorageKey">
+    <div class="app-shell">
+        <header class="app-header">
+            <div class="app-header__bar">
+                <a class="app-brand" href="@Url.Action("Index", "Home")">
+                    <img src="@Url.Content("~/Images/Logo.png")" alt="SGA" />
+                    <span>
+                        <strong>SGA</strong>
+                        <small>San Pedro Gestión Agrícola</small>
+                    </span>
+                </a>
+
+                <button type="button" class="app-nav-toggle" data-app-nav-toggle aria-controls="appMainNav" aria-expanded="false">
+                    <span>Módulos</span>
+                    <span class="app-nav-toggle__icon" aria-hidden="true"></span>
+                </button>
+
+                <nav class="app-nav" id="appMainNav" aria-label="Navegación principal">
+                    @if (permisos.Contains("HuertosV"))
+                    {
+                        @Html.ActionLink("Predios", "Index", "Campo", null, new { @class = "app-nav__link" + (controllerActualLower == "campo" ? " app-nav__link--active" : "") })
+                    }
+                    @if (permisos.Contains("TrabajadoresV"))
+                    {
+                        @Html.ActionLink("RR.HH.", "Index", "Trabajador", null, new { @class = "app-nav__link" + (controllerActualLower == "trabajador" ? " app-nav__link--active" : "") })
+                    }
+                    @if (cuentaActual != null)
+                    {
+                        @Html.ActionLink("Informes", "Index", "Informes", null, new { @class = "app-nav__link" + (controllerActualLower == "informes" ? " app-nav__link--active" : "") })
+                    }
+                    @if (permisos.Contains("EmpresasV"))
+                    {
+                        @Html.ActionLink("Contratistas", "Index", "Empresa", null, new { @class = "app-nav__link" + (controllerActualLower == "empresa" ? " app-nav__link--active" : "") })
+                    }
+                    @if (permisos.Contains("CuentasV"))
+                    {
+                        @Html.ActionLink("Cuentas", "Index", "Cuenta", null, new { @class = "app-nav__link" + (controllerActualLower == "cuenta" ? " app-nav__link--active" : "") })
+                    }
+                    @if (permisos.Contains("CasinoV") || (cuentaActual != null && cuentaActual.Usuario.Contains("Sebastian")))
+                    {
+                        @Html.ActionLink("Casino", "Index", "Casino", null, new { @class = "app-nav__link app-nav__link--highlight" + (controllerActualLower == "casino" ? " app-nav__link--active" : ""), title = "Módulo separado" })
+                    }
+                </nav>
+
+                <div class="app-header__actions">
+                    @if (cuentaActual != null)
+                    {
+                        <div class="app-user" data-user-menu data-storage-key="@themeStorageKey" data-theme-current="arena">
+                            <button type="button" class="app-user__toggle" data-user-toggle aria-expanded="false">
+                                <div class="app-user__identity">
+                                    <span class="app-user__name">@cuentaActual.Usuario</span>
+                                    <small class="app-user__company">@cuentaActual.Empresa</small>
+                                </div>
+                                <span class="app-user__caret" aria-hidden="true"></span>
+                            </button>
+
+                            <div class="app-user__menu" data-user-panel hidden>
+                                <div class="app-user__menu-head">
+                                    <strong>@cuentaActual.Usuario</strong>
+                                    <small>@cuentaActual.Empresa</small>
+                                </div>
+
+                                <div class="app-user__actions">
+                                    <a class="btn btn-outline-secondary btn-sm" href="@Url.Action("Details", "Cuenta", new { id = cuentaActual.Id })">Mi cuenta</a>
+                                    @if (cuentaActual.Nivel == 6 && cuentaActual.TrabajadorId != null)
+                                    {
+                                        <a class="btn btn-outline-secondary btn-sm" href="@Url.Action("Index", "Registro", new { id = cuentaActual.TrabajadorId })">Registros</a>
+                                    }
+                                    <a class="btn btn-outline-secondary btn-sm" href="@Url.Action("Salir", "Cuenta")">Salir</a>
+                                </div>
+
+                                <div class="app-user__theme-block">
+                                    <span class="app-user__theme-label">Tema</span>
+                                    <div class="theme-picker" data-theme-picker>
+                                        <button type="button" class="theme-pill" data-theme-value="arena" data-theme-label="Arena" aria-pressed="false">Arena</button>
+                                        <button type="button" class="theme-pill" data-theme-value="glaciar" data-theme-label="Glaciar" aria-pressed="false">Glaciar</button>
+                                        <button type="button" class="theme-pill" data-theme-value="grafito" data-theme-label="Grafito" aria-pressed="false">Grafito</button>
+                                        <button type="button" class="theme-pill" data-theme-value="bosque" data-theme-label="Bosque" aria-pressed="false">Bosque</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </header>
+
+        <main class="app-page">
+            <div class="app-page__inner">
+                @if (mostrarRemuneracion)
+                {
+                    @Html.Partial("Remuneraciones")
+                }
+                @RenderBody()
+            </div>
+        </main>
+
+        <footer class="app-footer">
+            <span>SGA</span>
+            <small>@DateTime.Now.Year - Operación interna</small>
+        </footer>
+    </div>
+
+    <div id="globalImagePreview" class="record-modal" data-image-modal aria-hidden="true">
+        <button type="button" class="record-modal__close" data-image-modal-close aria-label="Cerrar vista ampliada">&times;</button>
+        <img class="record-modal__content" id="globalImagePreviewContent" alt="Vista ampliada" />
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+    <script>
+        (function () {
+            var menu = document.querySelector("[data-user-menu]");
+            if (!menu) {
+                return;
+            }
+
+            var root = document.documentElement;
+            var body = document.body;
+            var toggle = menu.querySelector("[data-user-toggle]");
+            var panel = menu.querySelector("[data-user-panel]");
+            var buttons = Array.prototype.slice.call(menu.querySelectorAll("[data-theme-value]"));
+            var storageKey = menu.getAttribute("data-storage-key");
+            var fallbackTheme = "arena";
+
+            function isValidTheme(theme) {
+                return buttons.some(function (button) {
+                    return button.getAttribute("data-theme-value") === theme;
+                });
+            }
+
+            function closePanel() {
+                panel.hidden = true;
+                menu.classList.remove("is-open");
+                toggle.setAttribute("aria-expanded", "false");
+            }
+
+            function openPanel() {
+                panel.hidden = false;
+                menu.classList.add("is-open");
+                toggle.setAttribute("aria-expanded", "true");
+            }
+
+            function setTheme(theme, persist) {
+                var activeTheme = isValidTheme(theme) ? theme : fallbackTheme;
+                root.setAttribute("data-theme", activeTheme);
+                body.setAttribute("data-theme", activeTheme);
+                menu.setAttribute("data-theme-current", activeTheme);
+
+                buttons.forEach(function (button) {
+                    var isActive = button.getAttribute("data-theme-value") === activeTheme;
+                    button.classList.toggle("is-active", isActive);
+                    button.setAttribute("aria-pressed", isActive ? "true" : "false");
+                });
+
+                if (persist) {
+                    try {
+                        window.localStorage.setItem(storageKey, activeTheme);
+                    } catch (error) {
+                    }
+                }
+            }
+
+            toggle.addEventListener("click", function () {
+                if (panel.hidden) {
+                    openPanel();
+                } else {
+                    closePanel();
+                }
+            });
+
+            buttons.forEach(function (button) {
+                button.addEventListener("click", function () {
+                    setTheme(button.getAttribute("data-theme-value"), true);
+                });
+            });
+
+            document.addEventListener("click", function (event) {
+                if (!menu.contains(event.target)) {
+                    closePanel();
+                }
+            });
+
+            document.addEventListener("keydown", function (event) {
+                if (event.key === "Escape") {
+                    closePanel();
+                }
+            });
+
+            setTheme(root.getAttribute("data-theme"), false);
+        })();
+
+        (function () {
+            var modal = document.querySelector("[data-image-modal]");
+            if (!modal) {
+                return;
+            }
+
+            var modalImage = document.getElementById("globalImagePreviewContent");
+            var closeButton = modal.querySelector("[data-image-modal-close]");
+
+            function closeModal() {
+                modal.classList.remove("mostrar");
+                modal.setAttribute("aria-hidden", "true");
+                modalImage.removeAttribute("src");
+            }
+
+            document.addEventListener("click", function (event) {
+                var trigger = event.target.closest("img[data-image-preview]");
+                if (trigger) {
+                    modalImage.src = trigger.src;
+                    modalImage.alt = trigger.alt || "Vista ampliada";
+                    modal.classList.add("mostrar");
+                    modal.setAttribute("aria-hidden", "false");
+                    return;
+                }
+
+                if (event.target === modal || event.target === closeButton) {
+                    closeModal();
+                }
+            });
+
+            document.addEventListener("keydown", function (event) {
+                if (event.key === "Escape" && modal.classList.contains("mostrar")) {
+                    closeModal();
+                }
+            });
+        })();
+
+        (function () {
+            function applyRequiredMarkers(rootElement) {
+                var scope = rootElement || document;
+                var fields = scope.querySelectorAll("input, select, textarea");
+
+                Array.prototype.forEach.call(fields, function (field) {
+                    if (!field || field.disabled) {
+                        return;
+                    }
+
+                    var type = (field.getAttribute("type") || "").toLowerCase();
+                    if (type === "hidden" || type === "submit" || type === "button" || type === "reset") {
+                        return;
+                    }
+
+                    var isRequired = field.hasAttribute("required") || field.hasAttribute("data-val-required");
+                    if (!isRequired) {
+                        return;
+                    }
+
+                    var label = null;
+                    var id = field.getAttribute("id");
+                    if (id) {
+                        label = scope.querySelector('label[for="' + id + '"]');
+                    }
+
+                    if (!label) {
+                        var formGroup = field.closest(".form-group, .worker-toggle");
+                        if (formGroup) {
+                            label = formGroup.querySelector(".toolbar__label");
+                        }
+                    }
+
+                    if (!label || label.querySelector(".required-marker")) {
+                        return;
+                    }
+
+                    var marker = document.createElement("span");
+                    marker.className = "required-marker";
+                    marker.setAttribute("aria-hidden", "true");
+                    marker.textContent = "*";
+                    label.appendChild(marker);
+                });
+            }
+
+            applyRequiredMarkers(document);
+        })();
+
+        (function () {
+            var toggle = document.querySelector("[data-app-nav-toggle]");
+            var nav = document.getElementById("appMainNav");
+            var headerBar = document.querySelector(".app-header__bar");
+
+            if (!toggle || !nav || !headerBar) {
+                return;
+            }
+
+            function setOpen(isOpen) {
+                headerBar.classList.toggle("is-nav-open", isOpen);
+                toggle.setAttribute("aria-expanded", isOpen ? "true" : "false");
+            }
+
+            toggle.addEventListener("click", function () {
+                setOpen(!headerBar.classList.contains("is-nav-open"));
+            });
+
+            nav.addEventListener("click", function (event) {
+                if (event.target.closest("a")) {
+                    setOpen(false);
+                }
+            });
+
+            window.addEventListener("resize", function () {
+                if (window.innerWidth > 767) {
+                    setOpen(false);
+                }
+            });
+        })();
+    </script>
+</body>
+</html>

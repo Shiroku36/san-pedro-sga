@@ -1,0 +1,104 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>@ViewBag.Title - SGA</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+</head>
+<body class="public-layout">
+    <div class="public-shell">
+        <header class="public-header">
+            <div class="public-header__inner">
+                <a class="public-brand" href="@Url.Action("Index", "Home")">
+                    <img src="@Url.Content("~/Images/Logo.png")" alt="SGA" />
+                    <span>
+                        <strong>SGA</strong>
+                        <small>San Pedro Gestión Agrícola</small>
+                    </span>
+                </a>
+
+            <nav class="public-nav" aria-label="Navegación pública">
+                    <a href="@Url.Action("Index", "Home")">Inicio</a>
+                    <a href="@Url.Action("About", "Home")">Nosotros</a>
+                    <a href="@Url.Action("Contact", "Home")">Contacto</a>
+                    <a class="btn btn-sm btn-outline-light" href="@Url.Action("Login", "Cuenta")">Ingresar</a>
+                </nav>
+            </div>
+        </header>
+
+        <main class="public-main">
+            @RenderBody()
+        </main>
+
+        <footer class="public-footer">
+            <div class="public-footer__inner">
+                <div>
+                    <strong>Ingenieria JCP</strong>
+            <p>Sistema de gestión para operaciones agrícolas, personas y control interno.</p>
+                </div>
+                <div class="public-footer__links">
+                    <a href="@Url.Action("Index", "Home")">Inicio</a>
+                    <a href="@Url.Action("Contact", "Home")">Contacto</a>
+                    <a href="mailto:jcastro@ingenieriajcp.cl">jcastro@ingenieriajcp.cl</a>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+    <script>
+        (function () {
+            function applyRequiredMarkers(rootElement) {
+                var scope = rootElement || document;
+                var fields = scope.querySelectorAll("input, select, textarea");
+
+                Array.prototype.forEach.call(fields, function (field) {
+                    if (!field || field.disabled) {
+                        return;
+                    }
+
+                    var type = (field.getAttribute("type") || "").toLowerCase();
+                    if (type === "hidden" || type === "submit" || type === "button" || type === "reset") {
+                        return;
+                    }
+
+                    var isRequired = field.hasAttribute("required") || field.hasAttribute("data-val-required");
+                    if (!isRequired) {
+                        return;
+                    }
+
+                    var label = null;
+                    var id = field.getAttribute("id");
+                    if (id) {
+                        label = scope.querySelector('label[for="' + id + '"]');
+                    }
+
+                    if (!label) {
+                        var formGroup = field.closest(".form-group, .worker-toggle");
+                        if (formGroup) {
+                            label = formGroup.querySelector(".toolbar__label");
+                        }
+                    }
+
+                    if (!label || label.querySelector(".required-marker")) {
+                        return;
+                    }
+
+                    var marker = document.createElement("span");
+                    marker.className = "required-marker";
+                    marker.setAttribute("aria-hidden", "true");
+                    marker.textContent = "*";
+                    label.appendChild(marker);
+                });
+            }
+
+            applyRequiredMarkers(document);
+        })();
+    </script>
+</body>
+</html>

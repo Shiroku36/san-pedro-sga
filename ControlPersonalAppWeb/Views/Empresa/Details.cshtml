@@ -1,38 +1,60 @@
 ﻿@model ControlPersonalAppWeb.Empresas
 
 @{
-    ViewBag.Title = "Detalle";
+    ViewBag.Title = "Detalle contratista";
+    var cuenta = ControlPersonalAppWeb.Utils.SessionManager.CuentaAutenticada();
 }
 
-<div>
-    <h2 class="display-4 text-center">Contratista</h2>
-    <h3 class="text-muted font-weight-light">Detalle</h3>
-    <hr />
-    <dl class="dl-horizontal w-75 mx-auto">
-        <dt>
-            @Html.DisplayNameFor(model => model.Nombre)
-        </dt>
+<section class="page-header">
+    <div>
+        <span class="page-header__eyebrow">Ficha Contratista</span>
+        <h1>@Model.Nombre</h1>
+<p>Revisa la información principal del contratista y la referencia de nómina asociada.</p>
+    </div>
 
-        <dd>
-            @Html.DisplayFor(model => model.Nombre)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Rut)
-        </dt>
+    <div class="page-header__actions">
+        @if (cuenta != null && cuenta.Permisos != null && cuenta.Permisos.Contains("EmpresasE"))
+        {
+            <a class="btn btn-primary" href="@Url.Action("Edit", "Empresa", new { id = Model.Id })">Editar contratista</a>
+        }
+        <a class="btn btn-outline-secondary" href="@Url.Action("Index", "Empresa")">Volver</a>
+    </div>
+</section>
 
-        <dd>
-            @Html.DisplayFor(model => model.Rut)
-        </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Nomina)
-        </dt>
+<div class="worker-detail-grid">
+    <section class="surface worker-panel">
+        <div class="worker-panel__header">
+            <span class="worker-panel__eyebrow">Datos principales</span>
+            <h2>Resumen</h2>
+<p>Información base usada para identificar al contratista y relacionarlo con otros módulos.</p>
+        </div>
 
-        <dd>
-            @Html.DisplayFor(model => model.Nomina)
-        </dd>
+        <div class="worker-detail-list">
+            <div class="worker-detail-list__row">
+                <span class="worker-detail-list__label">Nombre</span>
+                <span class="worker-detail-list__value">@Model.Nombre</span>
+            </div>
+            <div class="worker-detail-list__row">
+                <span class="worker-detail-list__label">RUT</span>
+                <span class="worker-detail-list__value">@Model.Rut</span>
+            </div>
+            <div class="worker-detail-list__row">
+                <span class="worker-detail-list__label">Nomina</span>
+                <span class="worker-detail-list__value">@(!String.IsNullOrEmpty(Model.Nomina) ? Model.Nomina : "Sin archivo asociado")</span>
+            </div>
+        </div>
+    </section>
 
-    </dl>
-</div>
-<div class="form-group col-md-9 mx-auto my-5">
-    @Html.ActionLink("Volver a la lista", "Index", null, new { @class = "btn btn-block btn-primary mt-3" })
+    <section class="surface worker-panel">
+        <div class="worker-panel__header">
+            <span class="worker-panel__eyebrow">Siguiente accion</span>
+<h2>Siguiente paso</h2>
+<p>Desde aquí puedes editar la ficha o revisar los habilitados sin salir del módulo.</p>
+        </div>
+
+        <ul class="entity-note-list">
+            <li>Usa “Habilitados” desde el listado principal para activar o desactivar trabajadores del contratista.</li>
+            <li>La nómina sigue siendo una referencia de apoyo cargada desde este módulo.</li>
+        </ul>
+    </section>
 </div>

@@ -1,51 +1,75 @@
 ﻿@model ControlPersonalAppWeb.RegistroTrabajador
 
 @{
-    ViewBag.Title = "Crear";
+    ViewBag.Title = "Crear registro";
+    var workerId = ViewBag.WorkerId ?? ViewBag.Id;
+    var workerName = ViewBag.WorkerName as string ?? "Trabajador";
 }
 
+<section class="page-header">
+    <div>
+        <span class="page-header__eyebrow">Módulo Registros</span>
+        <h1>Crear registro</h1>
+        <p>Agrega una marca manual para @workerName con fecha, predio y foto si corresponde.</p>
+    </div>
 
-@using (Html.BeginForm("Create", "Registro", FormMethod.Post, new { enctype = "multipart/form-data" }))
+    <div class="page-header__actions">
+        <a class="btn btn-outline-secondary" href="@Url.Action("Index", "Registro", new { id = workerId })">Volver a registros</a>
+    </div>
+</section>
+
+@using (Html.BeginForm("Create", "Registro", new { id = workerId }, FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
     @Html.AntiForgeryToken()
-
-<div class="form-horizontal">
-
-    <h4 class="text-center display-4">Registro trabajador</h4>
-    <h3 class="text-muted font-weight-light">Crear</h3>
-    <hr />
-    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
     @Html.Hidden("Uid", (object)ViewBag.Uid)
-    @Html.HiddenFor(model => model.NombreTrabajador)
+    @Html.Hidden("NombreTrabajador", workerName)
 
-    <div class="form-group col-md-8 mx-auto">
-        @Html.LabelFor(model => model.Fecha, htmlAttributes: new { @class = "control-label font-weight-normal" })
-        <input class="form-control" type="datetime-local" id="Fecha" name="Fecha" min="2010-01-01" max="2030-01-01">
-        @Html.ValidationMessageFor(model => model.Fecha, "", new { @class = "text-danger" })
-    </div>
+    <section class="worker-create">
+        <div class="worker-create__main">
+            <section class="surface worker-panel">
+                <div class="worker-panel__header">
+                    <span class="worker-panel__eyebrow">Nuevo registro</span>
+                    <h2>Datos de marcacion</h2>
+                    <p>Indica la fecha, el predio y una foto opcional para respaldar el movimiento.</p>
+                </div>
 
-    <div class="form-group col-md-8 mx-auto">
-        @Html.LabelFor(model => model.Campo, htmlAttributes: new { @class = "control-label font-weight-normal" })
-        @Html.DropDownListFor(model => model.Campo, new SelectList(ViewBag.Campos), htmlAttributes: new { @class = "form-control" })
-        @Html.ValidationMessageFor(model => model.Campo, "", new { @class = "text-danger" })
-    </div>
+                @Html.ValidationSummary(true, "", new { @class = "text-danger mb-4" })
 
-    <input type="hidden" id="id" value=@ViewBag.id />
+                <div class="worker-form-grid">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Fecha, htmlAttributes: new { @class = "toolbar__label" })
+                        <input class="form-control" type="datetime-local" id="Fecha" name="Fecha" min="2010-01-01T00:00" max="2030-01-01T00:00" />
+                        @Html.ValidationMessageFor(model => model.Fecha, "", new { @class = "text-danger" })
+                    </div>
 
-    <div class="form-group col-md-8 mx-auto">
-        <label class="control-label font-weight-normal">Foto (opcional)</label>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Campo, htmlAttributes: new { @class = "toolbar__label" })
+                        @Html.DropDownListFor(model => model.Campo, new SelectList(ViewBag.Campos), htmlAttributes: new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.Campo, "", new { @class = "text-danger" })
+                    </div>
 
-        <div class=" my-1">
-            <input id="Foto" type="file" name="Foto" accept="image/*" class="form-control">
+                    <div class="form-group worker-form-grid__wide">
+                        <label class="toolbar__label" for="Foto">Foto</label>
+                        <input id="Foto" type="file" name="Foto" accept="image/*" class="form-control" />
+                        @Html.ValidationMessageFor(model => model.Foto, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="worker-actions">
+                    <input type="submit" value="Guardar registro" class="btn btn-primary" />
+                    <a class="btn btn-outline-secondary" href="@Url.Action("Index", "Registro", new { id = workerId })">Cancelar</a>
+                </div>
+            </section>
         </div>
 
-        @Html.ValidationMessageFor(model => model.Foto, "", new { @class = "text-danger" })
-    </div>
-
-    <div class="form-group col-md-9 mx-auto my-5">
-        <input type="submit" value="Crear" class="btn btn-primary btn-block" />
-        @Html.ActionLink("Volver a la lista", "Index", new { id = ViewBag.id }, new { @class = "btn btn-block btn-danger mt-3" })
-    </div>
-
-</div>
+        <aside class="worker-create__aside">
+            <section class="surface worker-panel worker-sidepanel">
+                <div class="worker-panel__header">
+                    <span class="worker-panel__eyebrow">Contexto</span>
+                    <h2>@workerName</h2>
+                    <p>El UID se asocia por dentro, asi que aqui solo debes registrar la marcacion.</p>
+                </div>
+            </section>
+        </aside>
+    </section>
 }

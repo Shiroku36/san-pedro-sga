@@ -3,216 +3,196 @@
 @{
     ViewBag.Title = "Casino";
     var cuenta = ControlPersonalAppWeb.Utils.SessionManager.CuentaAutenticada();
+    var totalRegistros = ViewBag.TotalRegistros != null ? (int)ViewBag.TotalRegistros : (Model != null ? Model.Count : 0);
+    var paginaActual = ViewBag.PaginaActual != null ? (int)ViewBag.PaginaActual : 1;
+    var totalPaginas = ViewBag.TotalPaginas != null ? (int)ViewBag.TotalPaginas : 1;
+    var fechaFiltro = ViewBag.FechaFiltro as string ?? DateTime.Now.ToString("yyyy-MM-dd");
+    var searchQuery = ViewBag.SearchQuery as string ?? string.Empty;
 }
 
-<h4 class="text-center display-4 mb-4">Registros @ViewBag.Fecha</h4>
+<section class="page-header casino-header">
+    <div>
+        <span class="page-header__eyebrow">Módulo Casino</span>
+        <h1>Casino</h1>
+        <p>Revisa consumos del día, busca rápido y exporta informes cuando los necesites.</p>
+    </div>
 
-
-<div class="container">
-    <div class="row align-items-center g-3">
-        <!-- Contenedor principal con espaciado -->
-        <!-- Primer formulario (Buscar por fecha única) -->
-
-        <div class="col-sm-8 form-label-group">
-            <input type="text" id="busqueda" onkeyup="buscar()" class=" mt-1 form-control" placeholder="Búsqueda">
-        </div>
-        <script src="~/Scripts/Busqueda.js"></script>
-        <div class="col-md-4 form-label-group">
-            @using (Html.BeginForm("Index", "Casino", FormMethod.Post, new { enctype = "multipart/form-data" }))
-            {
-                @Html.AntiForgeryToken()
-                <div class="row g-2 align-items-center">
-                    <div class="col-auto">
-                        <input type="date" name="Fecha" required class="form-control" />
-                    </div>
-                    <div class="col-auto">
-                        <button type="submit" class="btn btn-primary">Buscar</button>
-                    </div>
-                </div>
-            }
-        </div>
-
-        <!-- Segundo formulario (Buscar por rango de fechas) -->
-        <div class="col-md-10 mb-4">
-            @using (Html.BeginForm("Informe", "Casino", FormMethod.Post, new { enctype = "multipart/form-data" }))
-            {
-                @Html.AntiForgeryToken()
-                <div class="row g-3 align-items-center">
-                    <div class="col-auto">
-                        <input type="date" name="Inicio" id="fechaInicio" required class="form-control" max="@DateTime.Now.ToString("yyyy-MM-dd")" />
-                        <small class="text-danger d-none" id="errorInicio">Fecha inválida</small>
-                    </div>
-                    <div class="col-auto">
-                        <input type="date" name="Fin" id="fechaFin" required class="form-control" max="@DateTime.Now.ToString("yyyy-MM-dd")" />
-                        <small class="text-danger d-none" id="errorFin">Fecha fin debe ser mayor o igual a inicio</small>
-                    </div>
-                    <div class="row subir-div">
-                        <div class="col-auto">
-                            <button type="submit" class="btn btn-primary">Informe</button>
-                        </div>
-                        <div class="col-auto mt-1">
-                            <input class="form-check-input" type="radio" name="formato" id="formatoExcel" value="excel" checked>
-                            <label class="form-check-label" for="formatoExcel">Excel</label>
-                        </div>
-                        <div class="col-auto mt-1">
-                            <input class="form-check-input" type="radio" name="formato" id="formatoPdf" value="pdf">
-                            <label class="form-check-label" for="formatoPdf">PDF</label>
-                        </div>
-                    </div>
-
-                </div>
-            }
-        </div>
-
+    <div class="page-header__actions casino-header__actions">
+        <span class="casino-summary-pill">@totalRegistros registros en @ViewBag.Fecha</span>
         @if (cuenta.Permisos.Contains("PersonasV"))
         {
-            <div class="col-md-2">
-                <a href='@Url.Action("Index", "Personas")'>
-                    <label type="button" class="btn btn-success">Personas</label>
-                </a>
+            <a class="btn btn-primary casino-people-button" href="@Url.Action("Index", "Personas")">Abrir Personas</a>
+        }
+    </div>
+</section>
+
+<section class="casino-grid">
+    <article class="surface casino-panel">
+        <div class="worker-panel__header">
+            <span class="worker-panel__eyebrow">Consulta diaria</span>
+            <h2>Buscar por fecha</h2>
+                    <p>Cambia el día que quieres revisar sin perder el resto de la vista.</p>
+        </div>
+
+        @using (Html.BeginForm("Index", "Casino", FormMethod.Post, new { enctype = "multipart/form-data" }))
+        {
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="q" value="@searchQuery" />
+            <div class="casino-filter-grid casino-filter-grid--compact">
+                <div class="form-group mb-0">
+                    <label class="toolbar__label" for="Fecha">Fecha</label>
+                    <input type="date" id="Fecha" name="Fecha" required class="form-control" value="@fechaFiltro" />
+                </div>
+
+                <div class="casino-filter-grid__action">
+                    <button type="submit" class="btn btn-primary btn-block">Actualizar vista</button>
+                </div>
             </div>
         }
-    </div>
-</div>
-<div class="table-responsive">
-    <table class="table table-hover" id="tabla">
-        <tr class="bg-primary">
-            <th class="th-auto">Rut</th>
-            <th class="th-auto">Nombre</th>
-            <th class="th-auto">Fecha</th>
-            <th class="th-auto">Hora</th>
-            <th class="th-auto">Comida</th>
-            <th class="th-auto">Ubicación</th>
-            <th class="th-auto">Foto</th>
-            <th class="th-auto"></th>
+    </article>
 
-        </tr>
+    <article class="surface casino-panel">
+        <div class="worker-panel__header">
+            <span class="worker-panel__eyebrow">Informe</span>
+            <h2>Exportar por periodo</h2>
+            <p>Genera un informe en Excel o PDF para el rango de fechas que elijas.</p>
+        </div>
 
-        @foreach (var item in Model)
+        @using (Html.BeginForm("Informe", "Casino", FormMethod.Post, new { enctype = "multipart/form-data" }))
         {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Rut)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Nombre)
-                </td>
-                <td>
-                    @item.Fecha.Value.ToShortDateString()
-                </td>
-                <td>
-                    @item.Fecha.Value.ToShortTimeString()
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Comida)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Ubicacion)
-                </td>
-                <td>
-                    <img src="@String.Format("data:image/jpeg;base64,{0}", System.Convert.ToBase64String(item.Foto))" width="110" onclick="mostrarImagen(this)" style="cursor:pointer;" />
-                </td>
-                <td>
+            @Html.AntiForgeryToken()
+            <div class="casino-report-grid">
+                <div class="form-group mb-0">
+                    <label class="toolbar__label" for="fechaInicio">Inicio</label>
+                    <input type="date" name="Inicio" id="fechaInicio" required class="form-control" max="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                    <small class="text-danger d-none" id="errorInicio">Fecha invalida</small>
+                </div>
 
-                    <a href='@Url.Action("Details", "Casino", new { id = item.Id })'>
-                        <label title="Detalles" type="button" class="btn btn-info mx-1">Detalles</label>
-                    </a>
+                <div class="form-group mb-0">
+                    <label class="toolbar__label" for="fechaFin">Fin</label>
+                    <input type="date" name="Fin" id="fechaFin" required class="form-control" max="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                    <small class="text-danger d-none" id="errorFin">Fecha fin debe ser mayor o igual a inicio</small>
+                </div>
 
-                    @if (cuenta.Permisos.Contains("CasinoD"))
-                    {
-                        <a href='@Url.Action("Delete", "Casino", new { id = item.Id })' onclick="return confirm('¿Está seguro que desea eliminar este registro?')">
-                            <label title="Eliminar" type="button" class="btn btn-danger">Eliminar</label>
-                        </a>
-                    }
-                </td>
+                <div class="casino-format-group" role="radiogroup" aria-label="Formato informe">
+                    <label class="casino-format-option">
+                        <input class="form-check-input" type="radio" name="formato" id="formatoExcel" value="excel" checked="checked" />
+                        <span>Excel</span>
+                    </label>
+                    <label class="casino-format-option">
+                        <input class="form-check-input" type="radio" name="formato" id="formatoPdf" value="pdf" />
+                        <span>PDF</span>
+                    </label>
+                </div>
 
-            </tr>
+                <div class="casino-report-grid__action">
+                    <button type="submit" class="btn btn-warning btn-block">Generar informe</button>
+                </div>
+            </div>
         }
+    </article>
+</section>
 
-    </table>
-
-    <style>
-        .modal {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.8);
-            opacity: 0;
-            transform: scale(0.8);
-            transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
-            pointer-events: none;
-        }
-
-        .modal.mostrar {
-            opacity: 1;
-            transform: scale(1);
-            pointer-events: auto;
-        }
-
-        .modal-contenido {
-            max-width: 80%;
-            max-height: 80%;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(255, 255, 255, 0.2);
-        }
-
-        .cerrar {
-            position: absolute;
-            top: 15px;
-            right: 35px;
-            color: white;
-            font-size: 40px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-
-        .cerrar:hover {
-            color: #ccc;
-            transform: scale(1.1);
-        }
-
-        /* Servicio modal specific */
-        .servicio-contenido {
-            width: 420px;
-            max-width: 90%;
-            background: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            text-align: center;
-            color: #333;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
-        }
-
-        .servicio-contenido h5 { margin-bottom: 10px; }
-        .servicio-contenido p { margin-bottom: 18px; font-size:15px; }
-    </style>
-
-    <!-- Modal imagen -->
-    <div id="modalImagen" class="modal" onclick="cerrarImagen()">
-        <span class="cerrar" onclick="cerrarImagen()">&times;</span>
-        <img class="modal-contenido" id="imgAmpliada">
+<section class="surface casino-table-shell">
+        <div class="worker-panel__header">
+            <span class="worker-panel__eyebrow">Actividad</span>
+                    <h2>Registros del día</h2>
+        <p>Busca por persona, servicio o ubicacion sin salir de la tabla.</p>
     </div>
 
-
-</div>
-
-<script>
-    function mostrarImagen(img) {
-        var modal = document.getElementById("modalImagen");
-        var imgAmpliada = document.getElementById("imgAmpliada");
-        imgAmpliada.src = img.src;
-        modal.classList.add("mostrar");
+    @using (Html.BeginForm("Index", "Casino", FormMethod.Get, new { @class = "toolbar casino-search-form" }))
+    {
+        <input type="hidden" name="fecha" value="@fechaFiltro" />
+        <div class="toolbar__search-wrap">
+            <input type="text" id="q" name="q" value="@searchQuery" class="form-control toolbar__search search-input" placeholder="Buscar por rut, persona, servicio o ubicacion" />
+        </div>
+        <div class="casino-search-actions">
+            <button type="submit" class="btn btn-primary">Buscar</button>
+            @if (!String.IsNullOrWhiteSpace(searchQuery))
+            {
+                <a class="btn btn-outline-secondary" href="@Url.Action("Index", "Casino", new { fecha = fechaFiltro, page = 1 })">Limpiar</a>
+            }
+        </div>
     }
 
-    function cerrarImagen() {
-        var modal = document.getElementById("modalImagen");
-        modal.classList.remove("mostrar");
+    <div class="table-responsive">
+        <table class="table data-table table-hover" id="tabla">
+            <thead>
+                <tr>
+                    <th>Rut</th>
+                    <th>Nombre</th>
+                    <th>Fecha</th>
+                    <th>Hora</th>
+                    <th>Servicio</th>
+                    <th>Ubicacion</th>
+                    <th>Foto</th>
+                    <th class="data-table__actions">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null)
+                {
+                    foreach (var item in Model)
+                    {
+                        var fecha = item.Fecha.HasValue ? item.Fecha.Value : DateTime.MinValue;
+                        <tr>
+                            <td>@Html.DisplayFor(modelItem => item.Rut)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Nombre)</td>
+                            <td>@(item.Fecha.HasValue ? fecha.ToShortDateString() : "-")</td>
+                            <td>@(item.Fecha.HasValue ? fecha.ToShortTimeString() : "-")</td>
+                            <td><span class="casino-service-pill">@Html.DisplayFor(modelItem => item.Comida)</span></td>
+                            <td>@Html.DisplayFor(modelItem => item.Ubicacion)</td>
+                            <td>
+                                @if (item.Foto != null)
+                                {
+                                    <img src="@String.Format("data:image/jpeg;base64,{0}", System.Convert.ToBase64String(item.Foto))" class="record-photo record-photo--clickable casino-photo" alt="Servicio de @item.Nombre" loading="lazy" data-image-preview />
+                                }
+                                else
+                                {
+                                    <span class="record-photo record-photo--empty">Sin foto</span>
+                                }
+                            </td>
+                            <td class="data-table__actions">
+                                <div class="table-actions">
+                                    <a class="btn btn-info" href="@Url.Action("Details", "Casino", new { id = item.Id })">Detalle</a>
+                                    @if (cuenta.Permisos.Contains("CasinoD"))
+                                    {
+                                        <a class="btn btn-danger" href="@Url.Action("Delete", "Casino", new { id = item.Id })" onclick="return confirm('¿Está seguro que desea eliminar este registro?')">Eliminar</a>
+                                    }
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+
+    @if (totalPaginas > 1)
+    {
+        <div class="casino-pagination">
+            <span class="casino-pagination__meta">Pagina @paginaActual de @totalPaginas</span>
+            <div class="casino-pagination__actions">
+                @if (paginaActual > 1)
+                {
+                    <a class="btn btn-outline-secondary" href="@Url.Action("Index", "Casino", new { fecha = fechaFiltro, q = searchQuery, page = paginaActual - 1 })">Anterior</a>
+                }
+                @for (var pagina = Math.Max(1, paginaActual - 2); pagina <= Math.Min(totalPaginas, paginaActual + 2); pagina++)
+                {
+                    if (pagina == paginaActual)
+                    {
+                        <span class="casino-page-chip casino-page-chip--active">@pagina</span>
+                    }
+                    else
+                    {
+                        <a class="casino-page-chip" href="@Url.Action("Index", "Casino", new { fecha = fechaFiltro, q = searchQuery, page = pagina })">@pagina</a>
+                    }
+                }
+                @if (paginaActual < totalPaginas)
+                {
+                    <a class="btn btn-outline-secondary" href="@Url.Action("Index", "Casino", new { fecha = fechaFiltro, q = searchQuery, page = paginaActual + 1 })">Siguiente</a>
+                }
+            </div>
+        </div>
     }
-</script>
+</section>

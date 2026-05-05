@@ -4,6 +4,7 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
+using System.Data.SqlClient;
 using System.Web;
 using System.Web.Mvc;
 using ControlPersonalAppWeb;
@@ -17,13 +18,60 @@ namespace ControlPersonalAppWeb.Controllers
     public class PersonasController : Controller
     {
         private SgajcpEntities db = new SgajcpEntities();
+        private const int PersonasPageSize = 100;
+
+        private Personas ObtenerPersonaPorId(int id)
+        {
+            const string sql = @"
+SELECT TOP 1 Id, CentroCosto1, CentroCosto2, GlosaCosto, Ubicacion, Instalacion, Rut, Nombre, GlosaPuesto
+FROM dbo.Personas WITH (NOLOCK)
+WHERE Id = @id";
+
+            return db.Database.SqlQuery<Personas>(sql, new SqlParameter("@id", id)).FirstOrDefault();
+        }
 
         // GET: Personas
-        public ActionResult Index()
+        public ActionResult Index(string q = null, int page = 1)
         {
-            List<Personas> personas = db.Personas
-                        .OrderBy(x => x.Rut).ToList();
-            
+            var searchQuery = (q ?? string.Empty).Trim();
+            var paginaActual = Math.Max(page, 1);
+            var offset = (paginaActual - 1) * PersonasPageSize;
+            var likeSearch = "%" + searchQuery + "%";
+
+            const string sql = @"
+SELECT Id, CentroCosto1, CentroCosto2, GlosaCosto, Ubicacion, Instalacion, Rut, Nombre, GlosaPuesto
+FROM dbo.Personas WITH (NOLOCK)
+WHERE (@searchQuery = '' 
+    OR ISNULL(Rut, '') LIKE @likeSearch
+    OR ISNULL(Nombre, '') LIKE @likeSearch
+    OR ISNULL(CentroCosto1, '') LIKE @likeSearch
+    OR ISNULL(CentroCosto2, '') LIKE @likeSearch
+    OR ISNULL(GlosaCosto, '') LIKE @likeSearch
+    OR ISNULL(Ubicacion, '') LIKE @likeSearch
+    OR ISNULL(GlosaPuesto, '') LIKE @likeSearch)
+ORDER BY Id
+OFFSET @offset ROWS FETCH NEXT @fetch ROWS ONLY";
+
+            var personas = db.Database.SqlQuery<Personas>(
+                sql,
+                new SqlParameter("@searchQuery", searchQuery),
+                new SqlParameter("@likeSearch", likeSearch),
+                new SqlParameter("@offset", offset),
+                new SqlParameter("@fetch", PersonasPageSize + 1))
+                .ToList();
+
+            var tienePaginaSiguiente = personas.Count > PersonasPageSize;
+            if (tienePaginaSiguiente)
+            {
+                personas = personas.Take(PersonasPageSize).ToList();
+            }
+
+            ViewBag.SearchQuery = searchQuery;
+            ViewBag.PaginaActual = paginaActual;
+            ViewBag.TienePaginaAnterior = paginaActual > 1;
+            ViewBag.TienePaginaSiguiente = tienePaginaSiguiente;
+            ViewBag.PageSize = PersonasPageSize;
+
             return View(personas);
         }
         public string formatearRut(string rut)
@@ -47,8 +95,9 @@ namespace ControlPersonalAppWeb.Controllers
         public ActionResult Cargar()
         {
             SgajcpEntities db = new SgajcpEntities();
-            string empresa = ControlPersonalAppWeb.Utils.SessionManager.CuentaAutenticada().Empresa;
-            var empresas = db.Empresas.Select(x => x.Nombre).ToList(); ;
+            var cuentaActual = ControlPersonalAppWeb.Utils.SessionManager.CuentaAutenticada();
+            string empresa = cuentaActual != null ? cuentaActual.Empresa : string.Empty;
+            var empresas = db.Empresas.Select(x => x.Nombre).ToList();
             if (empresa != "JCP")
             {
                 empresas = db.Empresas.Where(x => x.Nombre == empresa).Select(x => x.Nombre).ToList();
@@ -57,10 +106,12 @@ namespace ControlPersonalAppWeb.Controllers
             return View();
         }
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Cargar(FormCollection collection)
         {
             HttpPostedFileBase hpf = Request.Files["csv"];
             string mensaje = "";
+            bool huboErrores = false;
             if (hpf != null && hpf.ContentLength > 0)
             {
                 StreamReader csvreader = new StreamReader(hpf.InputStream);
@@ -115,6 +166,7 @@ namespace ControlPersonalAppWeb.Controllers
                     }
                     catch (DbEntityValidationException e)
                     {
+                        huboErrores = true;
                         mensaje += "\nError al guardar: " + e.Message;
                         foreach (var eve in e.EntityValidationErrors)
                         {
@@ -127,6 +179,7 @@ namespace ControlPersonalAppWeb.Controllers
                     }
                     catch (Exception ex)
                     {
+                        huboErrores = true;
                         mensaje += "\nError general: " + ex.Message;
                     }
                 }
@@ -134,10 +187,12 @@ namespace ControlPersonalAppWeb.Controllers
                 try
                 {
                     db.SaveChanges();
-                    ViewBag.mensaje = string.IsNullOrEmpty(mensaje) ? "Carga exitosa." : mensaje;
+                    TempData["FeedbackType"] = huboErrores ? "info" : "success";
+                    TempData["FeedbackMessage"] = string.IsNullOrEmpty(mensaje) ? "Personas cargadas correctamente." : mensaje;
                 }
                 catch (DbEntityValidationException e)
                 {
+                    huboErrores = true;
                     foreach (var eve in e.EntityValidationErrors)
                     {
                         mensaje += $"Entidad: {eve.Entry.Entity.GetType().Name}, Estado: {eve.Entry.State}\n";
@@ -147,10 +202,16 @@ namespace ControlPersonalAppWeb.Controllers
                         }
                     }
 
-                    ViewBag.mensaje = mensaje;
+                    TempData["FeedbackType"] = "error";
+                    TempData["FeedbackMessage"] = mensaje;
                 }
 
                 csvreader.Close();
+            }
+            else
+            {
+                TempData["FeedbackType"] = "error";
+                TempData["FeedbackMessage"] = "Selecciona un archivo antes de continuar.";
             }
 
             Utils.SessionManager.log("Carga personas desde CSV");
@@ -166,7 +227,7 @@ namespace ControlPersonalAppWeb.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Personas personas = db.Personas.Find(id);
+            Personas personas = ObtenerPersonaPorId(id.Value);
             if (personas == null)
             {
                 return HttpNotFound();
@@ -191,6 +252,8 @@ namespace ControlPersonalAppWeb.Controllers
             {
                 db.Personas.Add(personas);
                 db.SaveChanges();
+                TempData["FeedbackType"] = "success";
+                TempData["FeedbackMessage"] = "Persona creada correctamente.";
                 return RedirectToAction("Index");
             }
 
@@ -204,7 +267,7 @@ namespace ControlPersonalAppWeb.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Personas personas = db.Personas.Find(id);
+            Personas personas = ObtenerPersonaPorId(id.Value);
             if (personas == null)
             {
                 return HttpNotFound();
@@ -221,8 +284,31 @@ namespace ControlPersonalAppWeb.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Entry(personas).State = EntityState.Modified;
-                db.SaveChanges();
+                const string sql = @"
+UPDATE dbo.Personas
+SET CentroCosto1 = @CentroCosto1,
+    CentroCosto2 = @CentroCosto2,
+    GlosaCosto = @GlosaCosto,
+    Ubicacion = @Ubicacion,
+    Instalacion = @Instalacion,
+    Rut = @Rut,
+    Nombre = @Nombre,
+    GlosaPuesto = @GlosaPuesto
+WHERE Id = @Id";
+
+                db.Database.ExecuteSqlCommand(
+                    sql,
+                    new SqlParameter("@CentroCosto1", (object)personas.CentroCosto1 ?? DBNull.Value),
+                    new SqlParameter("@CentroCosto2", (object)personas.CentroCosto2 ?? DBNull.Value),
+                    new SqlParameter("@GlosaCosto", (object)personas.GlosaCosto ?? DBNull.Value),
+                    new SqlParameter("@Ubicacion", (object)personas.Ubicacion ?? DBNull.Value),
+                    new SqlParameter("@Instalacion", (object)personas.Instalacion ?? DBNull.Value),
+                    new SqlParameter("@Rut", (object)personas.Rut ?? DBNull.Value),
+                    new SqlParameter("@Nombre", (object)personas.Nombre ?? DBNull.Value),
+                    new SqlParameter("@GlosaPuesto", (object)personas.GlosaPuesto ?? DBNull.Value),
+                    new SqlParameter("@Id", personas.Id));
+                TempData["FeedbackType"] = "success";
+                TempData["FeedbackMessage"] = "Persona actualizada correctamente.";
                 return RedirectToAction("Index");
             }
             return View(personas);
@@ -235,14 +321,12 @@ namespace ControlPersonalAppWeb.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Personas personas = db.Personas.Find(id);
+            Personas personas = ObtenerPersonaPorId(id.Value);
             if (personas == null)
             {
                 return HttpNotFound();
             }
-            db.Personas.Remove(personas);
-            db.SaveChanges();
-            return RedirectToAction("Index");
+            return View(personas);
         }
 
         // POST: Personas/Delete/5
@@ -250,9 +334,9 @@ namespace ControlPersonalAppWeb.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Personas personas = db.Personas.Find(id);
-            db.Personas.Remove(personas);
-            db.SaveChanges();
+            db.Database.ExecuteSqlCommand("DELETE FROM dbo.Personas WHERE Id = @Id", new SqlParameter("@Id", id));
+            TempData["FeedbackType"] = "success";
+            TempData["FeedbackMessage"] = "Persona eliminada correctamente.";
             return RedirectToAction("Index");
         }
 

@@ -1,6 +1,12 @@
-﻿<div class="row">
-    <div class="col-md-12 mx-auto form-label-group p-0">
-        <input type="text" placeholder="Búsqueda" id="busqueda" onkeyup="buscar()" class="form-control mb-3 w-75">
-    </div>
+@{
+    var searchPlaceholder = Convert.ToString(ViewData["SearchPlaceholder"]);
+    if (String.IsNullOrWhiteSpace(searchPlaceholder))
+    {
+        searchPlaceholder = "Buscar";
+    }
+}
+
+<div class="toolbar__search-wrap">
+    <input type="text" placeholder="@searchPlaceholder" id="busqueda" onkeyup="buscar()" class="form-control mb-3 toolbar__search search-input">
 </div>
 <script src="~/Scripts/Busqueda.js"></script>

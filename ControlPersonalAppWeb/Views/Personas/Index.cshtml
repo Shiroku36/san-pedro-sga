@@ -2,80 +2,107 @@
 
 @{
     ViewBag.Title = "Personas";
-
     var cuenta = ControlPersonalAppWeb.Utils.SessionManager.CuentaAutenticada();
+    var permisos = cuenta != null && cuenta.Permisos != null ? cuenta.Permisos : string.Empty;
+    var paginaActual = ViewBag.PaginaActual != null ? (int)ViewBag.PaginaActual : 1;
+    var tienePaginaAnterior = ViewBag.TienePaginaAnterior != null && (bool)ViewBag.TienePaginaAnterior;
+    var tienePaginaSiguiente = ViewBag.TienePaginaSiguiente != null && (bool)ViewBag.TienePaginaSiguiente;
+    var personasPagina = Model != null ? Model.Count() : 0;
+    var searchQuery = ViewBag.SearchQuery as string ?? string.Empty;
+    var feedbackType = TempData["FeedbackType"] as string;
+    var feedbackMessage = TempData["FeedbackMessage"] as string;
 }
 
-<h1 class="display-4 text-center">Índice personas</h1>
-<hr />
-<div class="row">
-    <div class="col-sm-8 form-label-group">
-        <input type="text" id="busqueda" onkeyup="buscar()" class="mb-3 mt-1 form-control" placeholder="Búsqueda">
+@if (!String.IsNullOrEmpty(feedbackMessage))
+{
+    <div class="form-feedback @(feedbackType == "error" ? "form-feedback--error" : feedbackType == "success" ? "form-feedback--success" : "form-feedback--info")">
+        @feedbackMessage
     </div>
-    <script src="~/Scripts/Busqueda.js"></script>
-    <div class="form-group col-sm-4 mt-1">
-        @if (cuenta.Permisos.Contains("PersonasC"))
+}
+
+<section class="page-header">
+    <div>
+        <span class="page-header__eyebrow">Módulo Personas</span>
+        <h1>Personas</h1>
+        <p>@personasPagina personas visibles en la pagina @paginaActual para revisar y actualizar.</p>
+    </div>
+
+    <div class="page-header__actions page-header__actions--uniform">
+        <a class="btn btn-outline-secondary" href="@Url.Action("Cargar", "Personas")">Cargar archivo</a>
+        @if (permisos.Contains("PersonasC"))
         {
-            <a href='@Url.Action("Create", "Personas")'>
-                <label type="button" class="btn btn-primary float-right ml-2 mb-3">Crear Nuevo</label>
-            </a>
+            <a class="btn btn-primary" href="@Url.Action("Create", "Personas")">Nueva persona</a>
         }
-
-        <a href='@Url.Action("Cargar", "Personas")'>
-            <label type="button" class="btn btn-primary float-right ml-2  mb-3">Cargar</label>
-        </a>
     </div>
-</div>
-<body>
-    <div class="table-responsive">
-        <table class="table table-hover" id="tabla">
-            <tr class="bg-primary">
-                <th style="width:12%">
-                    @Html.DisplayNameFor(model => model.Rut)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Nombre)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.GlosaCosto)
-                </th>
-                <th></th>
-            </tr>
+</section>
 
-            @foreach (var item in Model)
+<section class="surface">
+    @using (Html.BeginForm("Index", "Personas", FormMethod.Get, new { @class = "toolbar" }))
+    {
+        <div class="toolbar__search-wrap">
+            <input type="text" id="q" name="q" value="@searchQuery" class="form-control toolbar__search" placeholder="Buscar por rut, nombre o centro de costo" />
+        </div>
+        <div class="casino-search-actions">
+            <button type="submit" class="btn btn-primary">Buscar</button>
+            @if (!String.IsNullOrWhiteSpace(searchQuery))
             {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Rut)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Nombre)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.GlosaCosto)
-                    </td>
-                    <td>
-                        @if (cuenta.Permisos.Contains("PersonasE"))
-                        {
-                            <a href='@Url.Action("Edit", "Personas", new { id = item.Id })'>
-                                <label title="Editar" type="button" class="btn btn-warning">Editar</label>
-                            </a>
-                        }
-
-                        <a href='@Url.Action("Details", "Personas", new { id = item.Id })'>
-                            <label title="Detalle" type="button" class="btn btn-info mx-1">Detalle</label>
-                        </a>
-
-                        @if (cuenta.Permisos.Contains("PersonasD"))
-                        {
-                            <a href='@Url.Action("Delete", "Personas", new { id = item.Id })' onclick="return confirm('¿Está seguro que desea eliminar a la persona?')">
-                                <label title="Eliminar" type="button" class="btn btn-danger">Borrar</label>
-                            </a>
-                        }
-                    </td>
-                </tr>
+                <a class="btn btn-outline-secondary" href="@Url.Action("Index", "Personas", new { page = 1 })">Limpiar</a>
             }
+        </div>
+    }
 
+    <div class="table-responsive">
+        <table class="table data-table table-hover" id="tabla">
+            <thead>
+                <tr>
+                    <th style="width:12%">@Html.DisplayNameFor(model => model.Rut)</th>
+                    <th>@Html.DisplayNameFor(model => model.Nombre)</th>
+                    <th>@Html.DisplayNameFor(model => model.GlosaCosto)</th>
+                    <th>@Html.DisplayNameFor(model => model.Ubicacion)</th>
+                    <th>@Html.DisplayNameFor(model => model.GlosaPuesto)</th>
+                    <th class="data-table__actions personas-actions-column">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(modelItem => item.Rut)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Nombre)</td>
+                        <td>@Html.DisplayFor(modelItem => item.GlosaCosto)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Ubicacion)</td>
+                        <td>@Html.DisplayFor(modelItem => item.GlosaPuesto)</td>
+                        <td class="data-table__actions personas-actions-column">
+                            <div class="table-actions table-actions--uniform">
+                                @if (permisos.Contains("PersonasE"))
+                                {
+                                    <a class="btn btn-sm btn-warning" href="@Url.Action("Edit", "Personas", new { id = item.Id })">Editar</a>
+                                }
+                                <a class="btn btn-sm btn-info" href="@Url.Action("Details", "Personas", new { id = item.Id })">Detalle</a>
+                                @if (permisos.Contains("PersonasD"))
+                                {
+                                    <a class="btn btn-sm btn-danger" href="@Url.Action("Delete", "Personas", new { id = item.Id })">Eliminar</a>
+                                }
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
         </table>
     </div>
-</body>
+
+    <div class="casino-pagination">
+        <span class="casino-pagination__meta">Pagina @paginaActual</span>
+        <div class="casino-pagination__actions">
+            @if (tienePaginaAnterior)
+            {
+                <a class="btn btn-outline-secondary" href="@Url.Action("Index", "Personas", new { q = searchQuery, page = paginaActual - 1 })">Anterior</a>
+            }
+            <span class="casino-page-chip casino-page-chip--active">@paginaActual</span>
+            @if (tienePaginaSiguiente)
+            {
+                <a class="btn btn-outline-secondary" href="@Url.Action("Index", "Personas", new { q = searchQuery, page = paginaActual + 1 })">Siguiente</a>
+            }
+        </div>
+    </div>
+</section>

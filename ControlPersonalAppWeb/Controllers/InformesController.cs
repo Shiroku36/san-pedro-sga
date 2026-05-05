@@ -19,7 +19,7 @@ namespace ControlPersonalAppWeb.Controllers
     public class InformesController : Controller
     {
         SgajcpEntities db = new SgajcpEntities();
-        private Cuentas cuenta = Utils.SessionManager.CuentaAutenticada();
+        private Cuentas cuenta => Utils.SessionManager.CuentaAutenticada();
         public ActionResult Horas()
         {
             HttpPostedFileBase postedFile = Request.Files["Foto"];
@@ -31,6 +31,7 @@ namespace ControlPersonalAppWeb.Controllers
             return View();
         }
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Horas(FormCollection collection)
         {
             int horario = 0;
@@ -432,7 +433,8 @@ namespace ControlPersonalAppWeb.Controllers
             Response.AddHeader("content-disposition", "attachment;filename=" + "Informe horas extras.pdf");
             Response.Cache.SetCacheability(HttpCacheability.NoCache);
             Response.Write(document);
-            Response.End();
+            Response.Flush();
+            HttpContext.ApplicationInstance.CompleteRequest();
 
             return View();
         }// GET: Informes
@@ -486,204 +488,17 @@ namespace ControlPersonalAppWeb.Controllers
 
         }
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Index(FormCollection collection,int? id= null)
         {
-            SgajcpEntities database = new SgajcpEntities();
-
-
-
-
-
-            var rut = string.IsNullOrWhiteSpace(collection["Rut"]);
-            var inicio = string.IsNullOrWhiteSpace(collection["Inicio"]);
-            var fin = string.IsNullOrWhiteSpace(collection["Fin"]);
-            var campo = string.IsNullOrWhiteSpace(collection["Campo"]);
-            var empresita = string.IsNullOrWhiteSpace(collection["Empresa"]);
-            if(!campo)
+            return RedirectToAction("PDFRegistros", "Trabajador", new
             {
-                if(collection["Campo"]=="Todos")
-                {
-                    campo = true;
-                }
-            }
-            if (!empresita)
-            {
-                if (collection["Empresa"] == "Todos")
-                {
-                    empresita = true;
-                }
-            }
-            return RedirectToAction("PDFRegistros", "Trabajador", new {campo = collection["Campo"], empresa = collection["Empresa"], inicio = collection["inicio"], fin = collection["Fin"], tipo = collection["subject"] });
-            //Una persona
-            if (inicio && fin && campo) 
-            {
-                string rutIn = formatearRut(collection["Rut"]);
-                Trabajador trabajadorNew = database.Trabajador.First(x => x.Rut == rutIn);
-                Utils.SessionManager.tipo = collection["subject"];
-                return RedirectToAction("PDFRegistro", "Trabajador", new { id = trabajadorNew.Id });
-            }
-            //Una persona y una campo
-            if (!rut && inicio && fin && !campo) 
-            {
-                string rutIn = formatearRut(collection["Rut"]);
-                TrabajadorIndex trabajadorNew = database.Trabajador.Select(x => new TrabajadorIndex { Id = x.Id, Nombre = x.Nombre, ApellidoMaterno = x.ApellidoMaterno, ApellidoPaterno = x.ApellidoPaterno , Rut = x.Rut, Uid = x.Uid, Numero = x.Numero, Empresa = x.Empresa,
-                }).First(x => x.Rut == rutIn);
-                Utils.SessionManager.trabajadores = new List<TrabajadorIndex> { trabajadorNew };
-                Utils.SessionManager.campo = collection["Campo"];
-                Utils.SessionManager.tipo = collection["subject"];
-                return RedirectToAction("PDFRegistroFecha", "Trabajador");
-            }
-            //Un día
-            if(!inicio && fin && rut && campo  )
-            {
-                DateTime inicioIn = Convert.ToDateTime(collection["Inicio"]);
-                string empresa = Utils.SessionManager.CuentaAutenticada().Empresa;
-                List<TrabajadorIndex> trabajadores = database.Trabajador.Where(x => x.Empresa == empresa).Select(x => new TrabajadorIndex { Id = x.Id, Nombre = x.Nombre,
-                    ApellidoMaterno = x.ApellidoMaterno,
-                    ApellidoPaterno = x.ApellidoPaterno,
-                    Rut = x.Rut, Uid = x.Uid, Numero = x.Numero, Empresa = x.Empresa,
-                }).ToList();
-                trabajadores.Insert(0, new TrabajadorIndex { Nombre = inicioIn.ToShortDateString() });
-                Utils.SessionManager.trabajadores = trabajadores;
-                Utils.SessionManager.inicio = inicioIn;
-                Utils.SessionManager.tipo = collection["subject"];
-                return RedirectToAction("PDFRegistroFecha", "Trabajador");
-            }
-            //Un día en un campo
-            if (!inicio && fin && rut && !campo)
-            {
-                DateTime inicioIn = Convert.ToDateTime(collection["Inicio"]);
-                string empresa = Utils.SessionManager.CuentaAutenticada().Empresa;
-                List<TrabajadorIndex> trabajadores = database.Trabajador.Where(x => x.Empresa == empresa).Select(x => new TrabajadorIndex { Id = x.Id, Nombre = x.Nombre,
-                    ApellidoMaterno = x.ApellidoMaterno,
-                    ApellidoPaterno = x.ApellidoPaterno,
-                    Rut = x.Rut, Uid = x.Uid, Numero = x.Numero, Empresa = x.Empresa,
-                }).ToList();
-                trabajadores.Insert(0, new TrabajadorIndex { Nombre = inicioIn.ToShortDateString() });
-                Utils.SessionManager.trabajadores = trabajadores;
-                Utils.SessionManager.inicio = inicioIn;
-                Utils.SessionManager.tipo = collection["subject"];
-                Utils.SessionManager.campo = collection["Campo"];
-                return RedirectToAction("PDFRegistroFecha", "Trabajador");
-            }
-            //Un campo
-            if (!campo && inicio && fin && rut)
-            {
-                string campoIn = collection["Campo"];
-                var idCampo = database.Campos.First(x => x.Nombre == campoIn);
-                Utils.SessionManager.tipo = collection["subject"];
-                return RedirectToAction("PDFCampo", "Trabajador", new { id = idCampo.Id  });
-            }
-            //Rando de fecha
-            if (!inicio && !fin && rut && campo)
-            {
-                string empresa = Utils.SessionManager.CuentaAutenticada().Empresa;
-                List<TrabajadorIndex> trabajadores = database.Trabajador.Where(x => x.Empresa == empresa).Select(x => new TrabajadorIndex { Id = x.Id, Nombre = x.Nombre,
-                    ApellidoMaterno = x.ApellidoMaterno,
-                    ApellidoPaterno = x.ApellidoPaterno,
-                    Rut = x.Rut, Uid = x.Uid, Numero = x.Numero, Empresa = x.Empresa,
-                }).ToList();
-                trabajadores.Insert(0, new TrabajadorIndex { Nombre = collection["Inicio"] +" a "+ collection["Fin"] });
-                Utils.SessionManager.trabajadores = trabajadores;
-                Utils.SessionManager.inicio = Convert.ToDateTime(collection["Inicio"]);
-                Utils.SessionManager.fin = Convert.ToDateTime(collection["Fin"]); ;
-                Utils.SessionManager.campo = null;
-                Utils.SessionManager.tipo = collection["subject"];
-                return RedirectToAction("PDFRegistroFecha", "Trabajador");
-            }
-            //Rango de fecha y un campo
-            if (!inicio && !fin && rut && !campo)
-            {
-                string empresa = Utils.SessionManager.CuentaAutenticada().Empresa;
-                List<TrabajadorIndex> trabajadores = database.Trabajador.Where(x => x.Empresa == empresa).Select(x => new TrabajadorIndex { Id = x.Id, Nombre = x.Nombre,
-                    ApellidoMaterno = x.ApellidoMaterno,
-                    ApellidoPaterno = x.ApellidoPaterno,
-                    Rut = x.Rut, Uid = x.Uid, Numero = x.Numero, Empresa = x.Empresa,
-                }).ToList();
-                trabajadores.Insert(0, new TrabajadorIndex { Nombre = collection["Inicio"] + " a " + collection["Fin"] +" en "+ collection["Campo"] });
-                Utils.SessionManager.trabajadores = trabajadores;
-                Utils.SessionManager.inicio = Convert.ToDateTime(collection["Inicio"]);
-                Utils.SessionManager.fin = Convert.ToDateTime(collection["Fin"]);
-                Utils.SessionManager.campo = collection["Campo"];
-                Utils.SessionManager.tipo = collection["subject"];
-                return RedirectToAction("PDFRegistroFecha", "Trabajador");
-            }
-            //Rando de fecha, un campo y una persona
-            if (!inicio && !fin && !rut && !campo)
-            {
-
-                string rutIn = formatearRut(collection["Rut"]);
-                TrabajadorIndex trabajadorNew = database.Trabajador.Select(x => new TrabajadorIndex { Id = x.Id, Nombre = x.Nombre,
-                    ApellidoMaterno = x.ApellidoMaterno,
-                    ApellidoPaterno = x.ApellidoPaterno,
-                    Rut = x.Rut, Uid = x.Uid, Numero = x.Numero, Empresa = x.Empresa,
-                }).First(x => x.Rut == rutIn);
-                Utils.SessionManager.trabajadores = new List<TrabajadorIndex> { trabajadorNew };
-                Utils.SessionManager.inicio = Convert.ToDateTime(collection["Inicio"]);
-                Utils.SessionManager.fin = Convert.ToDateTime(collection["Fin"]);
-                Utils.SessionManager.campo = collection["Campo"];
-                Utils.SessionManager.tipo = collection["subject"];
-                return RedirectToAction("PDFRegistroFecha", "Trabajador");
-            }
-            //Rango de fecha de una persona
-            if (!inicio && !fin && !rut && campo)
-            {
-
-                string rutIn = formatearRut(collection["Rut"]);
-                Trabajador trabajadorNew2 = database.Trabajador.First(x => x.Rut == rutIn);
-                TrabajadorIndex trabajadorNew = database.Trabajador.Select(x => new TrabajadorIndex { Id = x.Id, Nombre = x.Nombre,
-                    ApellidoMaterno = x.ApellidoMaterno,
-                    ApellidoPaterno = x.ApellidoPaterno,
-                    Rut = x.Rut, Uid = x.Uid, Numero = x.Numero, Empresa = x.Empresa,
-                }).First(x => x.Rut == rutIn);
-                Utils.SessionManager.trabajadores = new List<TrabajadorIndex> { trabajadorNew };
-                Utils.SessionManager.inicio = Convert.ToDateTime(collection["Inicio"]);
-                Utils.SessionManager.fin = Convert.ToDateTime(collection["Fin"]);
-                Utils.SessionManager.campo = null;
-                Utils.SessionManager.tipo = collection["subject"];
-                return RedirectToAction("PDFRegistroFecha", "Trabajador");
-            }
-            //Un día una persona
-            if (!inicio && fin && !rut && campo)
-            {
-
-                string rutIn = formatearRut(collection["Rut"]);
-                TrabajadorIndex trabajadorNew = database.Trabajador.Select(x => new TrabajadorIndex { Id = x.Id, Nombre = x.Nombre,
-                    ApellidoMaterno = x.ApellidoMaterno,
-                    ApellidoPaterno = x.ApellidoPaterno,
-                    Rut = x.Rut, Uid = x.Uid, Numero = x.Numero, Empresa = x.Empresa,
-                }).First(x => x.Rut == rutIn);
-                Utils.SessionManager.trabajadores = new List<TrabajadorIndex> { trabajadorNew };
-                Utils.SessionManager.inicio = Convert.ToDateTime(collection["Inicio"]);
-                Utils.SessionManager.fin = Convert.ToDateTime("01-01-0001");
-                Utils.SessionManager.campo = null;
-                Utils.SessionManager.tipo = collection["subject"];
-                return RedirectToAction("PDFRegistroFecha", "Trabajador");
-            }
-            //Un día una persona un campo
-            if (!inicio && fin && !rut && !campo)
-            {
-
-                string rutIn = formatearRut(collection["Rut"]);
-                TrabajadorIndex trabajadorNew = database.Trabajador.Select(x => new TrabajadorIndex { Id = x.Id, Nombre = x.Nombre,
-                    ApellidoMaterno = x.ApellidoMaterno,
-                    ApellidoPaterno = x.ApellidoPaterno,
-                    Rut = x.Rut, Uid = x.Uid, Numero = x.Numero, Empresa = x.Empresa,
-                }).First(x => x.Rut == rutIn);
-                Utils.SessionManager.trabajadores = new List<TrabajadorIndex> { trabajadorNew };
-                Utils.SessionManager.inicio = Convert.ToDateTime(collection["Inicio"]);
-                Utils.SessionManager.fin = Convert.ToDateTime("01-01-0001");
-                Utils.SessionManager.campo = collection["Campo"];
-                Utils.SessionManager.tipo = collection["subject"];
-                return RedirectToAction("PDFRegistroFecha", "Trabajador");
-            }
-            //Sin nada
-            if(inicio && fin && rut && campo)
-            {
-                Utils.SessionManager.tipo = collection["subject"];
-                return RedirectToAction("PDFConsolidado", "Trabajador");
-            }
-            return RedirectToAction("Index");
+                campo = collection["Campo"],
+                empresa = collection["Empresa"],
+                inicio = collection["Inicio"],
+                fin = collection["Fin"],
+                tipo = collection["subject"]
+            });
         }
         // GET: Informes/Details/5
         public ActionResult Details(int id)
@@ -703,6 +518,7 @@ namespace ControlPersonalAppWeb.Controllers
 
         // POST: Informes/Create
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Asistencias(FormCollection collection)
         {
             try
@@ -728,6 +544,10 @@ namespace ControlPersonalAppWeb.Controllers
             }
             catch
             {
+                SgajcpEntities db = new SgajcpEntities();
+                string empresa = Utils.SessionManager.CuentaAutenticada().Empresa;
+                ViewBag.Trabajador = db.Trabajador.Where(x => x.Empresa == empresa).Select(x => new TrabajadorIndex { Id = x.Id, Nombre = x.Nombre, ApellidoMaterno = x.ApellidoMaterno, ApellidoPaterno = x.ApellidoPaterno, Rut = x.Rut
+                }).ToList();
                 return View();
             }
         }
@@ -771,7 +591,8 @@ namespace ControlPersonalAppWeb.Controllers
             Response.AddHeader("content-disposition", "attachment;filename=" + "Asistencia mensual " + dateTime.ToString(" MMMM yyyy ") + empresa.Nombre + ".pdf");
             Response.Cache.SetCacheability(HttpCacheability.NoCache);
             Response.Write(document);
-            Response.End();
+            Response.Flush();
+            HttpContext.ApplicationInstance.CompleteRequest();
         }
         private string GetDias(Trabajador trabajador, DateTime dateTime)
         {
@@ -846,6 +667,7 @@ namespace ControlPersonalAppWeb.Controllers
 
         // POST: Informes/Edit/5
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, FormCollection collection)
         {
             try
@@ -868,6 +690,7 @@ namespace ControlPersonalAppWeb.Controllers
 
         // POST: Informes/Delete/5
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Delete(int id, FormCollection collection)
         {
             try
@@ -880,6 +703,12 @@ namespace ControlPersonalAppWeb.Controllers
             {
                 return View();
             }
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing) db.Dispose();
+            base.Dispose(disposing);
         }
     }
 }

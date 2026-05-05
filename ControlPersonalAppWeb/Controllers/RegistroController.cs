@@ -22,7 +22,7 @@ namespace ControlPersonalAppWeb.Controllers
     public class RegistroController : Controller
     {
         SgajcpEntities db = new SgajcpEntities();
-        private Cuentas cuenta = Utils.SessionManager.CuentaAutenticada();
+        private Cuentas cuenta => Utils.SessionManager.CuentaAutenticada();
         public ActionResult BusquedaRegistro()
         {
             List<RegistroTrabajador> registros = new List<RegistroTrabajador>();
@@ -30,6 +30,7 @@ namespace ControlPersonalAppWeb.Controllers
             return View(registros);
         }
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult BusquedaRegistro(FormCollection collection)
         {
             string Numero = collection["Uid"];
@@ -37,11 +38,15 @@ namespace ControlPersonalAppWeb.Controllers
             List<RegistroTrabajador> registros = new List<RegistroTrabajador>();
             if (!String.IsNullOrEmpty(Numero))
             {
-                string Uid = db.Pulseras.First(x => x.Numero == Numero).Uid;
-                registros = db.RegistroTrabajador.Where(x => x.Uid == Uid).ToList();
-                foreach (var registro in registros)
+                var pulsera = db.Pulseras.FirstOrDefault(x => x.Numero == Numero);
+                if (pulsera != null)
                 {
-                    registro.NombreTrabajador = Numero;
+                    string Uid = pulsera.Uid;
+                    registros = db.RegistroTrabajador.Where(x => x.Uid == Uid).ToList();
+                    foreach (var registro in registros)
+                    {
+                        registro.NombreTrabajador = Numero;
+                    }
                 }
             }
             if (!String.IsNullOrEmpty(Campo))
@@ -79,12 +84,15 @@ namespace ControlPersonalAppWeb.Controllers
             return View(new List<RegistroTrabajador>());
         }
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Registros(FormCollection collection)
         {
 
             string numero = collection["numero"];
-            Pulseras pulsera = db.Pulseras.First(p => p.Numero == numero);
-            List<RegistroTrabajador> registros = db.RegistroTrabajador.Where(rt => rt.Uid == pulsera.Uid).ToList();
+            Pulseras pulsera = db.Pulseras.FirstOrDefault(p => p.Numero == numero);
+            List<RegistroTrabajador> registros = pulsera != null
+                ? db.RegistroTrabajador.Where(rt => rt.Uid == pulsera.Uid).ToList()
+                : new List<RegistroTrabajador>();
             ViewBag.numero = numero;
             /*
             string[] ids = collection["ID"].Split(new char[] { ',' });
@@ -102,7 +110,9 @@ namespace ControlPersonalAppWeb.Controllers
         public ActionResult Index(int id)
         {
             SgajcpEntities database = new SgajcpEntities();
-            Trabajador trabajador = database.Trabajador.First(x => x.Id == id);
+            Trabajador trabajador = database.Trabajador.FirstOrDefault(x => x.Id == id);
+            if (trabajador == null)
+                return HttpNotFound();
             ViewBag.idTrabajador = id;
             Utils.SessionManager.trabajadorID = id;
             ViewBag.id = id;
@@ -111,6 +121,7 @@ namespace ControlPersonalAppWeb.Controllers
             return View(database.RegistroTrabajador.Where(x => x.Uid == trabajador.Uid).ToList().OrderByDescending(x => x.Fecha));
         }
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Index(FormCollection collection)
         {
             string[] ids = collection["ID"].Split(new char[] { ',' });
@@ -127,9 +138,13 @@ namespace ControlPersonalAppWeb.Controllers
         public ActionResult Details(int id, int idTrabajador)
         {
             SgajcpEntities database = new SgajcpEntities();
-            RegistroTrabajador registroTrabajador = database.RegistroTrabajador.First(x => x.Id == id);
+            RegistroTrabajador registroTrabajador = database.RegistroTrabajador.FirstOrDefault(x => x.Id == id);
+            if (registroTrabajador == null)
+                return HttpNotFound();
             ViewBag.idTrabajador = idTrabajador;
-            Trabajador trabajador = db.Trabajador.First(x => x.Id == idTrabajador);
+            Trabajador trabajador = db.Trabajador.FirstOrDefault(x => x.Id == idTrabajador);
+            if (trabajador == null)
+                return HttpNotFound();
             Utils.SessionManager.log("Registros detalle trabajador: " + trabajador.Nombre + " " + trabajador.ApellidoPaterno + " " + trabajador.ApellidoMaterno);
             return View(registroTrabajador);
         }
@@ -138,11 +153,14 @@ namespace ControlPersonalAppWeb.Controllers
         public ActionResult Create(int id)
         {
             SgajcpEntities database = new SgajcpEntities();
-            Trabajador trabajador = database.Trabajador.First(x => x.Id == id);
+            Trabajador trabajador = database.Trabajador.FirstOrDefault(x => x.Id == id);
+            if (trabajador == null)
+                return HttpNotFound();
             ViewBag.Campos = getCampos("VSP");
             ViewBag.Uid = trabajador.Uid;
             ViewBag.Id = id;
-            ViewBag.Id = trabajador.Nombre;
+            ViewBag.WorkerId = id;
+            ViewBag.WorkerName = trabajador.Nombre + " " + trabajador.ApellidoPaterno + " " + trabajador.ApellidoMaterno;
             return View();
         }
         public string[] getCampos(string empresa)
@@ -166,6 +184,7 @@ namespace ControlPersonalAppWeb.Controllers
         }
         // POST: Registro/Create
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Create(int id, FormCollection collection, HttpPostedFileBase file)
         {
             try
@@ -197,6 +216,11 @@ namespace ControlPersonalAppWeb.Controllers
             }
             catch (DbEntityValidationException e)
             {
+                ViewBag.Campos = getCampos("VSP");
+                ViewBag.Uid = collection["Uid"];
+                ViewBag.Id = id;
+                ViewBag.WorkerId = id;
+                ViewBag.WorkerName = collection["NombreTrabajador"];
                 foreach (var eve in e.EntityValidationErrors)
                 {
                     Console.WriteLine("Entity of type \"{0}\" in state \"{1}\" has the following validation errors:",
@@ -238,15 +262,21 @@ namespace ControlPersonalAppWeb.Controllers
         public ActionResult Edit(int id, int idTrabajador)
         {
             SgajcpEntities database = new SgajcpEntities();
-            RegistroTrabajador registroTrabajador = database.RegistroTrabajador.First(x => x.Id == id);
+            RegistroTrabajador registroTrabajador = database.RegistroTrabajador.FirstOrDefault(x => x.Id == id);
+            if (registroTrabajador == null)
+                return HttpNotFound();
             ViewBag.idTrabajador = idTrabajador;
-            Trabajador trabajador = database.Trabajador.First(x => x.Id == idTrabajador);
+            Trabajador trabajador = database.Trabajador.FirstOrDefault(x => x.Id == idTrabajador);
+            if (trabajador == null)
+                return HttpNotFound();
             ViewBag.Campos = getCampos(trabajador.Empresa);
+            ViewBag.WorkerName = trabajador.Nombre + " " + trabajador.ApellidoPaterno + " " + trabajador.ApellidoMaterno;
             return View(registroTrabajador);
         }
 
         // POST: Registro/Edit/5
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, FormCollection collection, HttpPostedFileBase file)
         {
             try
@@ -272,7 +302,12 @@ namespace ControlPersonalAppWeb.Controllers
             }
             catch
             {
-                return View();
+                int idT = Convert.ToInt32(collection["idTrabajador"]);
+                Trabajador trabajador = db.Trabajador.First(x => x.Id == idT);
+                ViewBag.idTrabajador = idT;
+                ViewBag.Campos = getCampos(trabajador.Empresa);
+                ViewBag.WorkerName = trabajador.Nombre + " " + trabajador.ApellidoPaterno + " " + trabajador.ApellidoMaterno;
+                return View(db.RegistroTrabajador.First(x => x.Id == id));
             }
         }
 
@@ -280,24 +315,25 @@ namespace ControlPersonalAppWeb.Controllers
         public ActionResult Delete(int id)
         {
             SgajcpEntities database = new SgajcpEntities();
-            RegistroTrabajador registroTrabajador = database.RegistroTrabajador.First(x => x.Id == id);
-            database.RegistroTrabajador.Remove(registroTrabajador);
-            database.SaveChanges();
-            return RedirectToAction("Index", new { id = Utils.SessionManager.trabajadorID });
+            RegistroTrabajador registroTrabajador = database.RegistroTrabajador.FirstOrDefault(x => x.Id == id);
+            if (registroTrabajador == null)
+                return HttpNotFound();
+            return View(registroTrabajador);
         }
 
         // POST: Registro/Delete/5
         [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
+        [ValidateAntiForgeryToken]
+        [ActionName("Delete")]
+        public ActionResult DeleteConfirmed(int id)
         {
-            try
-            {
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
+            SgajcpEntities database = new SgajcpEntities();
+            RegistroTrabajador registroTrabajador = database.RegistroTrabajador.FirstOrDefault(x => x.Id == id);
+            if (registroTrabajador == null)
+                return HttpNotFound();
+            database.RegistroTrabajador.Remove(registroTrabajador);
+            database.SaveChanges();
+            return RedirectToAction("Index", new { id = Utils.SessionManager.trabajadorID });
         }
         public List<RegistroTrabajador> GetRegistrosHoy(DateTime fechaActual)
         {
@@ -405,6 +441,7 @@ namespace ControlPersonalAppWeb.Controllers
             return View(GetRegistrosHoy(dateTime).OrderByDescending(x => x.Fecha));
         }
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Hoy(FormCollection collection)
         {
             DateTime dateTime = Convert.ToDateTime(collection["Fecha"]);
@@ -533,6 +570,12 @@ namespace ControlPersonalAppWeb.Controllers
                 count++;
             }
             return nombres;
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing) db.Dispose();
+            base.Dispose(disposing);
         }
     }
 }

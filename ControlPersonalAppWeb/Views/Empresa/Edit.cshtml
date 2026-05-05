@@ -1,43 +1,93 @@
 ﻿@model ControlPersonalAppWeb.Empresas
 
 @{
-    ViewBag.Title = "Editar";
+    ViewBag.Title = "Editar contratista";
 }
 
+<section class="page-header">
+    <div>
+        <span class="page-header__eyebrow">Módulo Contratistas</span>
+        <h1>Editar contratista</h1>
+<p>Actualiza la ficha del contratista sin perder el contexto del módulo.</p>
+    </div>
+
+    <div class="page-header__actions">
+        <a class="btn btn-outline-primary" href="@Url.Action("Details", "Empresa", new { id = Model.Id })">Ver detalle</a>
+        <a class="btn btn-outline-secondary" href="@Url.Action("Index", "Empresa")">Volver</a>
+    </div>
+</section>
 
 @using (Html.BeginForm("Edit", "Empresa", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
     @Html.AntiForgeryToken()
 
-    <div class="form-horizontal">
-        <h4 class="text-center display-4">Contratista</h4>
-        <h3 class="text-muted font-weight-light">Editar</h3>
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.Id)
+    @Html.ValidationSummary(true, "", new { @class = "text-danger mb-4" })
+    @Html.HiddenFor(model => model.Id)
 
-        <div class="form-group col-md-8 mx-auto">
-            @Html.LabelFor(model => model.Nombre, htmlAttributes: new { @class = "control-label " })
-            @Html.EditorFor(model => model.Nombre, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.Nombre, "", new { @class = "text-danger" })
+    <div class="worker-create">
+        <div class="worker-create__main">
+            <section class="surface worker-panel">
+                <div class="worker-panel__header">
+                    <span class="worker-panel__eyebrow">Identidad comercial</span>
+                    <h2>Datos del contratista</h2>
+<p>Corrige nombre, RUT o la referencia de nómina desde la misma vista.</p>
+                </div>
+
+                <div class="worker-form-grid">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Nombre, htmlAttributes: new { @class = "toolbar__label" })
+                        @Html.EditorFor(model => model.Nombre, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Nombre, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Rut, htmlAttributes: new { @class = "toolbar__label" })
+                        @Html.EditorFor(model => model.Rut, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Rut, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="form-group worker-form-grid__wide">
+                        <label class="toolbar__label" for="Nomina1">Nomina trabajadores</label>
+                        <div class="worker-file-current">
+                            <strong>Archivo actual</strong>
+                            <span>@(!String.IsNullOrEmpty(Model.Nomina) ? Model.Nomina : "Sin archivo cargado")</span>
+                        </div>
+                        <input type="hidden" name="Nomina" value="@Model.Nomina" />
+                        <input type="file" name="Nomina1" id="Nomina1" class="form-control" />
+                    </div>
+                </div>
+            </section>
+
+            <div class="worker-actions">
+                <input type="submit" value="Guardar cambios" class="btn btn-primary" />
+                <a class="btn btn-outline-secondary" href="@Url.Action("Index", "Empresa")">Cancelar</a>
+            </div>
         </div>
 
-        <div class="form-group col-md-8 mx-auto">
-            @Html.LabelFor(model => model.Rut, htmlAttributes: new { @class = "control-label " })
-            @Html.EditorFor(model => model.Rut, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.Rut, "", new { @class = "text-danger" })
-        </div>
+        <aside class="worker-create__aside">
+            <section class="surface worker-panel">
+                <div class="worker-panel__header">
+                    <span class="worker-panel__eyebrow">Referencia</span>
+<h2>Resumen actual</h2>
+<p>Revisa el registro actual antes de guardar la nueva versión.</p>
+                </div>
 
-        <div class="form-group col-md-8 mx-auto">
-            <span>Nomina trabajadores</span><br />
-            <span>@Model.Nomina</span>
-            <input type="hidden" name="Nomina" value="@Model.Nomina" />
-            <input type="file" name="Nomina1" class="form-control" />
-        </div>
-        <div class="form-group col-md-9 mx-auto my-5">
-            <input type="submit" value="Guardar" class="btn btn-primary btn-block" />
-            @Html.ActionLink("Volver a la lista", "Index", null, new { @class = "btn btn-block btn-danger mt-3" })
-        </div>
+                <div class="worker-detail-list">
+                    <div class="worker-detail-list__row">
+                        <span class="worker-detail-list__label">Nombre</span>
+                        <span class="worker-detail-list__value">@Model.Nombre</span>
+                    </div>
+                    <div class="worker-detail-list__row">
+                        <span class="worker-detail-list__label">RUT</span>
+                        <span class="worker-detail-list__value">@Model.Rut</span>
+                    </div>
+                    <div class="worker-detail-list__row">
+                        <span class="worker-detail-list__label">Nomina</span>
+                        <span class="worker-detail-list__value">@(!String.IsNullOrEmpty(Model.Nomina) ? Model.Nomina : "Sin archivo")</span>
+                    </div>
+                </div>
+            </section>
+        </aside>
     </div>
 }
 

@@ -2,256 +2,153 @@
 
 @{
     ViewBag.Title = "Detalle Trabajador";
+    var cuenta = ControlPersonalAppWeb.Utils.SessionManager.CuentaAutenticada();
 }
 
-
-
-    <h2 class="display-4 text-center">Trabajador</h2>
+<section class="page-header">
     <div>
-        <h3 class="text-muted font-weight-light">Detalle</h3>
-        <hr />
-        <div class="col-sm-8 table-responsive">
-            <table class="mx-auto table-borderless table-hover tabla-detalle">
-
-                <tr>
-                    <td>
-                        @Html.DisplayNameFor(model => model.Nombre)
-                    </td>
-
-                    <td>
-                        @Html.DisplayFor(model => model.Nombre)
-                    </td>
-                </tr>
-
-                <tr>
-                    <td>
-                        @Html.DisplayNameFor(model => model.ApellidoPaterno)
-                    </td>
-
-                    <td>
-                        @Html.DisplayFor(model => model.ApellidoPaterno)
-                    </td>
-                </tr>
-
-                <tr>
-                    <td>
-                        @Html.DisplayNameFor(model => model.ApellidoMaterno)
-                    </td>
-
-                    <td>
-                        @Html.DisplayFor(model => model.ApellidoMaterno)
-                    </td>
-                </tr>
-
-                <tr>
-                    <td>
-                        @Html.DisplayNameFor(model => model.Rut)
-                    </td>
-
-                    <td>
-                        @Html.DisplayFor(model => model.Rut)
-                    </td>
-                </tr>
-
-                <tr>
-                    <td>
-                        @Html.DisplayNameFor(model => model.Numero)
-                    </td>
-
-                    <td>
-                        @Html.DisplayFor(model => model.Numero)
-                    </td>
-                </tr>
-
-                <tr>
-                    <td>
-                        Contratista
-                    </td>
-
-                    <td>
-                        @Html.DisplayFor(model => model.Empresa)
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        @Html.DisplayNameFor(model => model.Email)
-                    </td>
-
-                    <td>
-                        @Html.DisplayFor(model => model.Email)
-                    </td>
-                </tr>
-
-                <tr>
-                    <td>
-                        @Html.DisplayNameFor(model => model.Direccion)
-                    </td>
-
-                    <td>
-                        @Html.DisplayFor(model => model.Direccion)
-                    </td>
-                </tr>
-
-                <tr>
-                    <td>
-                        @Html.DisplayNameFor(model => model.Sexo)
-                    </td>
-
-                    <td>
-                        @Html.DisplayFor(model => model.Sexo)
-                    </td>
-                </tr>
-
-
-                <tr>
-                    <td>
-                        @Html.DisplayNameFor(model => model.Telefono)
-                    </td>
-
-                    <td>
-                        @Html.DisplayFor(model => model.Telefono)
-                    </td>
-                </tr>
-
-
-                <tr>
-                    <td>
-                        @Html.DisplayNameFor(model => model.Habilitado)
-                    </td>
-
-                    @if (Model.Habilitado == true)
-                    {
-                        <td>
-                            Si
-                        </td>
-                    }
-                    else
-                    {
-                        <td>
-                            No
-                        </td>
-                    }
-                </tr>
-                <tr>
-                    <td>
-                        @Html.DisplayNameFor(model => model.Nomina)
-                    </td>
-
-                    <td>
-                        @Html.DisplayFor(model => model.Nomina)
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        @Html.DisplayNameFor(model => model.Contrato)
-                    </td>
-
-                    <td>
-                        @Html.DisplayFor(model => model.Contrato)
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        @Html.DisplayNameFor(model => model.Anexo)
-                    </td>
-
-                    <td>
-                        @Html.DisplayFor(model => model.Anexo)
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        @Html.DisplayNameFor(model => model.Odi)
-                    </td>
-
-                    <td>
-                        @Html.DisplayFor(model => model.Odi)
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        @Html.DisplayNameFor(model => model.Registro_Epp)
-                    </td>
-
-                    <td>
-                        @Html.DisplayFor(model => model.Registro_Epp)
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        @Html.DisplayNameFor(model => model.Registro_RIOHS)
-                    </td>
-
-                    <td>
-                        @Html.DisplayFor(model => model.Registro_RIOHS)
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        @Html.DisplayNameFor(model => model.Registro_capacitación)
-                    </td>
-
-                    <td>
-                        @Html.DisplayFor(model => model.Registro_capacitación)
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        @Html.DisplayNameFor(model => model.Examen_altura_física)
-                    </td>
-
-                    <td>
-                        @Html.DisplayFor(model => model.Examen_altura_física)
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        @Html.DisplayNameFor(model => model.Procedimientos_de_trabajo)
-                    </td>
-
-                    <td>
-                        @Html.DisplayFor(model => model.Procedimientos_de_trabajo)
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        @Html.DisplayNameFor(model => model.Documento_Covid_19)
-                    </td>
-
-                    <td>
-                        @Html.DisplayFor(model => model.Documento_Covid_19)
-                    </td>
-                </tr>
-
-
-
-                <tr>
-                    @if (Model.FotoCarnet != null)
-                    {
-                        <td>
-                            @Html.DisplayNameFor(model => model.FotoCarnet)
-                        </td>
-
-                        <td>
-                            <img src="@String.Format("data:image/jpg;base64,{0}",System.Convert.ToBase64String(Model.FotoCarnet))" width="400" />
-                        </td>
-                    }
-                </tr>
-                <tr>
-                    @if (Model.Foto != null)
-                    {
-                        <td>
-                            @Html.DisplayNameFor(model => model.Foto)
-                        </td>
-
-                        <td>
-                            <img src="@String.Format("data:image/jpg;base64,{0}",System.Convert.ToBase64String(Model.Foto))" width="400"/>
-                        </td>
-                    }
-                </tr>
-            </table>
-        </div>
-        <div class="form-group col-md-9 mx-auto my-5">
-            @Html.ActionLink("Volver a la lista", "Index", null, new { @class = "btn btn-block btn-danger mt-3" })
-        </div>
+        <span class="page-header__eyebrow">Ficha RR.HH.</span>
+        <h1>@Model.Nombre @Model.ApellidoPaterno @Model.ApellidoMaterno</h1>
+<p>Consulta la ficha completa del trabajador con sus datos, documentos y fotos.</p>
     </div>
+
+    <div class="page-header__actions">
+        @if (cuenta != null && cuenta.Permisos != null && cuenta.Permisos.Contains("TrabajadoresE"))
+        {
+            <a class="btn btn-primary" href="@Url.Action("Edit", "Trabajador", new { id = Model.Id })">Editar ficha</a>
+        }
+        <a class="btn btn-outline-secondary" href="@Url.Action("Index", "Trabajador")">Volver a RR.HH.</a>
+    </div>
+</section>
+
+<div class="worker-detail-grid">
+    <section class="surface worker-panel">
+        <div class="worker-panel__header">
+            <span class="worker-panel__eyebrow">Resumen</span>
+            <h2>Datos principales</h2>
+                    <p>Aquí está la información que más se usa en el trabajo diario.</p>
+        </div>
+
+        <div class="worker-detail-list">
+            <div class="worker-detail-list__row">
+                <span class="worker-detail-list__label">Nombre</span>
+                <span class="worker-detail-list__value">@Model.Nombre @Model.ApellidoPaterno @Model.ApellidoMaterno</span>
+            </div>
+            <div class="worker-detail-list__row">
+                <span class="worker-detail-list__label">RUT</span>
+                <span class="worker-detail-list__value">@Model.Rut</span>
+            </div>
+            <div class="worker-detail-list__row">
+                <span class="worker-detail-list__label">Numero pulsera</span>
+                <span class="worker-detail-list__value">@Model.Numero</span>
+            </div>
+            <div class="worker-detail-list__row">
+                <span class="worker-detail-list__label">Contratista</span>
+                <span class="worker-detail-list__value">@Model.Empresa</span>
+            </div>
+            <div class="worker-detail-list__row">
+                    <span class="worker-detail-list__label">Correo</span>
+                <span class="worker-detail-list__value">@Model.Email</span>
+            </div>
+            <div class="worker-detail-list__row">
+                <span class="worker-detail-list__label">Direccion</span>
+                <span class="worker-detail-list__value">@Model.Direccion</span>
+            </div>
+            <div class="worker-detail-list__row">
+                <span class="worker-detail-list__label">Sexo</span>
+                <span class="worker-detail-list__value">@Model.Sexo</span>
+            </div>
+            <div class="worker-detail-list__row">
+                <span class="worker-detail-list__label">Telefono</span>
+                <span class="worker-detail-list__value">@Model.Telefono</span>
+            </div>
+            <div class="worker-detail-list__row">
+                <span class="worker-detail-list__label">Habilitado</span>
+                <span class="worker-detail-list__value">
+                    <span class="worker-status @(Model.Habilitado == true ? "worker-status--active" : "worker-status--inactive")">
+                        @(Model.Habilitado == true ? "Si" : "No")
+                    </span>
+                </span>
+            </div>
+        </div>
+    </section>
+
+    <section class="surface worker-panel">
+        <div class="worker-panel__header">
+            <span class="worker-panel__eyebrow">Documentacion</span>
+            <h2>Archivos registrados</h2>
+<p>Documentos asociados a la ficha laboral y a sus respaldos obligatorios.</p>
+        </div>
+
+        <div class="worker-doc-grid">
+            <div class="worker-doc-card">
+                <strong>Nomina</strong>
+                <span>@(!String.IsNullOrEmpty(Model.Nomina) ? Model.Nomina : "Sin archivo")</span>
+            </div>
+            <div class="worker-doc-card">
+                <strong>Contrato</strong>
+                <span>@(!String.IsNullOrEmpty(Model.Contrato) ? Model.Contrato : "Sin archivo")</span>
+            </div>
+            <div class="worker-doc-card">
+                <strong>Anexo</strong>
+                <span>@(!String.IsNullOrEmpty(Model.Anexo) ? Model.Anexo : "Sin archivo")</span>
+            </div>
+            <div class="worker-doc-card">
+                <strong>ODI</strong>
+                <span>@(!String.IsNullOrEmpty(Model.Odi) ? Model.Odi : "Sin archivo")</span>
+            </div>
+            <div class="worker-doc-card">
+                <strong>Registro EPP</strong>
+                <span>@(!String.IsNullOrEmpty(Model.Registro_Epp) ? Model.Registro_Epp : "Sin archivo")</span>
+            </div>
+            <div class="worker-doc-card">
+                <strong>Registro RIOHS</strong>
+                <span>@(!String.IsNullOrEmpty(Model.Registro_RIOHS) ? Model.Registro_RIOHS : "Sin archivo")</span>
+            </div>
+            <div class="worker-doc-card">
+                <strong>Registro capacitacion</strong>
+                <span>@(!String.IsNullOrEmpty(Model.Registro_capacitación) ? Model.Registro_capacitación : "Sin archivo")</span>
+            </div>
+            <div class="worker-doc-card">
+                <strong>Examen altura fisica</strong>
+                <span>@(!String.IsNullOrEmpty(Model.Examen_altura_física) ? Model.Examen_altura_física : "Sin archivo")</span>
+            </div>
+            <div class="worker-doc-card">
+                <strong>Procedimientos</strong>
+                <span>@(!String.IsNullOrEmpty(Model.Procedimientos_de_trabajo) ? Model.Procedimientos_de_trabajo : "Sin archivo")</span>
+            </div>
+            <div class="worker-doc-card">
+                <strong>Documento Covid-19</strong>
+                <span>@(!String.IsNullOrEmpty(Model.Documento_Covid_19) ? Model.Documento_Covid_19 : "Sin archivo")</span>
+            </div>
+        </div>
+    </section>
+
+    @if (Model.FotoCarnet != null || Model.Foto != null)
+    {
+        <section class="surface worker-panel worker-detail-grid__wide">
+            <div class="worker-panel__header">
+                <span class="worker-panel__eyebrow">Imagenes</span>
+                <h2>Registro visual</h2>
+<p>Fotos disponibles para carnet y para consulta interna.</p>
+            </div>
+
+            <div class="worker-image-grid">
+                @if (Model.FotoCarnet != null)
+                {
+                    <div class="worker-image-card">
+                        <strong>Foto carnet</strong>
+                        <img src="@String.Format("data:image/jpg;base64,{0}", System.Convert.ToBase64String(Model.FotoCarnet))" alt="Foto carnet" class="record-photo--clickable" data-image-preview />
+                    </div>
+                }
+                @if (Model.Foto != null)
+                {
+                    <div class="worker-image-card">
+                        <strong>Foto perfil</strong>
+                        <img src="@String.Format("data:image/jpg;base64,{0}", System.Convert.ToBase64String(Model.Foto))" alt="Foto perfil" class="record-photo--clickable" data-image-preview />
+                    </div>
+                }
+            </div>
+        </section>
+    }
+</div>

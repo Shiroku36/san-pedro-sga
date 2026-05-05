@@ -1,120 +1,66 @@
 ﻿@model ControlPersonalAppWeb.Casino
 
-
 @{
-    ViewBag.Title = "Crear";
-    var cuenta = ControlPersonalAppWeb.Utils.SessionManager.CuentaAutenticada();
+    ViewBag.Title = "Detalle de servicio";
 }
 
-<div>
-    <h4>Casino</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Rut)
-        </dt>
+<section class="page-header">
+    <div>
+        <span class="page-header__eyebrow">Módulo Casino</span>
+        <h1>Detalle del servicio</h1>
+        <p>Consulta el consumo y su foto de respaldo en una sola pantalla.</p>
+    </div>
 
-        <dd>
-            @Html.DisplayFor(model => model.Rut)
-        </dd>
+    <div class="page-header__actions">
+        <a class="btn btn-outline-secondary" href="@Url.Action("Index", "Casino")">Volver a Casino</a>
+    </div>
+</section>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Fecha)
-        </dt>
+<section class="worker-detail-grid">
+    <article class="surface worker-panel casino-panel">
+        <div class="worker-panel__header">
+            <span class="worker-panel__eyebrow">Resumen</span>
+            <h2>Datos del registro</h2>
+        </div>
 
-        <dd>
-            @Html.DisplayFor(model => model.Fecha)
-        </dd>
+        <div class="worker-detail-list">
+            <div class="worker-detail-list__row">
+                <span class="worker-detail-list__label">@Html.DisplayNameFor(model => model.Rut)</span>
+                <span class="worker-detail-list__value">@Html.DisplayFor(model => model.Rut)</span>
+            </div>
+            <div class="worker-detail-list__row">
+                <span class="worker-detail-list__label">@Html.DisplayNameFor(model => model.Fecha)</span>
+                <span class="worker-detail-list__value">@Html.DisplayFor(model => model.Fecha)</span>
+            </div>
+            <div class="worker-detail-list__row">
+                <span class="worker-detail-list__label">@Html.DisplayNameFor(model => model.Comida)</span>
+                <span class="worker-detail-list__value"><span class="casino-service-pill">@Html.DisplayFor(model => model.Comida)</span></span>
+            </div>
+            <div class="worker-detail-list__row">
+                <span class="worker-detail-list__label">@Html.DisplayNameFor(model => model.Ubicacion)</span>
+                <span class="worker-detail-list__value">@Html.DisplayFor(model => model.Ubicacion)</span>
+            </div>
+        </div>
+    </article>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Comida)
-        </dt>
+    <article class="surface worker-panel casino-panel">
+        <div class="worker-panel__header">
+            <span class="worker-panel__eyebrow">Fotografia</span>
+            <h2>Evidencia visual</h2>
+            <p>Foto asociada al registro para una revision rapida.</p>
+        </div>
 
-        <dd>
-            @Html.DisplayFor(model => model.Comida)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Foto)
-        </dt>
-
-        <dd>
-            <img src="@String.Format("data:image/jpeg;base64,{0}", System.Convert.ToBase64String(Model.Foto))" width="300" onclick="mostrarImagen(this)" style="cursor:pointer;" />
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Ubicacion)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Ubicacion)
-        </dd>
-
-    </dl>
-</div>
-
-<style>
-    .modal {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        position: fixed;
-        z-index: 1000;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.8);
-        opacity: 0;
-        transform: scale(0.8);
-        transition: opacity 0.2s ease-in-out, transform 0.2s ease-in-out;
-        pointer-events: none;
-    }
-
-        .modal.mostrar {
-            opacity: 1;
-            transform: scale(1);
-            pointer-events: auto;
+        @if (Model.Foto != null)
+        {
+            <div class="worker-photo-preview">
+                <img src="@String.Format("data:image/jpeg;base64,{0}", System.Convert.ToBase64String(Model.Foto))" alt="Foto del servicio" class="record-photo--clickable" data-image-preview />
+            </div>
         }
-
-    .modal-contenido {
-        max-width: 80%;
-        max-height: 80%;
-        border-radius: 10px;
-        box-shadow: 0 4px 10px rgba(255, 255, 255, 0.2);
-    }
-
-    .cerrar {
-        position: absolute;
-        top: 15px;
-        right: 35px;
-        color: white;
-        font-size: 40px;
-        font-weight: bold;
-        cursor: pointer;
-        transition: 0.2s;
-    }
-
-        .cerrar:hover {
-            color: #ccc;
-            transform: scale(1.1);
+        else
+        {
+            <div class="form-feedback form-feedback--info">
+                Este registro no tiene fotografia disponible.
+            </div>
         }
-</style>
-<!-- Modal -->
-<div id="modalImagen" class="modal" onclick="cerrarImagen()">
-    <span class="cerrar" onclick="cerrarImagen()">&times;</span>
-    <img class="modal-contenido" id="imgAmpliada">
-</div>
-<script>
-    function mostrarImagen(img) {
-        var modal = document.getElementById("modalImagen");
-        var imgAmpliada = document.getElementById("imgAmpliada");
-        imgAmpliada.src = img.src;
-        modal.classList.add("mostrar");
-    }
-
-    function cerrarImagen() {
-        var modal = document.getElementById("modalImagen");
-        modal.classList.remove("mostrar");
-    }
-</script>
+    </article>
+</section>

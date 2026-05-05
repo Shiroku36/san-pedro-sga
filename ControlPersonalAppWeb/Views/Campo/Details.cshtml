@@ -1,86 +1,78 @@
 ﻿@model ControlPersonalAppWeb.Campos
 
 @{
-    ViewBag.Title = "Detalle Predio";
+    ViewBag.Title = "Detalle predio";
 }
 
-<h2 class="display-4 text-center">Predio</h2>
-
-<div>
-    <h3 class="text-muted font-weight-light">Detalle</h3>
-    <hr />
-    <div class="col-sm-8 table-responsive">
-        <table class="mx-auto table-borderless table-hover tabla-detalle">
-            <tr>
-                <td>
-                    @Html.DisplayNameFor(model => model.Nombre)
-                </td>
-
-                <td>
-                    @Html.DisplayFor(model => model.Nombre)
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    @Html.DisplayNameFor(model => model.Lugar)
-                </td>
-
-                <td>
-                    @Html.DisplayFor(model => model.Lugar)
-                </td>
-            </tr>
-
-            <tr>
-                <td>
-                    @Html.DisplayNameFor(model => model.Empresa)
-                </td>
-
-                <td>
-                    @Html.DisplayFor(model => model.Empresa)
-                </td>
-
-            </tr>
-
-
-            <tr>
-                <td>
-                    @Html.DisplayNameFor(model => model.Encargado)
-                </td>
-                <td>
-                    @Html.DisplayFor(model => model.Encargado)
-                </td>
-
-
-            </tr>
-
-            <tr>
-                <td>
-                    @Html.DisplayNameFor(model => model.Correo)
-                </td>
-                <td>
-                    @Html.DisplayFor(model => model.Correo)
-                </td>
-
-
-            </tr>
-
-            <tr>
-                <td>
-                    @Html.DisplayNameFor(model => model.Telefono)
-                </td>
-                <td>
-                    @Html.DisplayFor(model => model.Telefono)
-                </td>
-
-
-            </tr>
-
-        </table>
+<section class="page-header">
+    <div>
+        <span class="page-header__eyebrow">Ficha Predio</span>
+        <h1>@Model.Nombre</h1>
+        <p>Consulta la información principal del predio en una sola vista.</p>
     </div>
 
-    <div class="form-group col-md-9 mx-auto my-5">
-        @Html.ActionLink("Volver a la lista", "Index", null, new { @class = "btn btn-block btn-danger mt-3" })
+    <div class="page-header__actions">
+        <a class="btn btn-primary" href="@Url.Action("Edit", "Campo", new { id = Model.Id })">Editar predio</a>
+        <a class="btn btn-outline-secondary" href="@Url.Action("Index", "Campo")">Volver</a>
     </div>
+</section>
+
+<div class="worker-detail-grid">
+    <section class="surface worker-panel">
+        <div class="worker-panel__header">
+            <span class="worker-panel__eyebrow">Resumen</span>
+            <h2>Datos principales</h2>
+                    <p>Estos datos se usan todos los días en la operación y en varios filtros.</p>
+        </div>
+
+        <div class="worker-detail-list">
+            <div class="worker-detail-list__row">
+                <span class="worker-detail-list__label">Nombre</span>
+                <span class="worker-detail-list__value">@Model.Nombre</span>
+            </div>
+            <div class="worker-detail-list__row">
+                <span class="worker-detail-list__label">Lugar</span>
+                <span class="worker-detail-list__value">@Model.Lugar</span>
+            </div>
+            <div class="worker-detail-list__row">
+                <span class="worker-detail-list__label">Empresa</span>
+                <span class="worker-detail-list__value">@Model.Empresa</span>
+            </div>
+            <div class="worker-detail-list__row">
+                <span class="worker-detail-list__label">Coordenadas</span>
+                <span class="worker-detail-list__value">@(!String.IsNullOrEmpty(Model.Coordenadas) ? Model.Coordenadas : "Sin coordenadas")</span>
+            </div>
+        </div>
+    </section>
+
+    <section class="surface worker-panel">
+        <div class="worker-panel__header">
+            <span class="worker-panel__eyebrow">Responsables</span>
+            <h2>Contacto operativo</h2>
+<p>Aqui quedan los nombres y contactos que mas se consultan.</p>
+        </div>
+
+        <div class="worker-detail-list">
+            <div class="worker-detail-list__row">
+                <span class="worker-detail-list__label">Encargado</span>
+                <span class="worker-detail-list__value">@Model.Encargado</span>
+            </div>
+            <div class="worker-detail-list__row">
+                <span class="worker-detail-list__label">Correo</span>
+                <span class="worker-detail-list__value">@Model.Correo</span>
+            </div>
+            <div class="worker-detail-list__row">
+                <span class="worker-detail-list__label">Telefono</span>
+                <span class="worker-detail-list__value">@Model.Telefono</span>
+            </div>
+            <div class="worker-detail-list__row">
+                <span class="worker-detail-list__label">Asistente</span>
+                <span class="worker-detail-list__value">@(!String.IsNullOrEmpty(Model.Asistente) ? Model.Asistente : "Sin asistente")</span>
+            </div>
+            <div class="worker-detail-list__row">
+                <span class="worker-detail-list__label">Telefono asistente</span>
+                <span class="worker-detail-list__value">@(!String.IsNullOrEmpty(Model.TelefonoAsistente) ? Model.TelefonoAsistente : "Sin telefono")</span>
+            </div>
+        </div>
+    </section>
 </div>
-
-

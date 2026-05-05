@@ -5,187 +5,284 @@
     var cuenta = ControlPersonalAppWeb.Utils.SessionManager.CuentaAutenticada();
 }
 
+<section class="page-header">
+    <div>
+        <span class="page-header__eyebrow">Alta RR.HH.</span>
+<h1>Nuevo trabajador</h1>
+<p>Crea la ficha del trabajador con sus datos, documentos y estado de acceso en una sola vista.</p>
+    </div>
+
+    <div class="page-header__actions">
+        <a class="btn btn-outline-primary" href="@Url.Action("Index", "Trabajador")">Volver a RR.HH.</a>
+    </div>
+</section>
 
 @using (Html.BeginForm("Create", "Trabajador", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
     @Html.AntiForgeryToken()
 
-    <div class="form-horizontal" aling="center">
-        <h4 class="text-center display-4">Trabajador</h4>
-        <h3 class="text-muted font-weight-light">Crear</h3>
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @if (!String.IsNullOrEmpty(ViewBag.texto))
-        {
-            <h2 align="center" style="color:red"><strong>@ViewBag.texto</strong></h2>
-        }
-        @if (String.IsNullOrEmpty(ViewBag.aviso))
-        {
-            <input type="hidden" name="aviso" id="aviso" />
-        }
-        else
-        {
-            <input type="hidden" name="aviso" value="Avisado" />
-        }
-        <h3 class="text-center font-weight-normal">Antecedentes</h3>
+    if (!String.IsNullOrEmpty(ViewBag.texto))
+    {
+        <div class="form-feedback form-feedback--error">
+            @ViewBag.texto
+        </div>
+    }
 
-        <div class="form-group col-md-8 mx-auto">
-            @Html.LabelFor(model => model.Nombre, htmlAttributes: new { @class = "control-label font-weight-normal" })
-            *@Html.EditorFor(model => model.Nombre, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.Nombre, "", new { @class = "text-danger" })
-        </div>
+    @Html.ValidationSummary(true, "", new { @class = "text-danger mb-4" })
 
-        <div class="form-group col-md-8 mx-auto">
-            <label class="control-label font-weight-normal">Apellido Paterno</label>
-            @Html.EditorFor(model => model.ApellidoPaterno, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.ApellidoPaterno, "", new { @class = "text-danger" })
-        </div>
+    if (String.IsNullOrEmpty(ViewBag.aviso))
+    {
+        <input type="hidden" name="aviso" id="aviso" />
+    }
+    else
+    {
+        <input type="hidden" name="aviso" value="Avisado" />
+    }
 
-        <div class="form-group col-md-8 mx-auto">
-            <label class="control-label font-weight-normal">Apellido Materno</label>
-            @Html.EditorFor(model => model.ApellidoMaterno, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.ApellidoMaterno, "", new { @class = "text-danger" })
-        </div>
+    <div class="worker-create">
+        <div class="worker-create__main">
+            <section class="surface worker-panel">
+                <div class="worker-panel__header">
+                    <span class="worker-panel__eyebrow">Identidad</span>
+                    <h2>Datos principales</h2>
+<p>Completa lo esencial para dejar la ficha lista desde el primer momento.</p>
+                </div>
 
-        <div class="form-group col-md-8 mx-auto">
-            @Html.LabelFor(model => model.Rut, htmlAttributes: new { @class = "control-label font-weight-normal" })
-            *
-            @if (Model != null)
-            {
-                <input class="form-control" maxlength="12" type="text" id="Rut" value="@Model.Rut" oninput="return  this.setCustomValidity('')" name="Rut" placeholder="">
-            }
-            else
-            {
-                <input class="form-control" maxlength="12" type="text" id="Rut" name="Rut" oninput="return this.setCustomValidity('') " placeholder="">
-            }
-            <script src="~/Scripts/validarRUT.js"></script>
-        </div>
+                <div class="worker-form-grid">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Nombre, htmlAttributes: new { @class = "toolbar__label" })
+                        @Html.EditorFor(model => model.Nombre, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Nombre, "", new { @class = "text-danger" })
+                    </div>
 
-        <div class="form-group col-md-8 mx-auto">
-            @Html.LabelFor(model => model.Numero, htmlAttributes: new { @class = "control-label font-weight-normal" })
-            @Html.EditorFor(model => model.Numero, new { htmlAttributes = new { @class = "form-control", type = "number" } })
-            @Html.ValidationMessageFor(model => model.Numero, "", new { @class = "text-danger" })
-        </div>
+                    <div class="form-group">
+                        <label class="toolbar__label" for="ApellidoPaterno">Apellido paterno</label>
+                        @Html.EditorFor(model => model.ApellidoPaterno, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.ApellidoPaterno, "", new { @class = "text-danger" })
+                    </div>
 
-        <div class="form-group col-md-8 mx-auto">
-            @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label font-weight-normal" })
-            @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", @type = "email" } })
-            @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
-        </div>
+                    <div class="form-group">
+                        <label class="toolbar__label" for="ApellidoMaterno">Apellido materno</label>
+                        @Html.EditorFor(model => model.ApellidoMaterno, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.ApellidoMaterno, "", new { @class = "text-danger" })
+                    </div>
 
-        <div class="form-group col-md-8 mx-auto">
-            <label class="control-label font-weight-normal">Dirección</label>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Rut, htmlAttributes: new { @class = "toolbar__label" })
+                        @if (Model != null)
+                        {
+                            <input class="form-control" maxlength="12" type="text" id="Rut" value="@Model.Rut" oninput="return this.setCustomValidity('')" name="Rut" />
+                        }
+                        else
+                        {
+                            <input class="form-control" maxlength="12" type="text" id="Rut" name="Rut" oninput="return this.setCustomValidity('')" />
+                        }
+                    </div>
 
-            @Html.EditorFor(model => model.Direccion, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.Direccion, "", new { @class = "text-danger" })
-        </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Numero, htmlAttributes: new { @class = "toolbar__label" })
+                        @Html.EditorFor(model => model.Numero, new { htmlAttributes = new { @class = "form-control", type = "number" } })
+                        @Html.ValidationMessageFor(model => model.Numero, "", new { @class = "text-danger" })
+                    </div>
 
-        <div class="form-group col-md-8 mx-auto">
-            @Html.LabelFor(model => model.Sexo, htmlAttributes: new { @class = "control-label font-weight-normal" })
+                    <div class="form-group">
+                        <label class="toolbar__label" for="EmpresaInput">Contratista</label>
+                        <input list="Empresa" id="EmpresaInput" name="Empresa" class="form-control" required value="@(Model != null ? Model.Empresa : "")" />
+                        <datalist id="Empresa">
+                            @foreach (var empresa in ViewBag.empresas)
+                            {
+                                <option value="@empresa"></option>
+                            }
+                        </datalist>
+                        @Html.ValidationMessageFor(model => model.Empresa, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </section>
 
-            @Html.DropDownListFor(model => model.Sexo, new SelectList(new string[] { "Masculino", "Femenino" }), htmlAttributes: new { @class = "form-control" })
-            @Html.ValidationMessageFor(model => model.Sexo, "", new { @class = "text-danger" })
-        </div>
-        <div class="form-group col-md-8 mx-auto">
-            @Html.LabelFor(model => model.Telefono, htmlAttributes: new { @class = "control-label font-weight-normal" })
+            <section class="surface worker-panel">
+                <div class="worker-panel__header">
+                    <span class="worker-panel__eyebrow">Contacto</span>
+                    <h2>Información de contacto</h2>
+<p>Estos datos ayudan a ubicar a la persona y ordenar mejor su ficha.</p>
+                </div>
 
-            @Html.EditorFor(model => model.Telefono, new { htmlAttributes = new { @class = "form-control" } })
-            @Html.ValidationMessageFor(model => model.Telefono, "", new { @class = "text-danger" })
-        </div>
+                <div class="worker-form-grid">
+                    <div class="form-group">
+                        <label class="toolbar__label" for="Email">Correo</label>
+                        @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", @type = "email" } })
+                        @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+                    </div>
 
-        <div class="form-group col-md-8 mx-auto">
-            <label class="control-label font-weight-normal">Contratista</label>
-            <input list="Empresa" name="Empresa" class="form-control" required />
-            <datalist id="Empresa">
-                @foreach (var empresa in ViewBag.empresas)
-                {
-                    <option value="@empresa"></option>
-                }
-            </datalist>
-            @Html.ValidationMessageFor(model => model.Empresa, "", new { @class = "text-danger" })
-        </div>
-        <div class="form-group col-md-8 mx-auto">
-            @Html.LabelFor(model => model.Habilitado, htmlAttributes: new { @class = "control-label font-weight-normal" })
-            <input type="checkbox" class="form-control" id="Habilitado" name="Habilitado" value="true" />
-            @Html.ValidationMessageFor(model => model.Habilitado, "", new { @class = "text-danger" })
-        </div>
-        <div class="form-group col-md-8 mx-auto">
-            @Html.LabelFor(model => model.Expiración, htmlAttributes: new { @class = "control-label font-weight-normal" })
-            <input type="date" name="Expiración" id="Expiración" class="form-control" />
-            @Html.ValidationMessageFor(model => model.Expiración, "", new { @class = "text-danger" })
-        </div>
-        <div class="form-group col-md-8 mx-auto">
-            @Html.LabelFor(model => model.Nomina, htmlAttributes: new { @class = "control-label font-weight-normal" })
-            <input type="file" name="Nomina" class="form-control" />
-        </div>
-        <div class="form-group col-md-8 mx-auto">
-            @Html.LabelFor(model => model.Contrato, htmlAttributes: new { @class = "control-label font-weight-normal" })
-            <input type="file" name="Contrato" class="form-control" />
-        </div>
-        <div class="form-group col-md-8 mx-auto">
-            @Html.LabelFor(model => model.Anexo, htmlAttributes: new { @class = "control-label font-weight-normal" })
-            <input type="file" name="Anexo" class="form-control" />
-        </div>
-        <div class="form-group col-md-8 mx-auto">
-            @Html.LabelFor(model => model.Odi, htmlAttributes: new { @class = "control-label font-weight-normal" })
-            <input type="file" name="Odi" class="form-control" />
-        </div>
-        <div class="form-group col-md-8 mx-auto">
-            @Html.LabelFor(model => model.Registro_Epp, htmlAttributes: new { @class = "control-label font-weight-normal" })
-            <input type="file" name="Registro_Epp" class="form-control" />
-        </div>
-        <div class="form-group col-md-8 mx-auto">
-            @Html.LabelFor(model => model.Registro_RIOHS, htmlAttributes: new { @class = "control-label font-weight-normal" })
-            <input type="file" name="Registro_RIOHS" class="form-control" />
-        </div>
-        <div class="form-group col-md-8 mx-auto">
-            @Html.LabelFor(model => model.Registro_capacitación, htmlAttributes: new { @class = "control-label font-weight-normal" })
-            <input type="file" name="Registro_capacitación" class="form-control" />
-        </div>
-        <div class="form-group col-md-8 mx-auto">
-            @Html.LabelFor(model => model.Examen_altura_física, htmlAttributes: new { @class = "control-label font-weight-normal" })
-            <input type="file" name="Examen_altura_física" class="form-control" />
-        </div>
-        <div class="form-group col-md-8 mx-auto">
-            @Html.LabelFor(model => model.Procedimientos_de_trabajo, htmlAttributes: new { @class = "control-label font-weight-normal" })
-            <input type="file" name="Procedimientos_de_trabajo" class="form-control" />
-        </div>
-        <div class="form-group col-md-8 mx-auto">
-            @Html.LabelFor(model => model.Documento_Covid_19, htmlAttributes: new { @class = "control-label font-weight-normal" })
-            <input type="file" name="Documento_Covid_19" class="form-control" />
-        </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Telefono, htmlAttributes: new { @class = "toolbar__label" })
+                        @Html.EditorFor(model => model.Telefono, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Telefono, "", new { @class = "text-danger" })
+                    </div>
 
-        <div class="form-group col-md-8 mx-auto">
-            <label class="control-label font-weight-normal">Foto Carnet</label>
-            <div class=" my-1">
-                <input id="FotoCarnet" type="file" name="FotoCarnet" accept="image/*" class="form-control">
+                    <div class="form-group worker-form-grid__wide">
+                        <label class="toolbar__label" for="Direccion">Direccion</label>
+                        @Html.EditorFor(model => model.Direccion, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Direccion, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Sexo, htmlAttributes: new { @class = "toolbar__label" })
+                        @Html.DropDownListFor(model => model.Sexo, new SelectList(new string[] { "Masculino", "Femenino" }), htmlAttributes: new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.Sexo, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </section>
+
+            <section class="surface worker-panel">
+                <div class="worker-panel__header">
+                    <span class="worker-panel__eyebrow">Estado</span>
+                    <h2>Habilitacion y vigencia</h2>
+<p>Define si la persona queda activa desde ahora y hasta cuando estara vigente.</p>
+                </div>
+
+                <div class="worker-form-grid">
+                    <div class="form-group worker-toggle">
+                        <label class="toolbar__label" for="Habilitado">Habilitado</label>
+                        <label class="worker-toggle__field" for="Habilitado">
+                            <input type="checkbox" id="Habilitado" name="Habilitado" value="true" @(Model != null && Model.Habilitado == true ? "checked=\"checked\"" : "") />
+                            <span>Permitir ingreso y uso operativo</span>
+                        </label>
+                        @Html.ValidationMessageFor(model => model.Habilitado, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="form-group">
+                        <label class="toolbar__label" for="Expiración">Expiracion</label>
+                        <input type="date" name="Expiración" id="Expiración" class="form-control" value="@(Model != null && Model.Expiración != null ? Convert.ToDateTime(Model.Expiración).ToString("yyyy-MM-dd") : "")" />
+                        @Html.ValidationMessageFor(model => model.Expiración, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </section>
+
+            <section class="surface worker-panel">
+                <div class="worker-panel__header">
+                    <span class="worker-panel__eyebrow">Documentos</span>
+                    <h2>Documentacion contractual</h2>
+<p>Sube los documentos mas importantes del ingreso y sus respaldos.</p>
+                </div>
+
+                <div class="worker-file-grid">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Nomina, htmlAttributes: new { @class = "toolbar__label" })
+                        <input type="file" name="Nomina" class="form-control" />
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Contrato, htmlAttributes: new { @class = "toolbar__label" })
+                        <input type="file" name="Contrato" class="form-control" />
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Anexo, htmlAttributes: new { @class = "toolbar__label" })
+                        <input type="file" name="Anexo" class="form-control" />
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Odi, htmlAttributes: new { @class = "toolbar__label" })
+                        <input type="file" name="Odi" class="form-control" />
+                    </div>
+                </div>
+            </section>
+
+            <section class="surface worker-panel">
+                <div class="worker-panel__header">
+                    <span class="worker-panel__eyebrow">Seguridad</span>
+                    <h2>Respaldos y cumplimiento</h2>
+<p>Agrega anexos de seguridad, capacitacion y otros respaldos que acompañan la ficha.</p>
+                </div>
+
+                <div class="worker-file-grid">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Registro_Epp, htmlAttributes: new { @class = "toolbar__label" })
+                        <input type="file" name="Registro_Epp" class="form-control" />
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Registro_RIOHS, htmlAttributes: new { @class = "toolbar__label" })
+                        <input type="file" name="Registro_RIOHS" class="form-control" />
+                    </div>
+
+                    <div class="form-group">
+                        <label class="toolbar__label" for="Registro_capacitación">Registro capacitacion</label>
+                        <input type="file" name="Registro_capacitación" id="Registro_capacitación" class="form-control" />
+                    </div>
+
+                    <div class="form-group">
+                        <label class="toolbar__label" for="Examen_altura_física">Examen altura fisica</label>
+                        <input type="file" name="Examen_altura_física" id="Examen_altura_física" class="form-control" />
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Procedimientos_de_trabajo, htmlAttributes: new { @class = "toolbar__label" })
+                        <input type="file" name="Procedimientos_de_trabajo" class="form-control" />
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Documento_Covid_19, htmlAttributes: new { @class = "toolbar__label" })
+                        <input type="file" name="Documento_Covid_19" class="form-control" />
+                    </div>
+                </div>
+            </section>
+
+            <section class="surface worker-panel">
+                <div class="worker-panel__header">
+                    <span class="worker-panel__eyebrow">Imagenes</span>
+                    <h2>Fotos de referencia</h2>
+<p>Sube una foto para carnet y otra para uso interno si hace falta.</p>
+                </div>
+
+                <div class="worker-file-grid worker-file-grid--images">
+                    <div class="form-group">
+                        <label class="toolbar__label" for="FotoCarnet">Foto carnet</label>
+                        <input id="FotoCarnet" type="file" name="FotoCarnet" accept="image/*" class="form-control" />
+                        @Html.ValidationMessageFor(model => model.FotoCarnet, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="form-group">
+                        <label class="toolbar__label" for="Foto">Foto perfil</label>
+                        <input id="Foto" type="file" name="Foto" accept="image/*" class="form-control" />
+                        @Html.ValidationMessageFor(model => model.Foto, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </section>
+
+            <div class="worker-actions">
+                <input type="submit" value="Crear trabajador" class="btn btn-primary" />
+                @Html.ActionLink("Cancelar", "Index", null, new { @class = "btn btn-outline-secondary" })
             </div>
-            @Html.ValidationMessageFor(model => model.FotoCarnet, "", new { @class = "text-danger" })
         </div>
 
-        <div class="form-group col-md-8 mx-auto">
-            <label class="control-label font-weight-normal">Foto perfil</label>
-            <div class=" my-1">
-                <input id="Foto" type="file" name="Foto" accept="image/*" class="form-control">
-            </div>
-            @Html.ValidationMessageFor(model => model.Foto, "", new { @class = "text-danger" })
-        </div>
-        <div class="form-group col-md-9 mx-auto mb-5">
-            <input type="submit" value="Crear" class="btn btn-primary btn-block" />
-            @Html.ActionLink("Volver a la lista", "Index", null, new { @class = "btn btn-block btn-danger mt-3" })
-        </div>
+        <aside class="worker-create__aside">
+            <section class="surface worker-sidepanel">
+                <span class="worker-panel__eyebrow">Control</span>
+<h3>Antes de guardar</h3>
+                <ul class="worker-note-list">
+                    <li>El RUT se revisa automaticamente cuando sales del campo.</li>
+                    <li>Si la pulsera ya existe, te avisamos antes de guardar.</li>
+                    <li>Marca habilitado solo si debe quedar operativo de inmediato.</li>
+                    <li>Los documentos quedan asociados despues de crear la ficha base.</li>
+                </ul>
+            </section>
+
+            <section class="surface worker-sidepanel">
+                <span class="worker-panel__eyebrow">Carga documental</span>
+<h3>Orden sugerido</h3>
+<p>Primero completa la identidad, luego sube documentos y termina con fotos y respaldos.</p>
+            </section>
+        </aside>
     </div>
 }
 
-
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
-}
-
-<script>
+    <script src="~/Scripts/validarRUT.js"></script>
+    <script>
         $(document).ready(function () {
             let timeoutId;
-
 
             $('#Rut').on('change', function () {
                 clearTimeout(timeoutId);
@@ -208,12 +305,10 @@
                         }
                         else {
                             document.getElementById("Rut").setCustomValidity('');
-
                         }
                     }
                 });
             }
-
 
             $('#Numero').on('change', function () {
                 clearTimeout(timeoutId);
@@ -231,10 +326,11 @@
                     data: { numero: numero },
                     success: function (result) {
                         if (!result.isAvailable) {
-                            alert("Esta pulsera ya está asignada, si continúa se le cambiará")
+                            alert("Esta pulsera ya esta asignada, si continua se le cambiara");
                         }
                     }
                 });
             }
         });
-</script>
+    </script>
+}

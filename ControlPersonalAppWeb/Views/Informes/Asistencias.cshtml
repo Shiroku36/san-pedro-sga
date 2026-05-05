@@ -1,48 +1,112 @@
-﻿
+﻿@using System.Linq
+@model dynamic
+
 @{
     ViewBag.Title = "Asistencias mensuales";
     var id = ControlPersonalAppWeb.Utils.SessionManager.CuentaAutenticada().Empresa;
+    var trabajadores = ViewBag.Trabajador as IEnumerable<ControlPersonalAppWeb.Models.TrabajadorIndex> ?? Enumerable.Empty<ControlPersonalAppWeb.Models.TrabajadorIndex>();
 }
 
-<h2>Asistencias mensuales</h2>
+<section class="page-header">
+    <div>
+        <span class="page-header__eyebrow">Módulo Informes</span>
+        <h1>Asistencias mensuales</h1>
+        <p>Elige el mes y las personas incluidas para generar el comprobante de asistencia.</p>
+    </div>
+
+    <div class="page-header__actions">
+        <a class="btn btn-outline-secondary" href="@Url.Action("Index", "Informes")">Volver a Informes</a>
+    </div>
+</section>
+
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
+    <input type="hidden" value="@id" name="id" id="id" />
 
-    <div class="form-horizontal" aling="center">
-        <div class="form-group">
-            <b class="control-label col-md-2">Periodo</b>
-            <div class="col-md-10">
-                <input class="form-control" type="month" name="Periodo" />
+    <section class="surface surface--spacious">
+        <div class="report-grid">
+            <div class="report-stack">
+                <article class="report-panel">
+                    <div class="report-panel__header">
+                        <span class="report-panel__eyebrow">Periodo</span>
+                        <h2>Mes de referencia</h2>
+                    <p>Selecciona el mes que quieres informar.</p>
+                    </div>
+                    <div class="report-panel__body">
+                        <div class="form-group mb-0">
+                            <label class="toolbar__label" for="Periodo">Periodo</label>
+                            <input class="form-control" type="month" id="Periodo" name="Periodo" />
+                        </div>
+                    </div>
+                </article>
+
+                <article class="report-panel">
+                    <div class="report-panel__header">
+                    <span class="report-panel__eyebrow">Selección</span>
+                        <h2>Inclusion masiva</h2>
+                    <p>Marca o desmarca todo de una vez antes de ajustar la selección final.</p>
+                    </div>
+                    <div class="report-panel__body">
+                        <label class="permission-check">
+                            <input type="checkbox" onClick="toggle(this)" />
+                            <span>Seleccionar todos</span>
+                        </label>
+                    </div>
+                </article>
+            </div>
+
+            <div class="report-stack">
+                <article class="report-panel report-panel--accent">
+                    <div class="report-panel__header">
+                        <span class="report-panel__eyebrow">Salida</span>
+                        <h2>Generar documento</h2>
+                        <p>Genera el documento con las personas seleccionadas y el mes indicado.</p>
+                    </div>
+                    <div class="report-panel__body">
+                        <div class="report-actions">
+                            <input type="submit" value="Generar asistencias" class="btn btn-success btn-block" />
+                        </div>
+                    </div>
+                </article>
             </div>
         </div>
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <b class="control-label col-md-3">Trabajadores</b>
-                <label><input type="checkbox" onClick="toggle(this)" /> Seleccionar todos</label><br />
 
-                <div class="col-md-10">
-                    <!--<label><input type="checkbox" id="select_all" /> Seleccionar todos</label><br />-->
-                    @foreach (var trabajador in ViewBag.Trabajador)
+        <section class="report-selection surface">
+            <div class="worker-panel__header">
+                <span class="worker-panel__eyebrow">Trabajadores</span>
+                    <h2>Selección individual</h2>
+                <p>Activa o desactiva personas puntuales antes de emitir el comprobante.</p>
+            </div>
+
+            @if (trabajadores.Any())
+            {
+                <div class="selection-grid">
+                    @foreach (var trabajador in trabajadores)
                     {
-                        <label><input type="checkbox" checked="checked" id="Permisos" name="centros" value=@trabajador.Id class="custom-checkbox chkCheckBoxId" /> @trabajador.Nombre @trabajador.ApellidoPaterno @trabajador.ApellidoMaterno - @trabajador.Rut</label><br />
+                        <label class="permission-check selection-card">
+                            <input type="checkbox" checked="checked" id="Permisos" name="centros" value="@trabajador.Id" class="chkCheckBoxId" />
+                            <span>@trabajador.Nombre @trabajador.ApellidoPaterno @trabajador.ApellidoMaterno - @trabajador.Rut</span>
+                        </label>
                     }
                 </div>
-            </div>
-        </div>
-        <input type="hidden" value=@id name="id" id="id" />
-        <div class="form-group">
-            <div align="center" class="form-group col-lg-6">
-                <input type="submit" value="Generar" class="btn btn-default" />
-            </div>
-        </div>
-    </div>
+            }
+            else
+            {
+                <div class="form-feedback form-feedback--info">
+                    No hay trabajadores disponibles para generar este informe con la cuenta actual.
+                    
+                </div>
+            }
+        </section>
+    </section>
 }
 
-<script language="JavaScript">
+<script>
     function toggle(source) {
-        checkboxes = document.getElementsByName('centros');
-        for (var checkbox in checkboxes)
-            checkbox.checked = source.checked;
+        var checkboxes = document.getElementsByName('centros');
+        for (var i = 0; i < checkboxes.length; i++) {
+            checkboxes[i].checked = source.checked;
+        }
     }
 </script>

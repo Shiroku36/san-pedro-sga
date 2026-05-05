@@ -1,53 +1,78 @@
-﻿@model IEnumerable<ControlPersonalAppWeb.RegistroTrabajador>
+﻿@using System.Linq
+@model IEnumerable<ControlPersonalAppWeb.RegistroTrabajador>
 
 @{
-    ViewBag.Title = "Registros";
+    ViewBag.Title = "Registros por pulsera";
+    var totalRegistros = Model != null ? Model.Count() : 0;
 }
 
-<h2>Registros @ViewBag.numero</h2>
+<section class="page-header">
+    <div>
+        <span class="page-header__eyebrow">Módulo Registros</span>
+        <h1>Registros por pulsera</h1>
+        <p>@totalRegistros registros asociados al numero consultado.</p>
+    </div>
 
-<p>
-    @Html.ActionLink("Crear nuevo", "Create")
-</p>
+    <div class="page-header__actions">
+        <a class="btn btn-outline-secondary" href="@Url.Action("Index", "Home")">Volver al inicio</a>
+    </div>
+</section>
+
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    <input name="numero" class="form-control" />
-    <button type="submit" class="form-control btn btn-primary mb-4 mt-4" >Buscar</button>
-    <!--<button type="submit" value="Delete" class="btn btn-sm btn-danger rounded-0" onclick="return confirm('¿Está seguro que desea elminiar varios registros?')"><i class="fa fa-trash-o"></i> Delete</button>
-    <br /><br />-->
-    <table class="table table-hover" id="tabla">
-        <tr class="bg-primary">
-            <th>
-                @Html.DisplayNameFor(model => model.Fecha)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Campo)
-            </th>
-            <th>
-                Foto
-            </th>
-            <th></th>
-        </tr>
 
-        @foreach (var item in Model)
-        {
-            <tr>
-                <!--
-                <td>
-                    <input type="checkbox" id="ID" checked="checked" name="ID" value="@item.Id" class="custom-checkbox chkCheckBoxId" />
-                </td>-->
-                <td>
-                    @Html.DisplayFor(modelItem => item.Fecha)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Campo)
-                </td>
-                <td>
-                    <img src="@String.Format("data:image/jpg;base64,{0}", System.Convert.ToBase64String(item.Foto))" width="110" />
-                </td>
-            </tr>
-        }
+    <section class="surface worker-panel">
+        <div class="worker-panel__header">
+            <span class="worker-panel__eyebrow">Consulta</span>
+            <h2>Numero de pulsera</h2>
+            <p>Consulta el historial de registros asociado a una pulsera especifica.</p>
+        </div>
 
-    </table>
+        <div class="record-filter-grid record-filter-grid--wide">
+            <div class="form-group mb-0">
+                <label class="toolbar__label" for="numero">Numero</label>
+                <input name="numero" id="numero" class="form-control" value="@ViewBag.numero" />
+            </div>
+            <div class="record-filter-grid__action">
+                <button type="submit" class="btn btn-primary btn-block">Buscar</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="surface mt-4">
+        <div class="table-responsive">
+            <table class="table data-table table-hover" id="tabla">
+                <thead>
+                    <tr>
+                        <th>@Html.DisplayNameFor(model => model.Fecha)</th>
+                        <th>@Html.DisplayNameFor(model => model.Campo)</th>
+                        <th>Foto</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null)
+                    {
+                        foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@Html.DisplayFor(modelItem => item.Fecha)</td>
+                                <td>@Html.DisplayFor(modelItem => item.Campo)</td>
+                                <td>
+                                    @if (item.Foto != null)
+                                    {
+                                        <img src="@String.Format("data:image/jpg;base64,{0}", System.Convert.ToBase64String(item.Foto))" class="record-photo record-photo--clickable" alt="Registro por pulsera" data-image-preview />
+                                    }
+                                    else
+                                    {
+                                        <span class="record-photo record-photo--empty">Sin foto</span>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </section>
 }

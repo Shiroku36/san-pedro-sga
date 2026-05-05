@@ -6,6 +6,7 @@ using System.Net.Mail;
 using System.Reflection.Emit;
 using System.Web;
 using System.Web.Mvc;
+using ControlPersonalAppWeb.Infrastructure;
 
 namespace ControlPersonalAppWeb.Controllers
 {
@@ -17,6 +18,7 @@ namespace ControlPersonalAppWeb.Controllers
         {
             return View();
         }
+        [AllowAnonymous]
         public ActionResult Index()
         {
 
@@ -28,6 +30,7 @@ namespace ControlPersonalAppWeb.Controllers
             return View();
         }
 
+        [AllowAnonymous]
         public ActionResult About()
         {
             ViewBag.Message = "Your application description page.";
@@ -35,6 +38,7 @@ namespace ControlPersonalAppWeb.Controllers
             return View();
         }
 
+        [AllowAnonymous]
         public ActionResult Contact()
         {
             //ViewBag.Message = "Your contact page.";
@@ -43,7 +47,9 @@ namespace ControlPersonalAppWeb.Controllers
 
             return View();
         }
+        [AllowAnonymous]
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Contact(FormCollection form)
         {
             //ViewBag.Message = "Your contact page.";
@@ -56,8 +62,8 @@ namespace ControlPersonalAppWeb.Controllers
             {
                 MailMessage mail = new MailMessage();
                 SmtpClient SmtpServer = new SmtpClient();
-                mail.From = new MailAddress("notificacionjcp@ingenieriajcp.cl",
-                "SGA JCP", System.Text.Encoding.UTF8);
+                mail.From = new MailAddress(AppSettings.SmtpFromAddress,
+                    AppSettings.SmtpFromName, System.Text.Encoding.UTF8);
                 mail.To.Add("jcastro@ingenieriajcp.cl");
                 //mail.To.Add("emilio.silva1@hotmail.com");
                 mail.Bcc.Add("sebastianct36@outlook.com");
@@ -67,10 +73,10 @@ namespace ControlPersonalAppWeb.Controllers
                 mail.Body = nombre + " quiere tener informacion del sistema\nNumero de telefono: " + telefono + "\nComentario: " + comentario;
                 SmtpServer.DeliveryMethod = SmtpDeliveryMethod.Network;
                 SmtpServer.UseDefaultCredentials = false;
-                SmtpServer.Port = 25;
-                SmtpServer.Host = "mail.ingenieriajcp.cl";
-                SmtpServer.Credentials = new System.Net.NetworkCredential("notificacionjcp@ingenieriajcp.cl", "notificacion");
-                SmtpServer.EnableSsl = true;
+                SmtpServer.Port = AppSettings.SmtpPort;
+                SmtpServer.Host = AppSettings.SmtpHost;
+                SmtpServer.Credentials = new System.Net.NetworkCredential(AppSettings.SmtpUser, AppSettings.SmtpPassword);
+                SmtpServer.EnableSsl = AppSettings.SmtpEnableSsl;
                 SmtpServer.Send(mail);
                 mail.Dispose();
                 SmtpServer.Dispose();
@@ -89,7 +95,13 @@ namespace ControlPersonalAppWeb.Controllers
         public ActionResult Log()
         {
             List<String> data = new List<string>();
-            StreamReader r = new StreamReader("C:\\Data\\Log.txt");
+            string logPath = System.IO.Path.Combine(AppSettings.FileStoragePath, "Log.txt");
+            if (!System.IO.File.Exists(logPath))
+            {
+                ViewBag.Log = data;
+                return View();
+            }
+            StreamReader r = new StreamReader(logPath);
             string line = "";
             while ((line = r.ReadLine()) != null)
             {

@@ -1,0 +1,26 @@
+@model ControlPersonalAppWeb.Campos
+
+@{
+    ViewBag.Title = "Eliminar Predio";
+}
+
+<h2>Confirmar eliminación</h2>
+
+<div class="surface">
+    <h3>¿Está seguro de que desea eliminar este predio?</h3>
+    <dl class="dl-horizontal">
+        <dt>Nombre</dt>
+        <dd>@Model.Nombre</dd>
+        <dt>Empresa</dt>
+        <dd>@Model.Empresa</dd>
+        <dt>Lugar</dt>
+        <dd>@Model.Lugar</dd>
+    </dl>
+
+    @using (Html.BeginForm("Delete", "Campo", new { id = Model.Id }, FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        <input type="submit" value="Eliminar" class="btn btn-danger" />
+        @Html.ActionLink("Cancelar", "Index", null, new { @class = "btn btn-secondary" })
+    }
+</div>

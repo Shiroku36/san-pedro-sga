@@ -195,6 +195,10 @@
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Infrastructure\AppSettings.cs" />
+    <Compile Include="Infrastructure\BaseController.cs" />
+    <Compile Include="Infrastructure\FileUploadService.cs" />
+    <Compile Include="Infrastructure\RequireAuthAttribute.cs" />
     <Compile Include="Campos.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
@@ -209,7 +213,6 @@
     <Compile Include="Controllers\CosechaController.cs" />
     <Compile Include="Controllers\CuentaController.cs" />
     <Compile Include="Controllers\EmpresaController.cs" />
-    <Compile Include="Controllers\EmpresasController.cs" />
     <Compile Include="Controllers\HistorialController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\HyDsController.cs" />
@@ -224,7 +227,6 @@
     <Compile Include="Controllers\SolicitudesController.cs" />
     <Compile Include="Controllers\StockController.cs" />
     <Compile Include="Controllers\TrabajadorController.cs" />
-    <Compile Include="Controllers\TrabajadoresController.cs" />
     <Compile Include="Cuentas.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
@@ -570,10 +572,12 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Empresa\Create.cshtml" />
     <Content Include="Views\Empresa\Edit.cshtml" />
+    <Content Include="Views\Empresa\Delete.cshtml" />
     <Content Include="Views\Empresa\Details.cshtml" />
     <Content Include="Views\Empresa\Index.cshtml" />
     <Content Include="Views\Cuenta\Create.cshtml" />
     <Content Include="Views\Cuenta\Edit.cshtml" />
+    <Content Include="Views\Cuenta\Delete.cshtml" />
     <Content Include="Views\Cuenta\Details.cshtml" />
     <Content Include="Views\Cuenta\Index.cshtml" />
     <Content Include="Views\Trabajador\Index.cshtml" />
@@ -581,6 +585,7 @@
     <Content Include="Views\Trabajador\Details.cshtml" />
     <Content Include="Views\Trabajador\Create.cshtml" />
     <Content Include="Views\Trabajador\Edit.cshtml" />
+    <Content Include="Views\Trabajador\Delete.cshtml" />
     <Content Include="Views\Registro\Details.cshtml" />
     <Content Include="Views\Registro\Edit.cshtml" />
     <Content Include="Views\Cuenta\Login.cshtml" />
@@ -592,12 +597,13 @@
     <Content Include="Views\Registro\Hoy.cshtml" />
     <Content Include="Views\Campo\Create.cshtml" />
     <Content Include="Views\Campo\Edit.cshtml" />
+    <Content Include="Views\Campo\Delete.cshtml" />
     <Content Include="Views\Campo\Details.cshtml" />
     <Content Include="Views\Campo\Index.cshtml" />
+    <Content Include="Views\Registro\Delete.cshtml" />
     <Content Include="Views\Registro\Registros.cshtml" />
     <Content Include="Views\Trabajador\PorDia.cshtml" />
     <Content Include="Views\Home\Log.cshtml" />
-    <Content Include="Views\Trabajador\Correo.cshtml" />
     <Content Include="Views\Remuneracion\Index.cshtml" />
     <Content Include="Views\HorasExtras\Create.cshtml" />
     <Content Include="Views\HorasExtras\Delete.cshtml" />
@@ -648,15 +654,8 @@
     <Content Include="Views\AFPs\Edit.cshtml" />
     <Content Include="Views\AFPs\Index.cshtml" />
     <Content Include="Views\Remuneraciones\ExcelPrevired.cshtml" />
-    <Content Include="Views\Trabajadores\Create.cshtml" />
-    <Content Include="Views\Trabajadores\Delete.cshtml" />
-    <Content Include="Views\Trabajadores\Details.cshtml" />
-    <Content Include="Views\Trabajadores\Index.cshtml" />
-    <Content Include="Views\Trabajadores\Edit.cshtml" />
     <Content Include="Views\Informes\Asistencias.cshtml" />
-    <Content Include="Views\Trabajador\Asistencias.cshtml" />
     <Content Include="Views\Registro\BusquedaRegistro.cshtml" />
-    <Content Include="Views\Registro\Lista.cshtml" />
     <Content Include="Views\Informes\Horas.cshtml" />
     <Content Include="Views\Trabajador\Cargar.cshtml" />
     <Content Include="Views\Comentarios\Index.cshtml" />
@@ -722,6 +721,11 @@
     <Content Include="Views\Personas\Cargar.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Images\hero-agri-1.png" />
+    <Content Include="Images\hero-agri-2.png" />
+    <Content Include="Images\hero-agri-3.png" />
+    <Content Include="Images\hero-agri-4.png" />
+    <Content Include="Images\hero-agri-5.png" />
     <Folder Include="bin\es\" />
     <Folder Include="Images\" />
     <Folder Include="Views\Liquidaciones\" />

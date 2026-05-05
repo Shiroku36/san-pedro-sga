@@ -20,6 +20,20 @@ namespace ControlPersonalAppWeb.Controllers
     public class CasinoController : Controller
     {
         private SgajcpEntities db = new SgajcpEntities();
+        private const int CasinoPageSize = 30;
+        private sealed class CasinoInformeRow
+        {
+            public DateTime? Fecha { get; set; }
+            public string Comida { get; set; }
+            public string Ubicacion { get; set; }
+            public string Rut { get; set; }
+            public string Nombre { get; set; }
+            public string GlosaPuesto { get; set; }
+            public string CentroCosto1 { get; set; }
+            public string CentroCosto2 { get; set; }
+            public string GlosaCosto { get; set; }
+            public string Instalacion { get; set; }
+        }
         Dictionary<string, List<string>> nombresServicios = new Dictionary<string, List<string>>
 {
     { "Molina", new List<string> {
@@ -36,73 +50,130 @@ namespace ControlPersonalAppWeb.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Index(FormCollection collection)
         {
-            DateTime fechaActual = Convert.ToDateTime(collection["Fecha"]);
-            ViewBag.Fecha = fechaActual.ToString("dddd, dd 'de' MMMM 'de' yyyy", new System.Globalization.CultureInfo("es-ES"));
-            var registrosHoy = db.Casino
-                .Where(x => x.Fecha.HasValue &&
-                            x.Fecha.Value.Day == fechaActual.Day &&
-                            x.Fecha.Value.Month == fechaActual.Month &&
-                            x.Fecha.Value.Year == fechaActual.Year)
-                .OrderByDescending(x => x.Fecha)
-                .ToList();
+            DateTime fechaActual;
+            if (!DateTime.TryParse(collection["Fecha"], out fechaActual))
+            {
+                fechaActual = DateTime.Now.Date;
+            }
 
-            var personas = db.Personas
-                        .DistinctBy(p => p.Rut)
-                        .ToDictionary(p => p.Rut, p => p.Nombre);
+            var searchQuery = (collection["q"] ?? string.Empty).Trim();
 
-            var registrosConNombre = registrosHoy
-                .Select(c => new CasinoConNombreViewModel
-                {
-                    Id = c.Id,
-                    Rut = c.Rut,
-                    Fecha = c.Fecha,
-                    Comida = c.Comida,
-                    Foto = c.Foto,
-                    Ubicacion = c.Ubicacion,
-                    Nombre = personas.ContainsKey(c.Rut.ToLower()) ? personas[c.Rut.ToLower()] : "(Desconocido)"
-                })
-                .ToList();
-
-
-
-            return View(registrosConNombre);
+            return RedirectToAction("Index", new
+            {
+                fecha = fechaActual.ToString("yyyy-MM-dd"),
+                q = string.IsNullOrWhiteSpace(searchQuery) ? null : searchQuery,
+                page = 1
+            });
         }
-        public ActionResult Index()
+        public ActionResult Index(string fecha = null, string q = null, int page = 1)
         {
-            DateTime fechaActual = DateTime.Now;
+            DateTime fechaActual;
+            if (!DateTime.TryParse(fecha, out fechaActual))
+            {
+                fechaActual = DateTime.Now.Date;
+            }
+            fechaActual = fechaActual.Date;
+            var fechaSiguiente = fechaActual.AddDays(1);
+
+            var searchQuery = (q ?? string.Empty).Trim();
+
             ViewBag.Fecha = fechaActual.ToString("dddd, dd 'de' MMMM 'de' yyyy", new System.Globalization.CultureInfo("es-ES"));
+            ViewBag.FechaFiltro = fechaActual.ToString("yyyy-MM-dd");
+            ViewBag.SearchQuery = searchQuery;
 
-            var registrosHoy = db.Casino
+            var consulta = db.Casino
+                .AsNoTracking()
                 .Where(x => x.Fecha.HasValue &&
-                            x.Fecha.Value.Day == fechaActual.Day &&
-                            x.Fecha.Value.Month == fechaActual.Month &&
-                            x.Fecha.Value.Year == fechaActual.Year)
+                            x.Fecha >= fechaActual &&
+                            x.Fecha < fechaSiguiente);
+
+            if (!string.IsNullOrWhiteSpace(searchQuery))
+            {
+                var rutsPorNombre = db.Personas
+                    .AsNoTracking()
+                    .Where(x => (x.Nombre ?? string.Empty).Contains(searchQuery))
+                    .Select(x => x.Rut);
+
+                consulta = consulta.Where(x =>
+                    (x.Rut ?? string.Empty).Contains(searchQuery) ||
+                    (x.Comida ?? string.Empty).Contains(searchQuery) ||
+                    (x.Ubicacion ?? string.Empty).Contains(searchQuery) ||
+                    rutsPorNombre.Contains(x.Rut));
+            }
+
+            var totalRegistros = consulta.Count();
+            var totalPaginas = Math.Max(1, (int)Math.Ceiling((double)totalRegistros / CasinoPageSize));
+            var paginaActual = Math.Min(Math.Max(page, 1), totalPaginas);
+
+            var registrosPagina = consulta
                 .OrderByDescending(x => x.Fecha)
-                .ToList();
-            var personas = db.Personas
-                        .DistinctBy(p => p.Rut)
-                        .ToDictionary(p => p.Rut, p => p.Nombre);
-
-
-            var registrosConNombre = registrosHoy
-                .Select(c => new CasinoConNombreViewModel
+                .Skip((paginaActual - 1) * CasinoPageSize)
+                .Take(CasinoPageSize)
+                .Select(x => new CasinoConNombreViewModel
                 {
-                    Id = c.Id,
-                    Rut = c.Rut,
-                    Fecha = c.Fecha,
-                    Comida = c.Comida,
-                    Foto = c.Foto,
-                    Ubicacion = c.Ubicacion,
-                    Nombre = personas.ContainsKey(c.Rut.ToLower()) ? personas[c.Rut.ToLower()] : "(Desconocido)"
+                    Id = x.Id,
+                    Rut = x.Rut,
+                    Fecha = x.Fecha,
+                    Comida = x.Comida,
+                    Ubicacion = x.Ubicacion
                 })
                 .ToList();
-            return View(registrosConNombre);
+
+            var idsPagina = registrosPagina.Select(x => x.Id).ToList();
+            var rutsPagina = registrosPagina
+                .Where(x => !string.IsNullOrWhiteSpace(x.Rut))
+                .Select(x => x.Rut)
+                .Distinct()
+                .ToList();
+
+            var nombresPagina = new Dictionary<string, string>();
+            if (rutsPagina.Count > 0)
+            {
+                try
+                {
+                    nombresPagina = db.Personas
+                        .AsNoTracking()
+                        .Where(x => rutsPagina.Contains(x.Rut))
+                        .Select(x => new { x.Rut, x.Nombre })
+                        .ToList()
+                        .GroupBy(x => x.Rut)
+                        .ToDictionary(x => x.Key, x => x.Select(y => y.Nombre).FirstOrDefault());
+                }
+                catch
+                {
+                    nombresPagina = new Dictionary<string, string>();
+                }
+            }
+
+            var fotosPagina = db.Casino
+                .AsNoTracking()
+                .Where(x => idsPagina.Contains(x.Id))
+                .Select(x => new { x.Id, x.Foto })
+                .ToList()
+                .ToDictionary(x => x.Id, x => x.Foto);
+
+            foreach (var registro in registrosPagina)
+            {
+                registro.Foto = fotosPagina.ContainsKey(registro.Id) ? fotosPagina[registro.Id] : null;
+                registro.Nombre = !string.IsNullOrWhiteSpace(registro.Rut) && nombresPagina.ContainsKey(registro.Rut)
+                    ? nombresPagina[registro.Rut]
+                    : null;
+                registro.Nombre = string.IsNullOrWhiteSpace(registro.Nombre) ? "(Desconocido)" : registro.Nombre;
+            }
+
+            ViewBag.TotalRegistros = totalRegistros;
+            ViewBag.PaginaActual = paginaActual;
+            ViewBag.TotalPaginas = totalPaginas;
+            ViewBag.PageSize = CasinoPageSize;
+
+            return View(registrosPagina);
         }
         public ActionResult Informe(FormCollection collection)
         {
             DateTime fechaInicio = Convert.ToDateTime(collection["Inicio"]);
             DateTime fechaFin = Convert.ToDateTime(collection["Fin"]);
-            fechaFin = fechaFin.AddDays(1);
+            fechaInicio = fechaInicio.Date;
+            fechaFin = fechaFin.Date.AddDays(1);
             // Servicios por ubicación
             Dictionary<string, List<string>> nombresServicios = new Dictionary<string, List<string>>
     {
@@ -114,24 +185,59 @@ namespace ControlPersonalAppWeb.Controllers
         }}
     };
 
-            // JOIN Casino + Personas por RUT
-            var datosFiltrados = (from c in db.Casino
-                                  join p in db.Personas on c.Rut equals p.Rut
-                                  where DbFunctions.TruncateTime(c.Fecha) >= fechaInicio.Date &&
-                                        DbFunctions.TruncateTime(c.Fecha) <= fechaFin.Date
-                                  select new
-                                  {
-                                      c.Fecha,
-                                      c.Comida,
-                                      c.Ubicacion,
-                                      c.Rut,
-                                      p.Nombre,
-                                      p.GlosaPuesto,
-                                      p.CentroCosto1,
-                                      p.CentroCosto2,
-                                      p.GlosaCosto,
-                                      p.Instalacion
-                                  }).ToList();
+            var registrosCasino = db.Casino
+                .AsNoTracking()
+                .Where(c => c.Fecha.HasValue &&
+                            c.Fecha >= fechaInicio &&
+                            c.Fecha < fechaFin)
+                .Select(c => new CasinoInformeRow
+                {
+                    Fecha = c.Fecha,
+                    Comida = c.Comida,
+                    Ubicacion = c.Ubicacion,
+                    Rut = c.Rut
+                })
+                .ToList();
+
+            var rutsInforme = registrosCasino
+                .Where(x => !string.IsNullOrWhiteSpace(x.Rut))
+                .Select(x => x.Rut)
+                .Distinct()
+                .ToList();
+
+            var personasPorRut = new Dictionary<string, Personas>();
+            if (rutsInforme.Count > 0)
+            {
+                try
+                {
+                    personasPorRut = db.Personas
+                        .AsNoTracking()
+                        .Where(x => rutsInforme.Contains(x.Rut))
+                        .ToList()
+                        .GroupBy(x => x.Rut)
+                        .ToDictionary(x => x.Key, x => x.FirstOrDefault());
+                }
+                catch
+                {
+                    personasPorRut = new Dictionary<string, Personas>();
+                }
+            }
+
+            foreach (var registro in registrosCasino)
+            {
+                Personas persona;
+                if (!string.IsNullOrWhiteSpace(registro.Rut) && personasPorRut.TryGetValue(registro.Rut, out persona) && persona != null)
+                {
+                    registro.Nombre = persona.Nombre;
+                    registro.GlosaPuesto = persona.GlosaPuesto;
+                    registro.CentroCosto1 = persona.CentroCosto1;
+                    registro.CentroCosto2 = persona.CentroCosto2;
+                    registro.GlosaCosto = persona.GlosaCosto;
+                    registro.Instalacion = persona.Instalacion;
+                }
+            }
+
+            var datosFiltrados = registrosCasino;
 
             // ✅ EXPORTACIÓN A PDF
             if (collection["formato"] == "pdf")
@@ -228,7 +334,7 @@ namespace ControlPersonalAppWeb.Controllers
                 sl.MergeWorksheetCells(fila, 1, fila, 11);
                 sl.SetCellStyle(fila++, 1, titleStyle);
 
-                sl.SetCellValue(fila++, 1, $"Desde: {fechaInicio:dd/MM/yyyy} - Hasta: {fechaFin:dd/MM/yyyy}");
+                sl.SetCellValue(fila++, 1, $"Desde: {fechaInicio:dd/MM/yyyy} - Hasta: {fechaFin.AddDays(-1):dd/MM/yyyy}");
 
                 string[] headers = { "Centro Costo 1", "Centro Costo 2", "Glosa Centro de Costo", "Ubicación",
                              "Instalación", "Rut", "Nombre completo", "Glosa Puesto", "Fecha", "Hora", "Servicio", "Ubicación pedido" };

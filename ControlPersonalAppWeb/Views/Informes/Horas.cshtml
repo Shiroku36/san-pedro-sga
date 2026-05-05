@@ -1,34 +1,94 @@
-﻿
-@{
-    ViewBag.Title = "Informes";
+﻿@{
+    ViewBag.Title = "Horas extras";
 }
 
-<h2>Calcular horas extras</h2>
+<section class="page-header">
+    <div>
+        <span class="page-header__eyebrow">Módulo Informes</span>
+        <h1>Horas extras</h1>
+        <p>Sube los CSV, ponle nombre al informe y genera el resumen de horas extras.</p>
+    </div>
+
+    <div class="page-header__actions">
+        <a class="btn btn-outline-secondary" href="@Url.Action("Index", "Informes")">Volver a Informes</a>
+    </div>
+</section>
+
 @using (Html.BeginForm("Horas", "Informes", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
-
+    @Html.AntiForgeryToken()
     if (!String.IsNullOrEmpty(ViewBag.texto))
     {
-        <h2 align="center" style="color:red"><strong>@ViewBag.texto</strong></h2>
+        <div class="form-feedback form-feedback--error">
+            @ViewBag.texto
+        </div>
     }
-    <div class="form-group">
-        <div class="col-md-12 ">
-            <b class="control-label col-md-2">Documento</b>
-            <input id="Foto" type="file" name="csv" accept=".csv" class="form-control" value="@ViewBag.documento" multiple>
-        </div>
-        <br />
-        <div class="col-md-12" style="margin-top:20px; margin-bottom:20px">
-            <b class="control-label col-md-2">Titulo</b>
-            <input type="text" name="titulo" class="form-control">
-        </div>
-        <br />
-        <div class="col-md-offset-2">
-            <label><input type="checkbox" name="horario" value="T" class="custom-checkbox chkCheckBoxId" />Horario diferido</label>
-        </div>
-        <br />
-        <div class="col-md-offset-2 col-md-12 form-group">
-            <input type="submit" value="Cargar" class="btn btn-default" />
-        </div>
-    </div>
-}
 
+    <section class="surface surface--spacious">
+        <div class="report-grid">
+            <div class="report-stack">
+                <article class="report-panel">
+                    <div class="report-panel__header">
+                        <span class="report-panel__eyebrow">Carga</span>
+                        <h2>Documentos fuente</h2>
+                    <p>Selecciona uno o varios CSV con la información que quieres procesar.</p>
+                    </div>
+                    <div class="report-panel__body">
+                        <div class="form-group mb-0">
+                            <label class="toolbar__label" for="csv">Documento</label>
+                            <input id="csv" type="file" name="csv" accept=".csv" class="form-control" multiple />
+                        </div>
+                    </div>
+                </article>
+
+                <article class="report-panel">
+                    <div class="report-panel__header">
+                        <span class="report-panel__eyebrow">Personalizacion</span>
+                        <h2>Titulo del informe</h2>
+                        <p>Si quieres, cambia el nombre que aparecera en el informe final.</p>
+                    </div>
+                    <div class="report-panel__body">
+                        <div class="form-group mb-0">
+                            <label class="toolbar__label" for="titulo">Titulo</label>
+                            <input type="text" id="titulo" name="titulo" class="form-control" placeholder="Informe horas extras" />
+                        </div>
+                    </div>
+                </article>
+            </div>
+
+            <div class="report-stack">
+                <article class="report-panel report-panel--accent">
+                    <div class="report-panel__header">
+                        <span class="report-panel__eyebrow">Configuracion</span>
+                        <h2>Opciones de calculo</h2>
+                        <p>Usa horario diferido solo si los archivos vienen con ese formato.</p>
+                    </div>
+                    <div class="report-panel__body">
+                        <label class="permission-check">
+                            <input type="checkbox" name="horario" value="T" class="chkCheckBoxId" />
+                            <span>Horario diferido</span>
+                        </label>
+                        <div class="report-actions">
+                            <input type="submit" value="Generar informe" class="btn btn-success btn-block" />
+                        </div>
+                    </div>
+                </article>
+
+                <article class="report-panel">
+                    <div class="report-panel__header">
+                        <span class="report-panel__eyebrow">Referencia</span>
+                        <h2>Antes de generar</h2>
+                        <p>Antes de generar, revisa que los archivos correspondan al periodo correcto.</p>
+                    </div>
+                    <div class="report-panel__body">
+                        <ul class="entity-note-list">
+                            <li>Puedes subir varios archivos CSV en una sola pasada.</li>
+                            <li>Si no escribes un titulo, usamos uno por defecto.</li>
+                            <li>El archivo se descarga apenas termina el proceso.</li>
+                        </ul>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+}

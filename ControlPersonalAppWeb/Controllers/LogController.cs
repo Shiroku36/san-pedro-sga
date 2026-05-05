@@ -14,12 +14,12 @@ namespace ControlPersonalAppWeb.Controllers
     public class LogController : Controller
     {
         private SgajcpEntities db = new SgajcpEntities();
-        private Cuentas cuenta = Utils.SessionManager.CuentaAutenticada();
+        private Cuentas cuenta => Utils.SessionManager.CuentaAutenticada();
 
         // GET: Log
         public ActionResult Index()
         {
-            return View(db.Log.ToList().OrderByDescending(x => x.Fecha).Take(10000).ToList());
+            return View(db.Log.OrderByDescending(x => x.Fecha).Take(10000).ToList());
         }
         /*
         // GET: Log/Details/5
@@ -122,6 +122,11 @@ namespace ControlPersonalAppWeb.Controllers
             return RedirectToAction("Index");
         }
         */
-        
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing) db.Dispose();
+            base.Dispose(disposing);
+        }
     }
 }

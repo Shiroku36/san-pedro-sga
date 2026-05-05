@@ -1,0 +1,26 @@
+@model ControlPersonalAppWeb.Cuentas
+
+@{
+    ViewBag.Title = "Eliminar Cuenta";
+}
+
+<h2>Confirmar eliminación</h2>
+
+<div class="surface">
+    <h3>¿Está seguro de que desea eliminar esta cuenta?</h3>
+    <dl class="dl-horizontal">
+        <dt>Usuario</dt>
+        <dd>@Model.Usuario</dd>
+        <dt>Nombre</dt>
+        <dd>@Model.Nombre @Model.Apellido</dd>
+        <dt>Empresa</dt>
+        <dd>@Model.Empresa</dd>
+    </dl>
+
+    @using (Html.BeginForm("Delete", "Cuenta", new { id = Model.Id }, FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        <input type="submit" value="Eliminar" class="btn btn-danger" />
+        @Html.ActionLink("Cancelar", "Index", null, new { @class = "btn btn-secondary" })
+    }
+</div>

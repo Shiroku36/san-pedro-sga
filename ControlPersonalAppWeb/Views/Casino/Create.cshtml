@@ -1,62 +1,83 @@
 ﻿@model ControlPersonalAppWeb.Casino
 
 @{
-    ViewBag.Title = "Crear";
-    var cuenta = ControlPersonalAppWeb.Utils.SessionManager.CuentaAutenticada();
+    ViewBag.Title = "Crear servicio";
 }
+
+<section class="page-header">
+    <div>
+        <span class="page-header__eyebrow">Módulo Casino</span>
+        <h1>Crear registro de servicio</h1>
+        <p>Ingresa un nuevo consumo con sus datos principales y su respaldo visual.</p>
+    </div>
+
+    <div class="page-header__actions">
+        <a class="btn btn-outline-secondary" href="@Url.Action("Index", "Casino")">Volver a Casino</a>
+    </div>
+</section>
 
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
 
-    <div class="form-horizontal">
-        <h4>Casino</h4>
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        <div class="form-group">
-            @Html.LabelFor(model => model.Rut, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Rut, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Rut, "", new { @class = "text-danger" })
-            </div>
+    <section class="worker-create worker-create--wide worker-create--casino">
+        <div class="worker-create__main">
+            <section class="surface worker-panel casino-panel">
+                <div class="worker-panel__header">
+                    <span class="worker-panel__eyebrow">Nuevo registro</span>
+                    <h2>Datos del servicio</h2>
+                    <p>Completa RUT, fecha, servicio, ubicacion y foto del registro.</p>
+                </div>
+
+                @Html.ValidationSummary(true, "", new { @class = "text-danger mb-4" })
+
+                <div class="worker-form-grid">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Rut, htmlAttributes: new { @class = "toolbar__label" })
+                        @Html.EditorFor(model => model.Rut, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Rut, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Fecha, htmlAttributes: new { @class = "toolbar__label" })
+                        @Html.EditorFor(model => model.Fecha, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Fecha, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Comida, htmlAttributes: new { @class = "toolbar__label" })
+                        @Html.EditorFor(model => model.Comida, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Comida, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Ubicacion, htmlAttributes: new { @class = "toolbar__label" })
+                        @Html.EditorFor(model => model.Ubicacion, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Ubicacion, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="form-group worker-form-grid__wide">
+                        @Html.LabelFor(model => model.Foto, htmlAttributes: new { @class = "toolbar__label" })
+                        @Html.EditorFor(model => model.Foto, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Foto, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="worker-actions">
+                    <input type="submit" value="Guardar registro" class="btn btn-primary" />
+                    <a class="btn btn-outline-secondary" href="@Url.Action("Index", "Casino")">Cancelar</a>
+                </div>
+            </section>
         </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.Fecha, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Fecha, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Fecha, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Comida, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Comida, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Comida, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Foto, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Foto, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Foto, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Ubicacion, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Ubicacion, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Ubicacion, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Crear" class="btn btn-default" />
-            </div>
-        </div>
-    </div>
+        <aside class="worker-create__aside">
+            <section class="surface worker-panel casino-sidepanel">
+                <div class="worker-panel__header">
+                    <span class="worker-panel__eyebrow">Referencia</span>
+                    <h2>Carga manual</h2>
+                    <p>Usa esta vista cuando necesites cargar un consumo a mano.</p>
+                </div>
+            </section>
+        </aside>
+    </section>
 }
