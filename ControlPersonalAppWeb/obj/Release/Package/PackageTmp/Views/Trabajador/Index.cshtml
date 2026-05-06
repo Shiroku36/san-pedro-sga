@@ -3,110 +3,100 @@
 @{
     ViewBag.Title = "RR.HH.";
     var cuenta = ControlPersonalAppWeb.Utils.SessionManager.CuentaAutenticada();
+    var totalTrabajadores = 0;
+    if (Model != null)
+    {
+        foreach (var trabajador in Model)
+        {
+            totalTrabajadores++;
+        }
+    }
 }
+
 @if (!String.IsNullOrEmpty(ControlPersonalAppWeb.Utils.SessionManager.mensaje))
 {
-    <div class="alert-info">
-        <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+    <div class="form-feedback form-feedback--info">
         @ControlPersonalAppWeb.Utils.SessionManager.mensaje
     </div>
     ControlPersonalAppWeb.Utils.SessionManager.mensaje = "";
 }
-<h1 class="display-4 text-center">Índice RR.HH.</h1>
-<hr />
 
-<div class="clearfix"></div>
-<div class="row">
-    <div class="col-sm-8 form-label-group">
-        <input type="text" id="busqueda" onkeyup="buscar()" class="mb-3 mt-1 form-control" placeholder="Búsqueda">
+<section class="page-header">
+    <div>
+        <span class="page-header__eyebrow">Módulo RR.HH.</span>
+        <h1>Trabajadores</h1>
+        <p>@totalTrabajadores trabajadores listos para revisar, actualizar y seguir en terreno.</p>
     </div>
-    <div class="form-group col-sm-4 mt-1">
+
+    <div class="page-header__actions">
+        <a class="btn btn-outline-primary" href="@Url.Action("Hoy", "Registro")">Registros del día</a>
         @if (cuenta.Permisos.Contains("TrabajadoresC"))
         {
-            <a href='@Url.Action("Create", "Trabajador")'>
-                <label type="button" class="btn btn-primary float-right ml-2  mb-3">Crear Nuevo</label>
-            </a>
+            <a class="btn btn-primary" href="@Url.Action("Create", "Trabajador")">Nuevo trabajador</a>
         }
-        @if (cuenta.Permisos.Contains("TrabajadoresU"))
-        {
-            <a href='@Url.Action("Cargar", "Trabajador")'>
-                <label type="button" class="btn btn-primary float-right ml-2  mb-3">Cargar</label>
-            </a>
-        }
-        <a href='@Url.Action("Hoy", "Registro")'>
-            <label type="button" class="btn btn-primary float-right  ">Registros del día</label>
-        </a>
-        <!--
-    <a href='@Url.Action("Borrar", "Trabajador")'>
-        <button type="button" class="btn btn-default">borrar</button>
-    </a>-->
     </div>
-</div>
+</section>
 
-<div class="table-responsive">
-    <table class="table table-hover" id="tabla">
-        <tr class="bg-primary">
-            <th style="width:12%">
-                @Html.DisplayNameFor(model => model.Rut)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Nombre)
-            </th>
-            <th>
-                Contratista
-            </th>
-            <th>
-                Numero pulsera
-            </th>
-            <th style="width:40%">
-                Accion
-            </th>
-        </tr>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @item.Rut
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Nombre) @Html.DisplayFor(modelItem => item.ApellidoPaterno) @Html.DisplayFor(modelItem => item.ApellidoMaterno)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Empresa)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Numero)
-                </td>
+<section class="surface">
+    <div class="toolbar">
+        <div>
+            <input type="text" id="busqueda" onkeyup="buscar()" class="form-control toolbar__search" placeholder="Buscar por RUT, nombre o UID" />
+        </div>
+    </div>
 
-                <td>
-                    @if (cuenta.Permisos.Contains("RegistrosV"))
-                    {
-                        <a href='@Url.Action("Index", "Registro", new { id = item.Id })'>
-                            <label type="button" class="btn btn-dark">Registros</label>
-                        </a>
-                    }
-
-                    @if (cuenta.Permisos.Contains("TrabajadoresE"))
-                    {
-                        <a href='@Url.Action("Edit", "Trabajador", new { id = item.Id })'>
-                            <label title="Editar" type="submit" class="btn btn-warning">Editar</label>
-                        </a>
-                    }
-                    <a href='@Url.Action("Details", "Trabajador", new { id = item.Id })'>
-                        <label title="Detalle" type="submit" class="btn btn-info">Detalle </label>
-                    </a>
-                    @if (cuenta.Permisos.Contains("TrabajadoresD"))
-                    {
-                        <a href='@Url.Action("Delete", "Trabajador", new { id = item.Id })' onclick="return confirm('¿Está seguro que desea eliminar el Trabajador?')" })>
-                            <label title="Eliminar" type="submit" class="btn btn-danger">Borrar</label>
-                        </a>
-                    }
-
-                </td>
-
-            </tr>
-        }
-    </table>
-</div>
+    <div class="table-responsive">
+        <table class="table data-table table-hover" id="tabla">
+            <thead>
+                <tr>
+                    <th>RUT</th>
+                    <th>Nombre</th>
+                    <th>UID</th>
+                    <th>Numero pulsera</th>
+                    <th class="data-table__actions trabajador-actions-column">Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.Rut</td>
+                        <td>@Html.DisplayFor(modelItem => item.Nombre) @Html.DisplayFor(modelItem => item.ApellidoPaterno) @Html.DisplayFor(modelItem => item.ApellidoMaterno)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Uid)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Numero)</td>
+                        <td class="data-table__actions trabajador-actions-column">
+                            <div class="table-actions table-actions--trabajador">
+                                @if (cuenta.Permisos.Contains("RegistrosV"))
+                                {
+                                    <a class="btn btn-sm btn-outline-secondary" href="@Url.Action("Index", "Registro", new { id = item.Id })">Registros</a>
+                                }
+                                @if (cuenta.Permisos.Contains("TrabajadoresE"))
+                                {
+                                    <a class="btn btn-sm btn-warning" href="@Url.Action("Edit", "Trabajador", new { id = item.Id })">Editar</a>
+                                }
+                                <a class="btn btn-sm btn-info" href="@Url.Action("Details", "Trabajador", new { id = item.Id })">Detalle</a>
+                                @if (cuenta.Permisos.Contains("TrabajadoresD"))
+                                {
+                                    <a class="btn btn-sm btn-danger" href="@Url.Action("Delete", "Trabajador", new { id = item.Id })" onclick="return confirma('¿Está seguro que desea eliminar el Trabajador?')">Eliminar</a>
+                                }
+                                @if (cuenta.Permisos.Contains("Sueldo"))
+                                {
+                                    <a class="btn btn-sm btn-outline-secondary" href="@Url.Action("Index", "Remuneracion", new { id = item.Id })">Remuneracion</a>
+                                }
+                                @if (cuenta.Permisos.Contains("TrabajadoresS"))
+                                {
+                                    <a class="btn btn-sm btn-success" href="@Url.Action("PDFDetalle", "Trabajador", new { id = item.Id })">Contrato</a>
+                                }
+                                @if (cuenta.Permisos.Contains("TrabajadoresM"))
+                                {
+                                    <a class="btn btn-sm btn-outline-primary" href="@Url.Action("Index", "Trabajador", new { id = item.Id })" target="_blank">Correo</a>
+                                }
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</section>
 
 <script src="~/Scripts/Busqueda.js"></script>

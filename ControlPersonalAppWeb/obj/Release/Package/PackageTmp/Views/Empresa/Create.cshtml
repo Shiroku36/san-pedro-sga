@@ -1,43 +1,80 @@
 ﻿@model ControlPersonalAppWeb.Empresas
 
 @{
-    ViewBag.Title = "Crear";
+    ViewBag.Title = "Crear contratista";
 }
 
+<section class="page-header">
+    <div>
+        <span class="page-header__eyebrow">Módulo Contratistas</span>
+<h1>Nuevo contratista</h1>
+<p>Agrega el contratista con sus datos principales y su nomina si ya la tienes.</p>
+    </div>
+
+    <div class="page-header__actions">
+        <a class="btn btn-outline-primary" href="@Url.Action("Index", "Empresa")">Volver a Contratistas</a>
+    </div>
+</section>
 
 @using (Html.BeginForm("Create", "Empresa", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
     @Html.AntiForgeryToken()
 
-    <h2 class="display-4 text-center">Contratista</h2>
-    <h3 class="text-muted font-weight-light">Crear</h3>
-    <hr />
-    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-    <div class="form-group col-md-8 mx-auto">
-        @Html.LabelFor(model => model.Nombre, htmlAttributes: new { @class = "control-label" })
-        @Html.EditorFor(model => model.Nombre, new { htmlAttributes = new { @class = "form-control", @required = "required" } })
-        @Html.ValidationMessageFor(model => model.Nombre, "", new { @class = "text-danger" })
-    </div>
+    @Html.ValidationSummary(true, "", new { @class = "text-danger mb-4" })
 
-    <div class="form-group col-md-8 mx-auto">
-        @Html.LabelFor(model => model.Rut, htmlAttributes: new { @class = "control-label" })
-        @Html.EditorFor(model => model.Rut, new { htmlAttributes = new { @class = "form-control", @onchange = "checkRut(this)" } })
-        @Html.ValidationMessageFor(model => model.Rut, "", new { @class = "text-danger" })
-        <script src="~/Scripts/validarRUT.js"></script>
-    </div>
+    <div class="worker-create">
+        <div class="worker-create__main">
+            <section class="surface worker-panel">
+                <div class="worker-panel__header">
+                    <span class="worker-panel__eyebrow">Identidad comercial</span>
+                    <h2>Datos principales</h2>
+                    <p>Completa la información básica con la que se reconocerá dentro del sistema.</p>
+                </div>
 
-    <div class="form-group col-md-8 mx-auto">
-        <span>Nomina trabajadores</span>
-        <input type="file" name="Nomina" class="form-control" />
-    </div>
+                <div class="worker-form-grid">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Nombre, htmlAttributes: new { @class = "toolbar__label" })
+                        @Html.EditorFor(model => model.Nombre, new { htmlAttributes = new { @class = "form-control", required = "required" } })
+                        @Html.ValidationMessageFor(model => model.Nombre, "", new { @class = "text-danger" })
+                    </div>
 
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Rut, htmlAttributes: new { @class = "toolbar__label" })
+                        @Html.EditorFor(model => model.Rut, new { htmlAttributes = new { @class = "form-control", @onchange = "checkRut(this)" } })
+                        @Html.ValidationMessageFor(model => model.Rut, "", new { @class = "text-danger" })
+                    </div>
 
-    <div class="form-group col-md-9 mx-auto my-5">
-        <input type="submit" value="Guardar" class="btn btn-primary btn-block" />
-        @Html.ActionLink("Volver a la lista", "Index", null, new { @class = "btn btn-block btn-danger mt-3" })
+                    <div class="form-group worker-form-grid__wide">
+                        <label class="toolbar__label" for="Nomina">Nomina trabajadores</label>
+                        <input type="file" name="Nomina" id="Nomina" class="form-control" />
+                    </div>
+                </div>
+            </section>
+
+            <div class="worker-actions">
+                <input type="submit" value="Guardar contratista" class="btn btn-primary" />
+                <a class="btn btn-outline-secondary" href="@Url.Action("Index", "Empresa")">Cancelar</a>
+            </div>
+        </div>
+
+        <aside class="worker-create__aside">
+            <section class="surface worker-panel">
+                <div class="worker-panel__header">
+                    <span class="worker-panel__eyebrow">Antes de guardar</span>
+<h2>Antes de guardar</h2>
+<p>Con nombre y RUT ya puedes dejar este contratista creado y usarlo enseguida.</p>
+                </div>
+
+                <ul class="entity-note-list">
+                    <li>El nombre se reutiliza en trabajadores, predios y cuentas relacionadas.</li>
+                    <li>La nomina es opcional y puedes subirla ahora o mas adelante.</li>
+                </ul>
+            </section>
+        </aside>
     </div>
 }
 
+<script src="~/Scripts/validarRUT.js"></script>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

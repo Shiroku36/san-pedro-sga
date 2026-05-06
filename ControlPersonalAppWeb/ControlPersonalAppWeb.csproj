@@ -566,7 +566,9 @@
     <Content Include="Views\Web.config" />
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
+    <Content Include="Views\Shared\_AppLayout.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Shared\_PublicLayout.cshtml" />
     <Content Include="Views\Home\About.cshtml" />
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
@@ -696,7 +698,6 @@
     <Content Include="Views\Notificaciones\Index.cshtml" />
     <Content Include="Views\Shared\Busqueda.cshtml" />
     <Content Include="Views\Shared\Productos.cshtml" />
-    <Content Include="SGA.pfx" />
     <Content Include="Views\Cuenta\Password.cshtml" />
     <Content Include="Views\SolicitudDeCompras\Create.cshtml" />
     <Content Include="Views\SolicitudDeCompras\Details.cshtml" />
@@ -777,7 +778,6 @@
     <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>SGA.pfx</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets')" />

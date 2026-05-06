@@ -1,156 +1,326 @@
-﻿@model ControlPersonalAppWeb.Cuentas
+﻿@using System.Collections.Generic
+@model ControlPersonalAppWeb.Cuentas
 
 @{
-    ViewBag.Title = "Crear";
-    var cuenta = ControlPersonalAppWeb.Utils.SessionManager.CuentaAutenticada();
+    ViewBag.Title = "Crear cuenta";
+    var predios = ViewBag.campos as IEnumerable<string> ?? Enumerable.Empty<string>();
+    var predioPermisos = new[]
+    {
+        Tuple.Create("HuertosV", "Ver"),
+        Tuple.Create("HuertosC", "Crear"),
+        Tuple.Create("HuertosE", "Editar"),
+        Tuple.Create("HuertosD", "Eliminar")
+    };
+    var empresaPermisos = new[]
+    {
+        Tuple.Create("EmpresasV", "Ver"),
+        Tuple.Create("EmpresasC", "Crear"),
+        Tuple.Create("EmpresasE", "Editar"),
+        Tuple.Create("EmpresasD", "Eliminar")
+    };
+    var trabajadorPermisos = new[]
+    {
+        Tuple.Create("TrabajadoresV", "Ver"),
+        Tuple.Create("TrabajadoresC", "Crear"),
+        Tuple.Create("TrabajadoresE", "Editar"),
+        Tuple.Create("TrabajadoresD", "Eliminar"),
+        Tuple.Create("TrabajadoresU", "Cargar")
+    };
+    var registroPermisos = new[]
+    {
+        Tuple.Create("RegistrosV", "Ver"),
+        Tuple.Create("RegistrosC", "Crear"),
+        Tuple.Create("RegistrosE", "Editar"),
+        Tuple.Create("RegistrosD", "Eliminar")
+    };
+    var cuentaPermisos = new[]
+    {
+        Tuple.Create("CuentasV", "Ver"),
+        Tuple.Create("CuentasC", "Crear"),
+        Tuple.Create("CuentasE", "Editar"),
+        Tuple.Create("CuentasD", "Eliminar")
+    };
+    var archivoPermisos = new[]
+    {
+        Tuple.Create("ArchivoV", "Ver"),
+        Tuple.Create("ArchivoC", "Crear"),
+        Tuple.Create("ArchivoE", "Editar"),
+        Tuple.Create("ArchivoD", "Eliminar")
+    };
+    var casinoPermisos = new[]
+    {
+        Tuple.Create("CasinoV", "Ver"),
+        Tuple.Create("CasinoD", "Eliminar")
+    };
+    var personasPermisos = new[]
+    {
+        Tuple.Create("PersonasV", "Ver"),
+        Tuple.Create("PersonasC", "Crear"),
+        Tuple.Create("PersonasE", "Editar"),
+        Tuple.Create("PersonasD", "Eliminar")
+    };
 }
+
+<section class="page-header">
+    <div>
+        <span class="page-header__eyebrow">Módulo Cuentas</span>
+        <h1>Nueva cuenta</h1>
+        <p>Crea el acceso de un usuario y define desde el inicio qué podrá ver y hacer.</p>
+    </div>
+
+    <div class="page-header__actions">
+        <a class="btn btn-outline-primary" href="@Url.Action("Index", "Cuenta")">Volver a cuentas</a>
+    </div>
+</section>
 
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
 
-    <div class="form-horizontal">
-        <h4 class="text-center display-4">Cuentas</h4>
-        <h3 class="text-muted font-weight-light">Crear</h3>
-        <hr />
-        <div class="row">
-            <div class="col-sm-6">
-                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                <div class="form-group col-md-10 mx-auto">
-                    @Html.LabelFor(model => model.Usuario, htmlAttributes: new { @class = "control-label font-weight-normal" })
-                    @Html.EditorFor(model => model.Usuario, new { htmlAttributes = new { @class = "form-control", required = "required" } })
-                    @Html.ValidationMessageFor(model => model.Usuario, "", new { @class = "text-danger" })
+    @Html.ValidationSummary(true, "", new { @class = "text-danger mb-4" })
+    <input type="hidden" value="VSP" name="Empresa" />
+
+    <div class="worker-create worker-create--wide">
+        <div class="worker-create__main">
+            <section class="surface worker-panel">
+                <div class="worker-panel__header">
+                    <span class="worker-panel__eyebrow">Acceso</span>
+                    <h2>Datos de la cuenta</h2>
+                    <p>Completa el usuario, la contraseña y la información básica de la persona que usará el sistema.</p>
                 </div>
 
-                <div class="form-group col-md-10 mx-auto">
-                    @Html.LabelFor(model => model.Password, htmlAttributes: new { @class = "control-label font-weight-normal" })
-                    @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control", @type = "password", required = "required" } })
-                    @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+                <div class="worker-form-grid">
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Usuario, htmlAttributes: new { @class = "toolbar__label" })
+                        @Html.EditorFor(model => model.Usuario, new { htmlAttributes = new { @class = "form-control", required = "required" } })
+                        @Html.ValidationMessageFor(model => model.Usuario, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="form-group">
+                        <label class="toolbar__label" for="Password">Contraseña</label>
+                        @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control", @type = "password", required = "required" } })
+                        @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="form-group">
+                        <label class="toolbar__label" for="Confirmar">Confirmar contraseña</label>
+                        <input class="form-control" type="password" id="Confirmar" oninput="password()" required />
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Nombre, htmlAttributes: new { @class = "toolbar__label" })
+                        @Html.EditorFor(model => model.Nombre, new { htmlAttributes = new { @class = "form-control", required = "required" } })
+                        @Html.ValidationMessageFor(model => model.Nombre, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Apellido, htmlAttributes: new { @class = "toolbar__label" })
+                        @Html.EditorFor(model => model.Apellido, new { htmlAttributes = new { @class = "form-control", required = "required" } })
+                        @Html.ValidationMessageFor(model => model.Apellido, "", new { @class = "text-danger" })
+                    </div>
+
+                    <div class="form-group">
+                        <label class="toolbar__label" for="Email">Correo</label>
+                        @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", @type = "email", required = "required" } })
+                        @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </section>
+
+            <section class="surface worker-panel">
+                <div class="worker-panel__header">
+                    <span class="worker-panel__eyebrow">Permisos</span>
+                    <h2>Permisos</h2>
+                    <p>Marca solo los módulos y acciones que realmente necesita para trabajar.</p>
                 </div>
 
-                <div class="form-group col-md-10 mx-auto">
-                    <label>Confirmar password</label>
-                    <input class="form-control" type="password" id="Confirmar" oninput="password()" required />
+                <div class="permission-grid permission-grid--compact">
+                    <article class="permission-card permission-card--wide">
+                        <div class="permission-card__header">
+                            <span class="worker-panel__eyebrow">Predios habilitados</span>
+                            <h3>Acceso por predio</h3>
+                        </div>
+                        <div class="permission-checklist permission-checklist--chips">
+                            @foreach (var predio in predios)
+                            {
+                                <label class="permission-check">
+                                    <input type="checkbox" name="Permisos" value="@predio" />
+                                    <span>@predio</span>
+                                </label>
+                            }
+                            <label class="permission-check">
+                                <input type="checkbox" name="Permisos" value="Todos" />
+                                <span>Todos para informes</span>
+                            </label>
+                        </div>
+                    </article>
+
+                    <article class="permission-card">
+                        <div class="permission-card__header">
+                            <span class="worker-panel__eyebrow">Módulo</span>
+                            <h3>Predios</h3>
+                        </div>
+                        <div class="permission-checklist">
+                            @foreach (var permiso in predioPermisos)
+                            {
+                                <label class="permission-check">
+                                    <input type="checkbox" name="Permisos" value="@permiso.Item1" />
+                                    <span>@permiso.Item2</span>
+                                </label>
+                            }
+                        </div>
+                    </article>
+
+                    <article class="permission-card">
+                        <div class="permission-card__header">
+                            <span class="worker-panel__eyebrow">Módulo</span>
+                            <h3>Contratistas</h3>
+                        </div>
+                        <div class="permission-checklist">
+                            @foreach (var permiso in empresaPermisos)
+                            {
+                                <label class="permission-check">
+                                    <input type="checkbox" name="Permisos" value="@permiso.Item1" />
+                                    <span>@permiso.Item2</span>
+                                </label>
+                            }
+                        </div>
+                    </article>
+
+                    <article class="permission-card">
+                        <div class="permission-card__header">
+                            <span class="worker-panel__eyebrow">Módulo</span>
+                            <h3>Trabajadores</h3>
+                        </div>
+                        <div class="permission-checklist">
+                            @foreach (var permiso in trabajadorPermisos)
+                            {
+                                <label class="permission-check">
+                                    <input type="checkbox" name="Permisos" value="@permiso.Item1" />
+                                    <span>@permiso.Item2</span>
+                                </label>
+                            }
+                        </div>
+                    </article>
+
+                    <article class="permission-card">
+                        <div class="permission-card__header">
+                            <span class="worker-panel__eyebrow">Módulo</span>
+                            <h3>Registros</h3>
+                        </div>
+                        <div class="permission-checklist">
+                            @foreach (var permiso in registroPermisos)
+                            {
+                                <label class="permission-check">
+                                    <input type="checkbox" name="Permisos" value="@permiso.Item1" />
+                                    <span>@permiso.Item2</span>
+                                </label>
+                            }
+                        </div>
+                    </article>
+
+                    <article class="permission-card">
+                        <div class="permission-card__header">
+                            <span class="worker-panel__eyebrow">Módulo</span>
+                            <h3>Cuentas</h3>
+                        </div>
+                        <div class="permission-checklist">
+                            @foreach (var permiso in cuentaPermisos)
+                            {
+                                <label class="permission-check">
+                                    <input type="checkbox" name="Permisos" value="@permiso.Item1" />
+                                    <span>@permiso.Item2</span>
+                                </label>
+                            }
+                        </div>
+                    </article>
+
+                    <article class="permission-card">
+                        <div class="permission-card__header">
+                            <span class="worker-panel__eyebrow">Módulo</span>
+                            <h3>Archivos</h3>
+                        </div>
+                        <div class="permission-checklist">
+                            @foreach (var permiso in archivoPermisos)
+                            {
+                                <label class="permission-check">
+                                    <input type="checkbox" name="Permisos" value="@permiso.Item1" />
+                                    <span>@permiso.Item2</span>
+                                </label>
+                            }
+                        </div>
+                    </article>
+
+                    <article class="permission-card">
+                        <div class="permission-card__header">
+                            <span class="worker-panel__eyebrow">Módulo</span>
+                            <h3>Casino</h3>
+                        </div>
+                        <div class="permission-checklist">
+                            @foreach (var permiso in casinoPermisos)
+                            {
+                                <label class="permission-check">
+                                    <input type="checkbox" name="Permisos" value="@permiso.Item1" />
+                                    <span>@permiso.Item2</span>
+                                </label>
+                            }
+                        </div>
+                    </article>
+
+                    <article class="permission-card">
+                        <div class="permission-card__header">
+                            <span class="worker-panel__eyebrow">Módulo</span>
+                            <h3>Personas</h3>
+                        </div>
+                        <div class="permission-checklist">
+                            @foreach (var permiso in personasPermisos)
+                            {
+                                <label class="permission-check">
+                                    <input type="checkbox" name="Permisos" value="@permiso.Item1" />
+                                    <span>@permiso.Item2</span>
+                                </label>
+                            }
+                        </div>
+                    </article>
                 </div>
+            </section>
 
-                <div class="form-group col-md-10 mx-auto">
-                    @Html.LabelFor(model => model.Nombre, htmlAttributes: new { @class = "control-label font-weight-normal" })
-                    @Html.EditorFor(model => model.Nombre, new { htmlAttributes = new { @class = "form-control", required = "required" } })
-                    @Html.ValidationMessageFor(model => model.Nombre, "", new { @class = "text-danger" })
-                </div>
-
-                <div class="form-group col-md-10 mx-auto">
-                    @Html.LabelFor(model => model.Apellido, htmlAttributes: new { @class = "control-label font-weight-normal" })
-                    @Html.EditorFor(model => model.Apellido, new { htmlAttributes = new { @class = "form-control", required = "required" } })
-                    @Html.ValidationMessageFor(model => model.Apellido, "", new { @class = "text-danger" })
-                </div>
-
-                <div class="form-group col-md-10 mx-auto">
-                    @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label font-weight-normal" })
-                    @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control", @type = "Email", required = "required" } })
-                    @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
-                </div>
-
-                <div class="form-group col-md-10 mx-auto">
-                    <label class="control-label font-weight-normal" >Contratista</label>
-                    <input list="Empresa" name="Empresa" required class="form-control" />
-                    <datalist id="Empresa">
-                        @foreach (var empresa in ViewBag.empresas)
-                        {
-                            <option value="@empresa"></option>
-                        }
-                    </datalist>
-                    @Html.ValidationMessageFor(model => model.Empresa, "", new { @class = "text-danger" })
-                </div>
-
-            </div>
-
-            <div class="form-group col-sm-6 mx-auto">
-                @Html.LabelFor(model => model.Permisos, htmlAttributes: new { @class = "control-label font-weight-normal" })
-                <br />
-                <label>Informes</label><br />
-                <label><input type="checkbox" id="Permisos" name="Permisos" value="InformesV" class="custom-checkbox chkCheckBoxId" />Ver</label>
-                <label><input type="checkbox" id="Permisos" name="Permisos" value="Ingreso" class="custom-checkbox chkCheckBoxId" />Aviso no habilitado</label>
-                <label><input type="checkbox" id="Permisos" name="Permisos" value="Log" class="custom-checkbox chkCheckBoxId" />Log</label><br />
-                <label>Huertos</label><br />
-                <label><input type="checkbox" id="Permisos" name="Permisos" value="HuertosV" class="custom-checkbox chkCheckBoxId" />Ver</label>
-                <label><input type="checkbox" id="Permisos" name="Permisos" value="HuertosC" class="custom-checkbox chkCheckBoxId" />Crear</label>
-                <label><input type="checkbox" id="Permisos" name="Permisos" value="HuertosE" class="custom-checkbox chkCheckBoxId" />Editar </label>
-                <label><input type="checkbox" id="Permisos" name="Permisos" value="HuertosD" class="custom-checkbox chkCheckBoxId" />Eliminar </label><br />
-                <label>Trabajadores</label><br />
-                <label><input type="checkbox" id="Permisos" name="Permisos" value="TrabajadoresV" class="custom-checkbox chkCheckBoxId" />Ver</label>
-                <label><input type="checkbox" id="Permisos" name="Permisos" value="TrabajadoresC" class="custom-checkbox chkCheckBoxId" />Crear</label>
-                <label><input type="checkbox" id="Permisos" name="Permisos" value="TrabajadoresE" class="custom-checkbox chkCheckBoxId" />Editar </label>
-                <label><input type="checkbox" id="Permisos" name="Permisos" value="TrabajadoresD" class="custom-checkbox chkCheckBoxId" />Eliminar </label>
-                <label><input type="checkbox" id="Permisos" name="Permisos" value="TrabajadoresU" class="custom-checkbox chkCheckBoxId" />Cargar </label><br />
-                <label>Registros</label><br />
-                <label><input type="checkbox" id="Permisos" name="Permisos" value="RegistrosV" class="custom-checkbox chkCheckBoxId" />Ver </label>
-                <label><input type="checkbox" id="Permisos" name="Permisos" value="RegistrosC" class="custom-checkbox chkCheckBoxId" />Crear </label>
-                <label><input type="checkbox" id="Permisos" name="Permisos" value="RegistrosE" class="custom-checkbox chkCheckBoxId" />Editar </label>
-                <label><input type="checkbox" id="Permisos" name="Permisos" value="RegistrosD" class="custom-checkbox chkCheckBoxId" />Eliminar </label><br />
-                <label>Cuentas</label><br />
-                <label><input type="checkbox" id="Permisos" name="Permisos" value="CuentasV" class="custom-checkbox chkCheckBoxId" />Ver </label>
-                <label><input type="checkbox" id="Permisos" name="Permisos" value="CuentasC" class="custom-checkbox chkCheckBoxId" />Crear </label>
-                <label><input type="checkbox" id="Permisos" name="Permisos" value="CuentasE" class="custom-checkbox chkCheckBoxId" />Editar </label>
-                <label><input type="checkbox" id="Permisos" name="Permisos" value="CuentasD" class="custom-checkbox chkCheckBoxId" />Eliminar </label><br />
-                <label>Archivos</label><br />
-                <label><input type="checkbox" id="Permisos" name="Permisos" value="ArchivoV" class="custom-checkbox chkCheckBoxId" />Ver </label>
-                <label><input type="checkbox" id="Permisos" name="Permisos" value="ArchivoC" class="custom-checkbox chkCheckBoxId" />Crear </label>
-                <label><input type="checkbox" id="Permisos" name="Permisos" value="ArchivoE" class="custom-checkbox chkCheckBoxId" />Editar </label>
-                <label><input type="checkbox" id="Permisos" name="Permisos" value="ArchivoD" class="custom-checkbox chkCheckBoxId" />Eliminar </label><br />
-                @Html.ValidationMessageFor(model => model.Permisos, "", new { @class = "text-danger" })
-                <label>Contratistas</label><br />
-                <label><input type="checkbox" id="Permisos" name="Permisos" value="EmpresasV" class="custom-checkbox chkCheckBoxId" /> Ver </label>
-                <label><input type="checkbox" id="Permisos" name="Permisos" value="EmpresasC" class="custom-checkbox chkCheckBoxId" /> Crear </label>
-                <label><input type="checkbox" id="Permisos" name="Permisos" value="EmpresasE" class="custom-checkbox chkCheckBoxId" /> Editar </label>
-                <label><input type="checkbox" id="Permisos" name="Permisos" value="EmpresasD" class="custom-checkbox chkCheckBoxId" /> Eliminar </label><br />
+            <div class="worker-actions">
+                <input type="submit" value="Crear cuenta" class="btn btn-primary" />
+                <a class="btn btn-outline-secondary" href="@Url.Action("Index", "Cuenta")">Cancelar</a>
             </div>
         </div>
 
-        <div class="form-group col-md-9 mx-auto my-5">
-            <input type="submit" value="Crear" class="btn btn-primary btn-block" />
-            @Html.ActionLink("Volver a la lista", "Index", null, new { @class = "btn btn-block btn-danger mt-3" })
-        </div>
+        <aside class="worker-create__aside">
+            <section class="surface worker-panel">
+                <div class="worker-panel__header">
+                    <span class="worker-panel__eyebrow">Referencia</span>
+                    <h2>Recomendación</h2>
+                    <p>Empieza con permisos mínimos y amplía el acceso solo cuando el rol lo pida.</p>
+                </div>
+
+                <ul class="entity-note-list">
+                        <li>La cuenta se crea asociada a la empresa base configurada en esta versión.</li>
+                        <li>La selección de predios limita los informes y accesos operativos disponibles.</li>
+                        <li>La contraseña debe quedar confirmada antes de guardar.</li>
+                </ul>
+            </section>
+        </aside>
     </div>
 }
-
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
     <script>
-    function password(){
-        var todo = document.getElementById("Password");
-        var todo2 = document.getElementById("Confirmar");
+        function password() {
+            var todo = document.getElementById("Password");
+            var todo2 = document.getElementById("Confirmar");
 
-        if (todo.value != todo2.value) {
-            todo2.setCustomValidity("Las contraseñas no coinciden");
-            return false;
-        }
-        else
-        {
-            todo2.setCustomValidity('');
-        }
-    }
-    </script>
-    <script>
-        function filterFunction() {
-            var input, filter, a, i;
-            input = document.getElementById("myInput");
-            filter = input.value.toUpperCase();
-            div = document.getElementById("myDropdown");
-            a = div.getElementsByTagName("a");
-            for (i = 0; i < a.length; i++) {
-                if (filter.length > 0) {
-                    txtValue = a[i].textContent || a[i].innerText;
-                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
-                        a[i].style.display = "";
-                    } else {
-                        a[i].style.display = "none";
-                    }
-                }
-                else {
-                    a[i].style.display = "none";
-                }
+            if (todo.value != todo2.value) {
+                todo2.setCustomValidity("Las contraseñas no coinciden");
+                return false;
+            } else {
+                todo2.setCustomValidity('');
             }
         }
     </script>

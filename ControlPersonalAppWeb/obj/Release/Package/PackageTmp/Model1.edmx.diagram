@@ -12,6 +12,8 @@
         <EntityTypeShape EntityType="SgajcpModel.Empresas" Width="1.5" PointX="11" PointY="0.625" />
         <EntityTypeShape EntityType="SgajcpModel.Trabajador" PointX="0.75" PointY="0.75" Width="1.5" />
         <EntityTypeShape EntityType="SgajcpModel.Log" Width="1.5" PointX="11" PointY="2.5" />
+        <EntityTypeShape EntityType="SgajcpModel.Casino" Width="1.5" PointX="3.375" PointY="4.75" />
+        <EntityTypeShape EntityType="SgajcpModel.Personas" Width="1.5" PointX="3.375" PointY="0.625" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

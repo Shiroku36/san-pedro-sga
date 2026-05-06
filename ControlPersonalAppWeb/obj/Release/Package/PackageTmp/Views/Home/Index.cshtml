@@ -1,95 +1,178 @@
 ﻿@{
-    ViewBag.Title = "SGA";
+    ViewBag.Title = "Inicio";
+    var cuenta = ControlPersonalAppWeb.Utils.SessionManager.CuentaAutenticada();
+    var permisos = cuenta != null && cuenta.Permisos != null ? cuenta.Permisos : "";
 }
 
-<div class="row">
-    <div class="col-12">
-        <div class="jumbotron bg-dark">
-            <img class="col-auto" src="~/Images/Logo.png" alt="Alternate Text" />
-        </div>
-    </div>
-</div>
+@if (cuenta == null)
+{
+    var heroSlides = new[]
+    {
+        new { File = "hero-agri-1.png", Alt = "Equipo agrícola revisando operación en terreno", Eyebrow = "Operación en terreno", Title = "Datos claros desde el huerto" },
+        new { File = "hero-agri-2.png", Alt = "Control de inventario agrícola en packing", Eyebrow = "Inventario", Title = "Cosecha y stock bajo control" },
+        new { File = "hero-agri-3.png", Alt = "Supervisor agrícola inspeccionando riego", Eyebrow = "Predios", Title = "Seguimiento preciso por lote" },
+        new { File = "hero-agri-4.png", Alt = "Coordinación de trabajadores agrícolas al inicio de jornada", Eyebrow = "RR.HH.", Title = "Equipos coordinados cada día" },
+        new { File = "hero-agri-5.png", Alt = "Trazabilidad de cosecha con registros digitales", Eyebrow = "Trazabilidad", Title = "Registros listos para decidir" }
+    };
 
-
-<div class="row justify-content-center mb-4">
-    <div class="col-sm-10">
-        <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
-            <ol class="carousel-indicators">
-                <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
-                <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
-                <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
-            </ol>
-            <div class="carousel-inner">
-                <div class="carousel-item active">
-                    <img src="~/images/c1.jpg" class="d-block w-100" alt="...">
-                </div>
-                <div class="carousel-item">
-                    <img src="~/images/c1.jpg" class="d-block w-100" alt="...">
-                </div>
-                <div class="carousel-item">
-                    <img src="~/images/c1.jpg" class="d-block w-100" alt="...">
-                </div>
+    <section class="public-hero">
+        <div class="public-hero__content">
+            <span class="auth-kicker">Sistema de gestión agrícola</span>
+            <h1>Todo lo que pasa en la operación, en un solo lugar.</h1>
+            <p>SGA reúne personas, predios, registros e inventario en una plataforma clara, rápida de usar y fácil de seguir.</p>
+            <div class="public-hero__actions">
+                <a class="btn btn-light" href="@Url.Action("Login", "Cuenta")">Ingresar al sistema</a>
+                <a class="btn btn-outline-light" href="@Url.Action("Contact", "Home")">Pedir información</a>
             </div>
-            <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="sr-only">Previous</span>
-            </a>
-            <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="sr-only">Next</span>
-            </a>
         </div>
-    </div>
-</div>
+        <div class="public-hero__media public-hero-carousel" data-hero-carousel>
+            <div class="public-hero-carousel__track">
+                @for (var i = 0; i < heroSlides.Length; i++)
+                {
+                    var slide = heroSlides[i];
+                    <figure class="public-hero-slide @(i == 0 ? "is-active" : "")" data-hero-slide>
+                        <img src="@Url.Content("~/Images/" + slide.File)" alt="@slide.Alt" />
+                        <figcaption class="public-hero-slide__caption">
+                            <span>@slide.Eyebrow</span>
+                            <strong>@slide.Title</strong>
+                        </figcaption>
+                    </figure>
+                }
+            </div>
 
+            <button class="public-hero-carousel__control public-hero-carousel__control--prev" type="button" data-hero-prev aria-label="Imagen anterior">
+                <span aria-hidden="true">‹</span>
+            </button>
+            <button class="public-hero-carousel__control public-hero-carousel__control--next" type="button" data-hero-next aria-label="Imagen siguiente">
+                <span aria-hidden="true">›</span>
+            </button>
 
+            <div class="public-hero-carousel__dots" aria-label="Imágenes del carrusel">
+                @for (var i = 0; i < heroSlides.Length; i++)
+                {
+                    <button class="@(i == 0 ? "is-active" : "")" type="button" data-hero-dot="@i" aria-label="Ver imagen @(i + 1)"></button>
+                }
+            </div>
+        </div>
+    </section>
+}
+else
+{
+    <section class="page-header">
+        <div>
+            <span class="page-header__eyebrow">Panel principal</span>
+            <h1>Hola, @cuenta.Usuario</h1>
+            <p>Entra directo a los módulos que más usas y sigue tu trabajo sin vueltas.</p>
+        </div>
+    </section>
 
-<!--
-<div class="card-deck mb-3 text-center">
-    <div class="card mb-4 box-shadow">
-        <div class="card-header">
-            <h4 class="my-0 font-weight-normal">Free</h4>
+    <section class="surface surface--spacious">
+        <div class="module-grid">
+            @if (permisos.Contains("TrabajadoresV"))
+            {
+                <a class="module-tile" href="@Url.Action("Index", "Trabajador")">
+                    <strong>RR.HH.</strong>
+                    <span>Fichas, movimientos y gestión diaria del personal.</span>
+                </a>
+            }
+            @if (cuenta != null)
+            {
+                <a class="module-tile" href="@Url.Action("Index", "Informes")">
+                    <strong>Informes</strong>
+                    <span>Consultas, asistencia, horas y seguimiento operativo.</span>
+                </a>
+            }
+            @if (permisos.Contains("HuertosV"))
+            {
+                <a class="module-tile" href="@Url.Action("Index", "Campo")">
+                    <strong>Predios</strong>
+                    <span>Predios, centros de costo y estructura de trabajo.</span>
+                </a>
+            }
+            @if (permisos.Contains("EmpresasV"))
+            {
+                <a class="module-tile" href="@Url.Action("Index", "Empresa")">
+                    <strong>Contratistas</strong>
+                    <span>Contratistas, habilitados y nóminas de apoyo.</span>
+                </a>
+            }
+            @if (permisos.Contains("CuentasV"))
+            {
+                <a class="module-tile" href="@Url.Action("Index", "Cuenta")">
+                    <strong>Cuentas</strong>
+                    <span>Usuarios, accesos y permisos del sistema.</span>
+                </a>
+            }
+            @if (permisos.Contains("CasinoV") || cuenta.Usuario.Contains("Sebastian"))
+            {
+                <a class="module-tile module-tile--spotlight" href="@Url.Action("Index", "Casino")">
+                    <strong>Casino</strong>
+                    <span>Servicios y consumos en un módulo aparte, listo para crecer cuando lo necesites.</span>
+                </a>
+            }
         </div>
-        <div class="card-body">
-            <h1 class="card-title pricing-card-title">$0 <small class="text-muted">/ mo</small></h1>
-            <ul class="list-unstyled mt-3 mb-4">
-                <li>10 users included</li>
-                <li>2 GB of storage</li>
-                <li>Email support</li>
-                <li>Help center access</li>
-            </ul>
-            <button type="button" class="btn btn-lg btn-block btn-primary">Contact us</button>
-        </div>
-    </div>
-    <div class="card mb-4 box-shadow">
-        <div class="card-header">
-            <h4 class="my-0 font-weight-normal">Pro</h4>
-        </div>
-        <div class="card-body">
-            <h1 class="card-title pricing-card-title">$15 <small class="text-muted">/ mo</small></h1>
-            <ul class="list-unstyled mt-3 mb-4">
-                <li>20 users included</li>
-                <li>10 GB of storage</li>
-                <li>Priority email support</li>
-                <li>Help center access</li>
-            </ul>
-            <button type="button" class="btn btn-lg btn-block btn-primary">Contact us</button>
-        </div>
-    </div>
-    <div class="card mb-4 box-shadow">
-        <div class="card-header">
-            <h4 class="my-0 font-weight-normal">Enterprise</h4>
-        </div>
-        <div class="card-body">
-            <h1 class="card-title pricing-card-title">$29 <small class="text-muted">/ mo</small></h1>
-            <ul class="list-unstyled mt-3 mb-4">
-                <li>30 users included</li>
-                <li>15 GB of storage</li>
-                <li>Phone and email support</li>
-                <li>Help center access</li>
-            </ul>
-            <button type="button" class="btn btn-lg btn-block btn-primary">Contact us</button>
-        </div>
-    </div>
-</div>
--->
+    </section>
+}
+
+@section scripts {
+    <script>
+        (function () {
+            var carousel = document.querySelector("[data-hero-carousel]");
+            if (!carousel) {
+                return;
+            }
+
+            var slides = Array.prototype.slice.call(carousel.querySelectorAll("[data-hero-slide]"));
+            var dots = Array.prototype.slice.call(carousel.querySelectorAll("[data-hero-dot]"));
+            var previous = carousel.querySelector("[data-hero-prev]");
+            var next = carousel.querySelector("[data-hero-next]");
+            var activeIndex = 0;
+            var timer = null;
+
+            function showSlide(index) {
+                activeIndex = (index + slides.length) % slides.length;
+
+                slides.forEach(function (slide, slideIndex) {
+                    slide.classList.toggle("is-active", slideIndex === activeIndex);
+                });
+
+                dots.forEach(function (dot, dotIndex) {
+                    dot.classList.toggle("is-active", dotIndex === activeIndex);
+                    dot.setAttribute("aria-current", dotIndex === activeIndex ? "true" : "false");
+                });
+            }
+
+            function restartTimer() {
+                window.clearInterval(timer);
+                timer = window.setInterval(function () {
+                    showSlide(activeIndex + 1);
+                }, 5200);
+            }
+
+            dots.forEach(function (dot) {
+                dot.addEventListener("click", function () {
+                    showSlide(parseInt(dot.getAttribute("data-hero-dot"), 10));
+                    restartTimer();
+                });
+            });
+
+            previous.addEventListener("click", function () {
+                showSlide(activeIndex - 1);
+                restartTimer();
+            });
+
+            next.addEventListener("click", function () {
+                showSlide(activeIndex + 1);
+                restartTimer();
+            });
+
+            carousel.addEventListener("mouseenter", function () {
+                window.clearInterval(timer);
+            });
+
+            carousel.addEventListener("mouseleave", restartTimer);
+            showSlide(0);
+            restartTimer();
+        })();
+    </script>
+}

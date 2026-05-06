@@ -2,76 +2,80 @@
 
 @{
     ViewBag.Title = "Predios";
-    var cuenta = ControlPersonalAppWeb.Utils.SessionManager.CuentaAutenticada().Permisos;
-}
-<h1 class="display-4 text-center">Índice Predios</h1>
-    <hr />
-@if(cuenta.Contains("HuertosV"))
-{ 
-    if(cuenta.Contains("HuertosC"))
-    { 
-        <a href='@Url.Action("Create", "Campo")'>
-            <button type="button" class="btn btn-primary float-right mb-3">Crear Nuevo</button>
-        </a>
-    }
-
-<div class="table-responsive">
-    <table class="table table-hover">
-        <tr class="bg-primary">
-
-            <th>
-                @Html.DisplayNameFor(model => model.Nombre)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Lugar)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Encargado)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Asistente)
-            </th>
-            <th>
-                Accion
-            </th>
-        </tr>
-
-        @foreach (var item in Model)
+    var autenticada = ControlPersonalAppWeb.Utils.SessionManager.CuentaAutenticada();
+    var cuenta = autenticada != null && autenticada.Permisos != null ? autenticada.Permisos : "";
+    var totalPredios = 0;
+    if (Model != null)
+    {
+        foreach (var predio in Model)
         {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Nombre)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Lugar)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Encargado)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Asistente)
-                </td>
-                <td>
-                    @if (cuenta.Contains("HuertosE"))
-                    {
-                        <a href='@Url.Action("Edit", "Campo", new { id = item.Id })'>
-                            <button type="button" class="btn btn-warning">Editar</button>
-                        </a>
-                    }
-                    <a href='@Url.Action("Details", "Campo", new { id = item.Id })'>
-                        <button type="button" class="btn btn-info">Detalle</button>
-                    </a>
-                    @if (cuenta.Contains("HuertosD"))
-                    {
-                        <a href='@Url.Action("Delete", "Campo", new { id = item.Id })'>
-                            <button type="button" class="btn btn-danger" onclick="return confirm('¿Está seguro que desea eliminar el Predio?');" })>Borrar</button>
-                        </a>
-                    }
-                </td>
-            </tr>
+            totalPredios++;
         }
-
-    </table>
-</div>
-
+    }
 }
+
+@if (cuenta.Contains("HuertosV"))
+{
+    <section class="page-header">
+        <div>
+        <span class="page-header__eyebrow">Módulo Predios</span>
+            <h1>Predios</h1>
+        <p>@totalPredios predios listos para revisar y mantener al día.</p>
+        </div>
+
+        <div class="page-header__actions">
+            @if (cuenta.Contains("HuertosC"))
+            {
+            <a class="btn btn-primary" href="@Url.Action("Create", "Campo")">Nuevo predio</a>
+            }
+        </div>
+    </section>
+
+    <section class="surface">
+        <div class="toolbar">
+            <div>
+                <input type="text" id="busqueda" onkeyup="buscar()" class="form-control toolbar__search" placeholder="Buscar por nombre, lugar o encargado" />
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table data-table table-hover" id="tabla">
+                <thead>
+                    <tr>
+                        <th>@Html.DisplayNameFor(model => model.Nombre)</th>
+                        <th>@Html.DisplayNameFor(model => model.Lugar)</th>
+                        <th>@Html.DisplayNameFor(model => model.Encargado)</th>
+                        <th>@Html.DisplayNameFor(model => model.Asistente)</th>
+                        <th class="data-table__actions">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@Html.DisplayFor(modelItem => item.Nombre)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Lugar)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Encargado)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Asistente)</td>
+                            <td>
+                                <div class="table-actions">
+                                    @if (cuenta.Contains("HuertosE"))
+                                    {
+                                        <a class="btn btn-sm btn-warning" href="@Url.Action("Edit", "Campo", new { id = item.Id })">Editar</a>
+                                    }
+                                    <a class="btn btn-sm btn-info" href="@Url.Action("Details", "Campo", new { id = item.Id })">Detalle</a>
+                                    @if (cuenta.Contains("HuertosD"))
+                                    {
+                                        <a class="btn btn-sm btn-danger" href="@Url.Action("Delete", "Campo", new { id = item.Id })" onclick="return confirm('Esta seguro que desea eliminar el Predio?');">Eliminar</a>
+                                    }
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </section>
+}
+
+<script src="~/Scripts/Busqueda.js"></script>

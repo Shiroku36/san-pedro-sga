@@ -1,0 +1,40 @@
+@model IEnumerable<ControlPersonalAppWeb.Log>
+
+@{
+    ViewBag.Title = "Log";
+    var totalRegistros = Model != null ? Model.Count() : 0;
+}
+
+<section class="page-header">
+    <div>
+        <span class="page-header__eyebrow">Auditoria</span>
+        <h1>Log</h1>
+        <p>@totalRegistros eventos recientes registrados en el sistema.</p>
+    </div>
+</section>
+
+<section class="surface">
+    <div class="table-responsive">
+        <table class="table data-table table-hover">
+            <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Empresa</th>
+                    <th>Usuario</th>
+                    <th>Accion</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@(item.Fecha.HasValue ? item.Fecha.Value.ToString("dd-MM-yyyy HH:mm") : "Sin fecha")</td>
+                        <td>@Html.DisplayFor(modelItem => item.Empresa)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Usuario)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Acción)</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</section>

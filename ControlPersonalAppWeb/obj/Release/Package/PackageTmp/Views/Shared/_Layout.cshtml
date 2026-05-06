@@ -12,6 +12,7 @@
         //<meta http-equiv="Refresh" content="0;url=http://sgajcp.ingenieriajcp.cl/Cuenta/Login" />
 
     }
+    var autenticado = ControlPersonalAppWeb.Utils.SessionManager.CuentaAutenticada();
 }
 <!DOCTYPE html>
 <html>
@@ -46,9 +47,10 @@
                     {
                         <li>@Html.ActionLink("RR.HH.", "Index", "Trabajador")</li>
                     }
-                    @if (cuenta.Contains("InformesV"))
+                    @if (autenticado != null)
                     {
                         <li>@Html.ActionLink("Informe", "Index", "Informes")</li>
+
                     }
                     @if (cuenta.Contains("EmpresasV"))
                     {
@@ -61,6 +63,10 @@
                     @if (cuenta.Contains("Log"))
                     {
                         <li>@Html.ActionLink("Log", "Index", "Log")</li>
+                    }
+                    @if (cuenta.Contains("CasinoV"))
+                    {
+                        <li>@Html.ActionLink("Casino", "Index", "Casino")</li>
                     }
                     @if (ControlPersonalAppWeb.Utils.SessionManager.CuentaAutenticada() == null)
                     {
